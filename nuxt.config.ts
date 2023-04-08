@@ -6,6 +6,8 @@ export default defineNuxtConfig({
       title: 'Nuxt3 project',
     },
   },
+  css: ['~/assets/tailwind.css'],
+  modules: ['@nuxtjs/tailwindcss'],
   nitro: {
     serveStatic: true,
   },
