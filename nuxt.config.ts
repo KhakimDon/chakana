@@ -7,7 +7,19 @@ export default defineNuxtConfig({
     },
   },
   css: ['~/assets/tailwind.css'],
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          // automatically imports `defineStore`
+          'defineStore', // import { defineStore } from 'pinia'
+          ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+        ],
+      },
+    ],
+  ],
   nitro: {
     serveStatic: true,
   },
