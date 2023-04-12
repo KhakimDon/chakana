@@ -13,6 +13,8 @@ export default <Partial<Config>>{
     './nuxt.config.{js,ts}',
     './app.vue',
   ],
-  theme: {},
+  theme: {
+    extends: {}
+  },
   plugins: [LineClamp],
 }
