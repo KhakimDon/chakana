@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import LineClamp from '@tailwindcss/line-clamp'
 import { Config } from 'tailwindcss'
 
 export default <Partial<Config>>{
@@ -14,5 +13,5 @@ export default <Partial<Config>>{
     './app.vue',
   ],
   theme: {},
-  plugins: [LineClamp],
+  plugins: [],
 }
