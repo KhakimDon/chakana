@@ -51,5 +51,6 @@ module.exports = {
     'vue/prefer-true-attribute-shorthand': 'warn',
     'vue/html-self-closing': 'off',
     'vue/html-comment-content-newline': 'warn',
+    'vue/multi-word-component-names': 'off',
   },
 }
