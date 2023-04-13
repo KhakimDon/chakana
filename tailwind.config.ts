@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import LineClamp from '@tailwindcss/line-clamp'
 import { Config } from 'tailwindcss'
 
 export default <Partial<Config>>{
@@ -17,5 +16,5 @@ export default <Partial<Config>>{
   theme: {
     extends: {}
   },
-  plugins: [LineClamp],
+  plugins: [],
 }
