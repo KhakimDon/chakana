@@ -14,7 +14,7 @@ export default <Partial<Config>>{
     './error.vue',
   ],
   theme: {
-    extends: {}
+    extend: {}
   },
   plugins: [],
 }
