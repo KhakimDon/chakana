@@ -14,7 +14,29 @@ export default <Partial<Config>>{
     './error.vue',
   ],
   theme: {
-    extend: {}
+    extend: {
+      container: {
+        center: true,
+        padding: '1rem',
+        screens: {
+          sm: '1344px',
+        },
+      },
+      colors: {
+        dark: {
+          DEFAULT: '#1C1C1C',
+        },
+        orange: {
+          DEFAULT: '#FF831B',
+        },
+        red: {
+          DEFAULT: '#FF3300',
+        },
+        green: {
+          DEFAULT: '#13B541',
+        },
+      },
+    },
   },
   plugins: [],
 }

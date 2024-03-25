@@ -3,12 +3,13 @@ export default defineNuxtConfig({
   ssr: true,
   app: {
     head: {
-      title: 'Nuxt3 project',
+      title: 'Xolodilnik',
     },
   },
   css: ['~/assets/tailwind.css'],
   modules: [
     '@nuxtjs/tailwindcss',
+    'nuxt-svgo',
     [
       '@pinia/nuxt',
       {
