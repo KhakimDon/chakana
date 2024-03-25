@@ -23,6 +23,10 @@ export default <Partial<Config>>{
         },
       },
       colors: {
+        white: {
+          DEFAULT: '#FFFFFF',
+          100: '#F2F2F2',
+        },
         dark: {
           DEFAULT: '#1C1C1C',
         },
@@ -37,6 +41,8 @@ export default <Partial<Config>>{
         },
         gray: {
           DEFAULT: '#A3A3A3',
+          100: '#8F8F8F',
+          200: '#DADADA',
         },
       },
     },
