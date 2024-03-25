@@ -5,10 +5,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { NuxtError } from '#app'
-
 interface Props {
-  error: NuxtError
+  error: any
 }
 defineProps<Props>()
 </script>

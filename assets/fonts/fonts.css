@@ -1,0 +1,61 @@
+@font-face {
+    font-family: "VelaSans";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF;
+    src: local("Roboto"),
+    url("@/assets/fonts/VelaSans/VelaSans-Regular.woff2") format("woff2"),
+    url("@/assets/fonts/VelaSans/VelaSans-Regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "VelaSans";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF;
+    src: local("Roboto"),
+    url("@/assets/fonts/VelaSans/VelaSans-Medium.woff2") format("woff2"),
+    url("@/assets/fonts/VelaSans/VelaSans-Medium.woff") format("woff");
+}
+
+@font-face {
+    font-family: "VelaSans";
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF;
+    src: local("Roboto"),
+    url("@/assets/fonts/VelaSans/VelaSans-SemiBold.woff2") format("woff2"),
+    url("@/assets/fonts/VelaSans/VelaSans-SemiBold.woff") format("woff");
+}
+
+@font-face {
+    font-family: "VelaSans";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF;
+    src: local("Roboto"),
+    url("@/assets/fonts/VelaSans/VelaSans-Bold.woff2") format("woff2"),
+    url("@/assets/fonts/VelaSans/VelaSans-Bold.woff") format("woff");
+}
+
+@font-face {
+    font-family: "VelaSans";
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+000-5FF;
+    src: local("Roboto"),
+    url("@/assets/fonts/VelaSans/VelaSans-ExtraBold.woff2") format("woff2"),
+    url("@/assets/fonts/VelaSans/VelaSans-ExtraBold.woff") format("woff");
+}
+
+
+root {
+    font-family: 'VelaSans', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

@@ -6,7 +6,13 @@ export default defineNuxtConfig({
       title: 'Xolodilnik',
     },
   },
-  css: ['~/assets/tailwind.css'],
+  css: [
+    '~/assets/css/tailwind.css',
+    '~/assets/css/_transitions.css',
+    '~/assets/css/_toastification.css',
+    '~/assets/fonts/fonts.css',
+    'vue-toastification/dist/index.css',
+  ],
   modules: [
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
@@ -20,6 +26,7 @@ export default defineNuxtConfig({
         ],
       },
     ],
+    '@nuxt/image',
   ],
   nitro: {
     serveStatic: true,
