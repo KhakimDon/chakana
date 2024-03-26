@@ -43,7 +43,16 @@ export default <Partial<Config>>{
           DEFAULT: '#A3A3A3',
           100: '#8F8F8F',
           200: '#DADADA',
+          300: '#F7F7F7',
         },
+      },
+      lineHeight: {
+        120: '120%',
+        122: '122%',
+        130: '130%',
+      },
+      borderRadius: {
+        10: '10px',
       },
     },
   },

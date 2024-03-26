@@ -61,3 +61,23 @@ export const isValidPhone = (val: string) => {
   const phone = val.replace(/[\s)(-]/g, '')
   return phone.length === 9 && validPhones.includes(phone.substring(0, 2))
 }
+
+export function formatMoneyDecimal(number: any, fix = 0, option = 'decimal') {
+  let style: string
+  if (['USD', 'RUB'].includes(option)) {
+    style = 'currency'
+  } else if (['kilogram', 'meter', 'percent'].includes(option)) {
+    style = 'unit'
+  } else {
+    style = ''
+  }
+
+  const newStyle: string = style
+  const option2 = {
+    newStyle, //  unit currency percent decimal
+    [newStyle]: option,
+    maximumFractionDigits: fix,
+    minimumFractionDigits: fix,
+  }
+  return number ? new Intl.NumberFormat('ru-RU', option2).format(number) : '0'
+}

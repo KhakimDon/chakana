@@ -1,6 +1,6 @@
 <template>
-  <main class="container grid grid-cols-12 gap-5">
-    <aside class="col-end-2">
+  <main class="container grid grid-cols-12 gap-5 relative">
+    <aside class="col-span-2 sticky top-0">
       <slot name="left" />
     </aside>
     <section class="col-span-7">

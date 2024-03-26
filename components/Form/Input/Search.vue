@@ -20,7 +20,7 @@
         :class="searchIconWrapper"
       >
         <IconSearch
-          class="icon-search-bold flex-center text-xl text-gray translate-y-px"
+          class="icon-search-bold flex-center text-xl text-dark translate-y-px"
           :class="iconClass"
         />
       </div>

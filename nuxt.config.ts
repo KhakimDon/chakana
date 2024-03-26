@@ -4,6 +4,21 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Xolodilnik',
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: `/favicon.svg`,
+        },
+        {
+          rel: 'canonical',
+          href: '',
+        },
+        {
+          rel: 'preconnect',
+          href: 'https://xolodilnik.uz',
+        },
+      ],
     },
   },
   css: [
@@ -12,6 +27,7 @@ export default defineNuxtConfig({
     '~/assets/css/_toastification.css',
     '~/assets/fonts/fonts.css',
     'vue-toastification/dist/index.css',
+    'swiper/css',
   ],
   modules: [
     '@nuxtjs/tailwindcss',

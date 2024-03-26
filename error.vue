@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>Error: {{ error.statusCode }}</h1>
-    <pre>{{ error }}</pre>
+    <LayoutHeader />
   </div>
 </template>
 <script setup lang="ts">
