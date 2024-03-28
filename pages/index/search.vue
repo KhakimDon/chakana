@@ -8,6 +8,7 @@
       </NuxtLink>
       <NuxtLink to="/search" class="w-full">
         <FormInputSearch
+          v-model="search"
           input-id="main-search"
           :placeholder="$t('search')"
           class="w-full !h-10"
@@ -24,7 +25,7 @@
       <SearchBadge title="Подгузники Huggies 5" />
     </div>
 
-    <CommonSectionWrapper title="search_history" header-class="mb-3">
+    <CommonSectionWrapper title="search_history" header-class="!mb-3">
       <template #action>
         <button
           class="text-sm text-orange font-medium leading-normal tracking-[0.15px] hover:underline"
@@ -33,13 +34,22 @@
         </button>
       </template>
 
-      <div class="flex flex-col"></div>
+      <div class="flex flex-col gap-2">
+        <SearchHistory
+          v-for="key in 3"
+          :key
+          title="Рис кругло зёрный Из Холодильника"
+          @click="search = 'Рис кругло зёрный Из Холодильника'"
+        />
+      </div>
     </CommonSectionWrapper>
   </div>
 </template>
 <script setup lang="ts">
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconList from '~/assets/icons/Common/list.svg'
+
+const search = ref('')
 
 function focusInput() {
   const input = document.getElementById('main-search') as HTMLInputElement
