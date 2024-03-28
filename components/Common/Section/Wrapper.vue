@@ -1,11 +1,12 @@
 <template>
   <div>
-    <h4
-      class="mb-5 text-xl leading-normal font-extrabold text-dark"
-      :class="titleClass"
-    >
-      {{ $t(title) }}
-    </h4>
+    <div class="flex-center-between w-full mb-5" :class="headerClass">
+      <h4 class="text-xl leading-normal font-extrabold text-dark">
+        {{ $t(title) }}
+      </h4>
+
+      <slot name="action" />
+    </div>
     <slot />
   </div>
 </template>
@@ -15,7 +16,7 @@ import type { TClassName } from '~/types'
 
 interface Props {
   title: string
-  titleClass?: TClassName
+  headerClass?: TClassName
 }
 
 defineProps<Props>()
