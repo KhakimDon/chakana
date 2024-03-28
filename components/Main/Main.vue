@@ -17,9 +17,12 @@
       </a>
     </div>
     <div class="w-full flex-y-center gap-2 mt-4">
-      <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
+      <NuxtLink to="/search" class="w-full">
+        <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
+      </NuxtLink>
       <button
         class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
+        aria-label="list-button"
       >
         <IconList class="text-2xl text-[#4DAAF8]" />
       </button>

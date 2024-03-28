@@ -41,7 +41,7 @@ const { t } = useI18n()
 const menu = [
   {
     title: t('brands'),
-    link: '/',
+    link: '/brands',
     isPremium: false,
   },
   {

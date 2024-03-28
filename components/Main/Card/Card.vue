@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="flex flex-col justify-between gap-5">
+  <div class="flex flex-col justify-between gap-5">
     <div>
       <div
         class="w-full h-[113px] rounded-10 bg-white-100 flex-center relative"
@@ -30,9 +30,12 @@
         {{ formatMoneyDecimal(card?.discountPrice ?? card?.price) }}
         <span class="text-[11px] font-[150%]">UZS</span>
       </p>
-      <p class="mt-2 text-xs leading-122 text-dark font-semibold line-clamp-2">
+      <NuxtLink
+        class="mt-2 text-xs leading-122 text-dark font-semibold line-clamp-2 hover:text-orange transition-300"
+        :to="'/product/' + card?.id"
+      >
         {{ card?.title }}
-      </p>
+      </NuxtLink>
       <p class="mt-1.5 text-gray-100 font-medium text-xs leading-122">
         {{ card?.weight }}
       </p>
@@ -45,7 +48,7 @@
       @click="count++"
     />
     <MainCardCounter v-else v-model="count" :default-count="count" readonly />
-  </NuxtLink>
+  </div>
 </template>
 
 <script setup lang="ts">

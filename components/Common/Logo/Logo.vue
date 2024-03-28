@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink to="/">
+  <NuxtLink to="/" aria-label="home">
     <svg
       width="188"
       height="35"

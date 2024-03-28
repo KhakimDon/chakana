@@ -41,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import type { TClassName } from '~/types'
+
 interface Props {
   type?: string
   placeholder?: string
@@ -53,7 +55,7 @@ interface Props {
   max?: number
   isTransparent?: boolean
   min?: number
-  inputClass?: string | string[]
+  inputClass?: TClassName
   prefixClass?: string
   suffixClass?: string
   autocomplete?: string

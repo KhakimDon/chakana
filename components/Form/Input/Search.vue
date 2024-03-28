@@ -11,6 +11,7 @@
     ]"
     :placeholder="placeholder"
     v-bind="{ inputId }"
+    class="focus-within:!border-orange"
     @focus="$emit('focus')"
     @blur="$emit('blur')"
   >
@@ -33,9 +34,9 @@
         @click.stop="clearInput"
       >
         <slot name="suffix">
-          <div class="w-5 h-5 rounded-full bg-gray-200 flex-center">
+          <div class="w-5 h-5">
             <IconClose
-              class="text-base text-gray group-hover:text-red transition-300 !mb-0"
+              class="text-xl text-gray-100 group-hover:text-red transition-300 !mb-0"
               :class="[iconClass, iconCloseStyles]"
             />
           </div>

@@ -3,7 +3,11 @@
     <template #left>
       <MainSidebar class="sticky top-[86px]" />
     </template>
-    <Main />
+    <Transition name="fade" mode="out-in">
+      <div :key="$route.name">
+        <NuxtPage />
+      </div>
+    </Transition>
     <template #right>
       <div class="sticky top-[86px]">
         <MainMap />

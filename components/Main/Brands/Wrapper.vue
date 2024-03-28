@@ -1,6 +1,6 @@
 <template>
   <Swiper v-bind="swiperConfig">
-    <SwiperSlide v-for="(card, key) in brands" :key class="!w-[128px]">
+    <SwiperSlide v-for="(card, key) in brands" :key class="!w-[152px]">
       <MainBrandsCard :card />
     </SwiperSlide>
   </Swiper>
@@ -8,7 +8,8 @@
 
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import {brands} from "~/data";
+
+import { brands } from '~/data'
 
 const swiperConfig = {
   slidesPerView: 'auto',

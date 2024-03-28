@@ -1,5 +1,6 @@
 <template>
-  <button
+  <NuxtLink
+    :to="`/category/${item.id}`"
     class="flex-y-center relative gap-3 pb-1.5 before:absolute before:h-px before:bg-gray-300 before:w-[calc(100%-45px)] before:bottom-0 before:right-0 last:before:hidden group"
   >
     <div class="w-8 h-[26px] shrink-0">
@@ -15,7 +16,7 @@
     >
       {{ item?.title }}
     </p>
-  </button>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">
