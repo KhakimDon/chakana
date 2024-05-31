@@ -9,9 +9,9 @@
           {{ $t('error_text') }}
         </p>
 
-        <NuxtLink to="/" class="mt-7 block">
+        <NuxtLinkLocale to="/" class="mt-7 block">
           <BaseButton class="px-[26px]" :text="$t('back_home')" />
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
       <nuxt-img
         src="/images/error.png"

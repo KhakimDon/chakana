@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink to="/" aria-label="home">
+  <NuxtLinkLocale to="/" aria-label="home">
     <svg
       width="188"
       height="35"
@@ -89,7 +89,7 @@
         </linearGradient>
       </defs>
     </svg>
-  </NuxtLink>
+  </NuxtLinkLocale>
 </template>
 
 <script setup lang="ts"></script>

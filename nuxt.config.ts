@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
+    '@nuxtjs/i18n',
     [
       '@pinia/nuxt',
       {
@@ -47,6 +48,29 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
   ],
+
+
+  i18n: {
+    langDir: 'locales',
+    baseUrl: 'https://xolodilnik.uz',
+    locales: [
+      { code: 'ru', iso: 'ru-RU', file: 'ru' },
+      { code: 'uz', iso: 'uz', file: 'uz' },
+      { code: 'en', iso: 'en', file: 'en' },
+      { code: 'uzc', iso: 'uzc', file: 'uzc' },
+    ],
+    lazy: true,
+    useCookie: true,
+    cookieKey: 'i18n_redirected',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      onlyOnRoot: true, // recommended
+      fallbackLocale: 'uz',
+    },
+    defaultLocale: 'uz',
+    strategy: 'prefix_and_default',
+  },
   nitro: {
     serveStatic: true,
   },

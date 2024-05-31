@@ -17,9 +17,9 @@
       </a>
     </div>
     <div class="w-full flex-y-center gap-2 mt-4">
-      <NuxtLink to="/search" class="w-full">
+      <NuxtLinkLocale to="/search" class="w-full">
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
-      </NuxtLink>
+      </NuxtLinkLocale>
       <button
         class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
         aria-label="list-button"
@@ -28,14 +28,16 @@
       </button>
     </div>
     <CommonSectionWrapper title="take_and_go" class="mt-4">
-      <div class="grid grid-cols-4 gap-x-4 gap-y-10">
-        <MainCard
-          v-for="(card, index) in [...cards, ...cards]"
-          :key="index"
-          :card
-        />
-        <!--        <MainCardLoading v-for="key in 4" :key />-->
-      </div>
+      <Transition name="fade" mode="out-in">
+        <div :key="loading" class="grid grid-cols-4 gap-x-4 gap-y-10">
+          <template v-if="loading">
+            <MainCardLoading v-for="key in 16" :key />
+          </template>
+          <template v-else-if="!loading && list.length">
+            <MainCard v-for="(card, index) in list" :key="index" :card />
+          </template>
+        </div>
+      </Transition>
     </CommonSectionWrapper>
     <CommonSectionWrapper title="popular_brands" class="my-6">
       <MainBrandsWrapper />
@@ -55,5 +57,18 @@
 
 <script setup lang="ts">
 import IconList from '~/assets/icons/Common/list.svg'
+import { useApi } from '~/composables/useApi'
 import { cards } from '~/data'
+
+const list = ref([])
+const loading = ref(true)
+
+useApi()
+  .$get('new/products')
+  .then((res: any) => {
+    list.value = res?.items
+  })
+  .finally(() => {
+    loading.value = false
+  })
 </script>

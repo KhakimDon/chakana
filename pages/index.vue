@@ -1,7 +1,11 @@
 <template>
   <LayoutWrapper>
     <template #left>
-      <MainSidebar class="sticky top-[86px]" />
+      <MainSidebar
+        class="sticky top-[86px]"
+        :loading="categoriesLoading"
+        v-bind="{ categories }"
+      />
     </template>
     <Transition name="fade" mode="out-in">
       <div :key="$route.name">
@@ -27,4 +31,13 @@
     </template>
   </LayoutWrapper>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useCategoriesStore } from '~/store/categories'
+
+const categoriesStore = useCategoriesStore()
+
+const categoriesLoading = computed(() => categoriesStore.categories.loading)
+const categories = computed(() => categoriesStore.categories.list)
+
+categoriesStore.fetchCategories()
+</script>

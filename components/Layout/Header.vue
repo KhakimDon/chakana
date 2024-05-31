@@ -3,7 +3,7 @@
     <div class="container grid grid-cols-3 gap-4">
       <CommonLogo />
       <div class="flex-center gap-6">
-        <NuxtLink
+        <NuxtLinkLocale
           v-for="(item, index) in menu"
           :key="index"
           :to="item?.link"
@@ -14,7 +14,7 @@
             v-if="item?.isPremium"
             class="text-orange translate-y-0.5"
           />
-        </NuxtLink>
+        </NuxtLinkLocale>
       </div>
       <div class="flex justify-end">
         <BaseButton

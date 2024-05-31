@@ -3,22 +3,29 @@
     <div
       class="h-[calc(100vh-150px)] overflow-y-auto relative flex gap-2 w-[200%] overflow-x-hidden shrink-0"
     >
-      <div
-        class="flex flex-col gap-1.5 transition-300 w-[50%]"
-        :class="{ '-translate-x-full': isSingle }"
-      >
-        <MainSidebarItem
-          v-for="(item, index) in list"
-          :key="index"
-          v-bind="{ item }"
-        />
-        <MainSidebarItemLoading v-for="index in 9" :key="index" />
-      </div>
+      <Transition name="fade" mode="out-in">
+        <div
+          :key="loading"
+          class="flex flex-col gap-1.5 transition-300 w-[50%]"
+          :class="{ '-translate-x-full': isSingle }"
+        >
+          <template v-if="!loading">
+            <MainSidebarItem
+              v-for="(item, index) in categories"
+              :key="index"
+              v-bind="{ item }"
+            />
+          </template>
+          <template v-else>
+            <MainSidebarItemLoading v-for="index in 9" :key="index" />
+          </template>
+        </div>
+      </Transition>
       <div
         :class="{ '-translate-x-full': isSingle }"
         class="flex flex-col gap-1.5 transition-300 w-[50%] shrink-0"
       >
-        <NuxtLink
+        <NuxtLinkLocale
           to="/"
           class="flex-y-center gap-2 group"
           aria-label="sidebar-single"
@@ -29,11 +36,11 @@
           <p class="text-base leading-normal font-extrabold text-dark">
             {{ selectedCategory?.title }}
           </p>
-        </NuxtLink>
+        </NuxtLinkLocale>
 
         <FormCheckboxNested
           v-model="checkbox"
-          :list="list"
+          :list="categories"
           parent-text="All"
           class="mt-5"
         />
@@ -55,17 +62,27 @@
 </template>
 <script setup lang="ts">
 import IconChevron from '~/assets/icons/Common/chevron.svg'
+import type { ICategory } from '~/types/categories'
+
+interface Props {
+  loading: boolean
+  categories: ICategory[]
+}
+
+const props = defineProps<Props>()
 
 const hovered = ref(false)
 
 const route = useRoute()
 const checkbox = ref([])
 
-const isSingle = computed(() => route.name === 'index-category-slug')
+const isSingle = computed(() => route.name.includes('index-category-slug'))
 
 const selectedCategory = computed(() => {
   if (isSingle.value) {
-    return list.find((item) => item.id === Number(route.params.slug))
+    return props.categories.find(
+      (item: ICategory) => item.id === Number(route.params.slug)
+    )
   }
   return null
 })
@@ -76,144 +93,6 @@ watch(
     checkbox.value = []
   }
 )
-
-const list = [
-  {
-    id: 1,
-    image: '/images/fake/meat.webp',
-    title: 'Meat',
-  },
-  {
-    id: 2,
-    image: '/images/fake/meat.webp',
-    title: 'Vegetables',
-  },
-  {
-    id: 3,
-    image: '/images/fake/meat.webp',
-    title: 'Fruits',
-  },
-  {
-    id: 4,
-    image: '/images/fake/meat.webp',
-    title: 'Dairy',
-  },
-  {
-    id: 5,
-    image: '/images/fake/meat.webp',
-    title: 'Fish',
-  },
-  {
-    id: 6,
-    image: '/images/fake/meat.webp',
-    title: 'Bread',
-  },
-  {
-    id: 7,
-    image: '/images/fake/meat.webp',
-    title: 'Sweets',
-  },
-  {
-    id: 8,
-    image: '/images/fake/meat.webp',
-    title: 'Drinks',
-  },
-  {
-    id: 9,
-    image: '/images/fake/meat.webp',
-    title: 'Other',
-  },
-  // {
-  //   id: 1,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Meat',
-  // },
-  // {
-  //   id: 2,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Vegetables',
-  // },
-  // {
-  //   id: 3,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Fruits',
-  // },
-  // {
-  //   id: 4,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Dairy',
-  // },
-  // {
-  //   id: 5,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Fish',
-  // },
-  // {
-  //   id: 6,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Bread',
-  // },
-  // {
-  //   id: 7,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Sweets',
-  // },
-  // {
-  //   id: 8,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Drinks',
-  // },
-  // {
-  //   id: 9,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Other',
-  // },
-  // {
-  //   id: 1,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Meat',
-  // },
-  // {
-  //   id: 2,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Vegetables',
-  // },
-  // {
-  //   id: 3,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Fruits',
-  // },
-  // {
-  //   id: 4,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Dairy',
-  // },
-  // {
-  //   id: 5,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Fish',
-  // },
-  // {
-  //   id: 6,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Bread',
-  // },
-  // {
-  //   id: 7,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Sweets',
-  // },
-  // {
-  //   id: 8,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Drinks',
-  // },
-  // {
-  //   id: 9,
-  //   image: '/images/fake/meat.webp',
-  //   title: 'Other',
-  // },
-]
 </script>
 
 <style scoped>

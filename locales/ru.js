@@ -1,4 +1,4 @@
-{
+export default {
   "hello": "Привет",
   "brands": "Бренды",
   "discounts": "Скидки",
