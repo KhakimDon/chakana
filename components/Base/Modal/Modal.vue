@@ -22,11 +22,21 @@
                 :class="headerClass"
                 class="px-5 py-2 md:py-4 flex justify-between items-center border-b border-gray-300"
               >
-                <h3
-                  class="text-dark text-lg md:text-xl font-extrabold leading-7"
-                >
-                  {{ title }}
-                </h3>
+                <div class="flex-y-center">
+                  <CollapseTransition dimension="width">
+                    <div v-if="hasBack" class="pr-2">
+                      <IconChevron
+                        class="text-2xl text-dark cursor-pointer hover:-translate-x-1 transition-300"
+                        @click="$emit('back')"
+                      />
+                    </div>
+                  </CollapseTransition>
+                  <h3
+                    class="text-dark text-lg md:text-xl font-extrabold leading-7"
+                  >
+                    {{ title }}
+                  </h3>
+                </div>
                 <button
                   :class="buttonClass"
                   class="text-xl text-dark transition-300 hover:text-red"
@@ -46,9 +56,11 @@
   </teleport>
 </template>
 <script lang="ts" setup>
+import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
 import { useEventListener } from '@vueuse/core'
 import { onMounted, ref, watch } from 'vue'
 
+import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconClose from '~/assets/icons/Common/close.svg'
 
 interface Props {
@@ -60,6 +72,7 @@ interface Props {
   buttonClass?: string
   wrapperClass?: string
   noHeader?: boolean
+  hasBack?: boolean
 }
 
 const animationIn = ref(false)
@@ -71,6 +84,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'close'): void
+  (e: 'back'): void
 }>()
 
 function handleOuterClick(e: Event) {
