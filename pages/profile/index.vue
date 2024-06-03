@@ -21,14 +21,14 @@
         alt=""
       />
       <img
-        class="relative left-7 z-10 rounded-full w-[100px] h-[100px] border-4 border-gray-300 -mt-[50px] bg-transparent"
+        class="relative left-7 z-10 rounded-full w-[100px] h-[100px] border-4 border-gray-300 bg-gray-300 -mt-[50px]"
         width="100%"
         height="100%"
-        src="https://picsum.photos/123/123"
+        :src="data?.image"
         alt=""
       />
       <div class="px-6 pb-6 flex-center-between mt-4">
-        <p class="text-xl font-bold text-dark leading-130">Муродхожа Муратов</p>
+        <p class="text-xl font-bold text-dark leading-130">{{ data?.name }}</p>
 
         <button
           class="flex-y-center gap-1 font-semibold text-center text-sm leading-5 text-gray-100 group transition-300 hover:text-orange"
@@ -50,14 +50,16 @@
             {{ $t('phone_number') }}
           </p>
           <p class="text-base font-semibold leading-5 text-dark">
-            +998 71 200-70-07
+            {{ formatPhoneNumber(data?.phone) || '-' }}
           </p>
         </div>
         <div class="flex flex-col gap-1">
           <p class="text-sm leading-130 font-normal text-gray-100">
             {{ $t('email') }}
           </p>
-          <p class="text-base font-semibold leading-5 text-dark">-</p>
+          <p class="text-base font-semibold leading-5 text-dark">
+            {{ data?.email || '-' }}
+          </p>
         </div>
       </div>
       <div class="flex flex-col gap-3">
@@ -68,16 +70,22 @@
           <div class="w-[30px] h-[30px] bg-orange/10 flex-center rounded-lg">
             <img src="/images/svg/socials/instagram-gradient.svg" alt="" />
           </div>
-          <p class="text-sm font-medium leading-5 text-gray">
-            {{ $t('add_instagram') }}
+          <p
+            class="text-sm font-medium leading-5"
+            :class="data?.instagram ? 'text-dark' : 'text-gray'"
+          >
+            {{ data?.instagram || $t('add_instagram') }}
           </p>
         </div>
         <div class="flex items-center gap-2 p-1.5 pr-3 bg-white rounded-xl">
           <div class="w-[30px] h-[30px] bg-orange/10 flex-center rounded-lg">
             <img src="/images/svg/socials/telegram-gradient.svg" alt="" />
           </div>
-          <p class="text-sm font-medium leading-5 text-gray">
-            {{ $t('add_telegram') }}
+          <p
+            class="text-sm font-medium leading-5"
+            :class="data?.telegram ? 'text-dark' : 'text-gray'"
+          >
+            {{ data?.telegram || $t('add_telegram') }}
           </p>
         </div>
       </div>
@@ -86,7 +94,10 @@
 </template>
 
 <script setup lang="ts">
-const { data } = await useAsyncData('profile', () =>
-  useApi().$get('/deliver/profile/detail')
+import type { Profile } from '~/types/profile'
+import { formatPhoneNumber } from '~/utils/functions/common'
+
+const { data } = await useAsyncData<Profile>('profile', () =>
+  useApi().$get('/get/detail')
 )
 </script>

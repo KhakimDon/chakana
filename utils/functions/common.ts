@@ -104,3 +104,20 @@ export function generateUUID() {
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16)
   })
 }
+export function formatPhoneNumber(phoneNumber: string) {
+  // Remove any non-digit characters
+  if (phoneNumber) {
+    const cleanedNumber = phoneNumber.replace(/\D/g, '')
+
+    // Check if the cleaned number has 12 digits
+    if (cleanedNumber.length !== 12) {
+      return phoneNumber
+    }
+
+    // Use regex capturing groups to format the number
+    return cleanedNumber.replace(
+      /(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
+      '+$1 $2 $3 $4 $5'
+    )
+  }
+}
