@@ -22,6 +22,7 @@
           variant="secondary"
           class="!h-9 flex-center"
           :text="$t('register')"
+          @click="authStore.showAuth = true"
         >
           <template #prefix>
             <IconLogin class="text-xl" />
@@ -36,6 +37,9 @@ import { useI18n } from 'vue-i18n'
 
 import IconCrown from '~/assets/icons/Common/crown.svg'
 import IconLogin from '~/assets/icons/Common/login.svg'
+import {useAuthStore} from "~/store/auth";
+
+const authStore = useAuthStore()
 
 const { t } = useI18n()
 

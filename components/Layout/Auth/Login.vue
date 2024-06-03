@@ -27,6 +27,7 @@
         class="w-full !text-base h-11 flex-center"
         size="md"
         :text="$t('login_with_qr')"
+        @click="$emit('to-qr')"
       >
         <template #prefix>
           <IconQr class="!-mb-px block" />
@@ -76,7 +77,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submit', 'to-qr'])
 
 const { form } = unref(props)
 
