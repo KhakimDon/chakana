@@ -7,3 +7,12 @@ export interface Profile {
   image: string
   work_time: number
 }
+
+export interface INotification {
+  id: number
+  title: string
+  description: string
+  icon: string
+  date_send: string
+  viewed: boolean
+}

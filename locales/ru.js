@@ -60,4 +60,5 @@ export default {
   contacts: 'Контакты',
   email: 'Электронная почта',
   social_contacts: 'Социальные связи',
+  read_all: 'Просмотреть все',
 }
