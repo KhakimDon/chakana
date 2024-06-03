@@ -9,7 +9,7 @@
       },
       hoverClasses,
     ]"
-    class="rounded-lg relative transition-300 active:scale-95 disabled:!cursor-not-allowed"
+    class="rounded-lg border border-transparent relative transition-300 active:scale-95 disabled:!bg-white-100 disabled:text-gray disabled:!cursor-not-allowed"
     :disabled="loading || loadingMore || disabled"
   >
     <span
@@ -93,12 +93,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const variants: Record<TButtonVariants, string> = {
-  primary:
-    'bg-gradient-to-b from-orange-500 to-orange-600 text-white hover:!from-orange-600 hover:!to-orange-500',
+  primary: 'bg-orange text-white hover:!from-orange-600 hover:!to-orange-500',
   disabled: 'text-white bg-gray-100',
   outline: 'border border-white-100 text-dark hover:bg-orange hover:text-white',
   secondary:
-    'bg-white-100 text-dark md:hover:bg-white-300 md:hover:text-blue-800',
+    'bg-white-100 text-dark md:hover:bg-white md:hover:border-orange md:hover:text-orange',
   'secondary-dark': 'bg-gray-200 text-dark md:hover:bg-gray-300',
 }
 

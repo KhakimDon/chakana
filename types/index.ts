@@ -9,3 +9,17 @@ export type TClassName = TClass | TClass[]
 export interface ICustomObject<T = string | number> {
   [key: string]: T
 }
+
+export interface IBrand {
+  id: number
+  title: string
+  image: string
+}
+
+export interface IFile {
+  url: string
+  name: string
+  file?: File
+  type: string
+  id: string
+}

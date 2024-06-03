@@ -21,20 +21,24 @@
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
       </NuxtLinkLocale>
       <button
-        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
+        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-blue-100 transition-300"
         aria-label="list-button"
       >
-        <IconList class="text-2xl text-[#4DAAF8]" />
+        <IconList class="text-2xl text-blue-100" />
       </button>
     </div>
     <CommonSectionWrapper title="take_and_go" class="mt-4">
       <Transition name="fade" mode="out-in">
-        <div :key="loading" class="grid grid-cols-4 gap-x-4 gap-y-10">
-          <template v-if="loading">
+        <div :key="products?.loading" class="grid grid-cols-4 gap-x-4 gap-y-10">
+          <template v-if="products?.loading">
             <MainCardLoading v-for="key in 16" :key />
           </template>
-          <template v-else-if="!loading && list.length">
-            <MainCard v-for="(card, index) in list" :key="index" :card />
+          <template v-else-if="!products?.loading && products?.list.length">
+            <MainCard
+              v-for="(card, index) in products?.list"
+              :key="index"
+              :card
+            />
           </template>
         </div>
       </Transition>
@@ -43,32 +47,41 @@
       <MainBrandsWrapper />
     </CommonSectionWrapper>
     <CommonSectionWrapper title="profitable_shelf" class="my-6">
-      <div class="grid grid-cols-4 gap-x-4 gap-y-10">
-        <MainCard
-          v-for="(card, index) in [...cards, ...cards]"
-          :key="index"
-          :card
-        />
-        <MainCardLoading v-for="key in 4" :key />
-      </div>
+      <Transition name="fade" mode="out-in">
+        <div
+          :key="discounts?.loading"
+          class="grid grid-cols-4 gap-x-4 gap-y-10"
+        >
+          <template v-if="discounts?.loading">
+            <MainCardLoading v-for="key in 16" :key />
+          </template>
+          <template v-else-if="!discounts?.loading && discounts?.list.length">
+            <MainCard
+              v-for="(card, index) in discounts?.list"
+              :key="index"
+              :card
+            />
+          </template>
+        </div>
+      </Transition>
     </CommonSectionWrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import IconList from '~/assets/icons/Common/list.svg'
-import { useApi } from '~/composables/useApi'
-import { cards } from '~/data'
+import { useMainStore } from '~/store/main'
 
-const list = ref([])
-const loading = ref(true)
+const mainStore = useMainStore()
 
-useApi()
-  .$get('new/products')
-  .then((res: any) => {
-    list.value = res?.items
-  })
-  .finally(() => {
-    loading.value = false
-  })
+const products = computed(() => mainStore.products)
+const discounts = computed(() => mainStore.discounts)
+
+if (!products.value?.list.length) {
+  mainStore.fetchProducts()
+}
+
+if (!discounts.value?.list.length) {
+  mainStore.fetchDiscounts()
+}
 </script>

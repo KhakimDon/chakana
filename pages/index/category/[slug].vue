@@ -16,8 +16,6 @@
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
-import { cards } from '~/data'
-
 const route = useRoute()
 
 const loading = ref(true)

@@ -17,7 +17,7 @@
       <button
         class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
       >
-        <IconList class="text-2xl text-[#4DAAF8]" />
+        <IconList class="text-2xl text-blue-100" />
       </button>
     </div>
 

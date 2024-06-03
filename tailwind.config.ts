@@ -45,11 +45,15 @@ export default <Partial<Config>>{
           200: '#DADADA',
           300: '#F7F7F7',
         },
+        blue: {
+          100: '#4DAAF8',
+        },
       },
       lineHeight: {
         120: '120%',
         122: '122%',
         130: '130%',
+        140: '140%',
       },
       borderRadius: {
         10: '10px',

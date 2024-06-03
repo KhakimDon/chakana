@@ -7,6 +7,7 @@
           v-for="(item, index) in menu"
           :key="index"
           :to="item?.link"
+          exact-active-class="text-orange"
           class="text-sm leading-[18px] font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
         >
           {{ item?.title }}

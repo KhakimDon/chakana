@@ -34,3 +34,7 @@
         @apply flex justify-between;
     }
 }
+
+.nuxt-icon {
+    @apply !mb-0;
+}

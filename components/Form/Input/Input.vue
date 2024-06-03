@@ -1,7 +1,7 @@
 <template>
   <div
     :id="id"
-    class="bg-white-100 border border-transparent transition-300 focus-within:border-dark focus-within:bg-white flex items-center rounded-lg"
+    class="bg-white-100 border border-transparent transition-300 focus-within:!border-dark focus-within:bg-white flex items-center rounded-lg"
     :class="{
       '!border-red': error,
       '!bg-transparent border-white-100': isTransparent,
@@ -10,7 +10,6 @@
     <slot name="prefix" />
     <input
       v-bind="{
-        type,
         minlength,
         maxlength,
         max,
@@ -22,6 +21,8 @@
       }"
       :id="inputId"
       ref="Input"
+      :type="type === 'number' ? 'text' : type"
+      :inputmode="type === 'number' ? 'decimal' : undefined"
       class="w-full h-full text-base font-medium sm:text-sm p-3 text-dark bg-transparent outline-none placeholder:text-gray"
       :value="modelValue"
       :class="[
@@ -104,3 +105,16 @@ watch(
   { deep: true, immediate: true }
 )
 </script>
+
+<style scoped>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+</style>

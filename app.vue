@@ -1,7 +1,10 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <LayoutAuthModal />
+  </div>
 </template>
 <script setup lang="ts">
 useSeoMeta({

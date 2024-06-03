@@ -1,77 +1,83 @@
 <template>
-  <div
-    id="countdown"
-    class="absolute h-7 w-7 right-3 text-center bg-transparent rounded-full flex items-center justify-center"
-  >
-    <IconClose class="text-lg translate-y-px text-gray" />
-    <svg class="svg-circle">
-      <circle r="18" cx="20" cy="20" />
-    </svg>
+  <div>
+    <div v-if="timer" class="flex items-center space-x-2">
+      <p class="font-semibold text-dark text-base leading-130">
+        {{ $t('send_again') }}
+      </p>
+      <p class="text-base leading-130 text-gray-100 font-semibold">
+        {{ time }}
+      </p>
+    </div>
+    <div v-else class="flex items-center gap-2 cursor-pointer" @click="resend">
+      <p class="font-semibold text-dark text-base leading-130">
+        {{ $t('send_again') }}
+      </p>
+      <IconRefresh />
+    </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import IconClose from '~/assets/icons/Common/close.svg'
+import IconRefresh from '~/assets/icons/Common/refresh.svg'
 
 interface Props {
-  isCancelled?: boolean
+  secondsVal: number
 }
-
 const props = defineProps<Props>()
+
 interface Emits {
-  (e: 'finished'): void
+  (e: 'timeout'): void
+  (e: 'resend'): void
+}
+const $emit = defineEmits<Emits>()
+
+const seconds = ref(0)
+const timer = ref(true)
+
+const time = ref('')
+
+const countDown = () => {
+  seconds.value--
+
+  const mm = Math.floor(seconds.value / 60)
+  const ss = Math.floor(seconds.value % 60)
+
+  time.value = `${mm > 9 ? mm : '0' + mm}:${ss > 9 ? ss : '0' + ss}`
 }
 
-const timer = ref()
+function resend() {
+  $emit('resend')
+  timer.value = true
+  seconds.value = props.secondsVal + 1
+  const interval = setInterval(function () {
+    countDown()
 
-const number = ref(5)
-
-const emit = defineEmits<Emits>()
-setInterval(() => {
-  if (number.value > 0) {
-    number.value--
-  }
-}, 1000)
-
-onMounted(() => {
-  timer.value = setTimeout(() => {
-    emit('finished')
-  }, 5000)
-})
+    if (seconds.value < 0) {
+      clearInterval(interval)
+      timer.value = false
+      time.value = '00:00'
+      $emit('timeout')
+    }
+  }, 1000)
+}
 
 watch(
-  () => props.isCancelled,
+  () => props.secondsVal,
   () => {
-    clearTimeout(timer.value)
-  }
+    seconds.value = props.secondsVal
+    countDown()
+  },
+  { immediate: true }
 )
+
+const interval = setInterval(function () {
+  countDown()
+
+  if (seconds.value < 0) {
+    clearInterval(interval)
+    timer.value = false
+    time.value = '00:00'
+    $emit('timeout')
+  }
+}, 1000)
 </script>
-
-<style scoped>
-.svg-circle {
-  position: absolute;
-  top: -9px;
-  right: -7px;
-  width: 44px;
-  height: 44px;
-  transform: rotateY(-180deg) rotateZ(-90deg) scale(0.6);
-}
-
-.svg-circle circle {
-  stroke-dasharray: 113px;
-  stroke-dashoffset: 0;
-  stroke-linecap: round;
-  stroke-width: 3px;
-  stroke: #eaeaea;
-  fill: none;
-  animation: countdown 5s linear forwards;
-}
-
-@keyframes countdown {
-  from {
-    stroke-dashoffset: 0;
-  }
-  to {
-    stroke-dashoffset: 113px;
-  }
-}
-</style>
