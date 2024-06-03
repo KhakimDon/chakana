@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between gap-5">
+  <div class="flex flex-col justify-between gap-5 cursor-pointer">
     <div>
       <div
         class="w-full h-[113px] rounded-10 bg-white-100 flex-center relative"

@@ -15,7 +15,7 @@ export const useApi = (apiUrl?: string) => {
   ): Promise<T> {
     const headers = {
       ...options?.headers,
-      'Accept-Language': useCookie('locale').value || 'ru',
+      'Accept-Language': useCookie('i18n_redirected').value || 'ru',
       'Device-Id': 'asdkjasjknd',
     }
     const tokens = computed(() => authStore.getTokens().value)

@@ -18,7 +18,7 @@
         :readonly="readonly"
         :min="min"
         :max="max"
-        class="w-full h-full text-center text-xs leading-5 text-dark font-semibold"
+        class="w-full h-full text-center text-xs leading-5 text-dark font-semibold bg-transparent"
         :class="{ error }"
         @input="onChangeCount"
       />

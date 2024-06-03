@@ -34,13 +34,14 @@
             class="text-2xl text-dark group-hover:-translate-x-1 transition-300"
           />
           <p class="text-base leading-normal font-extrabold text-dark">
-            {{ selectedCategory?.title }}
+            {{ single?.name }}
           </p>
         </NuxtLinkLocale>
 
         <FormCheckboxNested
+          v-if="single?.children?.length"
           v-model="checkbox"
-          :list="categories"
+          :list="single?.children"
           parent-text="All"
           class="mt-5"
         />
@@ -62,14 +63,18 @@
 </template>
 <script setup lang="ts">
 import IconChevron from '~/assets/icons/Common/chevron.svg'
+import { useQuery } from '~/composables/useQuery'
 import type { ICategory } from '~/types/categories'
 
 interface Props {
   loading: boolean
   categories: ICategory[]
+  single: ICategory
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
+
+const { updateQuery } = useQuery()
 
 const hovered = ref(false)
 
@@ -78,21 +83,24 @@ const checkbox = ref([])
 
 const isSingle = computed(() => route.name.includes('index-category-slug'))
 
-const selectedCategory = computed(() => {
-  if (isSingle.value) {
-    return props.categories.find(
-      (item: ICategory) => item.id === Number(route.params.slug)
-    )
-  }
-  return null
-})
-
 watch(
   () => isSingle.value,
   () => {
     checkbox.value = []
   }
 )
+
+watch(
+  () => checkbox.value?.length,
+  () => {
+    updateQuery('categories', checkbox.value.join(','))
+  }
+)
+
+if (route.name.includes('index-category-slug') && route.query.categories) {
+  const categories = route.query.categories as string
+  checkbox.value = categories.split(',').map((category) => Number(category))
+}
 </script>
 
 <style scoped>
