@@ -66,10 +66,25 @@
     </div>
 
     <div class="flex-y-center gap-1.5 flex-wrap my-4">
-      <SearchBadge title="Подгузники Huggies 5" />
+      <div v-if="popularSearchLoading" class="flex-y-center">
+        <div
+          v-for="key in 5"
+          :key
+          class="shimmer w-full h-9 rounded-10 p-4 pl-0 border-b border-white-100"
+        />
+      </div>
+      <SearchBadge
+        v-for="(item, key) in popularSearchList"
+        :key
+        :title="item"
+      />
     </div>
 
-    <CommonSectionWrapper title="search_history" header-class="!mb-3">
+    <CommonSectionWrapper
+      v-if="searchHistoryList.length"
+      title="search_history"
+      header-class="!mb-3"
+    >
       <template #action>
         <button
           class="text-sm text-orange font-medium leading-normal tracking-[0.15px] hover:underline"
@@ -79,11 +94,18 @@
       </template>
 
       <div class="flex flex-col gap-2">
+        <div v-if="searchHistoryLoading">
+          <div
+            v-for="key in 5"
+            :key
+            class="shimmer w-full h-9 rounded-10 p-4 pl-0 border-b border-white-100"
+          />
+        </div>
         <SearchHistory
-          v-for="key in 3"
+          v-for="(item, key) in searchHistoryList"
           :key
-          title="Рис кругло зёрный Из Холодильника"
-          @click="search = 'Рис кругло зёрный Из Холодильника'"
+          :title="item"
+          @click="search = item"
         />
       </div>
     </CommonSectionWrapper>
@@ -117,6 +139,16 @@ const searchAutocompleteLoading = computed(
   () => searchStore.searchAutocompleteResults.loading
 )
 
+const popularSearchList = computed(() => searchStore.popularSearchResults.list)
+const popularSearchLoading = computed(
+  () => searchStore.popularSearchResults.loading
+)
+
+const searchHistoryList = computed(() => searchStore.searchHistoryResults.list)
+const searchHistoryLoading = computed(
+  () => searchStore.searchHistoryResults.loading
+)
+
 const updateSearch = debounce((val: string) => {
   searchStore.searchAutocomplete(val)
   searchStore.searchProducts(val)
@@ -136,6 +168,11 @@ const clickAutocompleteItem = (text: string) => {
   search.value = text
   autoCompleteItemClicked.value = true
 }
+
+onMounted(() => {
+  searchStore.searchPopular()
+  searchStore.searchHistory()
+})
 </script>
 <style scoped>
 .suggestions-shadow {

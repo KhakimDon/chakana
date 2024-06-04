@@ -4,11 +4,6 @@ export const useSearchStore = defineStore('searchStore', () => {
     loading: false,
   })
 
-  const searchAutocompleteResults = reactive({
-    list: [],
-    loading: false,
-  })
-
   function searchProducts(query: string) {
     return new Promise((resolve, reject) => {
       products.loading = true
@@ -26,6 +21,11 @@ export const useSearchStore = defineStore('searchStore', () => {
         })
     })
   }
+
+  const searchAutocompleteResults = reactive({
+    list: [],
+    loading: false,
+  })
 
   function searchAutocomplete(query: string) {
     return new Promise((resolve, reject) => {
@@ -45,10 +45,60 @@ export const useSearchStore = defineStore('searchStore', () => {
     })
   }
 
+  const searchHistoryResults = reactive({
+    list: [],
+    loading: false,
+  })
+
+  function searchHistory() {
+    return new Promise((resolve, reject) => {
+      searchHistoryResults.loading = true
+      useApi()
+        .$get(`/search-history`)
+        .then((res: any) => {
+          searchHistoryResults.list = res?.items
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          searchHistoryResults.loading = false
+        })
+    })
+  }
+
+  const popularSearchResults = reactive({
+    list: [],
+    loading: false,
+  })
+
+  function searchPopular() {
+    return new Promise((resolve, reject) => {
+      popularSearchResults.loading = true
+      useApi()
+        .$get(`/popular-search`)
+        .then((res: any) => {
+          popularSearchResults.list = res?.items
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          popularSearchResults.loading = false
+        })
+    })
+  }
+
   return {
     products,
     searchProducts,
     searchAutocompleteResults,
     searchAutocomplete,
+    searchHistoryResults,
+    searchHistory,
+    popularSearchResults,
+    searchPopular,
   }
 })
