@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        moduleResolution: 'Node16',
+      },
+    },
+  },
   ssr: false,
   app: {
     head: {
@@ -48,7 +55,6 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
   ],
-
 
   i18n: {
     langDir: 'locales',

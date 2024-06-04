@@ -14,6 +14,15 @@ export const useMainStore = defineStore('mainStore', {
       list: [],
       loading: true,
     },
+    popularBrands: {
+      list: [],
+      loading: true,
+    },
+
+    banners: {
+      list: [],
+      loading: true,
+    },
   }),
   actions: {
     fetchProducts() {
@@ -63,6 +72,39 @@ export const useMainStore = defineStore('mainStore', {
           })
           .finally(() => {
             this.brands.loading = false
+          })
+      })
+    },
+
+    fetchPopularBrands() {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$get('/popular/brands?page_size=15')
+          .then((res: any) => {
+            this.popularBrands.list = res?.items
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+          .finally(() => {
+            this.popularBrands.loading = false
+          })
+      })
+    },
+    fetchBanners() {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$get('/banners')
+          .then((res: any) => {
+            this.banners.list = res
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+          .finally(() => {
+            this.banners.loading = false
           })
       })
     },

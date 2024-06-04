@@ -23,7 +23,7 @@
       <FormCheckbox
         :checked="ids.includes(i.id)"
         :value="i.id"
-        :label="i?.title"
+        :label="i?.name"
         :info-icon="i?.infoIcon"
         :info-text="i?.text"
         :info-link="i?.path"

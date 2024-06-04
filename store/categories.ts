@@ -6,6 +6,7 @@ export const useCategoriesStore = defineStore('categoriesStore', {
       list: [] as ICategory[],
       loading: true,
     },
+    single: {} as ICategory,
   }),
   actions: {
     fetchCategories() {

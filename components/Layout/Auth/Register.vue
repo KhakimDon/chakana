@@ -17,7 +17,7 @@
       :placeholder="$t('add_instagram')"
     >
       <template #prefix>
-        <div class="w-10 h-10 bg-white-100 flex-center shrink-0 rounded-[10px]">
+        <div class="w-10 h-10 bg-white-100 flex-center shrink-0 rounded-10">
           <IconInstagram class="text-2xl text-dark" />
         </div>
       </template>
@@ -28,7 +28,7 @@
       :placeholder="$t('add_telegram')"
     >
       <template #prefix>
-        <div class="w-10 h-10 bg-white-100 flex-center shrink-0 rounded-[10px]">
+        <div class="w-10 h-10 bg-white-100 flex-center shrink-0 rounded-10">
           <IconTelegram class="text-2xl text-dark" />
         </div>
       </template>

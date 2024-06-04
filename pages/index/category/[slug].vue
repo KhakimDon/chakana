@@ -16,6 +16,9 @@
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
+import { useCategoriesStore } from '~/store/categories'
+
+const categoriesStore = useCategoriesStore()
 const route = useRoute()
 
 const loading = ref(true)
@@ -29,4 +32,22 @@ useApi()
   .finally(() => {
     loading.value = false
   })
+
+// ToDo: convert to useAsyncData and use seo meta
+function getSingle() {
+  useApi()
+    .$get(`category/${route.params.slug}`)
+    .then((res: any) => {
+      categoriesStore.single = res
+    })
+}
+getSingle()
+
+// useSeoMeta({
+//   title: data.value?.name,
+//   description: 'Xolodilnik - Xolodilnik',
+//   ogTitle: data.value?.name,
+//   twitterTitle: data.value?.name,
+//   twitterCard: 'summary',
+// })
 </script>

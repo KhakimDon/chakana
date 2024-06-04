@@ -62,4 +62,8 @@ export default {
   social_contacts: 'Социальные связи',
   read_all: 'Просмотреть все',
   add_card: 'Добавить карту',
+  no_data_search: 'Нет данных по поиску',
+  product_to_card_text:
+    'Вероятно, у вас закончился этот товар, добавить в корзину?',
+  saved: 'Избранные',
 }
