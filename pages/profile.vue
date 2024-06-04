@@ -47,7 +47,7 @@ const menu = [
     title: t('my_infos'),
     icon: SvgoProfileUserCircle,
     iconClass: 'text-orange group-[.active]:text-white',
-    iconWrapperClass: 'group-[.active]:bg-orange',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
   },
   {
     link: '/profile/orders',
@@ -65,7 +65,7 @@ const menu = [
       'group-[.active]:bg-[#088339] group-hover:bg-[#088339]/20',
   },
   {
-    link: '/profile/addresses',
+    link: '/profile/my-cards',
     title: t('my_cards'),
     icon: SvgoProfileCard,
     iconClass: 'text-blue-100 group-[.active]:text-white',

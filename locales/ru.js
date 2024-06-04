@@ -61,4 +61,5 @@ export default {
   email: 'Электронная почта',
   social_contacts: 'Социальные связи',
   read_all: 'Просмотреть все',
+  add_card: 'Добавить карту',
 }

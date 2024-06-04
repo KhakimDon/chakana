@@ -17,7 +17,7 @@ export const useNotificationsStore = defineStore('notificationsStore', {
   actions: {
     fetchNotifications(merge = false) {
       useApi()
-        .$get<IResponse<INotification>>('/notifications/', {
+        .$get<IResponse<INotification>>('/notifications', {
           params: this.notificationsParams,
         })
         .then((res: any) => {
