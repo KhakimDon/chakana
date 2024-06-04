@@ -23,7 +23,7 @@
     </div>
 
     <SearchSectionPopularSearch />
-    <SearchSectionSearchHistory @click-history="search = $event" />
+    <SearchSectionSearchHistory />
   </div>
 </template>
 <script setup lang="ts">
@@ -49,6 +49,8 @@ function focusInput() {
 onMounted(() => {
   focusInput()
 })
+
+const projects = computed(() => searchStore.products)
 
 const suggestionsRef = ref<HTMLDivElement | null>(null)
 const outsideClicked = ref(false)

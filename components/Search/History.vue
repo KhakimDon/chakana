@@ -4,20 +4,32 @@
   >
     <IconClose
       class="text-gray text-xl transition-300 hover:text-red cursor-pointer"
+      @click="deleteHistory(item?.id ?? 0)"
     />
     <p
       class="text-sm leading-130 font-medium text-dark hover:text-orange transition-300 cursor-pointer"
     >
-      {{ title }}
+      {{ item?.query }}
     </p>
   </div>
 </template>
 <script setup lang="ts">
 import IconClose from '~/assets/icons/Common/close.svg'
+import { useSearchStore } from '~/store/search'
 
 interface Props {
-  title: string
+  item: {
+    id: number
+    query: string
+  }
 }
 
 defineProps<Props>()
+
+const searchStore = useSearchStore()
+const deleteHistory = (id: number) => {
+  searchStore.deleteSearchHistory(id).then(() => {
+    searchStore.searchHistory()
+  })
+}
 </script>
