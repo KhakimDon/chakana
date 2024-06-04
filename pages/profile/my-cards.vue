@@ -6,6 +6,7 @@
       </h1>
       <button
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
+        @click="addCardModal = true"
       >
         <SvgoCommonPlus
           class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
@@ -33,7 +34,11 @@
             :subtitle="$t('you_still_dont_have_cards')"
           >
             <template #actions>
-              <BaseButton class="mt-4" :text="$t('add_card')" />
+              <BaseButton
+                class="mt-4"
+                :text="$t('add_card')"
+                @click="addCardModal = true"
+              />
             </template>
           </CommonNoData>
         </template>
@@ -45,6 +50,7 @@
       :delete-loading="deleteLoading"
       @delete="deleteCard"
     />
+    <ModalCardAdd v-model="addCardModal" />
   </div>
 </template>
 
@@ -59,8 +65,8 @@ const deleteLoading = computed(() => cardsStore.deleteLoading)
 cardsStore.fetchCards()
 
 const activeCard = ref<IBankCard | null>(null)
-const deleteModal = ref(false)
 
+const deleteModal = ref(false)
 const deleteConfirm = (card: IBankCard) => {
   activeCard.value = card
   deleteModal.value = true
@@ -71,4 +77,6 @@ const deleteCard = () => {
     deleteModal.value = false
   })
 }
+
+const addCardModal = ref(false)
 </script>

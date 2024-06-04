@@ -62,6 +62,7 @@ export default {
   social_contacts: 'Социальные связи',
   read_all: 'Просмотреть все',
   add_card: 'Добавить карту',
+  add: 'Добавить',
   no_data_search: 'Нет данных по поиску',
   product_to_card_text:
     'Вероятно, у вас закончился этот товар, добавить в корзину?',
@@ -74,4 +75,10 @@ export default {
   cancel: 'Отменить',
   delete: 'Удалить',
   card_deleted_successfully: 'Карта успешно удалена',
+  card_number: 'Номер карты',
+  expire_date: 'Срок',
+  enter_code_from_sms_code_sent_for_number:
+    'Введите код подтверждения из SMS.\n Код подтверждения отправлено на номер',
+  confirm: 'Подтвердить',
+  card_added_successfully: 'Карта успешно добавлена',
 }
