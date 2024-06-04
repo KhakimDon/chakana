@@ -1,118 +1,33 @@
 <template>
   <div>
-    <div class="w-full relative flex-y-center gap-2">
+    <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
       <NuxtLinkLocale to="/" class="group">
         <IconChevron
           class="text-2xl text-dark group-hover:text-orange transition-300"
         />
       </NuxtLinkLocale>
-      <NuxtLinkLocale to="/search" class="w-full">
-        <FormInputSearch
-          v-model="search"
-          input-id="main-search"
-          :placeholder="$t('search')"
-          class="w-full !h-10"
-          @focus="focusInput"
-        />
-      </NuxtLinkLocale>
+      <FormInputSearch
+        v-model="search"
+        input-id="main-search"
+        :placeholder="$t('search')"
+        class="w-full !h-10"
+        @focus="focusInput"
+        @clear="search = ''"
+      />
       <button
         class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
       >
         <IconList class="text-2xl text-blue-100" />
       </button>
-      <transition name="fade" mode="out-in">
-        <div
-          v-if="
-            searchAutocompleteList.length && search && !autoCompleteItemClicked
-          "
-          class="absolute left-8 suggestions-shadow rounded-xl h-fit max-h-[300px] z-10 bg-white top-12 w-[calc(100%-80px)]"
-        >
-          <div class="h-[60px] p-4 border-b border-white-100">
-            <p class="text-dark text-base font-bold leading-7">
-              {{ $t('suggestions_search') }}
-            </p>
-          </div>
-          <transition name="fade" mode="out-in">
-            <div
-              v-if="searchAutocompleteLoading"
-              class="px-4 space-y-2 overflow-x-hidden overflow-y-auto h-fit max-h-[240px] my-2"
-            >
-              <div
-                v-for="key in 5"
-                :key
-                class="shimmer w-full h-9 rounded-10 p-4 pl-0 border-b border-white-100"
-              />
-            </div>
-            <div
-              v-else
-              class="overflow-x-hidden overflow-y-auto h-fit max-h-[240px] pl-4"
-            >
-              <div
-                v-for="(item, key) in searchAutocompleteList"
-                :key
-                class="p-4 pl-0 border-b border-white-100 cursor-pointer group"
-                @click="clickAutocompleteItem(item?.name)"
-              >
-                <p
-                  class="line-clamp-1 text-sm font-normal text-dark leading-130 group-hover:font-medium transition-300"
-                >
-                  {{ item?.name }}
-                </p>
-              </div>
-            </div>
-          </transition>
-        </div>
-      </transition>
+      <SearchCardSuggestions v-if="!outsideClicked" :search="search" />
     </div>
 
-    <div class="flex-y-center gap-1.5 flex-wrap my-4">
-      <div v-if="popularSearchLoading" class="flex-y-center">
-        <div
-          v-for="key in 5"
-          :key
-          class="shimmer w-full h-9 rounded-10 p-4 pl-0 border-b border-white-100"
-        />
-      </div>
-      <SearchBadge
-        v-for="(item, key) in popularSearchList"
-        :key
-        :title="item"
-      />
-    </div>
-
-    <CommonSectionWrapper
-      v-if="searchHistoryList.length"
-      title="search_history"
-      header-class="!mb-3"
-    >
-      <template #action>
-        <button
-          class="text-sm text-orange font-medium leading-normal tracking-[0.15px] hover:underline"
-          @click="clearSearchHistory"
-        >
-          {{ $t('clear') }}
-        </button>
-      </template>
-
-      <div class="flex flex-col gap-2">
-        <div v-if="searchHistoryLoading">
-          <div
-            v-for="key in 5"
-            :key
-            class="shimmer w-full h-9 rounded-10 p-4 pl-0 border-b border-white-100"
-          />
-        </div>
-        <SearchHistory
-          v-for="(item, key) in searchHistoryList"
-          :key
-          :title="item"
-          @click="search = item"
-        />
-      </div>
-    </CommonSectionWrapper>
+    <SearchSectionPopularSearch />
+    <SearchSectionSearchHistory @click-history="search = $event" />
   </div>
 </template>
 <script setup lang="ts">
+import { onClickOutside } from '@vueuse/core'
 import debounce from 'lodash.debounce'
 
 import IconChevron from '~/assets/icons/Common/chevron.svg'
@@ -120,35 +35,27 @@ import IconList from '~/assets/icons/Common/list.svg'
 import { useSearchStore } from '~/store/search'
 
 const router = useRouter()
+const route = useRoute()
 const search = ref('')
 const searchStore = useSearchStore()
 
 function focusInput() {
   const input = document.getElementById('main-search') as HTMLInputElement
   input.focus()
-  autoCompleteItemClicked.value = false
+  searchStore.autoCompleteItemClicked = false
+  outsideClicked.value = false
 }
 
 onMounted(() => {
   focusInput()
 })
 
-const searchAutocompleteList = computed(
-  () => searchStore.searchAutocompleteResults.list
-)
-const searchAutocompleteLoading = computed(
-  () => searchStore.searchAutocompleteResults.loading
-)
+const suggestionsRef = ref<HTMLDivElement | null>(null)
+const outsideClicked = ref(false)
 
-const popularSearchList = computed(() => searchStore.popularSearchResults.list)
-const popularSearchLoading = computed(
-  () => searchStore.popularSearchResults.loading
-)
-
-const searchHistoryList = computed(() => searchStore.searchHistoryResults.list)
-const searchHistoryLoading = computed(
-  () => searchStore.searchHistoryResults.loading
-)
+onClickOutside(suggestionsRef, () => {
+  outsideClicked.value = true
+})
 
 const updateSearch = debounce((val: string) => {
   searchStore.searchAutocomplete(val)
@@ -164,20 +71,15 @@ watch(search, (val: string) => {
   updateSearch(val)
 })
 
-const autoCompleteItemClicked = ref(false)
-const clickAutocompleteItem = (text: string) => {
-  search.value = text
-  autoCompleteItemClicked.value = true
-}
-
-const clearSearchHistory = () => {
-  searchStore.clearSearchHistory()
-}
-
-onMounted(() => {
-  searchStore.searchPopular()
-  searchStore.searchHistory()
-})
+watch(
+  () => route.query,
+  (val: any) => {
+    if (val.query) {
+      search.value = val.query
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 <style scoped>
 .suggestions-shadow {

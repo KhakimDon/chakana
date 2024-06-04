@@ -1,4 +1,6 @@
 export const useSearchStore = defineStore('searchStore', () => {
+  const autoCompleteItemClicked = ref(false)
+
   const products = reactive({
     list: [],
     loading: false,
@@ -142,5 +144,6 @@ export const useSearchStore = defineStore('searchStore', () => {
     deleteSearchHistory,
     clearSearchHistoryLoading,
     clearSearchHistory,
+    autoCompleteItemClicked,
   }
 })
