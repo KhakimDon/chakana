@@ -117,7 +117,7 @@ export function formatPhoneNumber(phoneNumber: string) {
     // Use regex capturing groups to format the number
     return cleanedNumber.replace(
       /(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
-      '+$1 $2 $3 $4 $5'
+      '+$1 $2 $3-$4-$5'
     )
   }
 }
