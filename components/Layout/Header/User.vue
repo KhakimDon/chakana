@@ -1,7 +1,11 @@
 <template>
-  <BaseDropdown>
+  <BaseDropdown
+    body-class="!w-[260px]"
+    :show="showDropdown"
+    @toggle="showDropdown = $event"
+  >
     <template #head>
-      <div class="w-9 h-9 rounded-full linear-border-image">
+      <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
         <nuxt-img
           src="/images/default/user.png"
           alt="user-default"
@@ -9,10 +13,95 @@
         />
       </div>
     </template>
+    <template #body>
+      <div>
+        <NuxtLinkLocale
+          v-for="(item, index) in list"
+          :key="index"
+          :to="item.link"
+          class="flex-y-center gap-3 w-full relative px-3 last:pb-3 first:pt-3 py-2.5 group cursor-pointer"
+          @click="showDropdown = false"
+        >
+          <component
+            :is="item.icon"
+            class="text-2xl text-gray font-bold"
+            :class="item.iconClass"
+          />
+          <p
+            class="text-sm font-semibold leading-130 text-dark transition-300 group-hover:text-orange"
+            :class="{ 'group-hover:text-red': item.link === 'logout' }"
+          >
+            {{ item?.title }}
+          </p>
+          <div
+            class="h-px w-[calc(100%-48px)] bg-gray-300 absolute bottom-0 right-0"
+          />
+        </NuxtLinkLocale>
+      </div>
+    </template>
   </BaseDropdown>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {
+  SvgoCommonBell,
+  SvgoCommonLogOut,
+  SvgoProfileCard,
+  SvgoProfileSidebarLocation,
+  SvgoProfileSidebarMenuList,
+  SvgoProfileSidebarSettings,
+  SvgoProfileSidebarTag,
+  SvgoProfileUserCircle,
+} from '#components'
+
+const { t } = useI18n()
+
+const showDropdown = ref(false)
+
+const list = [
+  {
+    link: '/profile',
+    title: t('my_infos'),
+    icon: SvgoProfileUserCircle,
+  },
+  {
+    link: '/profile/addresses',
+    title: t('addresses'),
+    icon: SvgoProfileSidebarLocation,
+  },
+  {
+    link: '/profile/my-cards',
+    title: t('my_cards'),
+    icon: SvgoProfileCard,
+  },
+  {
+    link: '/profile/notifications',
+    title: t('notifications'),
+    icon: SvgoCommonBell,
+  },
+  {
+    link: '/profile/saved',
+    title: t('saved_list'),
+    icon: SvgoProfileSidebarMenuList,
+  },
+  {
+    link: '/profile/discounts',
+    title: t('discounts_and_promocodes'),
+    icon: SvgoProfileSidebarTag,
+  },
+  {
+    link: '/profile/settings',
+    title: t('settings'),
+    icon: SvgoProfileSidebarSettings,
+  },
+  {
+    link: 'logout',
+    title: t('logout_from_account'),
+    icon: SvgoCommonLogOut,
+    iconClass: 'text-red',
+  },
+]
+</script>
 
 <style scoped>
 .linear-border-image {

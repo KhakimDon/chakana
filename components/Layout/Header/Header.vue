@@ -1,5 +1,5 @@
 <template>
-  <header class="w-full border-b border-white-100 py-4">
+  <header :key="locale" class="w-full border-b border-white-100 py-4">
     <div class="container grid grid-cols-3 gap-4">
       <CommonLogo />
       <div class="flex-center gap-6">
@@ -32,23 +32,23 @@
         </BaseButton>
         <div v-else class="flex-y-center gap-2">
           <div class="w-px h-7 bg-white-100" />
-          <button class="flex-y-center gap-1.5 group">
+          <NuxtLinkLocale to="/cart" class="flex-y-center gap-1.5 group">
             <IconCart class="text-2xl text-blue-100" />
             <p
               class="text-sm leading-130 font-semibold text-dark transition-300 group-hover:text-orange"
             >
               {{ $t('basket') }}
             </p>
-          </button>
+          </NuxtLinkLocale>
           <div class="w-px h-7 bg-white-100" />
-          <button class="flex-y-center gap-1.5 group">
+          <NuxtLinkLocale to="/saved" class="flex-y-center gap-1.5 group">
             <IconHeart class="text-2xl text-red" />
             <p
               class="text-sm leading-130 font-semibold text-dark transition-300 group-hover:text-orange"
             >
               {{ $t('saved') }}
             </p>
-          </button>
+          </NuxtLinkLocale>
           <LayoutHeaderUser class="ml-2" />
         </div>
       </div>
@@ -68,6 +68,7 @@ const authStore = useAuthStore()
 const { t } = useI18n()
 
 const user = computed(() => authStore.user)
+const { locale } = useI18n()
 
 const menu = [
   {
