@@ -46,4 +46,5 @@ export default {
   product_to_card_text:
     'Вероятно, у вас закончился этот товар, добавить в корзину?',
   saved: 'Избранные',
+  suggestions_search: 'Возможно вы искали это:',
 }
