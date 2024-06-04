@@ -21,6 +21,7 @@ export default {
   profitable_shelf: 'Выгодная полка',
   popular_brands: 'Популярные бренды',
   error_text: 'Что-то пошло не так, мы не смогли найти страницу',
+  error_500_text: 'Внутренняя ошибка сервера. Попробуйте позже.',
   back_home: 'Вернуться в главное меню',
   developed_by: 'Developed by:',
   clear: 'Очистить',
