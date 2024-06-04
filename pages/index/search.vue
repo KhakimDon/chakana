@@ -12,6 +12,7 @@
           input-id="main-search"
           :placeholder="$t('search')"
           class="w-full !h-10"
+          @focus="focusInput"
         />
       </NuxtLinkLocale>
       <button
@@ -21,8 +22,10 @@
       </button>
       <transition name="fade" mode="out-in">
         <div
-          v-if="searchAutocompleteList.length && search"
-          class="absolute left-8 suggestions-shadow rounded-xl h-[300px] z-10 bg-white top-12 w-[calc(100%-80px)]"
+          v-if="
+            searchAutocompleteList.length && search && !autoCompleteItemClicked
+          "
+          class="absolute left-8 suggestions-shadow rounded-xl h-fit max-h-[300px] z-10 bg-white top-12 w-[calc(100%-80px)]"
         >
           <div class="h-[60px] p-4 border-b border-white-100">
             <p class="text-dark text-base font-bold leading-7">
@@ -32,7 +35,7 @@
           <transition name="fade" mode="out-in">
             <div
               v-if="searchAutocompleteLoading"
-              class="px-4 space-y-2 overflow-x-hidden overflow-y-auto h-[240px] my-2"
+              class="px-4 space-y-2 overflow-x-hidden overflow-y-auto h-fit max-h-[240px] my-2"
             >
               <div
                 v-for="key in 5"
@@ -42,15 +45,16 @@
             </div>
             <div
               v-else
-              class="overflow-x-hidden overflow-y-auto h-[240px] pl-4"
+              class="overflow-x-hidden overflow-y-auto h-fit max-h-[240px] pl-4"
             >
               <div
                 v-for="(item, key) in searchAutocompleteList"
                 :key
-                class="p-4 pl-0 border-b border-white-100"
+                class="p-4 pl-0 border-b border-white-100 cursor-pointer group"
+                @click="clickAutocompleteItem(item?.name)"
               >
                 <p
-                  class="line-clamp-1 text-sm font-normal text-dark leading-130"
+                  class="line-clamp-1 text-sm font-normal text-dark leading-130 group-hover:font-medium transition-300"
                 >
                   {{ item?.name }}
                 </p>
@@ -99,6 +103,7 @@ const searchStore = useSearchStore()
 function focusInput() {
   const input = document.getElementById('main-search') as HTMLInputElement
   input.focus()
+  autoCompleteItemClicked.value = false
 }
 
 onMounted(() => {
@@ -125,6 +130,12 @@ watch(search, (val: string) => {
   }
   updateSearch(val)
 })
+
+const autoCompleteItemClicked = ref(false)
+const clickAutocompleteItem = (text: string) => {
+  search.value = text
+  autoCompleteItemClicked.value = true
+}
 </script>
 <style scoped>
 .suggestions-shadow {
