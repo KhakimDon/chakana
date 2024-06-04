@@ -22,8 +22,50 @@
       <SearchCardSuggestions v-if="!outsideClicked" :search="search" />
     </div>
 
-    <SearchSectionPopularSearch />
-    <SearchSectionSearchHistory />
+    <section v-if="!products.list?.length">
+      <SearchSectionPopularSearch />
+      <SearchSectionSearchHistory />
+    </section>
+    <section v-else class="my-9">
+      <div
+        v-for="(product, key) in products.list"
+        :key
+        class="flex-y-center gap-2 justify-between rounded-xl px-4 py-3"
+      >
+        <div class="flex-y-center gap-2">
+          <div
+            class="border bg-white border-white-100 w-16 relative h-[52px] rounded-10 px-0.5"
+          >
+            <NuxtImg
+              :src="product.main_image"
+              class="w-full h-fit absolute -bottom-1 object-cover object-center"
+            />
+          </div>
+          <div class="space-y-0.5">
+            <p class="text-[13px] font-semibold leading-none text-dark">
+              {{ product?.name }}
+            </p>
+            <p class="text-xs font-medium leading-130 text-gray-400">
+              {{ product?.weight }} {{ product?.weight_measure }}
+            </p>
+          </div>
+        </div>
+        <BaseButton
+          v-if="count < 1"
+          class="w-full"
+          :text="$t('to_basket')"
+          variant="outline"
+          @click="count++"
+        />
+        <MainCardCounter
+          v-else
+          v-model="count"
+          :default-count="count"
+          class="w-24 border-none bg-white-100"
+          readonly
+        />
+      </div>
+    </section>
   </div>
 </template>
 <script setup lang="ts">
@@ -37,6 +79,7 @@ import { useSearchStore } from '~/store/search'
 const router = useRouter()
 const route = useRoute()
 const search = ref('')
+const count = ref(0)
 const searchStore = useSearchStore()
 
 function focusInput() {
@@ -50,7 +93,7 @@ onMounted(() => {
   focusInput()
 })
 
-const projects = computed(() => searchStore.products)
+const products = computed(() => searchStore.products)
 
 const suggestionsRef = ref<HTMLDivElement | null>(null)
 const outsideClicked = ref(false)
@@ -67,10 +110,11 @@ const updateSearch = debounce((val: string) => {
 watch(search, (val: string) => {
   if (val) {
     router.push({ query: { query: val } })
+    updateSearch(val)
   } else {
     router.push({ query: {} })
+    searchStore.products.list = []
   }
-  updateSearch(val)
 })
 
 watch(
