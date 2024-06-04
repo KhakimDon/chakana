@@ -45,9 +45,15 @@
       class="w-full"
       :text="$t('to_basket')"
       variant="outline"
-      @click="count++"
+      @click.stop="count++"
     />
-    <MainCardCounter v-else v-model="count" :default-count="count" readonly />
+    <MainCardCounter
+      v-else
+      v-model="count"
+      :default-count="count"
+      readonly
+      @click.stop
+    />
   </div>
 </template>
 
