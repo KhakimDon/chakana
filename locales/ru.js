@@ -66,4 +66,12 @@ export default {
   product_to_card_text:
     'Вероятно, у вас закончился этот товар, добавить в корзину?',
   saved: 'Избранные',
+  no_cards_yet: 'Карты пока нет',
+  you_still_dont_have_cards: 'Вы еще не добавляете карты',
+  delete_card: 'Удалить карту',
+  are_you_sure_to_delete_this_card:
+    'Вы уверены, что хотите удалить \n{card} карту?',
+  cancel: 'Отменить',
+  delete: 'Удалить',
+  card_deleted_successfully: 'Карта успешно удалена',
 }

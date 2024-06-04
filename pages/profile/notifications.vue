@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { useNotificationsStore } from '~/store/profile/notifications'
-
-const notifications = useNotificationsStore()
-
-const data = computed(() => notifications.notifications)
-notifications.fetchNotifications()
-</script>
-
 <template>
   <div>
     <div class="flex-center-between mb-4">
@@ -34,5 +25,11 @@ notifications.fetchNotifications()
     </Transition>
   </div>
 </template>
+<script setup lang="ts">
+import { useNotificationsStore } from '~/store/profile/notifications'
 
-<style scoped></style>
+const notifications = useNotificationsStore()
+
+const data = computed(() => notifications.notifications)
+notifications.fetchNotifications()
+</script>
