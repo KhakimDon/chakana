@@ -68,6 +68,44 @@ export const useSearchStore = defineStore('searchStore', () => {
     })
   }
 
+  const deleteSearchHistoryLoading = ref(false)
+  function deleteSearchHistory(id: number) {
+    return new Promise((resolve, reject) => {
+      deleteSearchHistoryLoading.value = true
+      useApi()
+        .$delete(`/search-history/delete`, {
+          body: [id],
+        })
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          deleteSearchHistoryLoading.value = false
+        })
+    })
+  }
+
+  const clearSearchHistoryLoading = ref(false)
+  function clearSearchHistory() {
+    return new Promise((resolve, reject) => {
+      clearSearchHistoryLoading.value = true
+      useApi()
+        .$delete(`/search-history/clear`)
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          clearSearchHistoryLoading.value = false
+        })
+    })
+  }
+
   const popularSearchResults = reactive({
     list: [],
     loading: false,
@@ -100,5 +138,9 @@ export const useSearchStore = defineStore('searchStore', () => {
     searchHistory,
     popularSearchResults,
     searchPopular,
+    deleteSearchHistoryLoading,
+    deleteSearchHistory,
+    clearSearchHistoryLoading,
+    clearSearchHistory,
   }
 })

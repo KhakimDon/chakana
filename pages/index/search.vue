@@ -88,6 +88,7 @@
       <template #action>
         <button
           class="text-sm text-orange font-medium leading-normal tracking-[0.15px] hover:underline"
+          @click="clearSearchHistory"
         >
           {{ $t('clear') }}
         </button>
@@ -167,6 +168,10 @@ const autoCompleteItemClicked = ref(false)
 const clickAutocompleteItem = (text: string) => {
   search.value = text
   autoCompleteItemClicked.value = true
+}
+
+const clearSearchHistory = () => {
+  searchStore.clearSearchHistory()
 }
 
 onMounted(() => {
