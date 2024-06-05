@@ -4,19 +4,26 @@ import type { INotification, IOrderCard } from '~/types/profile'
 export const useOrderStore = defineStore('orderStore', {
   state: () => ({
     orders: {
-      list: [] as IOrderCard[],
-      loading: true,
+      active: {
+        list: [] as IOrderCard[],
+        loading: true,
+      },
+      archive: {
+        list: [] as IOrderCard[],
+        loading: true,
+      },
     },
   }),
   actions: {
-    fetchOrders() {
+    fetchOrders(type: 'active' | 'archive' = 'active') {
+      if (this.orders[type].list.length) return
       useApi()
-        .$get('/order/list')
+        .$get('/order/list', { params: { status: type } })
         .then((res: IOrderCard[]) => {
-          this.orders.list = res
+          this.orders[type].list = res
         })
         .finally(() => {
-          this.orders.loading = false
+          this.orders[type].loading = false
         })
     },
   },
