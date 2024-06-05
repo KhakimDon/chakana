@@ -2,7 +2,7 @@
   <BaseDropdown>
     <template #head>
       <div class="w-9 h-9 rounded-full linear-border-image">
-        <nuxt-img
+        <img
           src="/images/default/user.png"
           alt="user-default"
           class="w-full h-full"
