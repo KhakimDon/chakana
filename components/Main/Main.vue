@@ -73,8 +73,19 @@
               @click="selectProduct(card)"
             />
           </template>
+          <template v-if="!products?.params?.loading">
+            <MainCardLoading v-for="key in 10" :key />
+          </template>
         </div>
       </Transition>
+      <div
+        v-if="
+          products.params?.total > products?.list.length &&
+          !products?.loading &&
+          !products?.params?.loading
+        "
+        ref="target"
+      />
     </CommonSectionWrapper>
     <MainModalInfo
       :show="showProduct"
@@ -85,6 +96,8 @@
 </template>
 
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
+
 import IconList from '~/assets/icons/Common/list.svg'
 import { useMainStore } from '~/store/main'
 import type { IProduct } from '~/types/products'
@@ -118,4 +131,12 @@ function selectProduct(product: IProduct) {
   selectedProduct.value = product
   showProduct.value = true
 }
+
+const target = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  if (isIntersecting) {
+    mainStore.fetchProducts(false)
+  }
+})
 </script>
