@@ -92,4 +92,8 @@ export default {
   order_accepted: 'Заказ принят',
   order_collecting: 'Заказ собираеться',
   order_delivering: 'Заказ в пути',
+  suggestions_search: 'Возможно вы искали это:',
+  search_nodata_title: 'Кажется, мы пока не нашли именно то, что вам нужно. ',
+  search_nodata_subtitle:
+    'Но не переживайте! У нас также есть множество других продуктов, которые могут вас заинтересовать.',
 }

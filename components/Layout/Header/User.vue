@@ -6,7 +6,7 @@
   >
     <template #head>
       <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
-        <nuxt-img
+        <img
           src="/images/default/user.png"
           alt="user-default"
           class="w-full h-full"
