@@ -1,7 +1,7 @@
 <template>
   <div class="py-12 flex flex-col items-center">
     <slot name="img">
-      <nuxt-img
+      <img
         :src="image"
         :class="imageClass"
         alt="no-data-image"

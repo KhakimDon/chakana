@@ -24,16 +24,30 @@
       </div>
     </section>
 
-    <section v-if="!products.list?.length">
+    <section v-if="!search">
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
-    <section v-else class="my-5">
+    <section v-else-if="products.loading && search" class="my-5 space-y-3">
+      <div
+        v-for="key in 10"
+        :key
+        class="shimmer w-full h-16 rounded-10 pl-0 border-b border-white-100"
+      />
+    </section>
+    <section v-else-if="products.list?.length && search" class="my-5">
       <SearchCardProduct
         v-for="(product, key) in products.list"
         :key
         :product="product"
         :class="{ 'bg-gray-300/50': key % 2 === 0 }"
+      />
+    </section>
+    <section v-else-if="!products.list?.length && search" class="my-5">
+      <CommonNoData
+        :title="$t('search_nodata_title')"
+        :subtitle="$t('search_nodata_subtitle')"
+        image="/images/no-data/no-searches.png"
       />
     </section>
   </div>
