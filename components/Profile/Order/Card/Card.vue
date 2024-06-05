@@ -4,8 +4,8 @@
     <div
       class="grid gap-[0.9px] h-40 rounded-lg border border-white-100 cursor-pointer overflow-hidden"
       :class="[
-        imagesLen > 2 ? 'grid-rows-2' : 'grid-rows-1',
-        { 'grid-cols-2': imagesLen > 1 },
+        images.length > 2 ? 'grid-rows-2' : 'grid-rows-1',
+        { 'grid-cols-2': images.length > 1 },
       ]"
     >
       <div
@@ -13,17 +13,19 @@
         :key="i"
         class="relative flex items-center bg-white"
         :class="{
-          'col-span-2': i == 2 && imagesLen == 3,
+          'col-span-2': i == 2 && images?.length == 3,
         }"
       >
         <img :src="image" alt="product-image" class="max-h-full mx-auto" />
 
         <!-- 4-image overlaps shade for over 4 img case -->
         <div
-          v-if="i === 3 && imagesLen > 4"
+          v-if="i === 3 && images?.length > 4"
           class="absolute top-0 flex items-center justify-center w-full h-full bg-dark/60"
         >
-          <span class="text-lg text-white font-bold">+{{ imagesLen - 3 }}</span>
+          <span class="text-lg text-white font-bold"
+            >+{{ images?.length - 3 }}</span
+          >
         </div>
       </div>
     </div>
@@ -34,10 +36,12 @@
         <p class="text-gray-100 text-xs font-semibold leading-130">
           {{ $t('order_number') }}:
         </p>
-        <span class="text-sm font-bold text-dark leading-130">#120021</span>
+        <span class="text-sm font-bold text-dark leading-130">
+          #{{ item.id }}
+        </span>
       </div>
 
-      <CommonCardBadge :type="type" />
+      <!--      <ProfileOrderCardBadge :type="item?.status" />-->
 
       <hr class="my-2.5 border-gray-200" />
 
@@ -45,11 +49,15 @@
         <p class="text-gray-100 font-semibold leading-130">
           {{ $t('order_date') }}:
         </p>
-        <span class="font-bold text-dark leading-130">04.01.2024</span>
+        <span class="font-bold text-dark leading-130">
+          {{ dayjs(item.date_order).format('DD.MM.YYYY') }}
+        </span>
       </div>
 
       <div class="flex items-end text-dark font-extrabold">
-        <p class="text-xl mr-0.5 leading-130">50 090</p>
+        <p class="text-xl mr-0.5 leading-130">
+          {{ formatMoneyDecimal(item.total_real_price) }}
+        </p>
         <span class="text-[15px] leading-140">UZS</span>
       </div>
     </div>
@@ -71,27 +79,20 @@
 </template>
 
 <script setup lang="ts">
-import type { TOrderBadgeTypes } from '~/types/components/card'
+import dayjs from 'dayjs'
+
+import type { IOrderCard } from '~/types/profile.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
-  type: TOrderBadgeTypes
+  item: IOrderCard
 }
 
 const props = defineProps<Props>()
 
-const productImages = [
-  '/images/fake/cheesecake.webp',
-  '/images/fake/coffee.webp',
-  '/images/fake/kasha.webp',
-  '/images/fake/nestle.webp',
-  '/images/fake/pepsi.webp',
-]
-
-const imagesLen = productImages.length
-
 // max 4 images
 const images = computed(() => {
-  if (imagesLen > 4) return productImages.slice(0, 4)
-  else return productImages
+  if (props.item.images.length > 4) return props.item.images.slice(0, 4)
+  else return props.item.images
 })
 </script>
