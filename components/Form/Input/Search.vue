@@ -20,10 +20,10 @@
         class="h-max pl-2 pr-2 pointer-events-none flex-center"
         :class="searchIconWrapper"
       >
-        <IconSearch
-          class="icon-search-bold flex-center text-xl text-dark translate-y-px"
-          :class="iconClass"
-        />
+        <!--        <IconSearch-->
+        <!--          class="icon-search-bold flex-center text-xl text-dark translate-y-px"-->
+        <!--          :class="iconClass"-->
+        <!--        />-->
       </div>
     </template>
     <template #suffix>
@@ -48,7 +48,7 @@
 
 <script lang="ts" setup>
 // import IconClose from '~/assets/icons/common/close.svg'
-import IconSearch from '~/assets/icons/common/search.svg'
+// import IconSearch from '~/assets/icons/common/search.svg'
 import { debounce } from '~/utils/functions/common'
 
 interface Props {
