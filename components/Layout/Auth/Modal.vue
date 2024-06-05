@@ -19,7 +19,9 @@
         <LayoutAuthConfirm
           v-else-if="step === 'confirm'"
           :form="confirmForm"
-          :phone="loginForm.values.phone"
+          :phone="params.phone"
+          :loading="buttonLoading"
+          @submit="confirmCode"
           @back="step = 'login'"
         />
         <LayoutAuthRegister
@@ -45,8 +47,12 @@ interface Props {
 const props = defineProps<Props>()
 defineEmits(['close'])
 
-const step = ref('login')
+const step = ref('register')
 const buttonLoading = ref(false)
+const params = ref({
+  phone: '',
+  session: '',
+})
 
 const loginForm = useForm(
   {
@@ -80,15 +86,39 @@ const registerForm = useForm(
 
 function sendSms() {
   buttonLoading.value = true
+  params.value.phone = '+998' + loginForm.values.phone?.replace(/\D/g, '')
   useApi()
     .$post('/send-sms', {
       body: {
-        phone: '+998' + loginForm.values.phone?.replace(/\D/g, ''),
+        phone_number: params.value.phone,
         type_: 'login_sms_verification',
       },
     })
-    .then((res) => {
-      console.log(res)
+    .then((res: any) => {
+      if (!res?.register) {
+        step.value = 'confirm'
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => (buttonLoading.value = false))
+}
+
+function confirmCode() {
+  buttonLoading.value = true
+  useApi()
+    .$post('/verify', {
+      body: {
+        phone_number: params.value.phone,
+        session: params.value.session,
+        otp_code: confirmForm.values.code,
+      },
+    })
+    .then((res: any) => {
+      console.log('res, ', res)
+      params.value.session = res.session
+      step.value = 'register'
     })
     .catch((err) => {
       console.log(err)
