@@ -92,4 +92,7 @@ export default {
   order_accepted: 'Заказ принят',
   order_collecting: 'Заказ собираеться',
   order_delivering: 'Заказ в пути',
+  delivered: 'Доставленный',
+  canceled: 'Отменено',
+  reorder: 'Повторить заказ'
 }

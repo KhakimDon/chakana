@@ -6,7 +6,9 @@
     <div class="mr-1">
       <SvgoCommonCheck v-if="type === 'accepted'" />
       <SvgoCommonBag v-else-if="type === 'collected'" />
-      <SvgoCommonMap v-else />
+      <SvgoCommonMap v-else-if="type === 'on_the_way'" />
+      <SvgoCommonFlag v-else-if="type === 'delivered'" />
+      <SvgoCommonClose v-else />
     </div>
 
     <span class="text-xs leading-130">{{ $t(typesText[type]) }}</span>
@@ -21,12 +23,16 @@ defineProps<{ type: TOrderStatuses }>()
 const typesStyle: Record<TOrderStatuses, string> = {
   accepted: 'text-blue-100 bg-blue-100/[.08]',
   collected: 'text-orange bg-orange/[.14]',
-  delivered: 'text-[#CFA600] bg-[#CFA600]/[.14]',
+  on_the_way: 'text-[#CFA600] bg-[#CFA600]/[.14]',
+  delivered: 'text-green bg-green/[.10]',
+  cancelled: 'text-red bg-red/[.10]',
 }
 
 const typesText: Record<TOrderStatuses, string> = {
   accepted: 'order_accepted',
   collected: 'order_collecting',
-  delivered: 'order_delivering',
+  on_the_way: 'order_delivering',
+  delivered: 'delivered',
+  cancelled: 'canceled',
 }
 </script>
