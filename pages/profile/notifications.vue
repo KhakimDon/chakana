@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { useNotificationsStore } from '~/store/profile/notifications'
-
-const notifications = useNotificationsStore()
-
-const data = computed(() => notifications.notifications)
-notifications.fetchNotifications()
-</script>
-
 <template>
   <div>
     <div class="flex-center-between mb-4">
@@ -25,14 +16,24 @@ notifications.fetchNotifications()
     <Transition name="fade" mode="out-in">
       <div :key="data.loading" class="flex flex-col gap-4">
         <template v-if="data.loading">
-          <NotificationCardLoading v-for="i in 10" :key="i" />
+          <ProfileNotificationCardLoading v-for="i in 10" :key="i" />
         </template>
         <template v-else>
-          <NotificationCard v-for="(item, i) in data.list" :key="i" :item />
+          <ProfileNotificationCard
+            v-for="(item, i) in data.list"
+            :key="i"
+            :item
+          />
         </template>
       </div>
     </Transition>
   </div>
 </template>
+<script setup lang="ts">
+import { useNotificationsStore } from '~/store/profile/notifications'
 
-<style scoped></style>
+const notifications = useNotificationsStore()
+
+const data = computed(() => notifications.notifications)
+notifications.fetchNotifications()
+</script>

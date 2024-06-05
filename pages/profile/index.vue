@@ -1,12 +1,12 @@
 <template>
   <div>
-    <pre>{{ data }}</pre>
     <div class="flex-center-between mb-4">
       <h1 class="text-[22px] font-extrabold leading-7 text-dark">
         {{ $t('my_infos') }}
       </h1>
       <button
         class="flex-y-center gap-1 font-semibold text-sm text-center leading-5 text-gray-100 group transition-300 hover:text-orange"
+        @click="editModal = true"
       >
         <SvgoCommonEditPenSquare
           class="text-xl leading-5 text-gray-100 transition-300 group-hover:text-orange"
@@ -32,6 +32,7 @@
 
         <button
           class="flex-y-center gap-1 font-semibold text-center text-sm leading-5 text-gray-100 group transition-300 hover:text-orange"
+          @click="editModal = true"
         >
           <SvgoCommonEditPenSquare
             class="text-xl leading-5 text-gray-100 transition-300 group-hover:text-orange"
@@ -90,6 +91,7 @@
         </div>
       </div>
     </div>
+    <ModalProfileEdit v-model="editModal" />
   </div>
 </template>
 
@@ -100,4 +102,6 @@ import { formatPhoneNumber } from '~/utils/functions/common'
 const { data } = await useAsyncData<Profile>('profile', () =>
   useApi().$get('/get/detail')
 )
+
+const editModal = ref(false)
 </script>

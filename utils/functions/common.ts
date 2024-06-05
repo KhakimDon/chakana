@@ -117,7 +117,22 @@ export function formatPhoneNumber(phoneNumber: string) {
     // Use regex capturing groups to format the number
     return cleanedNumber.replace(
       /(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
-      '+$1 $2 $3 $4 $5'
+      '+$1 $2 $3-$4-$5'
     )
   }
+}
+
+export const checkExpireDate = (value: any) => {
+  const month = value.slice(0, 2)
+  const year = value.slice(3, 5)
+
+  const currentMonth = new Date().getMonth() + 1
+  const currentYear = String(new Date().getFullYear()).slice(2, 5)
+  const checkMonth =
+    +month <= 12 &&
+    (+year !== +currentYear ||
+      (+year === +currentYear && +month >= currentMonth))
+  const checkYear = year >= currentYear && year <= +currentYear + 5
+
+  return checkYear && checkMonth
 }
