@@ -8,9 +8,9 @@
       />
     </template>
     <Transition name="fade" mode="out-in">
-      <div :key="$route.name">
-        <NuxtPage />
-      </div>
+      <!--      <div :key="$route.name">-->
+      <!--        <NuxtPage />-->
+      <!--      </div>-->
     </Transition>
     <template #right>
       <div class="sticky top-[86px]">
