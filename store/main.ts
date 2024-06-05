@@ -5,8 +5,9 @@ export const useMainStore = defineStore('mainStore', {
       loading: true,
       params: {
         page: 1,
-        page_size: 5,
+        page_size: 15,
         total: 0,
+        loading: false,
       },
     },
 
@@ -50,7 +51,7 @@ export const useMainStore = defineStore('mainStore', {
             } else {
               this.products.list = res?.items.concat(this.products.list)
             }
-            this.products.params.total = res?.total
+            this.products.params.total = res?.count
             resolve(res)
           })
           .catch((error) => {
