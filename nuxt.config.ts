@@ -80,6 +80,9 @@ export default defineNuxtConfig({
   nitro: {
     serveStatic: true,
   },
+  build: {
+    transpile: ['vue-toastification'],
+  },
   devServerHandlers: [],
   runtimeConfig: {
     public: {
