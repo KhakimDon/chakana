@@ -12,6 +12,7 @@
       <div
         v-if="lists?.list?.length"
         class="flex-y-center gap-1 cursor-pointer select-none"
+        @click="addListModal = true"
       >
         <SvgoCommonPlus class="text-red text-sm" />
         <p class="text-sm font-semibold leading-tight text-red">
@@ -25,7 +26,7 @@
       </div>
       <div
         v-else-if="lists?.list?.length && !lists?.loading"
-        class="flex-y-center gap-3 my-4"
+        class="flex-y-center flex-wrap gap-4 my-4"
       >
         <SearchListCard
           v-for="list in lists?.list"
@@ -47,6 +48,7 @@
         </BaseButton>
       </div>
     </section>
+    <ModalListAdd v-model="addListModal" />
   </main>
 </template>
 
@@ -55,6 +57,7 @@ import IconChevron from 'assets/icons/Common/chevron.svg'
 
 import { useListStore } from '~/store/list.js'
 
+const addListModal = ref(false)
 const listStore = useListStore()
 
 const lists = computed(() => listStore.lists)
