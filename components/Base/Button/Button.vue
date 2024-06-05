@@ -7,7 +7,7 @@
         '!cursor-progress': loading || loadingMore,
         'disabled:!bg-gray-100': !loading && !loadingMore,
       },
-      hoverClasses,
+        ,
     ]"
     class="rounded-lg border border-transparent relative transition-300 active:scale-95 disabled:!bg-white-100 disabled:text-gray disabled:!cursor-not-allowed"
     :disabled="loading || loadingMore || disabled"

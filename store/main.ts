@@ -3,6 +3,11 @@ export const useMainStore = defineStore('mainStore', {
     products: {
       list: [],
       loading: true,
+      params: {
+        page: 1,
+        page_size: 5,
+        total: 0,
+      },
     },
 
     discounts: {
@@ -25,12 +30,27 @@ export const useMainStore = defineStore('mainStore', {
     },
   }),
   actions: {
-    fetchProducts() {
+    fetchProducts(force = true) {
       return new Promise((resolve, reject) => {
+        if (force) {
+          this.products.params.page = 1
+        } else {
+          this.products.params.page += 1
+        }
         useApi()
-          .$get('/new/products')
+          .$get('/new/products', {
+            params: {
+              page_size: this.products.params.page_size,
+              page: this.products.params.page,
+            },
+          })
           .then((res: any) => {
-            this.products.list = res?.items
+            if (force) {
+              this.products.list = res?.items
+            } else {
+              this.products.list = res?.items.concat(this.products.list)
+            }
+            this.products.params.total = res?.total
             resolve(res)
           })
           .catch((error) => {
