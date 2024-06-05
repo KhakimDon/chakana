@@ -5,7 +5,7 @@ FROM node:18.20-alpine3.19
 RUN npm install pm2 -g
 
 # Set the working directory in the container
-WORKDIR /app
+# WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
 
@@ -24,4 +24,4 @@ RUN yarn build
 EXPOSE 3000
 
 # Run your Vue.js application using PM2
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]
