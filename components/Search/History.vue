@@ -8,6 +8,7 @@
     />
     <p
       class="text-sm leading-130 font-medium text-dark hover:text-orange transition-300 cursor-pointer"
+      @click="clickHistory(item?.query ?? '')"
     >
       {{ item?.query }}
     </p>
@@ -26,10 +27,15 @@ interface Props {
 
 defineProps<Props>()
 
+const router = useRouter()
 const searchStore = useSearchStore()
 const deleteHistory = (id: number) => {
   searchStore.deleteSearchHistory(id).then(() => {
     searchStore.searchHistory()
   })
+}
+
+const clickHistory = (text: string) => {
+  router.push({ query: { query: text } })
 }
 </script>

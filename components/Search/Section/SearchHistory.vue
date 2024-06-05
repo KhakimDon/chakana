@@ -27,7 +27,6 @@
             v-for="(item, key) in searchHistoryList"
             :key
             :item="item"
-            @click="clickHistory(item?.query ?? '')"
           />
         </div>
       </transition>
@@ -56,10 +55,6 @@ const clearSearchHistory = () => {
 onMounted(() => {
   searchStore.searchHistory()
 })
-
-const clickHistory = (text: string) => {
-  router.push({ query: { query: text } })
-}
 </script>
 
 <style scoped></style>
