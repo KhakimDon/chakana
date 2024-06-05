@@ -1,7 +1,7 @@
 <template>
   <CommonSectionWrapper title="brands">
     <Transition name="fade" mode="out-in">
-      <div :key="brands?.loading" class="grid grid-cols-4 gap-4">
+      <div :key="brands?.loading" class="grid grid-cols-5 gap-4 gap-y-6">
         <template v-if="brands?.loading">
           <MainBrandsCardLoading v-for="key in 16" :key />
         </template>
@@ -20,7 +20,7 @@
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
-import { useMainStore } from '~/store/main'
+import { useMainStore } from '~/store/main.js'
 
 const mainStore = useMainStore()
 
