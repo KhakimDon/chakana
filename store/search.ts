@@ -3,7 +3,7 @@ export const useSearchStore = defineStore('searchStore', () => {
 
   const products = reactive({
     list: [],
-    loading: false,
+    loading: true,
   })
 
   function searchProducts(query: string) {
