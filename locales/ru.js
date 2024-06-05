@@ -67,4 +67,10 @@ export default {
   product_to_card_text:
     'Вероятно, у вас закончился этот товар, добавить в корзину?',
   saved: 'Избранные',
+  more_info_product: 'Подробнее о заказе',
+  order_number: 'Номер заказа',
+  order_date: 'Дата заказа',
+  order_accepted: 'Заказ принят',
+  order_collecting: 'Заказ собираеться',
+  order_delivering: 'Заказ в пути',
 }
