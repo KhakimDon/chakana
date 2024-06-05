@@ -15,9 +15,7 @@ interface IState {
 
 export const useAuthStore = defineStore('authStore', {
   state: (): IState => ({
-    user: {
-      id: 1,
-    } as IProfileUser,
+    user: {} as IProfileUser,
     showAuth: false,
     accessToken: undefined,
     refreshToken: undefined,
