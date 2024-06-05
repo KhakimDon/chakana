@@ -12,7 +12,8 @@
         <LayoutAuthLogin
           v-if="step === 'login'"
           :form="loginForm"
-          @submit="step = 'confirm'"
+          :loading="buttonLoading"
+          @submit="sendSms"
           @to-qr="step = 'qr'"
         />
         <LayoutAuthConfirm
@@ -45,6 +46,7 @@ const props = defineProps<Props>()
 defineEmits(['close'])
 
 const step = ref('login')
+const buttonLoading = ref(false)
 
 const loginForm = useForm(
   {
@@ -75,6 +77,24 @@ const registerForm = useForm(
     name: { required },
   }
 )
+
+function sendSms() {
+  buttonLoading.value = true
+  useApi()
+    .$post('/send-sms', {
+      body: {
+        phone: '+998' + loginForm.values.phone?.replace(/\D/g, ''),
+        type_: 'login_sms_verification',
+      },
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => (buttonLoading.value = false))
+}
 
 watch(
   () => props.show,

@@ -38,6 +38,7 @@ export const useMainStore = defineStore('mainStore', {
         } else {
           this.products.params.loading = true
           this.products.params.page += 1
+          this.products.params.loading = true
         }
         useApi()
           .$get('/new/products', {
