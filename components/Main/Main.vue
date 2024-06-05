@@ -37,7 +37,7 @@
       <Transition name="fade" mode="out-in">
         <div
           :key="discounts?.loading"
-          class="grid grid-cols-4 gap-x-4 gap-y-10"
+          class="grid grid-cols-5 gap-x-4 gap-y-10"
         >
           <template v-if="discounts?.loading">
             <MainCardLoading v-for="key in 16" :key />
@@ -61,7 +61,7 @@
     </CommonSectionWrapper>
     <CommonSectionWrapper title="profitable_shelf" class="my-6">
       <Transition name="fade" mode="out-in">
-        <div :key="products?.loading" class="grid grid-cols-4 gap-x-4 gap-y-10">
+        <div :key="products?.loading" class="grid grid-cols-5 gap-x-4 gap-y-10">
           <template v-if="products?.loading">
             <MainCardLoading v-for="key in 16" :key />
           </template>
