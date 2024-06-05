@@ -36,7 +36,6 @@ export const useMainStore = defineStore('mainStore', {
         if (force) {
           this.products.params.page = 1
         } else {
-          this.products.params.loading = true
           this.products.params.page += 1
           this.products.params.loading = true
         }
