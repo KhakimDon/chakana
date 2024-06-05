@@ -26,17 +26,19 @@
         </div>
       </Transition>
     </CommonSectionWrapper>
+    <div ref="infiniteScrollTrigger" class="h-1"></div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
 import IconChevron from 'assets/icons/Common/chevron.svg'
 
 import type { IProduct } from '~/types/products.js'
 
 const route = useRoute()
 
-const { list, loading } = useListFetcher<IProduct>(
+const { list, loading, loadMore } = useListFetcher<IProduct>(
   `/brand/products/${route.params.id}`,
   16,
   true
@@ -45,6 +47,14 @@ const { list, loading } = useListFetcher<IProduct>(
 const { data: single } = await useAsyncData<IProduct>('brands-single', () =>
   useApi().$get(`/brand/${route.params.id}`)
 )
+
+const infiniteScrollTrigger = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(infiniteScrollTrigger, ([{ isIntersecting }]) => {
+  if (isIntersecting && !loading.list) {
+    loadMore()
+  }
+})
 
 useSeoMeta({
   title: single.value.title,
