@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-y-center gap-3 relative">
+  <div class="flex-y-center w-fit flex-col gap-1 relative">
     <input
       id="file-avatar"
       :key="image"
@@ -9,7 +9,7 @@
       @change="handleChange"
     />
     <div
-      class="w-[92px] h-[92px] rounded-full border border-white-100 relative overflow-hidden flex-center cursor-pointer"
+      class="w-[92px] h-[92px] shrink-0 rounded-full border border-white-100 relative overflow-hidden flex-center cursor-pointer group"
       @click="getFile"
     >
       <img
@@ -20,40 +20,29 @@
       />
       <IconPhotoAdd v-else class="text-[32px]" />
 
-      <!--      <img-->
-      <!--        v-else-->
-      <!--        src="/images/default/default.svg"-->
-      <!--        alt="profile-avatar"-->
-      <!--        class="object-cover w-[78px] mx-auto absolute-x -bottom-2"-->
-      <!--      />-->
+      <div
+        v-if="image"
+        class="absolute inset-0 flex-center group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none opacity-0 bg-dark/60 transition-300"
+        @click="getFile"
+      >
+        <SvgoCommonEditPenSquare class="text-2xl leading-6 text-white" />
+      </div>
     </div>
-    <div
-      v-if="image"
-      class="flex-center absolute-x -bottom-3 bg-white w-8 h-8 rounded-full border-[0.5px] border-white-100 edit-shadow cursor-pointer hover:border-orange transition-300"
-      @click="getFile"
-    >
-      <IconEditPen class="text-gray-100 text-xl" />
-    </div>
-    <!--    <div class="flex flex-col gap-2">-->
-    <!--      <button-->
-    <!--        class="min-w-[104px] px-4 py-1 rounded-lg text-sm leading-normal font-normal text-dark transition-300 border border-gray-400 hover:border-green"-->
-    <!--        @click="getFile"-->
-    <!--      >-->
-    <!--        {{ $t('change') }}-->
-    <!--      </button>-->
-    <!--      <button-->
-    <!--        v-if="image"-->
-    <!--        class="min-w-[104px] px-4 py-1 rounded-lg text-sm leading-normal font-normal text-dark transition-300 border border-red hover:border-red/40"-->
-    <!--        @click="removeImage"-->
-    <!--      >-->
-    <!--        {{ $t('delete') }}-->
-    <!--      </button>-->
-    <!--    </div>-->
+    <CollapseTransition>
+      <button
+        v-if="image"
+        class="text-xs leading-5 font-medium text-red"
+        @click="removeImage"
+      >
+        {{ $t('delete_avatar') }}
+      </button>
+    </CollapseTransition>
   </div>
 </template>
 
 <script setup lang="ts">
-import IconEditPen from '~/assets/icons/Common/edit-pen-square.svg'
+import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
+
 import IconPhotoAdd from '~/assets/icons/Common/photo-add.svg'
 
 interface Props {

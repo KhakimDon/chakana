@@ -16,3 +16,10 @@ export interface INotification {
   date_send: string
   viewed: boolean
 }
+
+export interface IBankCard {
+  id: number
+  card_number: string
+  card_type: string
+  processing: string
+}
