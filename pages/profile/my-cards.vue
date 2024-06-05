@@ -17,10 +17,10 @@
     <Transition name="fade" mode="out-in">
       <div :key="cards.loading" class="grid grid-cols-2 gap-5">
         <template v-if="cards.loading">
-          <MyCardLoading v-for="i in 4" :key="i" />
+          <ProfileMyCardLoading v-for="i in 4" :key="i" />
         </template>
         <template v-else-if="cards.list.length">
-          <MyCard
+          <ProfileMyCard
             v-for="item in cards.list"
             :key="item.id"
             :item
@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import MyCard from '~/components/MyCard/MyCard.vue'
+import MyCard from '~/components/Profile/MyCard/MyCard.vue'
 import { useCardsStore } from '~/store/profile/cards'
 import type { IBankCard } from '~/types/profile'
 
