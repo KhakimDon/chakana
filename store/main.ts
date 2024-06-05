@@ -36,6 +36,7 @@ export const useMainStore = defineStore('mainStore', {
         if (force) {
           this.products.params.page = 1
         } else {
+          this.products.params.loading = true
           this.products.params.page += 1
         }
         useApi()
@@ -59,6 +60,7 @@ export const useMainStore = defineStore('mainStore', {
           })
           .finally(() => {
             this.products.loading = false
+            this.products.params.loading = false
           })
       })
     },
