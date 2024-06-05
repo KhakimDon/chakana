@@ -1,72 +1,40 @@
 <template>
   <div>
-    <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
-      <NuxtLinkLocale to="/" class="group">
-        <IconChevron
-          class="text-2xl text-dark group-hover:text-orange transition-300"
+    <section class="sticky bg-white py-5 top-[69px] w-full z-10">
+      <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
+        <NuxtLinkLocale to="/" class="group">
+          <IconChevron
+            class="text-2xl text-dark group-hover:text-orange transition-300"
+          />
+        </NuxtLinkLocale>
+        <FormInputSearch
+          v-model="search"
+          input-id="main-search"
+          :placeholder="$t('search')"
+          class="w-full !h-10"
+          @focus="focusInput"
+          @clear="search = ''"
         />
-      </NuxtLinkLocale>
-      <FormInputSearch
-        v-model="search"
-        input-id="main-search"
-        :placeholder="$t('search')"
-        class="w-full !h-10"
-        @focus="focusInput"
-        @clear="search = ''"
-      />
-      <button
-        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
-      >
-        <IconList class="text-2xl text-blue-100" />
-      </button>
-      <SearchCardSuggestions v-if="!outsideClicked" :search="search" />
-    </div>
+        <button
+          class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
+        >
+          <IconList class="text-2xl text-blue-100" />
+        </button>
+        <SearchCardSuggestions v-if="!outsideClicked" :search="search" />
+      </div>
+    </section>
 
     <section v-if="!products.list?.length">
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
-    <section v-else class="my-9">
-      <div
+    <section v-else class="my-5">
+      <SearchCardProduct
         v-for="(product, key) in products.list"
         :key
-        class="flex-y-center gap-2 justify-between rounded-xl px-4 py-3"
-      >
-        <div class="flex-y-center gap-2">
-          <div
-            class="border bg-white border-white-100 w-16 relative h-[52px] rounded-10 px-0.5"
-          >
-            <NuxtImg
-              :src="product.main_image"
-              class="w-full h-fit absolute -bottom-1 object-cover object-center"
-            />
-          </div>
-          <div class="space-y-0.5">
-            <p class="text-[13px] font-semibold leading-none text-dark">
-              {{ product?.name }}
-            </p>
-            <p class="text-xs font-medium leading-130 text-gray-400">
-              {{ product?.weight }} {{ product?.weight_measure }}
-            </p>
-          </div>
-        </div>
-        <div class="w-24">
-          <BaseButton
-            v-if="count < 1"
-            class="w-24"
-            :text="$t('to_basket')"
-            variant="outline"
-            @click="count++"
-          />
-          <MainCardCounter
-            v-else
-            v-model="count"
-            :default-count="count"
-            class="w-24 border-none bg-white-100"
-            readonly
-          />
-        </div>
-      </div>
+        :product="product"
+        :class="{ 'bg-gray-300/50': key % 2 === 0 }"
+      />
     </section>
   </div>
 </template>
@@ -81,7 +49,6 @@ import { useSearchStore } from '~/store/search'
 const router = useRouter()
 const route = useRoute()
 const search = ref('')
-const count = ref(0)
 const searchStore = useSearchStore()
 
 function focusInput() {
