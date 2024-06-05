@@ -56,6 +56,8 @@ const validPhones = [
   '99',
   '77',
   '20',
+  '88',
+  '50',
 ]
 export const isValidPhone = (val: string) => {
   const phone = val.replace(/[\s)(-]/g, '')
