@@ -50,20 +50,22 @@
             </p>
           </div>
         </div>
-        <BaseButton
-          v-if="count < 1"
-          class="w-full"
-          :text="$t('to_basket')"
-          variant="outline"
-          @click="count++"
-        />
-        <MainCardCounter
-          v-else
-          v-model="count"
-          :default-count="count"
-          class="w-24 border-none bg-white-100"
-          readonly
-        />
+        <div class="w-24">
+          <BaseButton
+            v-if="count < 1"
+            class="w-24"
+            :text="$t('to_basket')"
+            variant="outline"
+            @click="count++"
+          />
+          <MainCardCounter
+            v-else
+            v-model="count"
+            :default-count="count"
+            class="w-24 border-none bg-white-100"
+            readonly
+          />
+        </div>
       </div>
     </section>
   </div>
