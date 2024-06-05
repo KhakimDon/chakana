@@ -15,7 +15,7 @@ build_image:
     - make build-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=dev
     - make push-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=dev
   only:
-    - dev
+    - master
 
 deploy:
   stage: deploy_dev
@@ -24,9 +24,9 @@ deploy:
     - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
   script:
     - docker pull registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID
-    - docker rm -f xolodilnik-frontend
+    # - docker rm -f xolodilnik-frontend
     - docker run --name xolodilnik-frontend -d -p 3888:3000 --restart always registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID
   only:
-    - dev
+    - master
   tags: 
     - main
