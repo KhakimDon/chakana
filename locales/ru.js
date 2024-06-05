@@ -21,6 +21,7 @@ export default {
   profitable_shelf: 'Выгодная полка',
   popular_brands: 'Популярные бренды',
   error_text: 'Что-то пошло не так, мы не смогли найти страницу',
+  error_500_text: 'Внутренняя ошибка сервера. Попробуйте позже.',
   back_home: 'Вернуться в главное меню',
   developed_by: 'Developed by:',
   clear: 'Очистить',
@@ -66,4 +67,10 @@ export default {
   product_to_card_text:
     'Вероятно, у вас закончился этот товар, добавить в корзину?',
   saved: 'Избранные',
+  more_info_product: 'Подробнее о заказе',
+  order_number: 'Номер заказа',
+  order_date: 'Дата заказа',
+  order_accepted: 'Заказ принят',
+  order_collecting: 'Заказ собираеться',
+  order_delivering: 'Заказ в пути',
 }
