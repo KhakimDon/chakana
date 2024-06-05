@@ -83,4 +83,6 @@ export default {
   card_added_successfully: 'Карта успешно добавлена',
   save: 'Сохранить',
   delete_avatar: 'Удалить аватарку',
+  active: 'Активные',
+  archive: 'Архив',
 }
