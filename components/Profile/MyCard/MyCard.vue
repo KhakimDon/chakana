@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IBankCard } from '~/types/profile'
+import type { IBankCard } from '~/types/profile.js'
 
 interface Props {
   item: IBankCard
