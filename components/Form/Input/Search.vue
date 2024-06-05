@@ -35,10 +35,10 @@
       >
         <slot name="suffix">
           <div class="w-5 h-5">
-            <IconClose
-              class="text-xl text-gray-100 group-hover:text-red transition-300 !mb-0"
-              :class="[iconClass, iconCloseStyles]"
-            />
+            <!--            <IconClose-->
+            <!--              class="text-xl text-gray-100 group-hover:text-red transition-300 !mb-0"-->
+            <!--              :class="[iconClass, iconCloseStyles]"-->
+            <!--            />-->
           </div>
         </slot>
       </div>
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import IconClose from '~/assets/icons/common/close.svg'
+// import IconClose from '~/assets/icons/common/close.svg'
 import IconSearch from '~/assets/icons/common/search.svg'
 import { debounce } from '~/utils/functions/common'
 
