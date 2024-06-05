@@ -1,6 +1,6 @@
 <template>
-  <div class="rounded-2xl sidebar-premium p-px">
-    <div class="p-3 pt-4 bg-white rounded-2xl flex flex-col items-center">
+  <div class="rounded-2xl sidebar-premium p-px overflow-hidden">
+    <div class="p-3 pt-4 bg-white rounded-[15px] flex flex-col items-center">
       <div class="relative">
         <img
           class="relative z-10"

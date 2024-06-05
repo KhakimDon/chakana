@@ -1,12 +1,12 @@
 <template>
   <teleport to="body">
     <div
-      :class="{ '!opacity-100 !visible': show }"
+      :class="{ '!opacity-100 !visible': modelValue }"
       class="fixed top-0 left-0 w-full h-full bg-dark/[64%] z-50 flex items-center justify-center invisible opacity-0 transition-300 p-5 !m-0"
     >
       <Transition name="modal">
         <div
-          v-if="show"
+          v-if="modelValue"
           id="ModalBg"
           ref="wrapper"
           class="fixed top-0 left-0 w-full h-full z-[51] flex items-center justify-center transition-300 p-5"
@@ -65,7 +65,7 @@ import IconClose from '~/assets/icons/Common/close.svg'
 
 interface Props {
   title?: string
-  show?: boolean
+  modelValue?: boolean
   disableOuterClose?: boolean
   bodyClass?: string
   headerClass?: string
@@ -83,7 +83,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  (e: 'close'): void
+  (e: 'update:modelValue', value: boolean): void
   (e: 'back'): void
 }>()
 
@@ -91,7 +91,7 @@ function handleOuterClick(e: Event) {
   const target = e.target as HTMLElement
   if (target === wrapper.value) {
     if (!props.disableOuterClose) {
-      emit('close')
+      emit('update:modelValue', false)
     } else {
       animationIn.value = true
       setTimeout(() => {
@@ -102,7 +102,7 @@ function handleOuterClick(e: Event) {
 }
 
 watch(
-  () => props.show,
+  () => props.modelValue,
   (val) => {
     if (val) {
       document.body.style.overflow = 'hidden'
@@ -123,7 +123,7 @@ onMounted(() => {
 })
 
 function close() {
-  emit('close')
+  emit('update:modelValue', false)
 }
 </script>
 

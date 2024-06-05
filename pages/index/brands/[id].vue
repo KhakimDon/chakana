@@ -9,12 +9,16 @@
         </NuxtLinkLocale>
       </template>
       <Transition name="fade" mode="out-in">
-        <div :key="loading" class="grid grid-cols-5 gap-x-4 gap-y-10">
-          <template v-if="loading">
+        <div
+          v-if="loading.list || list?.length"
+          :key="loading.list"
+          class="grid grid-cols-5 gap-x-4 gap-y-10"
+        >
+          <template v-if="loading?.list">
             <MainCardLoading v-for="key in 16" :key />
           </template>
-          <template v-else-if="!loading && data?.length">
-            <MainCard v-for="(card, index) in data" :key="index" :card />
+          <template v-else-if="list">
+            <MainCard v-for="(card, index) in list" :key="index" :card />
           </template>
           <template v-else>
             <CommonNoData class="col-span-4" />
@@ -32,8 +36,10 @@ import type { IProduct } from '~/types/products.js'
 
 const route = useRoute()
 
-const { data, loading } = await useAsyncData<IProduct>('brands-detail', () =>
-  useApi().$get(`/brand/products/${route.params.id}`)
+const { list, loading } = useListFetcher<IProduct>(
+  `/brand/products/${route.params.id}`,
+  16,
+  true
 )
 
 const { data: single } = await useAsyncData<IProduct>('brands-single', () =>

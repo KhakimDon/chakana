@@ -8,6 +8,7 @@
         class="py-2 flex items-center gap-1.5 w-full group"
         exact-active-class="active"
       >
+        <!--        active-class="active"-->
         <span
           class="w-6 h-6 rounded-md flex-center transition-300"
           :class="i.iconWrapperClass"
