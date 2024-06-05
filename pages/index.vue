@@ -15,7 +15,7 @@
     <template #right>
       <div class="sticky top-[86px]">
         <MainMap />
-        <div class="mt-5">
+        <div v-if="false" class="mt-5">
           <p class="text-xl leading-normal font-extrabold text-dark">
             {{ $t('basket') }}
           </p>

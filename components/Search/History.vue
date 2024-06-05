@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-y-center relative gap-2 pb-2 after:w-[calc(100%-20px)] last:after:hidden after:h-px after:absolute after:right-0 after:bottom-0 after:bg-[#F7F7F7]"
+    class="flex-y-center relative gap-2 pb-2 after:w-[calc(100%-20px)] last:after:hidden after:h-px after:absolute after:right-0 after:bottom-0 after:bg-gray-300"
   >
     <IconClose
       class="text-gray text-xl transition-300 hover:text-red cursor-pointer"

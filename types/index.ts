@@ -23,3 +23,11 @@ export interface IFile {
   type: string
   id: string
 }
+
+export interface IResponse<T = any> {
+  count: number
+  items: T[]
+  current: string
+  next: string
+  previous: string
+}
