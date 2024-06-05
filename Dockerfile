@@ -24,4 +24,4 @@ RUN yarn build
 EXPOSE 3000
 
 # Run your Vue.js application using PM2
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]
