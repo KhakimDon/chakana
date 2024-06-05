@@ -24,14 +24,23 @@
         <p
           v-if="!showEditor"
           class="text-sm font-normal text-dark leading-tight"
-          @click="showEditor = true"
         >
-          {{ t('search_list_enter_notes') }}
+          <span @click="showEditor = true">
+            {{ t('search_list_enter_notes') }}
+          </span>
+          <BaseButton
+            class="ml-2 text-sm font-normal text-dark leading-tight"
+            :text="$t('search')"
+            size="sm"
+            @click="pasteClipboardData"
+          />
         </p>
         <CommonCheckSpelling
-          v-else
+          v-show="showEditor"
           v-model="form.values.notes"
+          :model-value="clipboardData"
           class="max-h-96 overflow-y-auto"
+          @paste="pasteClipboardData"
         />
       </div>
       <BaseButton
@@ -66,6 +75,15 @@ const { t } = useI18n()
 const listStore = useListStore()
 const loading = ref(false)
 const showEditor = ref(false)
+
+const clipboardData = ref()
+
+const pasteClipboardData = () => {
+  navigator.clipboard.readText().then((data) => {
+    clipboardData.value = data?.replaceAll('* ', '')?.split('\n')
+    showEditor.value = true
+  })
+}
 
 const form = useForm(
   {
