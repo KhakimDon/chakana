@@ -108,4 +108,5 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
+  new_list: 'Новый список',
 }
