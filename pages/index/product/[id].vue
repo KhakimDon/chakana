@@ -25,7 +25,7 @@
           </p>
 
           <div class="flex-y-center gap-2">
-            <div class="w-full">
+            <div class="w-full flex-y-center gap-2">
               <BaseButton
                 v-if="count < 1"
                 class="w-full"
@@ -44,6 +44,10 @@
                 readonly
                 @click.stop
               />
+
+              <BaseButton variant="outline">
+                <IconExport class="text-xl" />
+              </BaseButton>
             </div>
           </div>
         </div>
@@ -53,6 +57,7 @@
 </template>
 <script setup lang="ts">
 import IconCart from '~/assets/icons/Common/cart.svg'
+import IconExport from '~/assets/icons/Common/export.svg'
 import { formatMoneyDecimal } from '~/utils/functions/common'
 
 const route = useRoute()
