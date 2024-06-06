@@ -31,11 +31,13 @@
     </template>
     <Teleport to="body">
       <CommonModalAddressDelivery v-model="show" @close="show = false" />
+      <pre>{{ data }}</pre>
     </Teleport>
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
 import { useCategoriesStore } from '~/store/categories'
+import type { Profile } from '~/types/profile.js'
 
 const route = useRoute()
 
@@ -47,6 +49,10 @@ const categories = computed(() => categoriesStore.categories.list)
 const single = computed(() => categoriesStore.single)
 
 categoriesStore.fetchCategories()
+
+const { data } = await useAsyncData<Profile>('address-delivery', () =>
+  useApi().$get('/saved/address')
+)
 
 watch(
   () => route.name,

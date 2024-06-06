@@ -96,4 +96,6 @@ export default {
   canceled: 'Отменено',
   reorder: 'Повторить заказ',
   address_delivery: 'Адрес доставки',
+  home: 'Дом',
+  other_address: 'Заказать на другой адрес',
 }
