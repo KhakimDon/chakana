@@ -15,11 +15,24 @@
         <template v-else>
           <CommonNoData class="col-span-4" />
         </template>
+        <template v-if="brands?.params?.loading">
+          <MainCardLoading v-for="key in 10" :key />
+        </template>
       </div>
     </Transition>
+    <div
+      v-if="
+        brands.params?.total > brands.list.length &&
+        !brands?.loading &&
+        !brands?.params?.loading
+      "
+      ref="target"
+    />
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
+
 import { useMainStore } from '~/store/main.js'
 
 const mainStore = useMainStore()
@@ -29,4 +42,12 @@ const brands = computed(() => mainStore.brands)
 if (!brands.value?.list.length) {
   mainStore.fetchBrands()
 }
+
+const target = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  if (isIntersecting) {
+    mainStore.fetchBrands(false)
+  }
+})
 </script>
