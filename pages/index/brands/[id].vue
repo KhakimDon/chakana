@@ -1,9 +1,9 @@
 <template>
-  <CommonSectionWrapper :title="single.title" class="my-6">
+  <CommonSectionWrapper title-link :title="single.title" class="my-6">
     <template #beforeTitle>
       <NuxtLinkLocale to="/brands">
         <IconChevron
-          class="text-2xl text-dark group-hover:-translate-x-1 transition-300"
+          class="text-2xl text-dark group-hover:-translate-x-1 transition-300 group-hover:text-orange"
         />
       </NuxtLinkLocale>
     </template>
@@ -13,7 +13,12 @@
           <MainCardLoading v-for="key in 16" :key />
         </template>
         <template v-else-if="list?.length">
-          <MainCard v-for="(card, index) in list" :key="index" :card />
+          <MainCard
+            v-for="(card, index) in list"
+            :key="index"
+            :card
+            @click="selectProduct(card)"
+          />
         </template>
         <template v-else>
           <CommonNoData class="col-span-4" />
@@ -27,6 +32,11 @@
       v-if="!loading?.list && !loading?.button && paginationData?.next"
       ref="infiniteScrollTrigger"
     />
+    <MainModalInfo
+      v-model="showProduct"
+      :product="selectedProduct"
+      @close="showProduct = false"
+    />
   </CommonSectionWrapper>
 </template>
 
@@ -36,7 +46,14 @@ import IconChevron from 'assets/icons/Common/chevron.svg'
 
 import type { IProduct } from '~/types/products.js'
 
+const showProduct = ref(false)
+const selectedProduct = ref<IProduct | null>(null)
 const route = useRoute()
+
+function selectProduct(product: IProduct) {
+  selectedProduct.value = product
+  showProduct.value = true
+}
 
 const { list, loading, loadMore, paginationData } = useListFetcher<IProduct>(
   `/brand/products/pagination/${route.params.id}`,
