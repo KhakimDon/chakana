@@ -4,6 +4,7 @@ before_script:
 stages:
   - build_dev
   - deploy_dev
+  - deploy_prod
 
 build_image:
   stage: build_dev
@@ -24,9 +25,23 @@ deploy:
     - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
   script:
     - docker pull registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID
-    # - docker rm -f xolodilnik-frontend
+    - docker rm -f xolodilnik-frontend
     - docker run --name xolodilnik-frontend -d -p 3888:3000 --restart always registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID
   only:
     - dev
   tags: 
     - main
+
+deploy_to_prod:
+  stage: deploy_prod
+  image: registry.uicgroup.tech/devops/docker:dind
+  before_script:
+    - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
+  script:
+    - docker pull registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID
+    # - docker rm -f xolodilnik-frontend
+    - docker run --name xolodilnik-frontend -d -p 3888:3000 --restart always registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID
+  only:
+    - master
+  tags: 
+    - 228_server
