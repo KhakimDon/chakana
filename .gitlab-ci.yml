@@ -32,17 +32,17 @@ deploy:
   tags: 
     - main
 
-# build_image_prod:
-#   stage: build
-#   image: registry.uicgroup.tech/devops/docker:dind
-#   before_script:
-#     - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
-#   script:
-#     - make vars-input KEYS=$DEV_KEYS
-#     - make build-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=prod
-#     - make push-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=prod
-#   only:
-#     - master
+build_image_prod:
+  stage: build
+  image: registry.uicgroup.tech/devops/docker:dind
+  before_script:
+    - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
+  script:
+    - make vars-input KEYS=$DEV_KEYS
+    - make build-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=prod
+    - make push-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=prod
+  only:
+    - master
     
 deploy_to_prod:
   stage: deploy_prod
