@@ -36,6 +36,21 @@ export const useAuthStore = defineStore('authStore', {
           })
       })
     },
+    updateUser(user: IProfileUser) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$put<IProfileUser>('update/detail', {
+            body: user,
+          })
+          .then((res) => {
+            resolve(res)
+            this.fetchUser()
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
     getTokens() {
       const access = useCookie('access_token')
       const refresh = useCookie('refresh_token')
