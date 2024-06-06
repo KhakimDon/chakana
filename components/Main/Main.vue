@@ -28,7 +28,7 @@
       </NuxtLinkLocale>
       <NuxtLinkLocale
         to="/search/list"
-        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-blue-100 transition-300"
+        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-blue-100/10 transition-300"
         aria-label="list-button"
       >
         <IconList class="text-2xl text-blue-100" />
@@ -89,7 +89,7 @@
       />
     </CommonSectionWrapper>
     <MainModalInfo
-      :show="showProduct"
+      v-model="showProduct"
       :product="selectedProduct"
       @close="showProduct = false"
     />

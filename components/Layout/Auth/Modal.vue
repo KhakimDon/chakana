@@ -47,7 +47,7 @@ interface Props {
 const props = defineProps<Props>()
 defineEmits(['close'])
 
-const step = ref('register')
+const step = ref('login')
 const buttonLoading = ref(false)
 const params = ref({
   phone: '',

@@ -13,11 +13,11 @@ export const useCategoriesStore = defineStore('categoriesStore', {
       return new Promise((resolve, reject) => {
         useApi()
           .$get('/categories')
-          .then((res) => {
+          .then((res: any) => {
             this.categories.list = res
             resolve(res)
           })
-          .catch((error) => {
+          .catch((error: any) => {
             reject(error)
           })
           .finally(() => {
