@@ -27,9 +27,23 @@ export const useListStore = defineStore('listStore', () => {
     })
   }
 
+  function deleteList(id: string) {
+    return new Promise((resolve, reject) => {
+      useApi()
+        .$delete(`/delete-user-products-list/${id}`)
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   return {
     selectedList,
     lists,
     getUserProductsList,
+    deleteList,
   }
 })

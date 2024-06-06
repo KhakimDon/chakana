@@ -33,6 +33,7 @@
           :key
           :list="list"
           @open-details="openDetailsModal(list)"
+          @delete="deleteList"
         />
       </div>
       <div v-else class="flex-center flex-col gap-3 mt-40">
@@ -79,6 +80,12 @@ const openDetailsModal = (list: any) => {
 const openAddListModal = () => {
   listStore.selectedList = null
   addListModal.value = true
+}
+
+const deleteList = (id: string) => {
+  listStore.deleteList(id).then(() => {
+    listStore.getUserProductsList(params)
+  })
 }
 </script>
 

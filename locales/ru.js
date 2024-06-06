@@ -101,6 +101,7 @@ export default {
   search_list_no_data_subtitle:
     'Добавляйте список и наслаждайтесь удобными покупками в холодильнике',
   new_list: 'Новый список',
+  edit_list: 'Редактировать список',
   more: 'Еще {count}',
   enter_list_title: 'Название списка',
   search_list_enter_notes:

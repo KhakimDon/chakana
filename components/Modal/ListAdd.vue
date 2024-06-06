@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="selectedList?.main_name ? selectedList?.main_name : $t('new_list')"
+    :title="selectedList?.main_name ? $t('edit_list') : $t('new_list')"
     title-class="!text-xl !font-extrabold !leading-7"
     @update:model-value="$emit('update:modelValue', $event)"
   >
@@ -54,14 +54,26 @@
           @paste="pasteClipboardData"
         />
       </div>
-      <BaseButton
-        class="!py-3 w-full"
-        :loading
-        :text="$t('search')"
-        size="md"
-        :disabled="loading || form.$v.value.$invalid"
-        @click="add"
-      />
+      <div class="flex-y-center gap-2">
+        <BaseButton
+          v-if="hasSave"
+          class="!py-3 w-full"
+          :loading
+          variant="secondary"
+          :text="$t('save')"
+          size="md"
+          :disabled="loading || form.$v.value.$invalid"
+          @click="add"
+        />
+        <BaseButton
+          class="!py-3 w-full"
+          :loading
+          :text="$t('search')"
+          size="md"
+          :disabled="loading || form.$v.value.$invalid"
+          @click="add"
+        />
+      </div>
     </div>
   </BaseModal>
 </template>
@@ -75,6 +87,7 @@ import { useListStore } from '~/store/list.js'
 interface Props {
   modelValue: boolean
   selectedList: any
+  hasSave?: boolean
 }
 const props = defineProps<Props>()
 

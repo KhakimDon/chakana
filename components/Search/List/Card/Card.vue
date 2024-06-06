@@ -2,14 +2,21 @@
   <div
     class="h-fit min-h-[211px] w-44 p-3 group rounded-10 flex flex-col bg-gray-300"
   >
-    <p
-      class="text-base font-semibold mb-3 text-dark leading-tight cursor-pointer transition-300 group-hover:text-orange"
-      @click="emit('openDetails')"
-    >
-      {{ list?.main_name }}
-    </p>
+    <div class="flex-y-center mb-3 justify-between">
+      <p
+        class="text-base font-semibold text-dark line-clamp-1 leading-tight cursor-pointer transition-300 group-hover:text-orange"
+        @click="emit('openDetails')"
+      >
+        {{ list?.main_name }}
+      </p>
+      <SvgoCommonTrash
+        v-if="showDelete"
+        class="text-gray-500 cursor-pointer text-xl hover:text-red transition-300"
+        @click="emit('delete', list?.main_note_id)"
+      />
+    </div>
     <div
-      class="overflow-y-auto overflow-x-hidden h-[100px] transition-300 group-hover:text-orange"
+      class="overflow-y-auto overflow-x-hidden cursor-pointer h-[100px] transition-300 group-hover:text-orange"
       @click="emit('openDetails')"
     >
       <ul
@@ -42,7 +49,7 @@
     </div>
     <p
       v-if="list?.created_at"
-      class="flex-y-center leading-130"
+      class="flex-y-center leading-130 cursor-pointer"
       @click="emit('openDetails')"
     >
       <SvgoCommonCalendar class="mr-1 text-xl text-gray" />
@@ -59,12 +66,19 @@
 import dayjs from 'dayjs'
 
 interface Props {
-  list: any
+  list: {
+    main_name: string
+    main_note_id: string
+    notes: string[]
+    created_at: string
+  }
+  showDelete?: boolean
 }
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'openDetails'): void
+  (e: 'delete', id?: string): void
 }>()
 
 const { t } = useI18n()
