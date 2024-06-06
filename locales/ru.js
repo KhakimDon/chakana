@@ -94,5 +94,6 @@ export default {
   order_delivering: 'Заказ в пути',
   delivered: 'Доставленный',
   canceled: 'Отменено',
-  reorder: 'Повторить заказ'
+  reorder: 'Повторить заказ',
+  address_delivery: 'Адрес доставки',
 }

@@ -14,7 +14,7 @@
     </Transition>
     <template #right>
       <div class="sticky top-[86px]">
-        <MainMap />
+        <MainMap @change-coords="changeCoords" />
         <div v-if="false" class="mt-5">
           <p class="text-xl leading-normal font-extrabold text-dark">
             {{ $t('basket') }}
@@ -29,6 +29,9 @@
         </div>
       </div>
     </template>
+    <Teleport to="body">
+      <CommonModalAddressDelivery v-model="show" @close="show = false" />
+    </Teleport>
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
@@ -37,6 +40,7 @@ import { useCategoriesStore } from '~/store/categories'
 const route = useRoute()
 
 const categoriesStore = useCategoriesStore()
+const show = ref(true)
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
 const categories = computed(() => categoriesStore.categories.list)
@@ -50,4 +54,8 @@ watch(
     categoriesStore.single = null
   }
 )
+
+const changeCoords = () => {
+  show.value = true
+}
 </script>
