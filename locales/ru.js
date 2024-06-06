@@ -104,4 +104,8 @@ export default {
   language: 'Язык',
   send_notification: 'Отправить уведомления',
   choose_language: 'Выберите язык',
+  go_back: 'Вернуться назад',
+  no_notifications_yet: 'Уведомлений пока нет',
+  you_have_not_received_any_notifications:
+    "You haven't received any notifications yet",
 }

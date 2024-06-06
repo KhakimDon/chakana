@@ -1,47 +1,3 @@
-<script setup lang="ts">
-import { SvgoCommonBell, SvgoCommonGlobe } from '#components'
-
-const { currentLanguage, languagesList, changeLocale } = useLanguageSwitcher()
-
-const listLinks = ref([
-  {
-    name: 'language',
-    subtitle: currentLanguage.value?.nameFull,
-    wrapperClass: 'hover:border-orange hover:bg-orange/10',
-    icon: SvgoCommonGlobe,
-    iconClass: 'text-orange',
-    value: 'language',
-  },
-  {
-    name: 'send_notification',
-    icon: SvgoCommonBell,
-    wrapperClass: 'hover:border-[#F7C954] hover:bg-[#F7C954]/10',
-    iconClass: 'text-[#F7C954]',
-    value: 'notification',
-  },
-])
-
-const languageModal = ref(false)
-const notification = ref(false)
-const language = ref(currentLanguage.value?.code)
-
-const actions = (value: string) => {
-  switch (value) {
-    case 'language':
-      languageModal.value = true
-      break
-    case 'notification':
-      notification.value = !notification.value
-      break
-  }
-}
-
-function changeLang() {
-  changeLocale(language.value)
-  languageModal.value = false
-}
-</script>
-
 <template>
   <div>
     <h1 class="text-xl font-extrabold leading-7 text-dark mb-4">
@@ -105,3 +61,46 @@ function changeLang() {
     </BaseModal>
   </div>
 </template>
+<script setup lang="ts">
+import { SvgoCommonBell, SvgoCommonGlobe } from '#components'
+
+const { currentLanguage, languagesList, changeLocale } = useLanguageSwitcher()
+
+const listLinks = ref([
+  {
+    name: 'language',
+    subtitle: currentLanguage.value?.nameFull,
+    wrapperClass: 'hover:border-orange hover:bg-orange/10',
+    icon: SvgoCommonGlobe,
+    iconClass: 'text-orange',
+    value: 'language',
+  },
+  {
+    name: 'send_notification',
+    icon: SvgoCommonBell,
+    wrapperClass: 'hover:border-[#F7C954] hover:bg-[#F7C954]/10',
+    iconClass: 'text-[#F7C954]',
+    value: 'notification',
+  },
+])
+
+const languageModal = ref(false)
+const notification = ref(false)
+const language = ref(currentLanguage.value?.code)
+
+const actions = (value: string) => {
+  switch (value) {
+    case 'language':
+      languageModal.value = true
+      break
+    case 'notification':
+      notification.value = !notification.value
+      break
+  }
+}
+
+function changeLang() {
+  changeLocale(language.value)
+  languageModal.value = false
+}
+</script>

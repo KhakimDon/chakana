@@ -1,19 +1,3 @@
-<script setup lang="ts">
-import { CONFIG } from '../../../config/index.js'
-import { formatPhoneNumber } from '../../../utils/functions/common.js'
-
-interface Props {
-  modelValue: boolean
-}
-defineProps<Props>()
-
-interface Emits {
-  (e: 'update:modelValue', value: boolean): void
-}
-
-const emit = defineEmits<Emits>()
-</script>
-
 <template>
   <BaseModal
     :model-value="modelValue"
@@ -61,5 +45,18 @@ const emit = defineEmits<Emits>()
     </p>
   </BaseModal>
 </template>
+<script setup lang="ts">
+import { CONFIG } from '../../../config/index.js'
+import { formatPhoneNumber } from '../../../utils/functions/common.js'
 
-<style scoped></style>
+interface Props {
+  modelValue: boolean
+}
+defineProps<Props>()
+
+interface Emits {
+  (e: 'update:modelValue', value: boolean): void
+}
+
+const emit = defineEmits<Emits>()
+</script>
