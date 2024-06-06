@@ -4,7 +4,11 @@
     v-bind="{ modelValue }"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <FormAvatarUpload :default-image="user?.image" class="mb-6" />
+    <FormAvatarUpload
+      :default-image="user?.image"
+      class="mb-6"
+      @change="avatar = $event"
+    />
     <div class="flex flex-col gap-4">
       <FormGroup :label="$t('full_name')">
         <FormInput
@@ -121,15 +125,17 @@ const form = useForm(
   }
 )
 
+const avatar = ref<File>()
 const loading = ref(false)
 
 function submit() {
   form.$v.value.$touch()
-  if (form.$v.value.$invalid) return
-  loading.value = true
-  authStore.updateUser(form.values).finally(() => {
-    loading.value = false
-  })
-  emit('update:modelValue', false)
+  console.log(avatar.value.name)
+  // if (form.$v.value.$invalid) return
+  // loading.value = true
+  // authStore.updateUser(form.values).finally(() => {
+  //   loading.value = false
+  // })
+  // emit('update:modelValue', false)
 }
 </script>
