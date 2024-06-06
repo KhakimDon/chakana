@@ -110,4 +110,7 @@ export default {
   canceled: 'Отменено',
   reorder: 'Повторить заказ',
   paste_text_from_buffer: 'Вставить скопированный текст',
+  checking_against_list: 'Сверка по списку',
+  from_your_request: 'По вашему запросу',
+  found: 'Найдено: {count} из {all}',
 }

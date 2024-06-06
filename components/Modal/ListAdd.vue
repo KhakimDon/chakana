@@ -71,7 +71,7 @@
           :text="$t('search')"
           size="md"
           :disabled="loading || form.$v.value.$invalid"
-          @click="add"
+          @click="add('search')"
         />
       </div>
     </div>
@@ -95,7 +95,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const listStore = useListStore()
 const loading = ref(false)
@@ -105,7 +105,10 @@ const clipboardData = ref()
 
 const pasteClipboardData = () => {
   navigator.clipboard.readText().then((data) => {
-    clipboardData.value = data?.replaceAll('* ', '')?.split('\n')
+    clipboardData.value = [
+      ...form.values.notes,
+      ...(data?.replaceAll('* ', '')?.split('\n') ?? []),
+    ]
     showEditor.value = true
   })
 }
@@ -122,7 +125,7 @@ const form = useForm(
   }
 )
 
-function createCard() {
+function createCard(mode?: string) {
   useApi()
     .$post('/create-user-products-list', {
       body: {
@@ -137,6 +140,9 @@ function createCard() {
       form.values.notes = []
       emit('update:modelValue', false)
       listStore.getUserProductsList()
+      if (mode === 'search') {
+        navigateTo(`/${locale.value}/search/list-results`)
+      }
     })
     .catch((err: Error) => {
       const { handleError } = useErrorHandling()
@@ -147,7 +153,7 @@ function createCard() {
     })
 }
 
-function updateCard() {
+function updateCard(mode?: string) {
   useApi()
     .$put('/update-user-products-list', {
       body: {
@@ -163,6 +169,9 @@ function updateCard() {
       form.values.notes = []
       emit('update:modelValue', false)
       listStore.getUserProductsList()
+      if (mode === 'search') {
+        navigateTo(`/${locale.value}/search/list-results`)
+      }
     })
     .catch((err: Error) => {
       const { handleError } = useErrorHandling()
@@ -173,14 +182,14 @@ function updateCard() {
     })
 }
 
-function add() {
+function add(mode?: string) {
   form.$v.value.$touch()
   if (!form.$v.value.$invalid) {
     loading.value = true
     if (props.selectedList?.main_note_id) {
-      updateCard()
+      updateCard(mode)
     } else {
-      createCard()
+      createCard(mode)
     }
   }
 }
