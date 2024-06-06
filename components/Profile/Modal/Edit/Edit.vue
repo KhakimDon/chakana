@@ -88,7 +88,7 @@
         </template>
       </FormInput>
       <BaseButton :text="$t('save')" class="mt-2" @click="submit" />
-      <ModalProfileEditPhone v-model="phoneEditModal" />
+      <ProfileModalEditPhone v-model="phoneEditModal" />
     </div>
   </BaseModal>
 </template>

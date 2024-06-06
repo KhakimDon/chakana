@@ -43,7 +43,7 @@
       @submit="submitOtp"
       @resend="submit"
     />
-    <ModalProfileEditTooManyTries v-model="tooManyTries" />
+    <ProfileModalEditTooManyTries v-model="tooManyTries" />
   </BaseModal>
 </template>
 
