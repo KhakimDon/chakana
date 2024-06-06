@@ -24,7 +24,7 @@
           disabled
         >
           <template #suffix>
-            <button>
+            <button @click="phoneEditModal = true">
               <SvgoCommonEditPenSquare
                 class="text-2xl leading-6 text-gray-100 hover:text-orange transition-300"
               />
@@ -88,6 +88,7 @@
         </template>
       </FormInput>
       <BaseButton :text="$t('save')" class="mt-2" @click="submit" />
+      <ModalProfileEditPhone v-model="phoneEditModal" />
     </div>
   </BaseModal>
 </template>
@@ -111,6 +112,9 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 const authStore = useAuthStore()
+const { showToast } = useCustomToast()
+
+const phoneEditModal = ref(false)
 
 const form = useForm(
   {
@@ -130,12 +134,16 @@ const loading = ref(false)
 
 function submit() {
   form.$v.value.$touch()
-  console.log(avatar.value.name)
-  // if (form.$v.value.$invalid) return
-  // loading.value = true
-  // authStore.updateUser(form.values).finally(() => {
-  //   loading.value = false
-  // })
-  // emit('update:modelValue', false)
+  if (form.$v.value.$invalid) return
+  loading.value = true
+  authStore
+    .updateUser(form.values)
+    .then(() => {
+      showToast('profile_updated_successfully', 'success')
+      emit('update:modelValue', false)
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 </script>
