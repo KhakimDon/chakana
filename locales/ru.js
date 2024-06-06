@@ -105,4 +105,7 @@ export default {
   enter_list_title: 'Название списка',
   search_list_enter_notes:
     'Введите список вручную или поставьте текст из буффера обмена',
+  delivered: 'Доставленный',
+  canceled: 'Отменено',
+  reorder: 'Повторить заказ'
 }
