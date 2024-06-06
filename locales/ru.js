@@ -101,4 +101,7 @@ export default {
     'Вы неправильно ввели код верификации 3 раза в связи с чем заблокированы на 24 часа',
   phone_number_contact_support: 'Номер телефона службы поддержки',
   profile_updated_successfully: 'Профиль успешно обновлен',
+  language: 'Язык',
+  send_notification: 'Отправить уведомления',
+  choose_language: 'Выберите язык',
 }
