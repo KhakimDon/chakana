@@ -24,7 +24,7 @@
           variant="secondary"
           class="!h-9 flex-center"
           :text="$t('register')"
-          @click="authStore.showAuth = true"
+          @click="openAuthModal"
         >
           <template #prefix>
             <IconLogin class="text-xl" />
@@ -69,6 +69,11 @@ const { t } = useI18n()
 
 const user = computed(() => authStore.user)
 const { locale } = useI18n()
+
+function openAuthModal() {
+  authStore.showAuth = true
+  console.log('openAuthModal', authStore.showAuth)
+}
 
 const menu = [
   {

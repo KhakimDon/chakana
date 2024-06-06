@@ -73,7 +73,7 @@
               @click="selectProduct(card)"
             />
           </template>
-          <template v-if="!products?.params?.loading">
+          <template v-if="products?.params?.loading">
             <MainCardLoading v-for="key in 10" :key />
           </template>
         </div>

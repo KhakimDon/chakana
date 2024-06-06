@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatMoneyDecimal } from '@/utils/functions/common'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 </script>
 
 <style>

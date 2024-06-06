@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import type { INotification } from '~/types/profile'
+import type { INotification } from '~/types/profile.js'
 
 interface Props {
   item: INotification

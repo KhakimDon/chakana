@@ -36,7 +36,9 @@ export const useMainStore = defineStore('mainStore', {
         if (force) {
           this.products.params.page = 1
         } else {
+          this.products.params.loading = true
           this.products.params.page += 1
+          this.products.params.loading = true
         }
         useApi()
           .$get('/new/products', {
@@ -49,7 +51,7 @@ export const useMainStore = defineStore('mainStore', {
             if (force) {
               this.products.list = res?.items
             } else {
-              this.products.list = res?.items.concat(this.products.list)
+              this.products.list = this.products.list.concat(res?.items)
             }
             this.products.params.total = res?.count
             resolve(res)
@@ -59,6 +61,7 @@ export const useMainStore = defineStore('mainStore', {
           })
           .finally(() => {
             this.products.loading = false
+            this.products.params.loading = false
           })
       })
     },

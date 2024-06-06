@@ -8,6 +8,7 @@
         input-class="!pl-1"
         type="number"
         :error="form.$v.value.phone.$error"
+        @keydown.enter="submit"
       >
         <template #prefix>
           <div class="flex-center h-11">
@@ -33,11 +34,11 @@
           <IconQr class="!-mb-px block" />
         </template>
       </BaseButton>
-
       <BaseButton
         class="w-full mt-4"
         :disabled="form.$v.value.$invalid"
         :text="$t('continue')"
+        v-bind="{ loading }"
         @click="submit"
       />
       <i18n-t
@@ -74,6 +75,7 @@ import type { TForm } from '~/composables/useForm'
 
 interface Props {
   form: TForm<any>
+  loading?: boolean
 }
 
 const props = defineProps<Props>()
