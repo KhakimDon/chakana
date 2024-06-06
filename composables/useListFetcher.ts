@@ -18,8 +18,8 @@ export const useListFetcher = <T>(
   const currentPage = ref(Number(route.query?.page ?? 1))
 
   const params = reactive({
-    limit: paginationLimit ?? 9,
-    offset: (currentPage.value - 1) * (paginationLimit ?? 9),
+    page_size: paginationLimit ?? 9,
+    page: 1,
     search: route.query.search ?? undefined,
     ...customParams,
   })
@@ -35,17 +35,18 @@ export const useListFetcher = <T>(
       ...customParams,
     })
 
-    if (params.offset > 0) {
+    if (params.page > 0) {
       if (itself) {
         list.value = [...(list.value ?? []), ...data.items]
       } else {
         list.value = [...(list.value ?? []), ...data]
       }
     } else {
-      list.value = data
+      list.value = data.items
     }
 
-    paginationData.count = data.count
+    paginationData.count = data?.count
+    paginationData.next = data?.next
 
     loading.list = false
     loading.button = false
@@ -53,11 +54,11 @@ export const useListFetcher = <T>(
 
   const loadMore = () => {
     loading.button = true
-    params.offset += params.limit
+    params.page++
   }
 
   const resetList = () => {
-    params.offset = 0
+    params.page = 1
     fetchApplications()
   }
 
