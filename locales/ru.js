@@ -94,5 +94,8 @@ export default {
   order_delivering: 'Заказ в пути',
   delivered: 'Доставленный',
   canceled: 'Отменено',
-  reorder: 'Повторить заказ'
+  reorder: 'Повторить заказ',
+  description: 'Описание',
+  about_product: 'О товаре',
+  recommended_products: 'Может, ещё кое-что?',
 }
