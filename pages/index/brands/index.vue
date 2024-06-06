@@ -11,6 +11,15 @@
             :key="index"
             :card
           />
+
+          <div
+            v-if="
+              brands.params?.total > brands.list.length &&
+              !brands?.loading &&
+              !brands?.params?.loading
+            "
+            ref="target"
+          />
         </template>
         <template v-else>
           <CommonNoData class="col-span-4" />
@@ -20,14 +29,6 @@
         </template>
       </div>
     </Transition>
-    <div
-      v-if="
-        brands.params?.total > brands.list.length &&
-        !brands?.loading &&
-        !brands?.params?.loading
-      "
-      ref="target"
-    />
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
