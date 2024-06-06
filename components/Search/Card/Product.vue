@@ -10,15 +10,18 @@
         />
       </div>
       <div class="space-y-0.5">
-        <p class="text-[13px] font-semibold leading-none text-dark">
+        <NuxtLinkLocale
+          :to="`/project/${product?.id}`"
+          class="text-[13px] font-semibold hover:text-orange transition-300 leading-none text-dark"
+        >
           {{ product?.name }}
-        </p>
+        </NuxtLinkLocale>
         <p class="text-xs font-medium leading-130 text-gray-400">
           {{ product?.weight }} {{ product?.weight_measure }}
         </p>
       </div>
     </div>
-    <div class="w-24">
+    <div class="w-24 text-right">
       <BaseButton
         v-if="count < 1"
         class="w-24"
@@ -33,11 +36,20 @@
         class="w-24 border-none bg-white-100"
         readonly
       />
+      <p
+        v-if="count > 0"
+        class="mt-1 text-xs font-medium text-dark leading-none"
+      >
+        {{ formatMoneyDecimal(count * product?.price ?? 0, 0) }}
+        <span class="text-[10px] font-medium leading-130 text-dark">UZS</span>
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
+
 interface Props {
   product: any
 }
