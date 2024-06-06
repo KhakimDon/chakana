@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('new_list')"
+    :title="selectedList?.main_name ? selectedList?.main_name : $t('new_list')"
     title-class="!text-xl !font-extrabold !leading-7"
     @update:model-value="$emit('update:modelValue', $event)"
   >
@@ -17,24 +17,35 @@
       <p class="flex-y-center leading-130 mb-4 mt-2">
         <SvgoCommonCalendar class="mr-1 text-xl text-gray" />
         <span class="text-dark text-sm font-medium leading-130">
-          {{ dayjs(new Date()).format('DD.MM.YYYY, HH:mm') }}
+          {{
+            dayjs(
+              form.values?.created_at ? form.values?.created_at : new Date()
+            ).format('DD.MM.YYYY, HH:mm')
+          }}
         </span>
       </p>
       <div class="mb-3">
-        <p
+        <div
           v-if="!showEditor"
           class="text-sm font-normal text-dark leading-tight"
         >
-          <span @click="showEditor = true">
+          <p @click="openEditor">
             {{ t('search_list_enter_notes') }}
-          </span>
+          </p>
           <BaseButton
-            class="ml-2 text-sm font-normal text-dark leading-tight"
-            :text="$t('search')"
+            class="text-sm font-normal py-2 px-16 group w-full my-3 text-dark leading-tight"
+            :text="$t('paste_text_from_buffer')"
             size="sm"
+            variant="secondary"
             @click="pasteClipboardData"
-          />
-        </p>
+          >
+            <template #prefix>
+              <SvgoCommonCopy
+                class="text-dark text-xl transition-300 group-hover:text-orange"
+              />
+            </template>
+          </BaseButton>
+        </div>
         <CommonCheckSpelling
           v-show="showEditor"
           v-model="form.values.notes"
@@ -63,8 +74,9 @@ import { useListStore } from '~/store/list.js'
 
 interface Props {
   modelValue: boolean
+  selectedList: any
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -105,7 +117,33 @@ function createCard() {
         notes: form.values.notes,
       },
     })
-    .then((res: any) => {
+    .then(() => {
+      form.$v.value.$reset()
+      form.values.created_at = new Date()
+      form.values.main_name = ''
+      form.values.notes = []
+      emit('update:modelValue', false)
+      listStore.getUserProductsList()
+    })
+    .catch((err: Error) => {
+      const { handleError } = useErrorHandling()
+      handleError(err)
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+function updateCard() {
+  useApi()
+    .$put('/update-user-products-list', {
+      body: {
+        main_list_name: form.values.main_name,
+        main_list_id: props.selectedList?.main_note_id,
+        notes: form.values.notes,
+      },
+    })
+    .then(() => {
       form.$v.value.$reset()
       form.values.created_at = new Date()
       form.values.main_name = ''
@@ -126,7 +164,34 @@ function add() {
   form.$v.value.$touch()
   if (!form.$v.value.$invalid) {
     loading.value = true
-    createCard()
+    if (props.selectedList?.main_note_id) {
+      updateCard()
+    } else {
+      createCard()
+    }
   }
 }
+
+const openEditor = () => {
+  showEditor.value = true
+  clipboardData.value = ['']
+}
+
+watch(
+  () => props.selectedList,
+  (val) => {
+    if (val?.created_at && val?.main_name && val?.notes.length) {
+      showEditor.value = true
+      form.values.created_at = val?.created_at
+      form.values.main_name = val?.main_name
+      clipboardData.value = JSON.parse(JSON.stringify(val?.notes))
+    } else {
+      listStore.selectedList = null
+      form.values.created_at = new Date()
+      form.values.main_name = ''
+      clipboardData.value = ['']
+      showEditor.value = false
+    }
+  }
+)
 </script>

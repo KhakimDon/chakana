@@ -49,7 +49,7 @@ watch(
   (value) => {
     words.value = value
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
 
 function addWord(index: number) {

@@ -12,7 +12,7 @@
       <div
         v-if="lists?.list?.length"
         class="flex-y-center gap-1 cursor-pointer select-none"
-        @click="addListModal = true"
+        @click="openAddListModal"
       >
         <SvgoCommonPlus class="text-red text-sm" />
         <p class="text-sm font-semibold leading-tight text-red">
@@ -29,9 +29,10 @@
         class="flex-y-center flex-wrap gap-4 my-4"
       >
         <SearchListCard
-          v-for="list in lists?.list"
-          :key="list.id"
+          v-for="(list, key) in lists?.list"
+          :key
           :list="list"
+          @open-details="openDetailsModal(list)"
         />
       </div>
       <div v-else class="flex-center flex-col gap-3 mt-40">
@@ -48,7 +49,7 @@
         </BaseButton>
       </div>
     </section>
-    <ModalListAdd v-model="addListModal" />
+    <ModalListAdd v-model="addListModal" :selected-list="selectedList" />
   </main>
 </template>
 
@@ -68,6 +69,17 @@ const params = {
 }
 
 listStore.getUserProductsList(params)
+
+const selectedList = computed(() => listStore.selectedList)
+const openDetailsModal = (list: any) => {
+  listStore.selectedList = list
+  addListModal.value = true
+}
+
+const openAddListModal = () => {
+  listStore.selectedList = null
+  addListModal.value = true
+}
 </script>
 
 <style scoped></style>

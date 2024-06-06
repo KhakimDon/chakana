@@ -1,4 +1,5 @@
 export const useListStore = defineStore('listStore', () => {
+  const selectedList = ref<any>(null)
   const lists = reactive({
     list: [],
     loading: true,
@@ -27,6 +28,7 @@ export const useListStore = defineStore('listStore', () => {
   }
 
   return {
+    selectedList,
     lists,
     getUserProductsList,
   }
