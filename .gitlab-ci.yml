@@ -47,9 +47,8 @@ build_image_prod:
 deploy_to_prod:
   stage: deploy_prod
   image: registry.uicgroup.tech/devops/docker:dind
-  before_script:
-    - ssh mlwktddj@192.168.15.44 'docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD'
   script:
+    - ssh mlwktddj@192.168.15.44 'docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD'
     - ssh mlwktddj@192.168.15.44 'docker pull registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID'
     - ssh mlwktddj@192.168.15.44 'docker rm -f xolodilnik-frontend'
     - ssh mlwktddj@192.168.15.44 'docker run --name xolodilnik-frontend -d -p 3888:3000 --restart always registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID'
