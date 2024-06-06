@@ -10,6 +10,13 @@ export interface ICustomObject<T = string | number> {
   [key: string]: T
 }
 
+export interface IDefaultResponse<T> {
+  count: number
+  next: string | null
+  previous: string | null
+  items: T[]
+}
+
 export interface IBrand {
   id: number
   title: string

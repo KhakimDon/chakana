@@ -88,7 +88,7 @@
       />
     </CommonSectionWrapper>
     <MainModalInfo
-      :show="showProduct"
+      v-model="showProduct"
       :product="selectedProduct"
       @close="showProduct = false"
     />
