@@ -5,6 +5,7 @@
     :class="{
       '!border-red': error,
       '!bg-transparent border-white-100': isTransparent,
+      '!border-none': noBorder,
     }"
   >
     <slot name="prefix" />
@@ -62,6 +63,7 @@ interface Props {
   autocomplete?: string
   inputId?: string
   readonly?: boolean
+  noBorder?: boolean
   id?: string
 }
 

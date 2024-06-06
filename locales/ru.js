@@ -92,9 +92,27 @@ export default {
   order_accepted: 'Заказ принят',
   order_collecting: 'Заказ собираеться',
   order_delivering: 'Заказ в пути',
+  suggestions_search: 'Возможно вы искали это:',
+  search_nodata_title: 'Кажется, мы пока не нашли именно то, что вам нужно. ',
+  search_nodata_subtitle:
+    'Но не переживайте! У нас также есть множество других продуктов, которые могут вас заинтересовать.',
+  search_list: 'Поиск по списку',
+  search_list_no_data_title: 'У вас нет сохраненного списка',
+  search_list_no_data_subtitle:
+    'Добавляйте список и наслаждайтесь удобными покупками в холодильнике',
+  new_list: 'Новый список',
+  edit_list: 'Редактировать список',
+  more: 'Еще {count}',
+  enter_list_title: 'Название списка',
+  search_list_enter_notes:
+    'Введите список вручную или поставьте текст из буффера обмена',
   delivered: 'Доставленный',
   canceled: 'Отменено',
   reorder: 'Повторить заказ',
+  paste_text_from_buffer: 'Вставить скопированный текст',
+  checking_against_list: 'Сверка по списку',
+  from_your_request: 'По вашему запросу',
+  found: 'Найдено: {count} из {all}',
   change_phone_number: 'Изменить номер телефона',
   too_many_tries: 'Слишком много попыток',
   you_tried_code_verification_three_times:
@@ -108,5 +126,4 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
-  new_list: 'Новый список',
 }
