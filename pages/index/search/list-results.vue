@@ -12,7 +12,12 @@
             {{ $t('from_your_request') }}
           </p>
           <p class="text-sm font-medium leading-130 text-gray-100">
-            {{ t('found', { count: 0, all: results?.list?.length }) }}
+            {{
+              t('found', {
+                count: results?.list?.length,
+                all: selectedList?.notes?.length,
+              })
+            }}
           </p>
         </div>
       </div>
@@ -21,7 +26,7 @@
         :text="$t('checking_against_list')"
         size="sm"
         variant="secondary"
-        @click="() => {}"
+        @click="getCheckingAgainstList"
       >
         <template #prefix>
           <SvgoCommonToDo
@@ -31,13 +36,7 @@
       </BaseButton>
     </div>
     <section class="w-full">
-      <div v-if="results?.loading" class="flex-y-center flex-wrap gap-3 my-4">
-        <div v-for="key in 7" :key class="w-44 h-52 shimmer rounded-10"></div>
-      </div>
-      <div
-        v-else-if="results?.list?.length && !results?.loading"
-        class="flex-y-center flex-wrap gap-4 my-4"
-      >
+      <div class="flex-y-center flex-wrap gap-4 my-4">
         <div v-for="(item, key) in results?.list" :key>
           <CommonSectionWrapper :title="item?.query" class="mt-4">
             <Transition name="fade" mode="out-in">
@@ -61,19 +60,29 @@
           </CommonSectionWrapper>
         </div>
       </div>
-      <div v-else class="flex-center flex-col gap-3 mt-40">
-        <CommonNoData
-          class="w-full"
-          image="/images/no-data/no-searches.png"
-          :title="$t('search_list_no_data_title')"
-          :subtitle="$t('search_list_no_data_subtitle')"
-        />
-      </div>
+      <Transition name="fade" mode="out-in">
+        <div
+          v-if="!results?.list?.length && !results?.loading"
+          class="flex-center flex-col gap-3 mt-40"
+        >
+          <CommonNoData
+            class="w-full"
+            image="/images/no-data/no-searches.png"
+            :title="$t('search_list_no_data_title')"
+            :subtitle="$t('search_list_no_data_subtitle')"
+          />
+        </div>
+      </Transition>
     </section>
     <MainModalInfo
       v-model="showProduct"
       :product="selectedProduct"
       @close="showProduct = false"
+    />
+    <ModalListChecking
+      v-model="showCheckingList"
+      :single-list="selectedList"
+      @close="showCheckingList = false"
     />
   </div>
 </template>
@@ -85,21 +94,50 @@ import { useListStore } from '~/store/list.js'
 import type { IProduct } from '~/types/products.js'
 
 const { t } = useI18n()
+const route = useRoute()
 
 const listStore = useListStore()
 
 const results = computed(() => listStore.searchByNoteProducts)
 
-onMounted(() => {
-  listStore.getUserProductsByNotes(listStore.selectedList?.notes)
-})
+listStore.getUserProductsList()
+
+const selectedList = ref()
+
+const lists = computed(() => listStore.lists.list)
+
+watch(
+  () => lists.value,
+  (val) => {
+    if (val.length) {
+      selectedList.value = val?.find(
+        (list: any) =>
+          Number(list?.main_note_id) === Number(route.query?.listId)
+      )
+    }
+  }
+)
+
+watch(
+  () => selectedList.value,
+  (val) => {
+    if (val) {
+      listStore.getUserProductsByNotes(val?.notes)
+    }
+  }
+)
 
 const showProduct = ref(false)
 const selectedProduct = ref<IProduct | null>(null)
-
 function selectProduct(product: IProduct) {
   selectedProduct.value = product
   showProduct.value = true
+}
+
+const showCheckingList = ref(false)
+const getCheckingAgainstList = () => {
+  showCheckingList.value = true
+  listStore.getUserProductsByNotesWithOrder(selectedList.value?.notes)
 }
 </script>
 

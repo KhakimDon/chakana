@@ -97,6 +97,7 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n()
 
+const router = useRouter()
 const listStore = useListStore()
 const loading = ref(false)
 const showEditor = ref(false)
@@ -170,7 +171,10 @@ function updateCard(mode?: string) {
       emit('update:modelValue', false)
       listStore.getUserProductsList()
       if (mode === 'search') {
-        navigateTo(`/${locale.value}/search/list-results`)
+        router.push({
+          path: `/${locale.value}/search/list-results`,
+          query: { listId: props.selectedList?.main_note_id },
+        })
       }
     })
     .catch((err: Error) => {

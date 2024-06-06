@@ -52,6 +52,31 @@ export const useListStore = defineStore('listStore', () => {
     })
   }
 
+  const searchByNoteAndOrderProducts = reactive({
+    list: [],
+    loading: true,
+  })
+
+  function getUserProductsByNotesWithOrder(notes?: string[]) {
+    return new Promise((resolve, reject) => {
+      searchByNoteAndOrderProducts.loading = true
+      useApi()
+        .$post(`/search/product/by-note-and-order`, {
+          body: notes,
+        })
+        .then((res: any) => {
+          searchByNoteAndOrderProducts.list = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          searchByNoteAndOrderProducts.loading = false
+        })
+    })
+  }
+
   function deleteList(id: string) {
     return new Promise((resolve, reject) => {
       useApi()
@@ -72,5 +97,7 @@ export const useListStore = defineStore('listStore', () => {
     deleteList,
     searchByNoteProducts,
     getUserProductsByNotes,
+    searchByNoteAndOrderProducts,
+    getUserProductsByNotesWithOrder,
   }
 })
