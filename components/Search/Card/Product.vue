@@ -10,9 +10,12 @@
         />
       </div>
       <div class="space-y-0.5">
-        <p class="text-[13px] font-semibold leading-none text-dark">
+        <NuxtLinkLocale
+          :to="`/project/${product?.id}`"
+          class="text-[13px] font-semibold hover:text-orange transition-300 leading-none text-dark"
+        >
           {{ product?.name }}
-        </p>
+        </NuxtLinkLocale>
         <p class="text-xs font-medium leading-130 text-gray-400">
           {{ product?.weight }} {{ product?.weight_measure }}
         </p>
