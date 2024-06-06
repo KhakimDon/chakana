@@ -50,7 +50,7 @@ export const useMainStore = defineStore('mainStore', {
             if (force) {
               this.products.list = res?.items
             } else {
-              this.products.list = res?.items.concat(this.products.list)
+              this.products.list = this.products.list.concat(res?.items)
             }
             this.products.params.total = res?.count
             resolve(res)

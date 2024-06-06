@@ -2,8 +2,8 @@
   <LayoutWrapper>
     <template #left>
       <div>
-        <SidebarPremium />
-        <SidebarMenu class="my-4" :menu />
+        <ProfileSidebarPremium />
+        <ProfileSidebarMenu class="my-4" :menu />
         <button
           class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
         >

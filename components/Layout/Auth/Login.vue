@@ -8,6 +8,7 @@
         input-class="!pl-1"
         type="number"
         :error="form.$v.value.phone.$error"
+        @keydown.enter="submit"
       >
         <template #prefix>
           <div class="flex-center h-11">

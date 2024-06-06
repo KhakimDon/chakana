@@ -31,7 +31,7 @@ export const useDiscountsStore = defineStore('discountsStore', {
             if (force) {
               this.discounts.list = res?.items
             } else {
-              this.discounts.list = res?.items.concat(this.discounts.list)
+              this.discounts.list = this.discounts.list.concat(res?.items)
             }
             this.discounts.params.total = res?.count
             resolve(res)

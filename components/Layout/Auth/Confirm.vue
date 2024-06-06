@@ -16,9 +16,15 @@
       class="my-5"
     />
 
-    <CommonTimer :seconds-val="3" />
+    <CommonTimer :seconds-val="120" />
 
-    <BaseButton class="mt-10 w-full" @click="submit" />
+    <BaseButton
+      class="mt-10 w-full"
+      v-bind="{ loading }"
+      :text="$t('confirm')"
+      :disabled="form.$v.value.$invalid"
+      @click="submit"
+    />
   </div>
 </template>
 
@@ -29,6 +35,7 @@ import type { TForm } from '~/composables/useForm'
 interface Props {
   phone: string
   form: TForm<any>
+  loading?: boolean
 }
 
 const props = defineProps<Props>()

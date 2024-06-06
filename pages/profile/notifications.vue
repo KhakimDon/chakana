@@ -16,10 +16,14 @@
     <Transition name="fade" mode="out-in">
       <div :key="data.loading" class="flex flex-col gap-4">
         <template v-if="data.loading">
-          <NotificationCardLoading v-for="i in 10" :key="i" />
+          <ProfileNotificationCardLoading v-for="i in 10" :key="i" />
         </template>
         <template v-else>
-          <NotificationCard v-for="(item, i) in data.list" :key="i" :item />
+          <ProfileNotificationCard
+            v-for="(item, i) in data.list"
+            :key="i"
+            :item
+          />
         </template>
       </div>
     </Transition>
