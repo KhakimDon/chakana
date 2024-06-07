@@ -56,7 +56,7 @@
                   v-for="(card, index) in products?.list"
                   :key="index"
                   :card
-                  @show-details="selectProduct(card)"
+                  @open="selectProduct(card)"
                 />
               </template>
               <template v-if="products?.params?.loading">

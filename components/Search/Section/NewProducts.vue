@@ -16,7 +16,7 @@
               v-for="(card, index) in newProducts?.list"
               :key="index"
               :card
-              @show-details="selectProduct(card)"
+              @open="selectProduct(card)"
             />
           </template>
         </div>

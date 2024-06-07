@@ -52,7 +52,7 @@
                     v-for="(card, index) in item?.products"
                     :key="index"
                     :card
-                    @show-details="selectProduct(card)"
+                    @open="selectProduct(card)"
                   />
                 </template>
               </div>
