@@ -1,13 +1,14 @@
 <template>
   <BaseModal
     :title="$t('edit_info')"
+    disable-outer-close
     v-bind="{ modelValue }"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <FormAvatarUpload
       :default-image="user?.image"
       class="mb-6"
-      @change="avatar = $event"
+      @change="changeAvatar"
     />
     <div class="flex flex-col gap-4">
       <FormGroup :label="$t('full_name')">
@@ -111,6 +112,8 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 const authStore = useAuthStore()
+const { showToast } = useCustomToast()
+const { t } = useI18n()
 
 const form = useForm(
   {
@@ -128,14 +131,30 @@ const form = useForm(
 const avatar = ref<File>()
 const loading = ref(false)
 
-function submit() {
+function changeAvatar(file: File | null) {
+  avatar.value = file
+}
+
+async function submit() {
   form.$v.value.$touch()
-  console.log(avatar.value.name)
-  // if (form.$v.value.$invalid) return
-  // loading.value = true
-  // authStore.updateUser(form.values).finally(() => {
-  //   loading.value = false
-  // })
-  // emit('update:modelValue', false)
+  if (form.$v.value.$invalid) return
+  loading.value = true
+  console.log(avatar.value)
+  if (avatar.value) {
+    const imageFormData = new FormData()
+    imageFormData.append('image', avatar.value)
+    await useApi().$post('upload/avatar', { body: imageFormData })
+  } else if (avatar.value === null) {
+    await useApi().$delete('delete/avatar')
+  }
+  authStore
+    .updateUser(form.values)
+    .then(() => {
+      showToast(t('profile_updated_successfully'), 'success')
+    })
+    .finally(() => {
+      loading.value = false
+    })
+  emit('update:modelValue', false)
 }
 </script>
