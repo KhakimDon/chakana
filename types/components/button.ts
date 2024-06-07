@@ -1,5 +1,6 @@
 export type TButtonVariants =
   | 'primary'
+  | 'green'
   | 'secondary'
   | 'disabled'
   | 'secondary-dark'

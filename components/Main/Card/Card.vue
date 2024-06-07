@@ -46,19 +46,20 @@
       class="w-full"
       :text="$t('to_basket')"
       variant="outline"
-      @click.stop="count++"
+      @click="addToCart(card)"
     />
     <MainCardCounter
       v-else
       v-model="count"
       :default-count="count"
+      :max="card?.max_quantity ?? 100000"
       readonly
-      @click.stop
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '~/store/cart.js'
 import type { IProduct } from '~/types/products'
 import { formatMoneyDecimal, getImageSize } from '~/utils/functions/common'
 
@@ -66,8 +67,64 @@ interface Props {
   card: IProduct
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits(['open'])
 
+const cartStore = useCartStore()
 const count = ref(0)
+
+const cartProducts = computed(() => cartStore.products)
+const addToCart = (product: any) => {
+  if (count.value <= product?.max_quantity) {
+    count.value++
+    cartStore.addToCart({
+      ...product,
+      cart_count: count.value,
+    })
+  }
+}
+
+watch(
+  () => count.value,
+  (newValue) => {
+    if (newValue === 0) {
+      cartStore.removeFromCart(props.card?.id)
+    } else {
+      cartStore.updateToCart({
+        ...props.card,
+        cart_count: newValue,
+      })
+    }
+  }
+)
+
+const cartProduct = computed(() =>
+  cartProducts.value.find((product) => product?.id === props.card?.id)
+)
+
+watch(
+  cartProduct,
+  (newValue) => {
+    if (newValue) {
+      count.value = newValue.cart_count
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  cartProducts,
+  (newValue) => {
+    if (newValue.length === 0) {
+      count.value = 0
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+onMounted(() => {
+  if (cartProduct.value) {
+    count.value = cartProduct.value?.cart_count ?? 0
+  }
+})
 </script>

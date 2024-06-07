@@ -127,7 +127,7 @@
         </div>
         <div v-else-if="list?.length" class="grid grid-cols-5 gap-4">
           <MainCard v-for="(card, index) in list" :key="index" :card />
-          <!--            @click="selectProduct(card)"-->
+          <!--            @open="selectProduct(card)"-->
         </div>
         <div v-else>
           <CommonNoData class="col-span-4" />
