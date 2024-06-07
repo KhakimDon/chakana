@@ -36,6 +36,21 @@ export const useAuthStore = defineStore('authStore', {
           })
       })
     },
+    updateUser(user: IProfileUser) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$put<IProfileUser>('update/detail', {
+            body: user,
+          })
+          .then((res) => {
+            resolve(res)
+            this.fetchUser()
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
     getTokens() {
       const access = useCookie('access_token')
       const refresh = useCookie('refresh_token')
@@ -107,6 +122,25 @@ export const useAuthStore = defineStore('authStore', {
       return new Promise((resolve, reject) => {
         useApi()
           .$get('/get/device')
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    // eslint-disable-next-line camelcase
+    sendSms(phone_number: string, type_ = 'login_sms_verification') {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$post<{ code: string }>('/send-sms', {
+            body: {
+              // eslint-disable-next-line camelcase
+              phone_number,
+              type_,
+            },
+          })
           .then((res) => {
             resolve(res)
           })

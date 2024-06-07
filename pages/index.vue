@@ -1,11 +1,12 @@
 <template>
-  <LayoutWrapper>
+  <LayoutWrapper has-fixed>
     <template #left>
-      <MainSidebar
-        class="sticky top-[86px]"
-        :loading="categoriesLoading"
-        v-bind="{ categories, single }"
-      />
+      <div class="w-[202px]">
+        <MainSidebar
+          :loading="categoriesLoading"
+          v-bind="{ categories, single }"
+        />
+      </div>
     </template>
     <Transition name="fade" mode="out-in">
       <div :key="$route.name">
@@ -13,8 +14,10 @@
       </div>
     </Transition>
     <template #right>
-      <div class="fixed w-[313px] top-[86px]">
-        <MainMap />
+      <div class="sticky top-[86px]">
+        <ClientOnly>
+          <MainMap />
+        </ClientOnly>
         <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
           <CartEmpty v-if="cartProducts.length === 0" />
           <CartFilled v-else />
@@ -32,6 +35,8 @@ const route = useRoute()
 const categoriesStore = useCategoriesStore()
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
+const categories = computed(() => categoriesStore.categories.list)
+const single = computed(() => categoriesStore.single)
 
 categoriesStore.fetchCategories()
 

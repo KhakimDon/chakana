@@ -1,5 +1,5 @@
 <template>
-  <section class="space-y-5">
+  <section class="space-y-5 mt-5">
     <CartCardFreeDelivery
       :free-delivery-price="90000"
       :cart-total-price="totalCartPrice"
@@ -37,7 +37,7 @@
     </div>
     <BaseButton
       class="w-full !rounded-10"
-      :text="$t('go_payment')"
+      :text="$t('go_to_cart')"
       variant="primary"
       @click="goToCart"
     />

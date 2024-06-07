@@ -26,5 +26,3 @@
     <div class="w-full h-8 shimmer rounded-md"></div>
   </div>
 </template>
-<script setup lang="ts">
-</script>

@@ -6,9 +6,10 @@
         @click="$emit('open')"
       >
         <MainCardBadge
+          v-if="card?.discount_type === 'percentage'"
           class="absolute -top-2 left-2"
-          :percent="card?.discountPercent"
-          :type="card?.discountType"
+          :percent="card?.discount_percentage"
+          :type="card?.discount_type"
         />
         <nuxt-img
           :src="getImageSize(card?.main_image, 'small')"
@@ -17,13 +18,19 @@
           loading="lazy"
         />
       </div>
-      <p
-        v-if="card?.discount_price"
-        class="mt-2 text-xs leading-[12px] font-medium text-gray-100 line-through"
-      >
-        {{ formatMoneyDecimal(card?.price) }}
-        <span class="text-[11px] font-[150%]">UZS</span>
-      </p>
+      <div v-if="card?.discount_price" class="flex-y-center gap-1">
+        <p
+          class="mt-2 text-xs leading-[12px] font-medium text-gray-100 line-through"
+        >
+          {{ formatMoneyDecimal(card?.price) }}
+          <span class="text-[11px] font-[150%]">UZS</span>
+        </p>
+        <p
+          class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded px-1 translate-y-1 -rotate-[8deg]"
+        >
+          {{ card?.discount_percentage }}%
+        </p>
+      </div>
       <p
         class="mt-2 text-sm leading-122 font-bold text-green"
         :class="{ '!text-red !mt-0': card?.discount_price }"
@@ -41,20 +48,22 @@
         {{ card?.weight }} {{ card?.weight_measure }}
       </p>
     </div>
-    <BaseButton
-      v-if="count < 1"
-      class="w-full"
-      :text="$t('to_basket')"
-      variant="outline"
-      @click="addToCart(card)"
-    />
-    <MainCardCounter
-      v-else
-      v-model="count"
-      :default-count="count"
-      :max="card?.max_quantity ?? 100000"
-      readonly
-    />
+    <ClientOnly>
+      <BaseButton
+        v-if="count < 1"
+        class="w-full"
+        :text="$t('to_basket')"
+        variant="outline"
+        @click="addToCart(card)"
+      />
+      <MainCardCounter
+        v-else
+        v-model="count"
+        :default-count="count"
+        :max="card?.max_quantity ?? 100000"
+        readonly
+      />
+    </ClientOnly>
   </div>
 </template>
 

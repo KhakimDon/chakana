@@ -66,7 +66,6 @@ const count = ref(0)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
-  showLoading.value = true
   if (count.value <= product?.max_quantity) {
     count.value++
     cartStore.addToCart({

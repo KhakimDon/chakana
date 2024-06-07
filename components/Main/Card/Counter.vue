@@ -10,19 +10,21 @@
       <IconTrash v-if="count === 1" class="!mb-0" />
       <IconMinus v-else class="!mb-0" />
     </button>
-    <div :class="{ readonly }" class="h-100">
-      <input
-        v-model="count"
-        v-maska="inputMask"
-        type="text"
-        :readonly="readonly"
-        :min="min"
-        :max="max"
-        class="w-full h-full text-center text-xs leading-5 text-dark font-semibold bg-transparent"
-        :class="{ error }"
-        @input="onChangeCount"
-      />
-    </div>
+    <client-only>
+      <div :class="{ readonly }" class="h-100">
+        <input
+          v-model="count"
+          v-maska="inputMask"
+          type="text"
+          :readonly="readonly"
+          :min="min"
+          :max="max"
+          class="w-full h-full text-center text-xs leading-5 text-dark font-semibold bg-transparent"
+          :class="{ error }"
+          @input="onChangeCount"
+        />
+      </div>
+    </client-only>
     <button
       :disabled="disableIncrease"
       class="text-base text-dark hover:text-orange transition-300"

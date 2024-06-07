@@ -94,13 +94,8 @@ const registerForm = useForm(
 function sendSms() {
   buttonLoading.value = true
   params.value.phone = '+998' + loginForm.values.phone?.replace(/\D/g, '')
-  useApi()
-    .$post('/send-sms', {
-      body: {
-        phone_number: params.value.phone,
-        type_: 'login_sms_verification',
-      },
-    })
+  useAuthStore()
+    .sendSms(params.value.phone)
     .then((res: any) => {
       params.value.isRegister = res.register
       step.value = 'confirm'
