@@ -3,6 +3,7 @@
     v-bind="{ show }"
     body-class="!max-w-[424px]"
     :title="$t('address_delivery')"
+    disable-outer-close
     @close="$emit('close')"
   >
     <div v-if="list.length">

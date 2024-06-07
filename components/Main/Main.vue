@@ -26,12 +26,13 @@
       <NuxtLinkLocale to="/search" class="w-full" @click.stop>
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
       </NuxtLinkLocale>
-      <button
+      <NuxtLinkLocale
+        to="/search/list"
         class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-blue-100/10 transition-300"
         aria-label="list-button"
       >
         <IconList class="text-2xl text-blue-100" />
-      </button>
+      </NuxtLinkLocale>
     </div>
     <CommonSectionWrapper title="take_and_go" class="mt-4">
       <Transition name="fade" mode="out-in">
@@ -47,7 +48,7 @@
               v-for="(card, index) in discounts?.list"
               :key="index"
               :card
-              @click="selectProduct(card)"
+              @open="selectProduct(card)"
             />
           </template>
         </div>
@@ -70,7 +71,7 @@
               v-for="(card, index) in products?.list"
               :key="index"
               :card
-              @click="selectProduct(card)"
+              @open="selectProduct(card)"
             />
           </template>
           <template v-if="products?.params?.loading">

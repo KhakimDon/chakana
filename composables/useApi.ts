@@ -18,9 +18,9 @@ export const useApi = (apiUrl?: string) => {
       'Accept-Language': useCookie('i18n_redirected').value || 'ru',
       'Device-Id': 'asdkjasjknd',
     }
-    const tokens = computed(() => authStore.getTokens().value)
+    const tokens = computed(() => authStore.getTokens())
     if (tokens.value?.refresh) {
-      if (!tokens.value?.access || isJwtExpired(authStore.tokens?.access)) {
+      if (!tokens.value?.access || isJwtExpired(tokens.value?.access)) {
         const dFetch = $fetch.create({
           method: 'POST',
           baseURL,

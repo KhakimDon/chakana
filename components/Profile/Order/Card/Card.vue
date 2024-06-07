@@ -42,7 +42,7 @@
           </span>
         </div>
 
-        <!--      <ProfileOrderCardBadge :type="item?.status" />-->
+        <ProfileOrderCardBadge :type="item?.status" />
 
         <hr class="my-2.5 border-gray-200" />
 

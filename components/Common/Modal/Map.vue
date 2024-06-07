@@ -4,6 +4,7 @@
     :has-back="!showAddAddress"
     :body-class="!showAddAddress ? 'min-w-[868px]' : '!min-w-[646px]'"
     :title="$t('specify_your_delivery_address')"
+    disable-outer-close
     @close="$emit('close')"
   >
     <div v-if="!showAddAddress">
@@ -51,30 +52,37 @@
           @click="addAddress"
         />
       </div>
-      <YandexMap
-        id="myMap"
-        ref="yMap"
-        :settings="settings"
-        class="ymap h-[440px] w-[828px] mt-4 rounde-lg"
-        :coords="coordinates"
-        @click="setLocation($event)"
-      >
-        <!--      @click="changeCoords"-->
-        <YmapMarker :coords="coordinates" :icon="'/images/svg/map-pin.svg'" />
-      </YandexMap>
-    </div>
-    <div v-else>
-      <div class="relative">
+      <ClientOnly>
         <YandexMap
           id="myMap"
           ref="yMap"
           :settings="settings"
-          class="h-[180px] w-[606px] mt-4 rounded-lg"
+          class="ymap h-[440px] w-[828px] mt-4 rounde-lg"
           :coords="coordinates"
+          @click="setLocation($event)"
         >
           <!--      @click="changeCoords"-->
           <YmapMarker :coords="coordinates" :icon="'/images/svg/map-pin.svg'" />
         </YandexMap>
+      </ClientOnly>
+    </div>
+    <div v-else>
+      <div class="relative">
+        <ClientOnly>
+          <YandexMap
+            id="myMap"
+            ref="yMap"
+            :settings="settings"
+            class="h-[180px] w-[606px] mt-4 rounded-lg"
+            :coords="coordinates"
+          >
+            <!--      @click="changeCoords"-->
+            <YmapMarker
+              :coords="coordinates"
+              :icon="'/images/svg/map-pin.svg'"
+            />
+          </YandexMap>
+        </ClientOnly>
         <p
           class="bg-white flex items-center justify-between shadow-card w-[590px] absolute bottom-[10px] text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
         >

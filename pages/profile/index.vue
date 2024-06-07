@@ -91,7 +91,7 @@
         </div>
       </div>
     </div>
-    <ModalProfileEdit v-model="editModal" />
+    <ProfileModalEdit v-model="editModal" :user="data" />
   </div>
 </template>
 

@@ -1,11 +1,12 @@
 <template>
-  <LayoutWrapper>
+  <LayoutWrapper has-fixed>
     <template #left>
-      <MainSidebar
-        class="sticky top-[86px]"
-        :loading="categoriesLoading"
-        v-bind="{ categories, single }"
-      />
+      <div class="w-[202px]">
+        <MainSidebar
+          :loading="categoriesLoading"
+          v-bind="{ categories, single }"
+        />
+      </div>
     </template>
     <Transition name="fade" mode="out-in">
       <div :key="$route.name">
@@ -14,33 +15,26 @@
     </Transition>
     <template #right>
       <div class="sticky top-[86px]">
-        <MainMap @change-coords="changeCoords" />
-        <div v-if="false" class="mt-5">
-          <p class="text-xl leading-normal font-extrabold text-dark">
-            {{ $t('basket') }}
-          </p>
-          <CommonNoData
-            image="/images/no-data/no-basket.webp"
-            title="empty_basket"
-            subtitle="empty_basket_text"
-            title-class="!max-w-full"
-            subtitle-class="!max-w-full"
-          />
-        </div>
+        <ClientOnly>
+          <MainMap @change-coords="changeCoords" />
+        </ClientOnly>
+        <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
+          <CartEmpty v-if="cartProducts.length === 0" />
+          <CartFilled v-else />
+        </Transition>
       </div>
     </template>
-    <Teleport to="body">
-      <CommonModalAddressDelivery
-        v-model="show"
-        :list="list"
-        @close="show = false"
-        @open-map-modal="openMapModal"
-      />
-      <CommonModalMap v-model="openModal" @close="openModal = false" />
-    </Teleport>
+    <CommonModalAddressDelivery
+      v-model="show"
+      :list="list"
+      @close="show = false"
+      @open-map-modal="openMapModal"
+    />
+    <CommonModalMap v-model="openModal" @close="openModal = false" />
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
+import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
 import type { IProduct } from '~/types/products.js'
 
@@ -55,6 +49,10 @@ const categories = computed(() => categoriesStore.categories.list)
 const single = computed(() => categoriesStore.single)
 
 categoriesStore.fetchCategories()
+
+const cartStore = useCartStore()
+
+const cartProducts = computed(() => cartStore.products)
 
 const { list } = useListFetcher<IProduct>(`/saved/address`, 25, false)
 

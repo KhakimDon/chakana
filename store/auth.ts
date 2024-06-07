@@ -1,8 +1,8 @@
 import type { IProfileUser, IUser, IUserForm } from '~/types/auth'
 
 interface TAuthTokens {
-  refresh?: string
-  access: string
+  refresh_token?: string
+  access_token: string
 }
 
 interface IState {
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('authStore', {
     fetchUser() {
       return new Promise((resolve, reject) => {
         useApi()
-          .$get<IProfileUser>('review/api/v1/front_office/UserDetail/')
+          .$get<IProfileUser>('get/detail')
           .then((res) => {
             this.user = res
             this.userFetched = true
@@ -33,6 +33,21 @@ export const useAuthStore = defineStore('authStore', {
           })
           .catch((error) => {
             reject(error)
+          })
+      })
+    },
+    updateUser(user: IProfileUser) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$put<IProfileUser>('update/detail', {
+            body: user,
+          })
+          .then((res) => {
+            resolve(res)
+            this.fetchUser()
+          })
+          .catch((err) => {
+            reject(err)
           })
       })
     },
@@ -45,15 +60,15 @@ export const useAuthStore = defineStore('authStore', {
       return { access: this.accessToken, refresh: this.refreshToken }
     },
     setTokens(payload: TAuthTokens) {
-      if (payload?.access) {
+      if (payload?.access_token) {
         const access = useCookie('access_token')
-        access.value = payload.access
-        this.accessToken = payload.access
+        access.value = payload.access_token
+        this.accessToken = payload.access_token
       }
-      if (payload?.refresh) {
+      if (payload?.refresh_token) {
         const refresh = useCookie('refresh_token')
-        refresh.value = payload.refresh
-        this.refreshToken = payload.refresh
+        refresh.value = payload.refresh_token
+        this.refreshToken = payload.refresh_token
       }
     },
     async authInit() {
@@ -107,6 +122,25 @@ export const useAuthStore = defineStore('authStore', {
       return new Promise((resolve, reject) => {
         useApi()
           .$get('/get/device')
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    // eslint-disable-next-line camelcase
+    sendSms(phone_number: string, type_ = 'login_sms_verification') {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$post<{ code: string }>('/send-sms', {
+            body: {
+              // eslint-disable-next-line camelcase
+              phone_number,
+              type_,
+            },
+          })
           .then((res) => {
             resolve(res)
           })

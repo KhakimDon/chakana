@@ -15,11 +15,12 @@
           @focus="focusInput"
           @clear="search = ''"
         />
-        <button
+        <NuxtLinkLocale
+          to="/search/list"
           class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
         >
           <IconList class="text-2xl text-blue-100" />
-        </button>
+        </NuxtLinkLocale>
         <SearchCardSuggestions v-if="!outsideClicked" :search="search" />
       </div>
     </section>
@@ -61,11 +62,11 @@
 </template>
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-import debounce from 'lodash.debounce'
 
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconList from '~/assets/icons/Common/list.svg'
 import { useSearchStore } from '~/store/search'
+import { debounce } from '~/utils/functions/common.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -92,18 +93,26 @@ onClickOutside(suggestionsRef, () => {
   outsideClicked.value = true
 })
 
-const updateSearch = debounce((val: string) => {
-  searchStore.searchAutocomplete(val)
-  searchStore.searchProducts(val)
-}, 300)
+const updateSearch = (val: string) => {
+  return debounce(
+    'search',
+    () => {
+      searchStore.searchAutocomplete(val)
+      searchStore.searchProducts(val)
+    },
+    300
+  )
+}
 
 watch(search, (val: string) => {
   if (val) {
-    router.push({ query: { query: val } })
-    updateSearch(val)
+    router.push({ query: { query: val } }).then(() => {
+      updateSearch(val)
+    })
   } else {
     router.push({ query: {} })
     searchStore.products.list = []
+    searchStore.products.loading = false
   }
 })
 

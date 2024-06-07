@@ -13,6 +13,7 @@
         v-for="(item, key) in popularSearchList"
         :key
         :title="item"
+        @click="clickBadge(item)"
       />
     </div>
   </transition>
@@ -21,6 +22,7 @@
 <script setup lang="ts">
 import { useSearchStore } from '~/store/search'
 
+const router = useRouter()
 const searchStore = useSearchStore()
 
 const popularSearchList = computed(() => searchStore.popularSearchResults.list)
@@ -32,6 +34,9 @@ const popularSearchLoading = computed(
 onMounted(() => {
   searchStore.searchPopular()
 })
+const clickBadge = (text: string) => {
+  router.push({ query: { query: text } })
+}
 </script>
 
 <style scoped></style>
