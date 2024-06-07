@@ -37,7 +37,6 @@
 <script setup lang="ts">
 import { useSearchStore } from '~/store/search'
 
-const router = useRouter()
 const searchStore = useSearchStore()
 
 const searchHistoryList = computed(() => searchStore.searchHistoryResults.list)

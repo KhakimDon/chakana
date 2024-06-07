@@ -93,8 +93,8 @@ onClickOutside(suggestionsRef, () => {
   outsideClicked.value = true
 })
 
-const updateSearch = (val: string) =>
-  debounce(
+const updateSearch = (val: string) => {
+  return debounce(
     'search',
     () => {
       searchStore.searchAutocomplete(val)
@@ -102,14 +102,17 @@ const updateSearch = (val: string) =>
     },
     300
   )
+}
 
 watch(search, (val: string) => {
   if (val) {
-    router.push({ query: { query: val } })
-    updateSearch(val)
+    router.push({ query: { query: val } }).then(() => {
+      updateSearch(val)
+    })
   } else {
     router.push({ query: {} })
     searchStore.products.list = []
+    searchStore.products.loading = false
   }
 })
 
