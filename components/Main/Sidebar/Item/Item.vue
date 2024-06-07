@@ -6,10 +6,10 @@
   >
     <div class="w-8 h-[26px] shrink-0">
       <nuxt-img
-        :src="item.image"
+        :src="item?.image"
         :alt="`image-${item?.name}`"
         class="w-full h-full object-contain"
-        :class="{'grayscale': !item.is_active }"
+        :class="{ grayscale: !item.is_active }"
         loading="lazy"
       />
     </div>

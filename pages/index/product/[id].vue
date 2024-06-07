@@ -121,14 +121,6 @@
       <h5 class="text-xl leading-normal font-bold text-dark mb-5">
         {{ $t('recommended_products') }}
       </h5>
-      <!--      <pre>-->
-      <!--loading: {{ loading }} - {{-->
-      <!--          !loading?.list &&-->
-      <!--          !loading?.button &&-->
-      <!--          paginationData?.count > list?.length-->
-      <!--        }}</pre-->
-      <!--      >-->
-
       <Transition name="fade" mode="out-in">
         <div v-if="loading?.list" class="grid grid-cols-5 gap-4">
           <MainCardLoading v-for="key in 16" :key />

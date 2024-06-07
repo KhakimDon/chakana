@@ -13,7 +13,7 @@
       </div>
     </Transition>
     <template #right>
-      <div class="sticky top-[86px]">
+      <div class="fixed w-[313px] top-[86px]">
         <MainMap />
         <div v-if="false" class="mt-5">
           <p class="text-xl leading-normal font-extrabold text-dark">
