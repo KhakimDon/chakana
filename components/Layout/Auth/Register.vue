@@ -38,6 +38,7 @@
       class="mt-11 w-full"
       :text="$t('register')"
       :disabled="form.$v.value.$invalid"
+      :loading="loading"
       @click="submit"
     />
   </div>
@@ -50,6 +51,7 @@ import type { TForm } from '~/composables/useForm'
 
 interface Props {
   form: TForm<any>
+  loading: boolean
 }
 
 const props = defineProps<Props>()

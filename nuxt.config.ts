@@ -7,10 +7,10 @@ export default defineNuxtConfig({
       },
     },
   },
-  ssr: false,
+  ssr: true,
   app: {
     head: {
-      title: 'Xolodilnik',
+      title: 'Холодильник Онлайн',
       htmlAttrs: {
         lang: 'ru',
       },
@@ -53,6 +53,7 @@ export default defineNuxtConfig({
         ],
       },
     ],
+    '@pinia-plugin-persistedstate/nuxt',
     '@nuxt/image',
   ],
 

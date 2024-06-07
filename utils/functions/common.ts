@@ -138,3 +138,17 @@ export const checkExpireDate = (value: any) => {
 
   return checkYear && checkMonth
 }
+
+export const getImageSize = (
+  url: string,
+  size: 'small' | 'medium' | 'large'
+) => {
+  const sizes = {
+    small: 256,
+    medium: 578,
+    large: 1024,
+  }
+  const newUrl = url?.split('_')
+
+  return newUrl?.[0] + '_' + sizes[size]
+}
