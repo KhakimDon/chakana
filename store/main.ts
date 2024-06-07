@@ -19,6 +19,12 @@ export const useMainStore = defineStore('mainStore', {
     brands: {
       list: [],
       loading: true,
+      params: {
+        page: 1,
+        page_size: 30,
+        total: 0,
+        loading: false,
+      },
     },
     popularBrands: {
       list: [],
@@ -82,12 +88,29 @@ export const useMainStore = defineStore('mainStore', {
       })
     },
 
-    fetchBrands() {
+    fetchBrands(force = true) {
       return new Promise((resolve, reject) => {
+        if (force) {
+          this.brands.params.page = 1
+        } else {
+          this.brands.params.loading = true
+          this.brands.params.page += 1
+          this.brands.params.loading = true
+        }
         useApi()
-          .$get('/brands')
+          .$get('/brands/pagination', {
+            params: {
+              page_size: this.brands.params.page_size,
+              page: this.brands.params.page,
+            },
+          })
           .then((res: any) => {
-            this.brands.list = res
+            if (force) {
+              this.brands.list = res?.items
+            } else {
+              this.brands.list = this.brands.list.concat(res?.items)
+            }
+            this.brands.params.total = res?.count
             resolve(res)
           })
           .catch((error) => {
@@ -95,6 +118,7 @@ export const useMainStore = defineStore('mainStore', {
           })
           .finally(() => {
             this.brands.loading = false
+            this.brands.params.loading = false
           })
       })
     },
