@@ -33,6 +33,7 @@
         v-else
         v-model="count"
         :default-count="count"
+        :max="product?.max_quantity ?? 100000"
         class="w-24 border-none bg-white-100"
         readonly
       />
