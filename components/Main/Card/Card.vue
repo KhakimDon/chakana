@@ -41,20 +41,22 @@
         {{ card?.weight }} {{ card?.weight_measure }}
       </p>
     </div>
-    <BaseButton
-      v-if="count < 1"
-      class="w-full"
-      :text="$t('to_basket')"
-      variant="outline"
-      @click="addToCart(card)"
-    />
-    <MainCardCounter
-      v-else
-      v-model="count"
-      :default-count="count"
-      :max="card?.max_quantity ?? 100000"
-      readonly
-    />
+    <ClientOnly>
+      <BaseButton
+        v-if="count < 1"
+        class="w-full"
+        :text="$t('to_basket')"
+        variant="outline"
+        @click="addToCart(card)"
+      />
+      <MainCardCounter
+        v-else
+        v-model="count"
+        :default-count="count"
+        :max="card?.max_quantity ?? 100000"
+        readonly
+      />
+    </ClientOnly>
   </div>
 </template>
 
