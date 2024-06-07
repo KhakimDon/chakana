@@ -30,19 +30,25 @@
       </div>
     </template>
     <Teleport to="body">
-      <CommonModalAddressDelivery v-model="show" @close="show = false" />
-      <pre>{{ data }}</pre>
+      <CommonModalAddressDelivery
+        v-model="show"
+        :list="list"
+        @close="show = false"
+        @open-map-modal="openMapModal"
+      />
+      <CommonModalMap v-model="openModal" @close="openModal = false" />
     </Teleport>
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
 import { useCategoriesStore } from '~/store/categories'
-import type { Profile } from '~/types/profile.js'
+import type { IProduct } from '~/types/products.js'
 
 const route = useRoute()
 
 const categoriesStore = useCategoriesStore()
-const show = ref(true)
+const show = ref(false)
+const openModal = ref(false)
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
 const categories = computed(() => categoriesStore.categories.list)
@@ -50,9 +56,7 @@ const single = computed(() => categoriesStore.single)
 
 categoriesStore.fetchCategories()
 
-const { data } = await useAsyncData<Profile>('address-delivery', () =>
-  useApi().$get('/saved/address')
-)
+const { list } = useListFetcher<IProduct>(`/saved/address`, 25, false)
 
 watch(
   () => route.name,
@@ -63,5 +67,10 @@ watch(
 
 const changeCoords = () => {
   show.value = true
+}
+
+const openMapModal = () => {
+  show.value = false
+  openModal.value = true
 }
 </script>

@@ -35,6 +35,10 @@ export const useMainStore = defineStore('mainStore', {
       list: [],
       loading: true,
     },
+    addressMap: {
+      list: [],
+      loading: true,
+    },
   }),
   actions: {
     fetchProducts(force = true) {
@@ -153,6 +157,27 @@ export const useMainStore = defineStore('mainStore', {
           })
           .finally(() => {
             this.banners.loading = false
+          })
+      })
+    },
+    fetchAddress(lat: number, long: number) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$get('/get/address', {
+            params: {
+              latitude: lat,
+              longitude: long,
+            },
+          })
+          .then((res: any) => {
+            this.addressMap.list = res
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+          .finally(() => {
+            this.addressMap.loading = false
           })
       })
     },
