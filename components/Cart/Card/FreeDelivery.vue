@@ -14,7 +14,8 @@
     <div class="h-1 w-full bg-gray-200 rounded-full relative">
       <div
         :style="{ width: calculatePercentage }"
-        class="h-1 absolute left-0 bg-green rounded-full transition-300"
+        class="h-1 absolute left-0 rounded-full transition-300"
+        :class="bgColor"
       />
     </div>
   </div>
@@ -32,6 +33,13 @@ const props = defineProps<Props>()
 const calculatePercentage = computed(() => {
   const difference = props.cartTotalPrice / props.freeDeliveryPrice
   return difference > 1 ? '100%' : `${difference * 100}%`
+})
+
+const bgColor = computed(() => {
+  if (props.cartTotalPrice / props.freeDeliveryPrice < 0.6) {
+    return 'bg-orange'
+  }
+  return 'bg-green'
 })
 </script>
 

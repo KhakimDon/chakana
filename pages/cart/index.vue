@@ -12,7 +12,10 @@
           <p class="text-[22px] font-extrabold leading-7">
             {{ $t('basket') }}
           </p>
-          <div class="flex-center gap-2 group cursor-pointer select-none">
+          <div
+            class="flex-center gap-2 group cursor-pointer select-none"
+            @click="clearCart"
+          >
             <SvgoCommonTrash
               class="text-base text-gray-100 group-hover:text-red transition-300"
             />
@@ -31,6 +34,14 @@
             :class="{ 'bg-gray-300/50': key % 2 === 0 }"
           />
         </div>
+        <section v-if="cartProducts.length === 0" class="my-5">
+          <CommonNoData
+            :title="$t('search_nodata_title')"
+            :subtitle="$t('search_nodata_subtitle')"
+            image="/images/no-data/no-searches.png"
+          />
+          <SearchSectionNewProducts />
+        </section>
         <CommonSectionWrapper title="maybe_something_else" class="my-10">
           <Transition name="fade" mode="out-in">
             <div
@@ -45,7 +56,7 @@
                   v-for="(card, index) in products?.list"
                   :key="index"
                   :card
-                  @click="selectProduct(card)"
+                  @show-details="selectProduct(card)"
                 />
               </template>
               <template v-if="products?.params?.loading">
@@ -94,7 +105,7 @@ import { useCartStore } from '~/store/cart.js'
 import { useMainStore } from '~/store/main.js'
 import type { IProduct } from '~/types/products.js'
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
 const mainStore = useMainStore()
@@ -138,6 +149,10 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
     mainStore.fetchProducts(false)
   }
 })
+
+const clearCart = () => {
+  cartStore.products = []
+}
 </script>
 
 <style scoped></style>

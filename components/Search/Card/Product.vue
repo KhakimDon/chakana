@@ -51,10 +51,11 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import type { IProduct } from '~/types/products.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
-  product: any
+  product: IProduct
   titleClass?: string
 }
 
@@ -65,6 +66,7 @@ const count = ref(0)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
+  showLoading.value = true
   if (count.value <= product?.max_quantity) {
     count.value++
     cartStore.addToCart({

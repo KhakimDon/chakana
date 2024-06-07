@@ -48,7 +48,7 @@
               v-for="(card, index) in discounts?.list"
               :key="index"
               :card
-              @click="selectProduct(card)"
+              @show-details="selectProduct(card)"
             />
           </template>
         </div>
@@ -71,7 +71,7 @@
               v-for="(card, index) in products?.list"
               :key="index"
               :card
-              @click="selectProduct(card)"
+              @show-details="selectProduct(card)"
             />
           </template>
           <template v-if="products?.params?.loading">

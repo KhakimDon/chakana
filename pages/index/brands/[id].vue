@@ -17,7 +17,7 @@
             v-for="(card, index) in list"
             :key="index"
             :card
-            @click="selectProduct(card)"
+            @show-details="selectProduct(card)"
           />
         </template>
         <template v-else>
