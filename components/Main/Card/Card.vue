@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-col justify-between gap-5 cursor-pointer">
-    <div @click="emit('showDetails', card)">
+    <div>
       <div
         class="w-full h-[113px] rounded-10 bg-white-100 flex-center relative"
+        @click="$emit('open')"
       >
         <MainCardBadge
           class="absolute -top-2 left-2"
@@ -10,7 +11,7 @@
           :type="card?.discountType"
         />
         <nuxt-img
-          :src="card?.main_image"
+          :src="getImageSize(card?.main_image, 'small')"
           alt="card-image"
           class="w-[95px] h-full object-contain"
           loading="lazy"
@@ -60,17 +61,14 @@
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
 import type { IProduct } from '~/types/products'
-import { formatMoneyDecimal } from '~/utils/functions/common'
+import { formatMoneyDecimal, getImageSize } from '~/utils/functions/common'
 
 interface Props {
   card: IProduct
 }
 
 const props = defineProps<Props>()
-
-const emit = defineEmits<{
-  (e: 'showDetails', card: IProduct): void
-}>()
+defineEmits(['open'])
 
 const cartStore = useCartStore()
 const count = ref(0)

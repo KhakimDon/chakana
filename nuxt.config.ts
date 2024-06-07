@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   ssr: false,
   app: {
     head: {
-      title: 'Xolodilnik',
+      title: 'Холодильник Онлайн',
       htmlAttrs: {
         lang: 'ru',
       },

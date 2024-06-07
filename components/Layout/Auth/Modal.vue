@@ -4,6 +4,7 @@
     body-class="max-w-[424px]"
     :title="$t('authorization')"
     :has-back="step === 'qr'"
+    disable-outer-close
     @close="$emit('close')"
     @back="step = 'login'"
   >
@@ -27,6 +28,8 @@
         <LayoutAuthRegister
           v-else-if="step === 'register'"
           :form="registerForm"
+          :loading="buttonLoading"
+          @submit="register"
         />
         <LayoutAuthQr v-else />
       </div>
@@ -97,6 +100,7 @@ function sendSms() {
     .then((res: any) => {
       if (!res?.register) {
         step.value = 'confirm'
+        params.value.session = res.session
       }
     })
     .catch((err) => {
@@ -119,6 +123,29 @@ function confirmCode() {
       console.log('res, ', res)
       params.value.session = res.session
       step.value = 'register'
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => (buttonLoading.value = false))
+}
+
+function register() {
+  buttonLoading.value = true
+  useApi()
+    .$post('/login', {
+      body: {
+        name: registerForm.values.name,
+        instagram: registerForm.values.instagram,
+        telegram: registerForm.values.telegram,
+        session: params.value.session,
+        phone_number: params.value.phone,
+        otp_code: confirmForm.values.code,
+      },
+    })
+    .then((res: any) => {
+      console.log('res, ', res)
+      step.value = 'login'
     })
     .catch((err) => {
       console.log(err)

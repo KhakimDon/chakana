@@ -13,7 +13,7 @@
       </div>
     </Transition>
     <template #right>
-      <div class="sticky top-[86px]">
+      <div class="fixed w-[313px] top-[86px]">
         <MainMap />
         <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
           <CartEmpty v-if="cartProducts.length === 0" />
