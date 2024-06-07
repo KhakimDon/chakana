@@ -120,7 +120,7 @@ const goBack = () => {
   router.back()
 }
 const goToPayment = () => {
-  router.push(`/${locale.value}/payment`)
+  router.push(`/${locale.value}/cart/payment`)
 }
 
 // All prices
