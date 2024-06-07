@@ -142,4 +142,9 @@ export default {
   cash: 'Наличными',
   payment_method: 'Способ оплаты',
   additional: 'Дополнительно',
+  courier_comment_info:
+    'Укажите дополнительно информацию к заказу. Например, как добраться или позвонить вам',
+  text_comment: 'Текст комментария',
+  enter_comment: 'Введите текст комментария',
+  recipient_details: 'Данные получателя',
 }

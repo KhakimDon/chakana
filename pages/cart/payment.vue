@@ -29,18 +29,8 @@
                 :title="$t('location_change_range')"
                 @open-details="() => {}"
               />
-              <PaymentCardInfo
-                icon="SvgoProfileUserCircle"
-                icon-class="text-teal-700 !text-2xl"
-                :title="'Машрабов Яхъё, +998 71 200 70 07'"
-                @open-details="() => {}"
-              />
-              <PaymentCardInfo
-                icon="SvgoProfileMessage"
-                icon-class="!text-blue-100 !text-2xl"
-                :title="$t('courier_comment')"
-                @open-details="() => {}"
-              />
+              <PaymentSectionUserData />
+              <PaymentSectionCommentForCurier />
             </section>
           </PaymentCardInfoHeader>
           <PaymentCardInfoHeader :title="$t('payment_method')">
