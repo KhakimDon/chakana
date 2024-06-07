@@ -11,6 +11,12 @@ import { useAuthStore } from '~/store/auth'
 
 const authStore = useAuthStore()
 
+const tokens = computed(() => authStore.getTokens())
+
+if (tokens.value?.access) {
+  authStore.fetchUser()
+}
+
 useSeoMeta({
   title: 'Холодильник Онлайн',
   description:

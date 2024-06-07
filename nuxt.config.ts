@@ -7,7 +7,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  ssr: false,
+  ssr: true,
   app: {
     head: {
       title: 'Холодильник Онлайн',

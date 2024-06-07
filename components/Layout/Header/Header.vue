@@ -72,7 +72,6 @@ const { locale } = useI18n()
 
 function openAuthModal() {
   authStore.showAuth = true
-  console.log('openAuthModal', authStore.showAuth)
 }
 
 const menu = [
