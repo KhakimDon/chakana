@@ -40,3 +40,15 @@ export interface IOrderCard {
   total_real_price: number
   images: string[]
 }
+
+export type TPromocodeStatuses = 'available' | 'used' | 'expired'
+
+export interface IPromocodeDetail {
+  id: number
+  code: string
+  expire?: string | null
+  minimum_price?: number | null
+  status: TPromocodeStatuses
+  discount: number
+  available?: boolean
+}
