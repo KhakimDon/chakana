@@ -15,23 +15,16 @@
     <template #right>
       <div class="fixed w-[313px] top-[86px]">
         <MainMap />
-        <div v-if="false" class="mt-5">
-          <p class="text-xl leading-normal font-extrabold text-dark">
-            {{ $t('basket') }}
-          </p>
-          <CommonNoData
-            image="/images/no-data/no-basket.webp"
-            title="empty_basket"
-            subtitle="empty_basket_text"
-            title-class="!max-w-full"
-            subtitle-class="!max-w-full"
-          />
-        </div>
+        <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
+          <CartEmpty v-if="cartProducts.length === 0" />
+          <CartFilled v-else />
+        </Transition>
       </div>
     </template>
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
+import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
 
 const route = useRoute()
@@ -39,10 +32,12 @@ const route = useRoute()
 const categoriesStore = useCategoriesStore()
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
-const categories = computed(() => categoriesStore.categories.list)
-const single = computed(() => categoriesStore.single)
 
 categoriesStore.fetchCategories()
+
+const cartStore = useCartStore()
+
+const cartProducts = computed(() => cartStore.products)
 
 watch(
   () => route.name,
