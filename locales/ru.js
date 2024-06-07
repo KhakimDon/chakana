@@ -94,5 +94,11 @@ export default {
   order_delivering: 'Заказ в пути',
   delivered: 'Доставленный',
   canceled: 'Отменено',
-  reorder: 'Повторить заказ'
+  reorder: 'Повторить заказ',
+  apply: 'Применить',
+  codeword: 'Кодовое слово',
+  enter_codeword: 'Введите кодовое слово',
+  available: 'Актив',
+  used: 'Использован',
+  expired: 'Срок истек',
 }
