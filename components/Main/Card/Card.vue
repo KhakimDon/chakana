@@ -12,7 +12,7 @@
         <nuxt-img
           :src="card?.main_image"
           alt="card-image"
-          class="w-[95px] h-[88px] object-contain"
+          class="w-[95px] h-full object-contain"
           loading="lazy"
         />
       </div>

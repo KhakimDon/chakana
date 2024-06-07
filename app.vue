@@ -3,15 +3,14 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <LayoutAuthModal v-bind="{show}" @close="authStore.showAuth = false" />
+    <LayoutAuthModal v-model="authStore.showAuth" />
   </div>
 </template>
 <script setup lang="ts">
-import {useAuthStore} from "~/store/auth";
+import { useAuthStore } from '~/store/auth'
 
 const authStore = useAuthStore()
 
-const show = computed(() => authStore.showAuth)
 useSeoMeta({
   title: 'Xolodilnik',
   description: 'Xolodilnik - Xolodilnik',

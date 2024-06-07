@@ -26,12 +26,13 @@
       <NuxtLinkLocale to="/search" class="w-full" @click.stop>
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
       </NuxtLinkLocale>
-      <button
-        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-blue-100 transition-300"
+      <NuxtLinkLocale
+        to="/search/list"
+        class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-blue-100/10 transition-300"
         aria-label="list-button"
       >
         <IconList class="text-2xl text-blue-100" />
-      </button>
+      </NuxtLinkLocale>
     </div>
     <CommonSectionWrapper title="take_and_go" class="mt-4">
       <Transition name="fade" mode="out-in">
@@ -73,11 +74,22 @@
               @click="selectProduct(card)"
             />
           </template>
+          <template v-if="products?.params?.loading">
+            <MainCardLoading v-for="key in 10" :key />
+          </template>
         </div>
       </Transition>
+      <div
+        v-if="
+          products.params?.total > products?.list.length &&
+          !products?.loading &&
+          !products?.params?.loading
+        "
+        ref="target"
+      />
     </CommonSectionWrapper>
     <MainModalInfo
-      :show="showProduct"
+      v-model="showProduct"
       :product="selectedProduct"
       @close="showProduct = false"
     />
@@ -85,6 +97,8 @@
 </template>
 
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
+
 import IconList from '~/assets/icons/Common/list.svg'
 import { useMainStore } from '~/store/main'
 import type { IProduct } from '~/types/products'
@@ -118,4 +132,12 @@ function selectProduct(product: IProduct) {
   selectedProduct.value = product
   showProduct.value = true
 }
+
+const target = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  if (isIntersecting) {
+    mainStore.fetchProducts(false)
+  }
+})
 </script>

@@ -1,8 +1,9 @@
 <template>
-  <div
-    class="w-full p-3 rounded-10 border-[0.5px] border-transparent hover:border-orange hover:shadow-[0_2px_16px_0_rgba(255,131,27,0.08)] transition-300"
+  <NuxtLinkLocale
+    :to="`/brands/${card.id}`"
+    class="w-full p-3 rounded-10 border-[0.5px] block border-transparent hover:border-orange hover:shadow-[0_2px_16px_0_rgba(255,131,27,0.08)] transition-300"
   >
-    <div class="w-full h-[80px] bg-white-100 rounded-10 flex-center">
+    <div class="w-full bg-white-100 rounded-10 flex-center">
       <nuxt-img
         :src="card.image"
         loading="lazy"
@@ -13,7 +14,7 @@
     <p class="text-center mt-2.5 text-sm leading-130 font-semibold text-dark">
       {{ card?.title }}
     </p>
-  </div>
+  </NuxtLinkLocale>
 </template>
 
 <script setup lang="ts">
@@ -22,7 +23,6 @@ interface Props {
     id: number
     title: string
     image: string
-    link: string
   }
 }
 
