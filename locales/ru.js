@@ -116,4 +116,17 @@ export default {
   checking_against_list: 'Сверка по списку',
   from_your_request: 'По вашему запросу',
   found: 'Найдено: {count} из {all}',
+  change_phone_number: 'Изменить номер телефона',
+  too_many_tries: 'Слишком много попыток',
+  you_tried_code_verification_three_times:
+    'Вы неправильно ввели код верификации 3 раза в связи с чем заблокированы на 24 часа',
+  phone_number_contact_support: 'Номер телефона службы поддержки',
+  profile_updated_successfully: 'Профиль успешно обновлен',
+  language: 'Язык',
+  send_notification: 'Отправить уведомления',
+  choose_language: 'Выберите язык',
+  go_back: 'Вернуться назад',
+  no_notifications_yet: 'Уведомлений пока нет',
+  you_have_not_received_any_notifications:
+    "You haven't received any notifications yet",
 }

@@ -25,7 +25,7 @@
           disabled
         >
           <template #suffix>
-            <button>
+            <button @click="phoneEditModal = true">
               <SvgoCommonEditPenSquare
                 class="text-2xl leading-6 text-gray-100 hover:text-orange transition-300"
               />
@@ -88,7 +88,8 @@
           </div>
         </template>
       </FormInput>
-      <BaseButton :text="$t('save')" class="mt-2" @click="submit" />
+      <BaseButton :text="$t('save')" class="mt-2" :loading @click="submit" />
+      <ProfileModalEditPhone v-model="phoneEditModal" />
     </div>
   </BaseModal>
 </template>
@@ -115,6 +116,8 @@ const authStore = useAuthStore()
 const { showToast } = useCustomToast()
 const { t } = useI18n()
 
+const phoneEditModal = ref(false)
+
 const form = useForm(
   {
     name: props.user?.name,
@@ -136,6 +139,7 @@ function changeAvatar(file: File | null) {
 }
 
 async function submit() {
+  console.log('qqwe')
   form.$v.value.$touch()
   if (form.$v.value.$invalid) return
   loading.value = true

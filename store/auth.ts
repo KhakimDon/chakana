@@ -130,6 +130,25 @@ export const useAuthStore = defineStore('authStore', {
           })
       })
     },
+    // eslint-disable-next-line camelcase
+    sendSms(phone_number: string, type_ = 'login_sms_verification') {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$post<{ code: string }>('/send-sms', {
+            body: {
+              // eslint-disable-next-line camelcase
+              phone_number,
+              type_,
+            },
+          })
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
   },
   getters: {
     isAuthorized: (state) => !!state.user?.id,

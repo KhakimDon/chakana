@@ -49,6 +49,15 @@
             <div :class="wrapperClass" class="p-5">
               <slot></slot>
             </div>
+            <button
+              v-if="hasClose"
+              class="absolute top-[18px] right-5"
+              @click="close"
+            >
+              <SvgoCommonClose
+                class="text-2xl leading-6 text-dark hover:text-red transition-300"
+              />
+            </button>
           </div>
         </div>
       </Transition>
@@ -72,6 +81,7 @@ interface Props {
   buttonClass?: string
   wrapperClass?: string
   noHeader?: boolean
+  hasClose?: boolean
   hasBack?: boolean
 }
 

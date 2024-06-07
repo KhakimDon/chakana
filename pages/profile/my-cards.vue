@@ -44,18 +44,17 @@
         </template>
       </div>
     </Transition>
-    <ModalCardDelete
+    <ProfileModalCardDelete
       v-model="deleteModal"
       :active-card="activeCard"
       :delete-loading="deleteLoading"
       @delete="deleteCard"
     />
-    <ModalCardAdd v-model="addCardModal" />
+    <ProfileModalCardAdd v-model="addCardModal" />
   </div>
 </template>
 
 <script setup lang="ts">
-import MyCard from '~/components/Profile/MyCard/MyCard.vue'
 import { useCardsStore } from '~/store/profile/cards'
 import type { IBankCard } from '~/types/profile'
 
