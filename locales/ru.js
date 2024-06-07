@@ -116,4 +116,10 @@ export default {
   checking_against_list: 'Сверка по списку',
   from_your_request: 'По вашему запросу',
   found: 'Найдено: {count} из {all}',
+  go_back: 'Вернуться назад',
+  clear_basket: 'Очистить корзину',
+  go_payment: 'Перейти к оплате',
+  free_delivery: 'Доставка бесплатно от:',
+  clear_all: 'Очистить все',
+  cary_products: '{count} товара',
 }
