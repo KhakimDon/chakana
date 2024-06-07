@@ -12,11 +12,11 @@
     </button>
     <FormOTP
       v-model="form.values.code"
-      :error="form.$v.value.code.$error"
+      :error="form.$v.value.code.$error || error"
       class="my-5"
     />
 
-    <CommonTimer :seconds-val="120" />
+    <CommonTimer :seconds-val="120" @resend="$emit('resend')" />
 
     <BaseButton
       class="mt-10 w-full"
@@ -36,10 +36,11 @@ interface Props {
   phone: string
   form: TForm<any>
   loading?: boolean
+  error?: boolean
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['close', 'submit', 'back'])
+const emit = defineEmits(['close', 'submit', 'back', 'resend'])
 
 const { form } = unref(props)
 

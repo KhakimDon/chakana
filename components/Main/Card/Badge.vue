@@ -17,7 +17,7 @@ import IconFlame from '~/assets/icons/Common/flame.svg'
 import IconFlash from '~/assets/icons/Common/flash.svg'
 
 interface Props {
-  type: 'percent' | 'day' | 'unknown'
+  type: 'fixed' | 'percentage' | 'unknown'
   percent?: number
 }
 
@@ -27,19 +27,19 @@ const { t } = useI18n()
 
 const badgeClasses = {
   percent: 'bg-gradient-to-b from-orange-500 to-orange-600 text-white',
-  day: 'bg-gradient-to-b from-orange-500 to-orange-600 text-white',
+  percentage: 'bg-gradient-to-b from-orange-500 to-orange-600 text-white',
   unknown: 'bg-green text-gray-700',
 }
 
 const badgeTexts = {
   percent: `-${props.percent}%`,
-  day: t('product_of_day'),
+  percentage: t('product_of_day'),
   unknown: t('profitable'),
 }
 
 const badgeIcons = {
   percent: IconFlame,
-  day: IconFlame,
+  percentage: IconFlame,
   unknown: IconFlash,
 }
 

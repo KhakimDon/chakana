@@ -7,7 +7,12 @@
       <BaseTab v-model="tab" :list="tabList" />
     </div>
 
-    <NuxtPage />
+    <NuxtPage
+      :transition="{
+        name: 'fade',
+        mode: 'out-in',
+      }"
+    />
   </div>
 </template>
 

@@ -18,19 +18,25 @@
         <template v-if="data.loading">
           <ProfileNotificationCardLoading v-for="i in 10" :key="i" />
         </template>
-        <template v-else>
+        <template v-else-if="data.list.length">
           <ProfileNotificationCard
             v-for="(item, i) in data.list"
             :key="i"
             :item
           />
         </template>
+        <CommonNoData
+          v-else
+          image="/images/no-data/no-notifications.svg"
+          :title="$t('no_notifications_yet')"
+          :subtitle="$t('you_have_not_received_any_notifications')"
+        />
       </div>
     </Transition>
   </div>
 </template>
 <script setup lang="ts">
-import { useNotificationsStore } from '~/store/profile/notifications'
+import { useNotificationsStore } from '~/store/profile/notifications.js'
 
 const notifications = useNotificationsStore()
 

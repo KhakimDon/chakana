@@ -18,6 +18,6 @@ import { useOrderStore } from '~/store/profile/orders.js'
 
 const orderStore = useOrderStore()
 
-const orders = computed(() => orderStore.orders)
+const orders = computed(() => orderStore.orders.active)
 orderStore.fetchOrders()
 </script>
