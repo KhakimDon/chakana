@@ -147,4 +147,8 @@ export default {
   text_comment: 'Текст комментария',
   enter_comment: 'Введите текст комментария',
   recipient_details: 'Данные получателя',
+  interval: '{range} сегодня',
+  nearest_2_hours: 'Ближайщие 2 часа',
+  when_delivery: 'Когда доставить?',
+  free_delivery_badge: 'Доставка бесплатно',
 }

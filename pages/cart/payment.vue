@@ -23,11 +23,8 @@
                 :subtitle="'123 Main Street'"
                 @open-details="() => {}"
               />
-              <PaymentCardInfo
-                icon="SvgoProfileClockLocation"
-                icon-class="text-purple-500 !text-2xl"
-                :title="$t('location_change_range')"
-                @open-details="() => {}"
+              <PaymentSectionClockLocation
+                :show-free-delivery="showFreeDelivery"
               />
               <PaymentSectionUserData />
               <PaymentSectionCommentForCurier />
@@ -52,7 +49,7 @@
     <template #right>
       <section class="space-y-5">
         <CartCardFreeDelivery
-          :free-delivery-price="90000"
+          :free-delivery-price="limitPrice"
           :cart-total-price="totalCartProductsPrice"
         />
         <CartCardPriceInfo />
@@ -73,6 +70,12 @@ import { useCartStore } from '~/store/cart.js'
 const { locale } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
+
+const limitPrice = ref(90000)
+
+const showFreeDelivery = computed(() => {
+  return totalCartProductsPrice.value > limitPrice.value
+})
 
 const cartProducts = computed(() => cartStore.products)
 
