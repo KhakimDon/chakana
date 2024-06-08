@@ -19,6 +19,7 @@
             :no-search-icon="false"
             :no-clear="false"
             placeholder="Search"
+            :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
             @blur="isFocus = false"
@@ -105,6 +106,7 @@
             :placeholder="$t('select_icon')"
             class="w-[295px] mt-1"
             is-radio
+            :error="error"
           />
         </label>
         <label class="text-dark text-sm font-medium leading-130">
@@ -113,6 +115,7 @@
             v-model="nameAddress"
             :placeholder="$t('name_address')"
             class="w-[290px] mt-1"
+            :error="error"
           />
         </label>
       </div>
@@ -179,6 +182,7 @@ const search = ref<string>('')
 const isFocus = ref<boolean>(false)
 const openSearchList = ref<boolean>(false)
 const nameAddress = ref<string>('')
+const error = ref<boolean>(false)
 
 const settings = {
   apiKey: CONFIG.YANDEX_KEY,
@@ -203,7 +207,7 @@ const addAddress = () => {
   if (search.value) {
     showAddAddress.value = true
   } else {
-    handleError('Iltimos, manzilni kiriting', 'error')
+    error.value = true
   }
 }
 
@@ -246,8 +250,21 @@ function sendAddress() {
         showAddAddress.value = false
         $emit('close')
       })
+  } else {
+    error.value = true
   }
 }
+
+watch(
+  () => selectIcons.value,
+  () => {
+    if (search.value) {
+      error.value = false
+    } else {
+      error.value = true
+    }
+  }
+)
 </script>
 <style scoped>
 /* width */
