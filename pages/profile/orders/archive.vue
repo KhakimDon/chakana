@@ -11,6 +11,9 @@
         offer-reorder
       />
     </template>
+    <template v-else>
+      <CommonNoData class="col-span-3" />
+    </template>
   </div>
 </template>
 

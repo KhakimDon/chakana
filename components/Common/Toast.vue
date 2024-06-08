@@ -20,7 +20,7 @@
         </h2>
       </div>
     </div>
-    <CommonTimer />
+    <!--    <CommonTimer />-->
   </div>
 </template>
 <script setup lang="ts">
