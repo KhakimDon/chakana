@@ -51,6 +51,7 @@ const status = computed(() => orderStatus.value?.status)
       />
       #{{ $route.params.id }}
     </NuxtLinkLocale>
+    <pre>{{ orderStatus }}</pre>
     <BaseStepper class="my-8" :step="status" :steps />
     <h1 class="text-center text-2xl font-extrabold leading-130 text-dark mb-1">
       {{ $t(`order_statuses.${status}`) }}
@@ -63,6 +64,7 @@ const status = computed(() => orderStatus.value?.status)
     <div class="mt-8 flex flex-col">
       <!--      <SearchCardProduct />-->
     </div>
+    <ProfileOrderCourier />
   </div>
 </template>
 

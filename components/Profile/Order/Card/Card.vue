@@ -73,7 +73,7 @@
         >
           <template #suffix>
             <SvgoCommonChevron
-              class="rotate-180 text-gray transition-300 group-hover:text-white"
+              class="rotate-180 text-gray transition-300 group-hover:text-white shrink-0"
             />
           </template>
         </BaseButton>

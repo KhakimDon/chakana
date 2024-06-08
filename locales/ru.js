@@ -153,4 +153,6 @@ export default {
     on_the_way_description:
       'Ваш заказ передан курьеру и будет доставлен в течении {time} минут.',
   },
+  courier: 'Курьер',
+  write_to_courier: 'Написать курьеру',
 }
