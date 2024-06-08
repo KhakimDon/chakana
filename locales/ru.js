@@ -180,4 +180,6 @@ export default {
   },
   courier: 'Курьер',
   write_to_courier: 'Написать курьеру',
+  enter_text: 'Введите текст',
+  send: 'Отправить',
 }

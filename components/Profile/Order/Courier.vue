@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <div class="py-3 px-4 bg-gray-300 rounded-xl">
     <p class="mb-2 text-sm leading-140 font-medium text-gray-100">
@@ -24,6 +22,7 @@
           class="!bg-gray-200 hover:!bg-white"
           :text="$t('write_to_courier')"
           variant="secondary"
+          @click="messageModal = true"
         >
           <template #prefix>
             <SvgoProfileMessage class="text-xl leading-5" />
@@ -38,8 +37,13 @@
         </a>
       </div>
     </div>
-    <BaseModal model-value :title="$t('write_to_courier')"> </BaseModal>
+    <BaseModal v-model="messageModal" :title="$t('write_to_courier')">
+      <FormTextarea :rows="5" :placeholder="$t('enter_text')" />
+      <BaseButton class="mt-4 w-full" :text="$t('send')" />
+    </BaseModal>
   </div>
 </template>
 
-<style scoped></style>
+<script setup lang="ts">
+const messageModal = ref(false)
+</script>
