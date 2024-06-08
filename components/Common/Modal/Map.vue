@@ -149,6 +149,7 @@ import {
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
+import { useAddressStore } from '~/store/address.js'
 import { useMainStore } from '~/store/main.js'
 import { useSearchStore } from '~/store/search.js'
 
@@ -165,14 +166,13 @@ interface Emits {
 
 defineProps<Props>()
 const $emit = defineEmits<Emits>()
-
-const seachStore = useSearchStore()
 const store = useMainStore()
+const addressStore = useAddressStore()
 const { handleError } = useErrorHandling()
 const { showToast } = useCustomToast()
 
-const searchAddressList = computed(() => seachStore.searchAddressList.list)
-const addressClick = computed(() => store.addressMap.list)
+const searchAddressList = computed(() => addressStore.searchAddressList.list)
+const addressClick = computed(() => addressStore.addressMap.list)
 
 const buttonLoading = ref<boolean>(false)
 const coordinates = ref([41.377541, 69.237922])
@@ -200,7 +200,7 @@ const setLocation = async (event: any) => {
   const coords = event.get('coords')
   coordinates.value = coords
   coordinates.value = coords
-  store.fetchAddress(coords[0], coords[1])
+  addressStore.fetchAddress(coords[0], coords[1])
 }
 
 const addAddress = () => {
@@ -213,7 +213,7 @@ const addAddress = () => {
 
 const searchQuery = (e: string) => {
   search.value = e
-  seachStore.searchAddress(search.value)
+  addressStore.searchAddress(search.value)
   openSearchList.value = true
 }
 
