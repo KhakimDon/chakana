@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex-center">
-      <FormAvatarUpload />
+      <FormAvatarUpload @change="changeAvatar" />
     </div>
 
     <FormGroup :label="$t('full_name')" class="mt-5">
@@ -63,5 +63,9 @@ function submit() {
   if (!form.$v.value.$error) {
     emit('submit')
   }
+}
+
+function changeAvatar(file: File | null) {
+  form.values.avatar = file
 }
 </script>
