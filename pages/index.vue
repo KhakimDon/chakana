@@ -14,9 +14,9 @@
       </div>
     </Transition>
     <template #right>
-      <div class="sticky top-[86px]">
+      <div class="fixed w-[313px] top-[86px]">
         <ClientOnly>
-          <MainMap />
+          <MainMap @change-coords="changeCoords" />
         </ClientOnly>
         <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
           <CartEmpty v-if="cartProducts.length === 0" />
@@ -24,15 +24,29 @@
         </Transition>
       </div>
     </template>
+    <CommonModalAddressDelivery
+      v-model="show"
+      :list="list"
+      @close="show = false"
+      @open-map-modal="openMapModal"
+    />
+    <CommonModalMap
+      v-model="openModal"
+      @close="openModal = false"
+      @open-saved-adress="openSavedAddress"
+    />
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
+import type { IProduct } from '~/types/products.js'
 
 const route = useRoute()
 
 const categoriesStore = useCategoriesStore()
+const show = ref(false)
+const openModal = ref(false)
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
 const categories = computed(() => categoriesStore.categories.list)
@@ -44,10 +58,26 @@ const cartStore = useCartStore()
 
 const cartProducts = computed(() => cartStore.products)
 
+const { list } = useListFetcher<IProduct>(`/saved/address`, 25, false)
+
 watch(
   () => route.name,
   () => {
     categoriesStore.single = null
   }
 )
+
+const changeCoords = () => {
+  show.value = true
+}
+
+const openMapModal = () => {
+  show.value = false
+  openModal.value = true
+}
+
+const openSavedAddress = () => {
+  show.value = true
+  openModal.value = false
+}
 </script>

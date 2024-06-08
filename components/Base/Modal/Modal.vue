@@ -15,7 +15,7 @@
           <div
             id="Modal"
             :class="[bodyClass, { animated: animationIn }]"
-            class="relative bg-white rounded-xl w-[484px] overflow-hidden"
+            class="relative bg-white rounded-xl w-[484px] transition-300"
           >
             <slot v-if="!noHeader" name="header">
               <div
@@ -71,6 +71,8 @@ import { onMounted, ref, watch } from 'vue'
 
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconClose from '~/assets/icons/Common/close.svg'
+
+const router = useRoute()
 
 interface Props {
   title?: string

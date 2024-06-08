@@ -25,6 +25,7 @@
         class="w-full"
         :text="$t('no_other')"
         variant="secondary-dark"
+        @click="$emit('change-coords')"
       />
     </div>
   </div>

@@ -26,14 +26,14 @@ export const useApi = (apiUrl?: string) => {
           baseURL,
           headers,
           body: {
-            refresh: tokens.value.refresh,
+            refresh_token: tokens.value.refresh,
           },
         })
         try {
-          const _res = await dFetch('users/Refresh/')
+          const _res = await dFetch('refresh/token')
           authStore.setTokens({
-            access: (_res as Pick<any, 'accessToken'>).access,
-            refresh: tokens.value.refresh,
+            access_token: (_res as Pick<any, 'accessToken'>).access_token,
+            refresh_token: tokens.value.refresh,
           })
         } catch (err) {
           authStore.logout()

@@ -108,7 +108,6 @@ export default {
     'Введите список вручную или поставьте текст из буффера обмена',
   delivered: 'Доставленный',
   canceled: 'Отменено',
-  reorder: 'Повторить заказ',
   apply: 'Применить',
   codeword: 'Кодовое слово',
   enter_codeword: 'Введите кодовое слово',
@@ -169,4 +168,17 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
+  reorder: 'Повторить заказ',
+  address_delivery: 'Адрес доставки',
+  home: 'Дом',
+  other_address: 'Заказать на другой адрес',
+  specify_your_delivery_address: 'Укажите ваш адрес доставки',
+  no_address: 'У вас еще не добавлено ни одного адреса',
+  add_address: 'Добавить адресс',
+  map_modal_desc:
+    'Так как Холодильник возит всё очень быстро со своих собственных складов, ассортимент в вашем районе может отличаться.',
+  select_icon: 'Иконка адреса',
+  name_address: 'Называние адреса',
+  enter_name: 'Введите название',
+  enter_icon: 'Выбрать иконку',
 }
