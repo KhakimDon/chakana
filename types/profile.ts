@@ -41,6 +41,18 @@ export interface IOrderCard {
   images: string[]
 }
 
+export type TPromocodeStatuses = 'available' | 'used' | 'expired'
+
+export interface IPromocodeDetail {
+  id: number
+  code: string
+  expire?: string | null
+  minimum_price?: number | null
+  status: TPromocodeStatuses
+  discount: number
+  available?: boolean
+}
+
 export type TPaymentTypes = 'cash' | 'card' | false
 
 export interface IOrderDetail {
