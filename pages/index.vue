@@ -30,7 +30,11 @@
       @close="show = false"
       @open-map-modal="openMapModal"
     />
-    <CommonModalMap v-model="openModal" @close="openModal = false" />
+    <CommonModalMap
+      v-model="openModal"
+      @close="openModal = false"
+      @open-saved-adress="openSavedAddress"
+    />
   </LayoutWrapper>
 </template>
 <script setup lang="ts">
@@ -70,5 +74,10 @@ const changeCoords = () => {
 const openMapModal = () => {
   show.value = false
   openModal.value = true
+}
+
+const openSavedAddress = () => {
+  show.value = true
+  openModal.value = false
 }
 </script>

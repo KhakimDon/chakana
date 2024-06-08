@@ -72,6 +72,8 @@ import { onMounted, ref, watch } from 'vue'
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconClose from '~/assets/icons/Common/close.svg'
 
+const router = useRoute()
+
 interface Props {
   title?: string
   modelValue?: boolean

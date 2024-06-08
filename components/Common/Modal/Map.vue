@@ -5,6 +5,7 @@
     :body-class="!showAddAddress ? 'min-w-[868px]' : '!min-w-[646px]'"
     :title="$t('specify_your_delivery_address')"
     disable-outer-close
+    @back="$emit('open-saved-adress')"
     @close="$emit('close')"
   >
     <div v-if="!showAddAddress">
@@ -143,21 +144,41 @@ import {
 } from 'vue-yandex-maps'
 
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
+import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
 import { useMainStore } from '~/store/main.js'
 import { useSearchStore } from '~/store/search.js'
 
+const router = useRouter()
+
+interface Props {
+  openModal?: boolean
+  list?: any
+}
+
+interface Emits {
+  (e: 'close', v: boolean): void
+}
+
+defineProps<Props>()
+const $emit = defineEmits<Emits>()
+
 const seachStore = useSearchStore()
 const store = useMainStore()
 const { handleError } = useErrorHandling()
+const { showToast } = useCustomToast()
 
+const searchAddressList = computed(() => seachStore.searchAddressList.list)
+const addressClick = computed(() => store.addressMap.list)
+
+const buttonLoading = ref<boolean>(false)
 const coordinates = ref([41.377541, 69.237922])
 const showAddAddress = ref(false)
 const selectIcons = ref<number | string | { [key: string]: string | number }>()
-
-const addAddress = () => {
-  showAddAddress.value = true
-}
+const search = ref<string>('')
+const isFocus = ref<boolean>(false)
+const openSearchList = ref<boolean>(false)
+const nameAddress = ref<string>('')
 
 const settings = {
   apiKey: CONFIG.YANDEX_KEY,
@@ -167,24 +188,6 @@ const settings = {
   version: '2.1',
 }
 loadYmap({ ...settings })
-
-interface Props {
-  openModal?: boolean
-  list?: any
-}
-
-const search = ref<string>('')
-const isFocus = ref<boolean>(false)
-const openSearchList = ref<boolean>(false)
-const searchQuery = (e: string) => {
-  search.value = e
-  seachStore.searchAddress(search.value)
-  openSearchList.value = true
-}
-
-const searchAddressList = computed(() => seachStore.searchAddressList.list)
-const addressClick = computed(() => store.addressMap.list)
-const buttonLoading = ref<boolean>(false)
 
 const { list: icons } = useListFetcher('get/icons', 10, false)
 
@@ -196,11 +199,19 @@ const setLocation = async (event: any) => {
   store.fetchAddress(coords[0], coords[1])
 }
 
-interface Emits {
-  (e: 'close', v: boolean): void
+const addAddress = () => {
+  if (search.value) {
+    showAddAddress.value = true
+  } else {
+    handleError('Iltimos, manzilni kiriting', 'error')
+  }
 }
 
-const $emit = defineEmits<Emits>()
+const searchQuery = (e: string) => {
+  search.value = e
+  seachStore.searchAddress(search.value)
+  openSearchList.value = true
+}
 
 const changeCoords = (item: any) => {
   search.value = item.address
@@ -209,31 +220,34 @@ const changeCoords = (item: any) => {
 }
 
 function sendAddress() {
-  buttonLoading.value = true
-  useApi()
-    .$post('/saved/address', {
-      body: {
-        icon_id: selectIcons.value,
-        title: addressClick.value.title,
-        street: addressClick.value.street,
-        zip: addressClick.value.zip,
-        latitude: coordinates.value[0],
-        longitude: coordinates.value[1],
-      },
-    })
-    .then((res: any) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      handleError(err)
-    })
-    .finally(() => {
-      buttonLoading.value = false
-      $emit('close')
-    })
+  if (search.value && selectIcons.value && nameAddress.value) {
+    buttonLoading.value = true
+    useApi()
+      .$post('/saved/address', {
+        body: {
+          icon_id: selectIcons.value,
+          title: nameAddress.value,
+          street: addressClick.value.street,
+          zip: addressClick.value.zip,
+          latitude: coordinates.value[0],
+          longitude: coordinates.value[1],
+        },
+      })
+      .then((res: any) => {
+        if (res.saved) {
+          showToast('Muvaffaqiyatli yuborildi', 'success')
+        }
+      })
+      .catch((err: any) => {
+        handleError(err)
+      })
+      .finally(() => {
+        buttonLoading.value = false
+        showAddAddress.value = false
+        $emit('close')
+      })
+  }
 }
-
-defineProps<Props>()
 </script>
 <style scoped>
 /* width */
