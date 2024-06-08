@@ -44,20 +44,22 @@
         </template>
       </div>
     </Transition>
-    <ModalCardDelete
+    <ProfileModalCardDelete
       v-model="deleteModal"
       :active-card="activeCard"
       :delete-loading="deleteLoading"
       @delete="deleteCard"
     />
-    <ModalCardAdd v-model="addCardModal" />
+    <ProfileModalCardAdd v-model="addCardModal" @finish="addedCard" />
   </div>
 </template>
 
 <script setup lang="ts">
-import MyCard from '~/components/Profile/MyCard/MyCard.vue'
 import { useCardsStore } from '~/store/profile/cards'
 import type { IBankCard } from '~/types/profile'
+
+const { showToast } = useCustomToast()
+const { t } = useI18n()
 
 const cardsStore = useCardsStore()
 const cards = computed(() => cardsStore.cards)
@@ -65,6 +67,12 @@ const deleteLoading = computed(() => cardsStore.deleteLoading)
 cardsStore.fetchCards()
 
 const activeCard = ref<IBankCard | null>(null)
+
+const addCardModal = ref(false)
+function addedCard() {
+  addCardModal.value = false
+  cardsStore.fetchCards()
+}
 
 const deleteModal = ref(false)
 const deleteConfirm = (card: IBankCard) => {
@@ -75,8 +83,8 @@ const deleteConfirm = (card: IBankCard) => {
 const deleteCard = () => {
   cardsStore.deleteCard(activeCard.value!).then(() => {
     deleteModal.value = false
+    showToast(t('card_deleted_successfully'), 'success')
+    cardsStore.fetchCards()
   })
 }
-
-const addCardModal = ref(false)
 </script>

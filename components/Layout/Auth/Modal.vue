@@ -94,13 +94,8 @@ const registerForm = useForm(
 function sendSms() {
   buttonLoading.value = true
   params.value.phone = '+998' + loginForm.values.phone?.replace(/\D/g, '')
-  useApi()
-    .$post('/send-sms', {
-      body: {
-        phone_number: params.value.phone,
-        type_: 'login_sms_verification',
-      },
-    })
+  useAuthStore()
+    .sendSms(params.value.phone)
     .then((res: any) => {
       params.value.isRegister = res.register
       step.value = 'confirm'
@@ -151,14 +146,32 @@ function register() {
     .then((res: any) => {
       authStore.setTokens(res)
       setTimeout(() => {
-        authStore.fetchUser()
+        if (registerForm.values.avatar) {
+          const formData = new FormData()
+          formData.append('image', registerForm.values.avatar)
+          useApi()
+            .$post('upload/avatar', { body: formData })
+            .then(() => {
+              authStore.fetchUser().finally(() => {
+                buttonLoading.value = false
+              })
+            })
+            .catch((err) => {
+              buttonLoading.value = false
+              handleError(err)
+            })
+        } else {
+          authStore.fetchUser().finally(() => {
+            buttonLoading.value = false
+          })
+        }
         authStore.showAuth = false
       }, 300)
     })
     .catch((err) => {
+      buttonLoading.value = false
       handleError(err)
     })
-    .finally(() => (buttonLoading.value = false))
 }
 
 watch(

@@ -1,7 +1,7 @@
 <template>
   <LayoutWrapper>
     <template #left>
-      <div>
+      <div class="sticky top-[86px]">
         <ProfileSidebarPremium />
         <ProfileSidebarMenu class="my-4" :menu />
         <button
@@ -88,7 +88,7 @@ const menu = [
       'group-[.active]:bg-[#9747FF] group-hover:bg-[#9747FF]/20',
   },
   {
-    link: '/profile/discounts',
+    link: '/profile/promocodes',
     title: t('discounts_and_promocodes'),
     icon: SvgoProfileSidebarTag,
     iconClass: 'text-[#F5C005] group-[.active]:text-white',

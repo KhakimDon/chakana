@@ -40,3 +40,33 @@ export interface IOrderCard {
   total_real_price: number
   images: string[]
 }
+
+export type TPromocodeStatuses = 'available' | 'used' | 'expired'
+
+export interface IPromocodeDetail {
+  id: number
+  code: string
+  expire?: string | null
+  minimum_price?: number | null
+  status: TPromocodeStatuses
+  discount: number
+  available?: boolean
+}
+
+export type TPaymentTypes = 'cash' | 'card' | false
+
+export interface IOrderDetail {
+  delivery: {
+    address: string
+    date: string
+    customer: {
+      full_name: string
+      phone: string
+    }
+    carrier: {
+      full_name: string
+      phone: string
+    }
+  }
+  payment_type: TPaymentTypes
+}
