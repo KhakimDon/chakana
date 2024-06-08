@@ -40,3 +40,21 @@ export interface IOrderCard {
   total_real_price: number
   images: string[]
 }
+
+export type TPaymentTypes = 'cash' | 'card' | false
+
+export interface IOrderDetail {
+  delivery: {
+    address: string
+    date: string
+    customer: {
+      full_name: string
+      phone: string
+    }
+    carrier: {
+      full_name: string
+      phone: string
+    }
+  }
+  payment_type: TPaymentTypes
+}
