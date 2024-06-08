@@ -1,11 +1,12 @@
 <template>
-  <LayoutWrapper>
+  <LayoutWrapper has-fixed>
     <template #left>
-      <MainSidebar
-        class="sticky top-[86px]"
-        :loading="categoriesLoading"
-        v-bind="{ categories, single }"
-      />
+      <div class="w-[202px]">
+        <MainSidebar
+          :loading="categoriesLoading"
+          v-bind="{ categories, single }"
+        />
+      </div>
     </template>
     <Transition name="fade" mode="out-in">
       <div :key="$route.name">
@@ -14,7 +15,9 @@
     </Transition>
     <template #right>
       <div class="sticky top-[86px]">
-        <MainMap />
+        <ClientOnly>
+          <MainMap />
+        </ClientOnly>
         <div v-if="false" class="mt-5">
           <p class="text-xl leading-normal font-extrabold text-dark">
             {{ $t('basket') }}

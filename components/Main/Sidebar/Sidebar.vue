@@ -11,7 +11,7 @@
         >
           <template v-if="!loading">
             <MainSidebarItem
-              v-for="(item, index) in categories"
+              v-for="(item, index) in [...categories, ...categories]"
               :key="index"
               v-bind="{ item }"
             />
@@ -47,7 +47,7 @@
         />
       </div>
     </div>
-    <div class="flex-center-between">
+    <div v-if="false" class="flex-center-between">
       <p
         class="text-sm leading-5 text-dark font-semibold whitespace-nowrap transition-300"
         :class="{ '-translate-x-5 -ml-10 opacity-0': hovered }"

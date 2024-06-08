@@ -1,9 +1,9 @@
 <template>
   <BaseModal
-    v-bind="{ show }"
     body-class="max-w-[424px]"
     :title="$t('authorization')"
     :has-back="step === 'qr'"
+    disable-outer-close
     @close="$emit('close')"
     @back="step = 'login'"
   >
@@ -27,6 +27,8 @@
         <LayoutAuthRegister
           v-else-if="step === 'register'"
           :form="registerForm"
+          :loading="buttonLoading"
+          @submit="register"
         />
         <LayoutAuthQr v-else />
       </div>
@@ -46,13 +48,17 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { show } = unref(props)
 defineEmits(['close'])
+const { handleError } = useErrorHandling()
 
+const authStore = useAuthStore()
 const step = ref('login')
 const buttonLoading = ref(false)
 const params = ref({
   phone: '',
   session: '',
+  isRegister: false,
 })
 
 const loginForm = useForm(
@@ -91,9 +97,12 @@ function sendSms() {
   useAuthStore()
     .sendSms(params.value.phone)
     .then((res: any) => {
-      if (!res?.register) {
-        step.value = 'confirm'
-      }
+      params.value.isRegister = res.register
+      step.value = 'confirm'
+      params.value.session = res.session
+    })
+    .catch((err) => {
+      handleError(err)
     })
     .finally(() => (buttonLoading.value = false))
 }
@@ -108,21 +117,57 @@ function confirmCode() {
         otp_code: confirmForm.values.code,
       },
     })
-    .then((res: any) => {
-      console.log('res, ', res)
-      params.value.session = res.session
-      step.value = 'register'
+    .then(() => {
+      if (params.value.isRegister) {
+        step.value = 'register'
+      } else {
+        register()
+      }
     })
     .catch((err) => {
-      console.log(err)
+      handleError(err)
+    })
+    .finally(() => (buttonLoading.value = false))
+}
+
+function register() {
+  buttonLoading.value = true
+  useApi()
+    .$post('/login', {
+      body: {
+        name: registerForm.values.name || undefined,
+        instagram: registerForm.values.instagram || undefined,
+        telegram: registerForm.values.telegram || undefined,
+        session: params.value.session,
+        phone_number: params.value.phone,
+        otp_code: confirmForm.values.code,
+      },
+    })
+    .then((res: any) => {
+      authStore.setTokens(res)
+      setTimeout(() => {
+        authStore.fetchUser()
+        authStore.showAuth = false
+      }, 300)
+    })
+    .catch((err) => {
+      handleError(err)
     })
     .finally(() => (buttonLoading.value = false))
 }
 
 watch(
-  () => props.show,
+  () => authStore.showAuth,
   () => {
     step.value = 'login'
+    loginForm.values.phone = ''
+    confirmForm.values.code = ''
+    registerForm.values.name = ''
+    registerForm.values.instagram = ''
+    registerForm.values.telegram = ''
+    loginForm.$v.value.$reset()
+    confirmForm.$v.value.$reset()
+    registerForm.$v.value.$reset()
   }
 )
 </script>

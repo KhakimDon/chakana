@@ -1,7 +1,7 @@
 <template>
   <LayoutWrapper>
     <template #left>
-      <div>
+      <div class="sticky top-[86px]">
         <ProfileSidebarPremium />
         <ProfileSidebarMenu class="my-4" :menu />
         <button
