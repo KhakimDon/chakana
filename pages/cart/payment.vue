@@ -16,13 +16,7 @@
         <div class="w-full my-6 space-y-6">
           <PaymentCardInfoHeader :title="$t('delivery_details')">
             <section class="space-y-2">
-              <PaymentCardInfo
-                icon="SvgoProfileTruck"
-                icon-class="text-orange !text-2xl"
-                :title="$t('courier_address')"
-                :subtitle="'123 Main Street'"
-                @open-details="() => {}"
-              />
+              <PaymentSectionAddress />
               <PaymentSectionClockLocation
                 :show-free-delivery="showFreeDelivery"
               />
@@ -30,18 +24,10 @@
               <PaymentSectionCommentForCurier />
             </section>
           </PaymentCardInfoHeader>
-          <PaymentCardInfoHeader :title="$t('payment_method')">
-            <section class="space-y-2">
-              <PaymentCardInfo
-                icon="SvgoProfileMoney"
-                icon-class="text-green !text-2xl"
-                :title="$t('cash')"
-                @open-details="() => {}"
-              />
-            </section>
-          </PaymentCardInfoHeader>
-          <PaymentSectionPromoCode />
+          <PaymentSectionPaymentMethod />
+          <PaymentSectionPromoCode v-if="false" />
           <div
+            v-if="false"
             class="flex-y-center gap-3 select-none cursor-pointer"
             @click="toggleUseBalance"
           >
@@ -80,6 +66,7 @@
           class="w-full !rounded-10"
           :text="$t('payment')"
           variant="green"
+          :loading="loading"
           @click="goToPayment"
         />
       </section>
@@ -88,10 +75,15 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+import { useI18n } from 'vue-i18n'
+
+import { useCustomToast } from '~/composables/useCustomToast.js'
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
 
@@ -111,8 +103,28 @@ const cartProducts = computed(() => cartStore.products)
 const goBack = () => {
   router.back()
 }
+
+const orderCartStore = useCartOrderStore()
+
+const orderDetail = computed(() => orderCartStore.orderDetail)
+const loading = computed(() => orderCartStore.orderCreating)
+
+const { showToast } = useCustomToast()
+
 const goToPayment = () => {
-  router.push(`/${locale.value}/cart/payment`)
+  orderCartStore
+    .createOrder({
+      ...orderDetail.value,
+      when_to_deliver: orderDetail.value.when_to_deliver
+        ?.toISOString()
+        .split('.')[0],
+    })
+    .then(() => {
+      showToast(t('order_created'), 'success')
+    })
+    .catch(() => {
+      showToast(t('order_not_created'), 'error')
+    })
 }
 
 // All prices

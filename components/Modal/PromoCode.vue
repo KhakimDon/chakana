@@ -57,7 +57,7 @@
       </div>
       <div
         v-else-if="promoCodes?.loading"
-        class="flex items-center justify-center"
+        class="space-y-2"
       >
         <ProfilePromocodesCardLoading v-for="key in 4" :key />
       </div>

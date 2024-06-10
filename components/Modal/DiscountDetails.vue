@@ -10,6 +10,30 @@
       </p>
       <div>
         <div
+          v-for="(product, index) in discount?.detail?.products"
+          :key="index"
+          class="flex-y-center justify-between border-b border-white-100 py-3"
+        >
+          <div class="space-y-1">
+            <p class="text-xs font-semibold leading-130 text-dark line-clamp-2">
+              {{ product?.name }}
+            </p>
+          </div>
+          <div class="flex-y-center flex-col items-end">
+            <p
+              class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded p-1"
+            >
+              -{{ product?.discount_percent }}%
+            </p>
+            <p class="text-xs text-green font-medium leading-none">
+              <span class="text-base font-semibold leading-tight"
+                >-{{ formatMoneyDecimal(product?.discount ?? 0, 0) }}</span
+              >
+              UZS
+            </p>
+          </div>
+        </div>
+        <div
           class="flex-y-center justify-between border-b border-white-100 py-3"
         >
           <div class="space-y-1">
@@ -17,12 +41,14 @@
               {{ $t('promo_code') }}
             </p>
             <p class="text-xs font-semibold leading-130 text-dark">
-              {{ promoCode?.code }}
+              {{ discount?.detail?.promo_code?.code }}
             </p>
           </div>
           <p class="text-xs text-green font-medium leading-none">
             <span class="text-base font-semibold leading-tight"
-              >-{{ formatMoneyDecimal(promoCode?.minimum_price, 0) }}</span
+              >-{{
+                formatMoneyDecimal(discount?.detail?.promo_code?.reward ?? 0, 0)
+              }}</span
             >
             UZS
           </p>
@@ -37,7 +63,7 @@
           <p
             class="text-xl z-10 font-extrabold leading-relaxed p-2 bg-white pr-0 text-red"
           >
-            -{{ formatMoneyDecimal(totalPrice, 0) }}
+            -{{ formatMoneyDecimal(discount?.detail?.total ?? 0, 0) }}
             <span class="text-[15px] font-extrabold leading-[21px]">UZS</span>
           </p>
         </div>
@@ -70,20 +96,13 @@ const emit = defineEmits<{
 
 const cartOrderStore = useCartOrderStore()
 
-const promoCodeDetails = computed(() => cartOrderStore.promoCode)
-
-const totalPrice = computed(() => {
-  if (props.promoCode) {
-    return props.promoCode?.minimum_price
-  }
-  return 0
-})
+const discount = computed(() => cartOrderStore.discount)
 
 watch(
   () => props.modelValue,
   (val) => {
     if (val) {
-      cartOrderStore.getPromoCodeDetail(props.promoCode?.id)
+      cartOrderStore.getCartDiscountDetail(props.promoCode?.id)
     }
   }
 )

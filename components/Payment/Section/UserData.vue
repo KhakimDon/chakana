@@ -2,14 +2,25 @@
   <PaymentCardInfo
     icon="SvgoProfileUserCircle"
     icon-class="text-teal-700 !text-2xl"
-    :title="$t('recipient_details')"
+    :title="userData?.length > 10 ? userData : $t('recipient_details')"
     @open-details="openModal = true"
   />
   <ModalUserData v-model="openModal" />
 </template>
 
 <script setup lang="ts">
+import { useCartOrderStore } from '~/store/cart_order.js'
+
 const openModal = ref(false)
+
+const orderCartStore = useCartOrderStore()
+
+const userData = computed(
+  () =>
+    orderCartStore.orderDetail.recipient.full_name +
+    ', +998 ' +
+    orderCartStore.orderDetail.recipient.phone
+)
 </script>
 
 <style scoped></style>

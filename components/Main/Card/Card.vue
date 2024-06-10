@@ -69,6 +69,7 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products'
 import { formatMoneyDecimal, getImageSize } from '~/utils/functions/common'
 
@@ -79,6 +80,7 @@ interface Props {
 const props = defineProps<Props>()
 defineEmits(['open'])
 
+const orderCartStore = useCartOrderStore()
 const cartStore = useCartStore()
 const count = ref(0)
 
@@ -86,9 +88,11 @@ const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
     count.value++
-    cartStore.addToCart({
-      ...product,
-      cart_count: count.value,
+    orderCartStore.addToCart(product?.id, count.value).then(() => {
+      cartStore.addToCart({
+        ...product,
+        cart_count: count.value,
+      })
     })
   }
 }
@@ -97,11 +101,15 @@ watch(
   () => count.value,
   (newValue) => {
     if (newValue === 0) {
-      cartStore.removeFromCart(props.card?.id)
+      orderCartStore.addToCart(props.card?.id, 0).then(() => {
+        cartStore.removeFromCart(props.card?.id)
+      })
     } else {
-      cartStore.updateToCart({
-        ...props.card,
-        cart_count: newValue,
+      orderCartStore.addToCart(props.card?.id, newValue).then(() => {
+        cartStore.updateToCart({
+          ...props.card,
+          cart_count: newValue,
+        })
       })
     }
   }
