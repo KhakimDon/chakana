@@ -24,16 +24,7 @@
               <PaymentSectionCommentForCurier />
             </section>
           </PaymentCardInfoHeader>
-          <PaymentCardInfoHeader :title="$t('payment_method')">
-            <section class="space-y-2">
-              <PaymentCardInfo
-                icon="SvgoProfileMoney"
-                icon-class="text-green !text-2xl"
-                :title="$t('cash')"
-                @open-details="() => {}"
-              />
-            </section>
-          </PaymentCardInfoHeader>
+          <PaymentSectionPaymentMethod />
           <PaymentSectionPromoCode />
           <div
             class="flex-y-center gap-3 select-none cursor-pointer"
