@@ -1,4 +1,22 @@
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
+  const orderDetail = reactive({
+    address: '',
+    when_to_deliver: new Date(),
+    recipient: {
+      name: '',
+      phone: '',
+    },
+    comment_to_courier: '',
+    payment_method: {
+      card_to_the_courier: false,
+      cash: false,
+      card_id: 0,
+      provider_id: 0,
+    },
+    promo_code_id: 0,
+    use_from_balance: false,
+  })
+
   const promoCodes = reactive({
     list: [],
     loading: true,
@@ -170,5 +188,6 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     getCartDetail,
     cartClear,
     addToCart,
+    orderDetail,
   }
 })

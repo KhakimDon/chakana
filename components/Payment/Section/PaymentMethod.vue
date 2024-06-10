@@ -4,7 +4,13 @@
       <PaymentCardInfo
         icon="SvgoProfileMoney"
         icon-class="text-green !text-2xl"
-        :title="$t('payment_method')"
+        :title="
+          payment?.cash
+            ? $t('cash')
+            : payment.card_to_the_courier
+            ? $t('courier_card')
+            : $t('payment_method')
+        "
         @open-details="openModal = true"
       />
     </section>
@@ -13,7 +19,13 @@
 </template>
 
 <script setup lang="ts">
+import { useCartOrderStore } from '~/store/cart_order.js'
+
 const openModal = ref(false)
+
+const orderCartStore = useCartOrderStore()
+
+const payment = computed(() => orderCartStore.orderDetail.payment_method)
 </script>
 
 <style scoped></style>

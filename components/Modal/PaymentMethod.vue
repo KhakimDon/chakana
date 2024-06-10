@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { minLength, required } from '@vuelidate/validators'
+import { useCartOrderStore } from '~/store/cart_order.js'
 
 interface Props {
   modelValue: boolean
@@ -97,29 +97,14 @@ watch(
 
 const paymentType = ref('paylov')
 
-const form = useForm(
-  {
-    name: '',
-    phone: '',
-  },
-  {
-    name: { required, minLength: minLength(3) },
-    phone: { required },
-  }
-)
-
+const orderCartStore = useCartOrderStore()
 function add() {
-  form.$v.value.$touch()
-  if (!form.$v.value.$invalid) {
-    loading.value = true
-    // API call here
-  }
-}
+  orderCartStore.orderDetail.payment_method.provider_id = 0
+  orderCartStore.orderDetail.payment_method.cash = cash.value
+  orderCartStore.orderDetail.payment_method.card_to_the_courier =
+    courierCard.value
+  orderCartStore.orderDetail.payment_method.card_id = 0
 
-watch(
-  () => props.modelValue,
-  () => {
-    form.$v.value.$reset()
-  }
-)
+  emit('update:modelValue', false)
+}
 </script>

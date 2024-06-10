@@ -4,6 +4,7 @@
     :title="$t('when_delivery')"
     @update:model-value="$emit('update:modelValue', $event)"
   >
+    <pre>{{ selectedInterval }}</pre>
     <div class="space-y-4">
       <p
         v-if="showFreeDelivery"
@@ -39,12 +40,14 @@
 </template>
 
 <script setup lang="ts">
+import { useCartOrderStore } from '~/store/cart_order.js'
+
 interface Props {
   modelValue: boolean
   showFreeDelivery?: boolean
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -56,7 +59,6 @@ const selectedInterval = ref('nearest_2_hours')
 
 function generateIntervals() {
   const now = new Date()
-  console.log('now', now)
   const intervals = []
 
   let currentHour = now.getHours()
@@ -100,8 +102,33 @@ function generateIntervals() {
 
   return intervals
 }
+
+function convertTimeTo12HourFormat(time: string) {
+  // Splitting the time string into hours and minutes
+  const timeArray = time.split(':')
+  let hours = parseInt(timeArray[0])
+
+  // Converting hours to 12-hour format
+  hours = hours % 12
+  hours = hours || 12 // 0 should be converted to 12
+
+  return hours
+}
+
+const orderCartStore = useCartOrderStore()
 function add() {
-  console.log('selectedInterval', selectedInterval.value)
+  if (selectedInterval.value === 'nearest_2_hours') {
+    orderCartStore.orderDetail.when_to_deliver = new Date()
+  } else {
+    const now = new Date()
+    now.setHours(
+      convertTimeTo12HourFormat(selectedInterval.value.split('-')[0])
+    )
+    now.setMinutes(0)
+    now.setSeconds(0)
+    orderCartStore.orderDetail.when_to_deliver = now
+  }
+  emit('update:modelValue', false)
 }
 
 const intervals = ref()

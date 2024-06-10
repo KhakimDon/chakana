@@ -46,6 +46,8 @@
 <script setup lang="ts">
 import { minLength, required } from '@vuelidate/validators'
 
+import { useCartOrderStore } from '~/store/cart_order.js'
+
 interface Props {
   modelValue: boolean
 }
@@ -69,11 +71,16 @@ const form = useForm(
   }
 )
 
+const orderCartStore = useCartOrderStore()
+
 function add() {
   form.$v.value.$touch()
   if (!form.$v.value.$invalid) {
     loading.value = true
-    // API call here
+    orderCartStore.orderDetail.recipient.name = form.values.name
+    orderCartStore.orderDetail.recipient.phone = form.values.phone
+    loading.value = false
+    emit('update:modelValue', false)
   }
 }
 
