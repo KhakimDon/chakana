@@ -1,9 +1,11 @@
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
   const orderDetail = reactive({
-    address: '',
+    address: {
+      id: 0,
+    },
     when_to_deliver: new Date(),
     recipient: {
-      name: '',
+      full_name: '',
       phone: '',
     },
     comment_to_courier: '',
@@ -174,6 +176,29 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const orderCreating = ref(false)
+
+  function createOrder(orderDetail: any) {
+    return new Promise((resolve, reject) => {
+      orderCreating.value = true
+      useApi()
+        .$post(`/order/create`, {
+          body: {
+            ...orderDetail,
+          },
+        })
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          orderCreating.value = false
+        })
+    })
+  }
+
   return {
     promoCodes,
     getPromoCodeList,
@@ -189,5 +214,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     cartClear,
     addToCart,
     orderDetail,
+    orderCreating,
+    createOrder,
   }
 })

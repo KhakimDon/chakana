@@ -21,11 +21,16 @@
 </template>
 
 <script setup lang="ts">
+import { useCartOrderStore } from '~/store/cart_order.js'
+
 const openModal = ref(false)
 const openMapModalRef = ref(false)
 const selectedLocation = ref()
+
+const orderCartStore = useCartOrderStore()
 const selectedAddress = (address: object) => {
   selectedLocation.value = address
+  orderCartStore.orderDetail.address.id = address?.id
 }
 const { list, resetList } = useListFetcher(`/saved/address`, 25, false, '')
 

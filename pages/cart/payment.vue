@@ -66,6 +66,7 @@
           class="w-full !rounded-10"
           :text="$t('payment')"
           variant="green"
+          :loading="loading"
           @click="goToPayment"
         />
       </section>
@@ -75,9 +76,10 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
 
@@ -97,8 +99,14 @@ const cartProducts = computed(() => cartStore.products)
 const goBack = () => {
   router.back()
 }
+
+const orderCartStore = useCartOrderStore()
+
+const orderDetail = computed(() => orderCartStore.orderDetail)
+const loading = computed(() => orderCartStore.orderCreating)
+
 const goToPayment = () => {
-  // router.push(`/${local  e.value}/cart/payment`)
+  orderCartStore.createOrder(orderDetail.value)
 }
 
 // All prices

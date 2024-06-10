@@ -77,7 +77,7 @@ function add() {
   form.$v.value.$touch()
   if (!form.$v.value.$invalid) {
     loading.value = true
-    orderCartStore.orderDetail.recipient.name = form.values.name
+    orderCartStore.orderDetail.recipient.full_name = form.values.name
     orderCartStore.orderDetail.recipient.phone = form.values.phone
     loading.value = false
     emit('update:modelValue', false)
