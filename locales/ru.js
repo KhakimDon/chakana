@@ -169,4 +169,8 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
+  promo_badge: 'Иcпользуется {text}',
+  promo_code: 'Промокод',
+  card_price: 'Баланс: {price} UZS',
+  use_balance: 'Использовать баланс',
 }
