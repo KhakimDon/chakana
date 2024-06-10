@@ -52,3 +52,21 @@ export interface IPromocodeDetail {
   discount: number
   available?: boolean
 }
+
+export type TPaymentTypes = 'cash' | 'card' | false
+
+export interface IOrderDetail {
+  delivery: {
+    address: string
+    date: string
+    customer: {
+      full_name: string
+      phone: string
+    }
+    carrier: {
+      full_name: string
+      phone: string
+    }
+  }
+  payment_type: TPaymentTypes
+}

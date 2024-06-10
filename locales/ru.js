@@ -168,6 +168,19 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
+  order_statuses: {
+    accepted: 'Заказ принято',
+    accepted_description: 'Заказ принят, товар скоро заберут со склада.',
+    collected: 'Заказ собирается',
+    collected_description: 'Заказ собирается, товар скоро заберут со склада.',
+    on_the_way: 'Курьер в пути',
+    on_the_way_description:
+      'Ваш заказ передан курьеру и будет доставлен в течении {time} минут.',
+  },
+  courier: 'Курьер',
+  write_to_courier: 'Написать курьеру',
+  enter_text: 'Введите текст',
+  send: 'Отправить',
   reorder: 'Повторить заказ',
   address_delivery: 'Адрес доставки',
   home: 'Дом',
