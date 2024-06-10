@@ -25,8 +25,9 @@
             </section>
           </PaymentCardInfoHeader>
           <PaymentSectionPaymentMethod />
-          <PaymentSectionPromoCode />
+          <PaymentSectionPromoCode v-if="false" />
           <div
+            v-if="false"
             class="flex-y-center gap-3 select-none cursor-pointer"
             @click="toggleUseBalance"
           >

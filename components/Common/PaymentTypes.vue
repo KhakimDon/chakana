@@ -15,6 +15,7 @@
       />
       <span class="flex-y-center gap-1">
         <span
+          v-if="false"
           class="h-5 w-fit px-[6px] text-xs bg-gray-200 rounded flex-center font-semibold text-dark leading-[15px]"
           >{{ 12 }}%</span
         >

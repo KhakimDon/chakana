@@ -207,4 +207,7 @@ export default {
   all_discounts_info:
     'Общая сумма вашего заказа была изменена из-за весовых изменений.',
   total: 'Итого',
+  payment_system: 'Платежные системы',
+  courier_card: 'Картой курьеру',
+  payment_via_card: 'Оплата картой',
 }
