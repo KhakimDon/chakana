@@ -82,7 +82,7 @@ const applyPromocode = () => {
 
   promocodesStore.applyPromocode(form.values.promocode)
 
-  if (!applyResult.success) {
+  if (!applyResult.value.success) {
     animate.value = true
   }
 }

@@ -40,9 +40,32 @@
               />
             </section>
           </PaymentCardInfoHeader>
-          <PaymentCardInfoHeader :title="$t('additional')">
-            <section class="space-y-2">SMTH</section>
-          </PaymentCardInfoHeader>
+          <PaymentSectionPromoCode />
+          <div
+            class="flex-y-center gap-3 select-none cursor-pointer"
+            @click="toggleUseBalance"
+          >
+            <div class="shrink-0 flex-center">
+              <SvgoProfileWallet class="text-2xl text-green-600" />
+            </div>
+            <div
+              class="flex-y-center group justify-between py-2 w-full h-[52px]"
+            >
+              <div class="space-y-1">
+                <p class="text-sm font-semibold leading-tight text-dark">
+                  {{ $t('use_balance') }}
+                </p>
+                <p class="text-xs font-normal leading-none text-gray-100">
+                  {{
+                    t('card_price', {
+                      price: formatMoneyDecimal(limitPrice, 0),
+                    })
+                  }}
+                </p>
+              </div>
+              <FormToggle v-model="useBalance" class="text-2xl" />
+            </div>
+          </div>
         </div>
       </div>
     </Transition>
@@ -66,12 +89,18 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
 
 const limitPrice = ref(90000)
+const useBalance = ref(false)
+
+const toggleUseBalance = () => {
+  useBalance.value = !useBalance.value
+}
 
 const showFreeDelivery = computed(() => {
   return totalCartProductsPrice.value > limitPrice.value
