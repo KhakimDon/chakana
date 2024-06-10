@@ -4,7 +4,6 @@
     :title="$t('when_delivery')"
     @update:model-value="$emit('update:modelValue', $event)"
   >
-    <pre>{{ selectedInterval }}</pre>
     <div class="space-y-4">
       <p
         v-if="showFreeDelivery"
@@ -118,11 +117,13 @@ function convertTimeTo12HourFormat(time: string) {
 const orderCartStore = useCartOrderStore()
 function add() {
   if (selectedInterval.value === 'nearest_2_hours') {
-    orderCartStore.orderDetail.when_to_deliver = new Date()
+    const now = new Date()
+    now.setHours(now.getHours() + 2)
+    orderCartStore.orderDetail.when_to_deliver = now
   } else {
     const now = new Date()
     now.setHours(
-      convertTimeTo12HourFormat(selectedInterval.value.split('-')[0])
+      convertTimeTo12HourFormat(selectedInterval.value.split('-')[0]) + 1
     )
     now.setMinutes(0)
     now.setSeconds(0)

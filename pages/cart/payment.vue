@@ -75,6 +75,10 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+import { useI18n } from 'vue-i18n'
+
+import { useCustomToast } from '~/composables/useCustomToast.js'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
@@ -105,8 +109,22 @@ const orderCartStore = useCartOrderStore()
 const orderDetail = computed(() => orderCartStore.orderDetail)
 const loading = computed(() => orderCartStore.orderCreating)
 
+const { showToast } = useCustomToast()
+
 const goToPayment = () => {
-  orderCartStore.createOrder(orderDetail.value)
+  orderCartStore
+    .createOrder({
+      ...orderDetail.value,
+      when_to_deliver: orderDetail.value.when_to_deliver
+        ?.toISOString()
+        .split('.')[0],
+    })
+    .then(() => {
+      showToast(t('order_created'), 'success')
+    })
+    .catch(() => {
+      showToast(t('order_not_created'), 'error')
+    })
 }
 
 // All prices

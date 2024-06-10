@@ -210,4 +210,6 @@ export default {
   payment_system: 'Платежные системы',
   courier_card: 'Картой курьеру',
   payment_via_card: 'Оплата картой',
+  order_created: 'Заказ успешно принят',
+  order_not_created: 'Произошла ошибка',
 }

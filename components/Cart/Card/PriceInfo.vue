@@ -20,7 +20,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div class="flex-y-center justify-between">
+      <div v-if="false" class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('delivery_price') }}
         </p>
@@ -29,7 +29,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div class="flex-y-center justify-between">
+      <div v-if="false" class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('ndc') }}
         </p>
@@ -47,7 +47,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <p class="text-xs font-medium leading-none text-green">
+      <p v-if="false" class="text-xs font-medium leading-none text-green">
         {{ $t('show_more') }}
       </p>
     </div>
