@@ -25,7 +25,7 @@
           {{ $t('delivery_price') }}
         </p>
         <p class="text-xs font-semibold leading-none text-dark">
-          {{ formatMoneyDecimal(deliveryPrice, 0) }}
+          {{ formatMoneyDecimal(deliveryPrice ?? 0, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
