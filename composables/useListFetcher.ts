@@ -1,9 +1,11 @@
+import Qr from '~/components/Layout/Auth/Qr/Qr.vue'
 import { ICustomObject, IDefaultResponse } from '~/types'
 
 export const useListFetcher = <T>(
   url: string,
   paginationLimit?: number,
   itself?: boolean,
+  search: string,
   customParams?: ICustomObject
 ) => {
   const route = useRoute()
@@ -20,7 +22,7 @@ export const useListFetcher = <T>(
   const params = reactive({
     page_size: paginationLimit ?? 9,
     page: 1,
-    search: route.query.search ?? undefined,
+    query: search ?? undefined,
     ...customParams,
   })
 
@@ -36,9 +38,12 @@ export const useListFetcher = <T>(
     })
 
     if (params.page > 0) {
-      if (itself) {
+      if (search) {
+        list.value = [...(list.value ?? []), ...data.suggestions]
+      }
+      if (itself && !search) {
         list.value = [...(list.value ?? []), ...data.items]
-      } else {
+      } else if (!itself && !search) {
         list.value = [...(list.value ?? []), ...data]
       }
     } else {
