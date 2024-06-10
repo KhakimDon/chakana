@@ -11,7 +11,7 @@
       </div>
       <div class="space-y-0.5">
         <NuxtLinkLocale
-          :to="`/project/${product?.id}`"
+          :to="`/product/${product?.id}`"
           class="text-[13px] font-semibold hover:text-orange transition-300 leading-none text-dark"
           :class="titleClass"
         >

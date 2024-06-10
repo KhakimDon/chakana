@@ -95,10 +95,18 @@
               {{ $t('description') }}
             </h4>
 
-            <div
-              class="text-gray-100 leading-140 text-sm mt-2"
-              v-html="data?.description"
-            />
+            <div class="flex items-end">
+              <div
+                :class="open ? 'line-clamp-none' : 'line-clamp-2'"
+                class="text-gray-100 leading-140 text-sm mt-2 line-clamp-2 max-w-[380px] transition-300"
+                v-html="data?.description"
+              />
+              <IconChevron
+                :class="open ? 'rotate-90' : ''"
+                class="text-orange -rotate-90 cursor-pointer"
+                @click="openDesc"
+              />
+            </div>
           </div>
 
           <div
@@ -152,9 +160,16 @@ import { useIntersectionObserver } from '@vueuse/core'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import IconCart from '~/assets/icons/Common/cart.svg'
+import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconExport from '~/assets/icons/Common/export.svg'
 import IconHeartPlus from '~/assets/icons/Common/heart-plus.svg'
 import { formatMoneyDecimal } from '~/utils/functions/common'
+
+const open = ref(false)
+
+const openDesc = () => {
+  open.value = !open.value
+}
 
 const { list, loading, paginationData, loadMore } = useListFetcher(
   'recommend/products',
