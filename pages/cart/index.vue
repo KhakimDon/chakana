@@ -102,6 +102,7 @@
 import { useIntersectionObserver } from '@vueuse/core'
 
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import { useMainStore } from '~/store/main.js'
 import type { IProduct } from '~/types/products.js'
 
@@ -150,8 +151,12 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
   }
 })
 
+const orderCartStore = useCartOrderStore()
+
 const clearCart = () => {
-  cartStore.products = []
+  orderCartStore.cartClear().then(() => {
+    cartStore.products = []
+  })
 }
 </script>
 

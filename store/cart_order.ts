@@ -101,6 +101,61 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const cart = reactive({
+    detail: {},
+    loading: true,
+  })
+
+  function getCartDetail() {
+    return new Promise((resolve, reject) => {
+      cart.loading = true
+      useApi()
+        .$get(`/cart/detail/mobile`, {})
+        .then((res: any) => {
+          cart.detail = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          cart.loading = false
+        })
+    })
+  }
+
+  function cartClear() {
+    return new Promise((resolve, reject) => {
+      useApi()
+        .$post(`/cart/clear`, {})
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
+  function addToCart(pId: number, count: number) {
+    return new Promise((resolve, reject) => {
+      useApi()
+        .$post(`/cart/add/mobile`, {
+          body: {
+            product_id: pId,
+            count,
+          },
+        })
+        .then((res: any) => {
+          resolve(res)
+          getCartDetail().then(() => {})
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   return {
     promoCodes,
     getPromoCodeList,
@@ -111,5 +166,9 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     getPromoCodeDetail,
     discount,
     getCartDiscountDetail,
+    cart,
+    getCartDetail,
+    cartClear,
+    addToCart,
   }
 })

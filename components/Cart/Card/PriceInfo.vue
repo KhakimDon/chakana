@@ -6,17 +6,17 @@
     <div
       class="text-xs mb-3 flex-y-center gap-1 font-semibold leading-none text-gray-100"
     >
-      {{ t('cary_products', { count: cartProducts.length }) }}
+      {{ t('cary_products', { count: cartDetail?.count }) }}
       <p class="w-1 h-1 bg-gray-100 rounded-full"></p>
       {{ t('products_weight', { weight: totalCartWeight }) }}
     </div>
     <div class="space-y-2">
       <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
-          {{ t('total_products', { count: cartProducts.length }) }}
+          {{ t('total_products', { count: cartDetail?.count }) }}
         </p>
         <p class="text-xs font-semibold leading-none text-dark">
-          {{ formatMoneyDecimal(totalCartProductsPrice, 0) }}
+          {{ formatMoneyDecimal(cartDetail?.product_price, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
@@ -34,7 +34,7 @@
           {{ $t('ndc') }}
         </p>
         <p class="text-xs font-semibold leading-none text-dark">
-          {{ formatMoneyDecimal(ndcPrice, 0) }}
+          {{ formatMoneyDecimal(cartDetail?.tax_price, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
@@ -42,8 +42,8 @@
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('discount') }}
         </p>
-        <p class="text-xs font-semibold leading-none text-dark">
-          {{ formatMoneyDecimal(discountPrice, 0) }}
+        <p class="text-xs font-semibold leading-none text-red">
+          -{{ formatMoneyDecimal(cartDetail?.discount_price, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
@@ -61,7 +61,7 @@
       <p
         class="text-xl font-bold leading-normal text-dark whitespace-nowrap line-clamp-1"
       >
-        {{ formatMoneyDecimal(totalPrice, 0) }}
+        {{ formatMoneyDecimal(cartDetail?.total_price, 0) }}
         <span class="text-xs font-bold leading-snug text-gray-100"> UZS </span>
       </p>
     </div>
@@ -70,11 +70,17 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const { t } = useI18n()
-const router = useRouter()
 const cartStore = useCartStore()
+const orderCartStore = useCartOrderStore()
+
+// Cart details
+const cartDetail = computed<any>(() => orderCartStore?.cart?.detail)
+
+orderCartStore.getCartDetail()
 
 const cartProducts = computed(() => cartStore.products)
 
@@ -84,48 +90,6 @@ const totalCartWeight = computed(() => {
       return acc + product?.weight * product?.cart_count
     }, 0) / 1000
   )?.toFixed(2)
-})
-
-// All prices
-const totalCartProductsPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.price * product?.cart_count
-    }, 0) || 0
-  )
-})
-
-const discountPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.discountPrice * product?.cart_count
-    }, 0) || 0
-  )
-})
-
-const ndcPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.ndcPrice * product?.cart_count
-    }, 0) || 0
-  )
-})
-
-const deliveryPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.deliveryPrice * product?.cart_count
-    }, 0) || 0
-  )
-})
-
-const totalPrice = computed(() => {
-  return (
-    totalCartProductsPrice.value +
-    discountPrice.value +
-    ndcPrice.value +
-    deliveryPrice.value
-  )
 })
 </script>
 <style scoped></style>
