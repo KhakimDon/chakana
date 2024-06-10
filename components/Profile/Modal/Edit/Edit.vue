@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { email, required, url } from '@vuelidate/validators'
+import { email, required } from '@vuelidate/validators'
 
 import { useAuthStore } from '~/store/auth.js'
 import type { IUser } from '~/types/auth.js'

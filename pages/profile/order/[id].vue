@@ -38,6 +38,16 @@ const { data: orderStatus } = await useAsyncData('orderStatus', () =>
   useApi().$get(`/order/status/${route.params.id}`)
 )
 const status = computed(() => orderStatus.value?.status)
+
+const products = ref()
+const productsLoading = ref(true)
+
+useApi()
+  .$get(`order/products/${route.params.id}`)
+  .then((res) => {
+    products.value = res
+  })
+  .finally(() => (productsLoading.value = false))
 </script>
 
 <template>
@@ -51,21 +61,54 @@ const status = computed(() => orderStatus.value?.status)
       />
       #{{ $route.params.id }}
     </NuxtLinkLocale>
-    <pre>{{ orderStatus }}</pre>
-    <BaseStepper class="my-8" :step="status" :steps />
-    <h1 class="text-center text-2xl font-extrabold leading-130 text-dark mb-1">
-      {{ $t(`order_statuses.${status}`) }}
-    </h1>
-    <p
-      class="text-sm leading-140 text-dark font-normal text-center mb-8 max-w-[343px] mx-auto"
-    >
-      {{ $t(`order_statuses.${status}_description`) }}
-    </p>
-    <div class="mt-8 flex flex-col">
-      <!--      <SearchCardProduct />-->
-    </div>
-    <ProfileOrderCourier />
+    <template v-if="false">
+      <template v-if="status !== 'delivered' && status !== 'cancelled'">
+        <BaseStepper class="my-8" :step="status" :steps />
+        <h1
+          class="text-center text-2xl font-extrabold leading-130 text-dark mb-1"
+        >
+          {{ $t(`order_statuses.${status}`) }}
+        </h1>
+        <p
+          class="text-sm leading-140 text-dark font-normal text-center mb-8 max-w-[343px] mx-auto"
+        >
+          {{ $t(`order_statuses.${status}_description`) }}
+        </p>
+      </template>
+      <Transition name="fade" mode="out-in">
+        <div :key="productsLoading" class="mt-8 mb-5 flex flex-col">
+          <template v-if="productsLoading">
+            <div
+              v-for="key in 10"
+              :key
+              class="shimmer w-full h-16 rounded-10 pl-0 border-b border-white-100 mb-2 last:mb-0"
+            />
+          </template>
+          <template v-else>
+            <SearchCardProduct
+              v-for="(item, index) in products?.delivered_products"
+              :key="index"
+              :product="item"
+              show-count
+              class="even:bg-gray-300/50"
+            />
+          </template>
+        </div>
+      </Transition>
+      <ProfileOrderCourier
+        v-if="data.delivery?.carrier?.id && status === 'on_the_way'"
+        :courier="data.delivery.carrier"
+      />
+      <BaseButton
+        v-if="status === 'delivered' || status === 'cancelled'"
+        class="w-full sticky bottom-7"
+        :text="$t('reorder')"
+      >
+        <template #prefix>
+          <SvgoCommonRefresh class="text-2xl leading-6" />
+        </template>
+      </BaseButton>
+    </template>
+    <ProfileOrderRate v-else />
   </div>
 </template>
-
-<style scoped></style>

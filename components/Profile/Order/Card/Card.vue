@@ -73,7 +73,7 @@
         >
           <template #suffix>
             <SvgoCommonChevron
-              class="rotate-180 text-gray transition-300 group-hover:text-white shrink-0"
+              class="rotate-180 text-xl leading-5 text-gray transition-300 group-hover:text-white shrink-0"
             />
           </template>
         </BaseButton>
@@ -88,7 +88,7 @@
       class="w-full mt-3 font-semibold"
     >
       <template #prefix>
-        <SvgoCommonRefresh />
+        <SvgoCommonRefresh class="text-xl leading-5" />
       </template>
     </BaseButton>
   </div>

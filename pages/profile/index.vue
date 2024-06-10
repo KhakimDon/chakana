@@ -21,7 +21,7 @@
         alt=""
       />
       <img
-        class="relative left-7 z-10 rounded-full w-[100px] h-[100px] border-4 border-gray-300 bg-gray-300 -mt-[50px]"
+        class="relative object-cover left-7 z-10 rounded-full w-[100px] h-[100px] border-4 border-gray-300 bg-gray-300 -mt-[50px]"
         width="100%"
         height="100%"
         :src="data?.image"

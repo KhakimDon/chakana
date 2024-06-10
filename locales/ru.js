@@ -194,4 +194,7 @@ export default {
   name_address: 'Называние адреса',
   enter_name: 'Введите название',
   enter_icon: 'Выбрать иконку',
+  count: '{count} шт.',
+  get_your_order: 'Получите ваш товар)',
+  how_the_order: 'Как вам заказ?',
 }
