@@ -58,6 +58,11 @@ export default <Partial<Config>>{
       borderRadius: {
         10: '10px',
       },
+      boxShadow: {
+        DEFAULT: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        map: '0px 6px 40px 0px rgba(28, 28, 28, 0.10)',
+        card: '0px 4px 12px 0px rgba(28, 28, 28, 0.12);',
+      },
     },
   },
   plugins: [],
