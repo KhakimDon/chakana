@@ -23,29 +23,38 @@
                 v-for="(item, index) in data?.extra_images"
                 :key="index"
               >
-                <img
-                  class="w-full rounded-2xl aspect-auto md:aspect-video object-contain cursor-pointer"
-                  :src="item.image"
-                  :alt="`Photo ${index + 1}`"
-                  @click="handleImg(item)"
-                />
+                <div
+                  class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
+                >
+                  <NuxtImg
+                    :src="item?.image"
+                    alt="card-image"
+                    class="w-full h-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
               </swiper-slide>
             </swiper>
           </div>
           <swiper
             v-bind="thumbSettings"
+            class="w-full"
             @swiper="setThumbsSwiper"
             @slide-change="onChange"
           >
             <swiper-slide
               v-for="(item, index) in data?.extra_images"
               :key="index"
+              class="w-full h-full"
             >
-              <img
-                class="aspect-video object-contain w-full h-full rounded-lg bg-white border-2 border-gray-4 hover:border-blue transition-300 cursor-pointer"
-                :src="item.image"
-                :alt="`Photo ${index + 1}`"
-              />
+              <div class="relative bg-white-100 rounded-10 w-11 h-11">
+                <NuxtImg
+                  :src="item?.image"
+                  alt="card-image"
+                  class="w-11 h-11 object-contain"
+                  loading="lazy"
+                />
+              </div>
             </swiper-slide>
             <span
               class="thumb-gradient left-0"
@@ -56,24 +65,6 @@
               :class="{ 'pointer-events-none opacity-0': isEnd }"
             />
           </swiper>
-          <Swiper :slides-per-view="'auto'" :space-between="12" centered-slides>
-            <SwiperSlide
-              v-for="(item, index) in data?.extra_images"
-              :key="index"
-              class="!w-11"
-            >
-              <div
-                class="relative flex-center bg-white-100 rounded-10 w-11 h-11"
-              >
-                <NuxtImg
-                  :src="item?.image"
-                  alt="card-image"
-                  class="w-full h-full object-contain"
-                  loading="lazy"
-                />
-              </div>
-            </SwiperSlide>
-          </Swiper>
         </div>
         <div class="col-span-5">
           <p class="text-[28px] font-bold leading-122 text-dark">
@@ -215,8 +206,8 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
 )
 
 const thumbSettings = {
-  slidesPerView: 4.5,
-  spaceBetween: 10,
+  slidesPerView: 8,
+  spaceBetween: 4,
   breakpoints: {
     640: {
       slidesPerView: 5,
@@ -284,3 +275,9 @@ useSeoMeta({
   twitterImage: data.value?.main_image,
 })
 </script>
+
+<style>
+.swiper-slide-thumb-active {
+  border: 2px solid #dd3333 !important;
+}
+</style>
