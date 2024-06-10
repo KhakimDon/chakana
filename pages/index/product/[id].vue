@@ -12,14 +12,50 @@
           <div
             class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
           >
-            <NuxtImg
-              :src="data?.main_image"
-              alt="card-image"
-              class="w-full h-full object-contain"
-              loading="lazy"
-            />
+            <swiper
+              v-if="data?.extra_images?.length"
+              :modules="[Thumbs, Navigation]"
+              :thumbs="{ swiper: thumbsSwiper }"
+              space-between="20"
+              class="mb-3 md:mb-5"
+            >
+              <swiper-slide
+                v-for="(item, index) in data?.extra_images"
+                :key="index"
+              >
+                <img
+                  class="w-full rounded-2xl aspect-auto md:aspect-video object-contain cursor-pointer"
+                  :src="item.image"
+                  :alt="`Photo ${index + 1}`"
+                  @click="handleImg(item)"
+                />
+              </swiper-slide>
+            </swiper>
           </div>
-
+          <swiper
+            v-bind="thumbSettings"
+            @swiper="setThumbsSwiper"
+            @slide-change="onChange"
+          >
+            <swiper-slide
+              v-for="(item, index) in data?.extra_images"
+              :key="index"
+            >
+              <img
+                class="aspect-video object-contain w-full h-full rounded-lg bg-white border-2 border-gray-4 hover:border-blue transition-300 cursor-pointer"
+                :src="item.image"
+                :alt="`Photo ${index + 1}`"
+              />
+            </swiper-slide>
+            <span
+              class="thumb-gradient left-0"
+              :class="{ 'pointer-events-none opacity-0': isBeginning }"
+            />
+            <span
+              class="thumb-gradient reverse right-0"
+              :class="{ 'pointer-events-none opacity-0': isEnd }"
+            />
+          </swiper>
           <Swiper :slides-per-view="'auto'" :space-between="12" centered-slides>
             <SwiperSlide
               v-for="(item, index) in data?.extra_images"
@@ -157,6 +193,7 @@
 </template>
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
+import { Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import IconCart from '~/assets/icons/Common/cart.svg'
@@ -176,6 +213,44 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
   25,
   true
 )
+
+const thumbSettings = {
+  slidesPerView: 4.5,
+  spaceBetween: 10,
+  breakpoints: {
+    640: {
+      slidesPerView: 5,
+      spaceBetween: 10,
+    },
+    768: {
+      slidesPerView: 6,
+      spaceBetween: 10,
+    },
+    1024: {
+      slidesPerView: 7,
+      spaceBetween: 12,
+    },
+  },
+  watchSlidesProgress: true,
+  modules: [Thumbs, Navigation],
+}
+const thumbsSwiper = ref(null)
+const setThumbsSwiper = (swiper: SwiperClass) => {
+  thumbsSwiper.value = swiper
+}
+
+const isBeginning = ref(true)
+const isEnd = ref(false)
+const onChange = (e: SwiperClass) => {
+  isBeginning.value = e.isBeginning
+  isEnd.value = e.isEnd
+  if (e.visibleSlidesIndexes.includes(0)) {
+    isBeginning.value = true
+  }
+  if (e.visibleSlidesIndexes.includes(e.slides.length - 1)) {
+    isEnd.value = true
+  }
+}
 
 const route = useRoute()
 const count = ref(0)
