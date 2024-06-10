@@ -38,7 +38,6 @@ const tabList = [
 watch(
   () => tab.value,
   () => {
-    console.log(tab.value)
     if (tab.value === 'active') {
       router.push(localePath('/profile/orders'))
     } else {
