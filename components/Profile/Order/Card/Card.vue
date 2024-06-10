@@ -64,18 +64,20 @@
       </div>
 
       <!-- Card footer -->
-      <BaseButton
-        variant="outline"
-        :text="$t('more_info_product')"
-        class="group bg-white border-white-100 rounded-[10px] w-full font-semibold"
-        main-class="justify-between text-[13px] leading-120"
-      >
-        <template #suffix>
-          <SvgoCommonChevron
-            class="rotate-180 text-gray transition-300 group-hover:text-white"
-          />
-        </template>
-      </BaseButton>
+      <NuxtLinkLocale :to="`/profile/order/${item.id}`">
+        <BaseButton
+          variant="outline"
+          :text="$t('more_info_product')"
+          class="group bg-white border-white-100 rounded-[10px] w-full font-semibold"
+          main-class="justify-between text-[13px] leading-120"
+        >
+          <template #suffix>
+            <SvgoCommonChevron
+              class="rotate-180 text-gray transition-300 group-hover:text-white shrink-0"
+            />
+          </template>
+        </BaseButton>
+      </NuxtLinkLocale>
     </div>
 
     <!-- Offer reorder -->

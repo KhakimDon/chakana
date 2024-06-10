@@ -79,7 +79,8 @@ const phoneForm = useForm(
   },
   {
     phone: { required, isValidPhone },
-  }
+  },
+  { $stopPropagation: true }
 )
 
 const session = ref('')
@@ -111,7 +112,8 @@ const confirmForm = useForm(
   },
   {
     code: { required, minLength: minLength(6) },
-  }
+  },
+  { $stopPropagation: true }
 )
 
 const wrongCode = ref(false)

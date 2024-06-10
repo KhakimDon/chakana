@@ -61,10 +61,11 @@ import { checkExpireDate } from '~/utils/functions/common.js'
 interface Props {
   modelValue: boolean
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
+  (e: 'finish'): void
 }>()
 
 const { showToast } = useCustomToast()
@@ -124,8 +125,8 @@ function confirmCard() {
       },
     })
     .then(() => {
-      showToast('success', t('card_added_successfully'))
-      emit('update:modelValue', false)
+      showToast(t('card_added_successfully'), 'success')
+      emit('finish')
     })
     .catch((err: Error) => {
       const { handleError } = useErrorHandling()
@@ -147,4 +148,13 @@ function add() {
     }
   }
 }
+
+watch(
+  () => props.modelValue,
+  (value: boolean) => {
+    if (value) {
+      step.value = 1
+    }
+  }
+)
 </script>

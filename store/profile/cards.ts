@@ -28,8 +28,6 @@ export const useCardsStore = defineStore('cardsStore', {
             this.cards.list = this.cards.list.filter(
               (item) => item.id !== card.id
             )
-            const { showToast } = useCustomToast()
-            showToast('card_deleted_successfully', 'success')
             resolve(res)
           })
           .catch((error) => {
