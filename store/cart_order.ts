@@ -74,6 +74,33 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const discount = reactive({
+    detail: {},
+    loading: true,
+  })
+
+  function getCartDiscountDetail(id: string) {
+    return new Promise((resolve, reject) => {
+      discount.loading = true
+      useApi()
+        .$get(`/cart/discounts`, {
+          query: {
+            promo_code_id: id,
+          },
+        })
+        .then((res: any) => {
+          discount.detail = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          discount.loading = false
+        })
+    })
+  }
+
   return {
     promoCodes,
     getPromoCodeList,
@@ -82,5 +109,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     isInvalidPromoCode,
     promoCode,
     getPromoCodeDetail,
+    discount,
+    getCartDiscountDetail,
   }
 })

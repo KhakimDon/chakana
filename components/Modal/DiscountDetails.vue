@@ -17,12 +17,14 @@
               {{ $t('promo_code') }}
             </p>
             <p class="text-xs font-semibold leading-130 text-dark">
-              {{ promoCode?.code }}
+              {{ discount?.detail?.promo_code?.code }}
             </p>
           </div>
           <p class="text-xs text-green font-medium leading-none">
             <span class="text-base font-semibold leading-tight"
-              >-{{ formatMoneyDecimal(promoCode?.minimum_price, 0) }}</span
+              >-{{
+                formatMoneyDecimal(discount?.detail?.promo_code?.reward ?? 0, 0)
+              }}</span
             >
             UZS
           </p>
@@ -37,7 +39,7 @@
           <p
             class="text-xl z-10 font-extrabold leading-relaxed p-2 bg-white pr-0 text-red"
           >
-            -{{ formatMoneyDecimal(totalPrice, 0) }}
+            -{{ formatMoneyDecimal(discount?.detail?.total ?? 0, 0) }}
             <span class="text-[15px] font-extrabold leading-[21px]">UZS</span>
           </p>
         </div>
@@ -70,7 +72,7 @@ const emit = defineEmits<{
 
 const cartOrderStore = useCartOrderStore()
 
-const promoCodeDetails = computed(() => cartOrderStore.promoCode)
+const discount = computed(() => cartOrderStore.discount)
 
 const totalPrice = computed(() => {
   if (props.promoCode) {
@@ -83,7 +85,7 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val) {
-      cartOrderStore.getPromoCodeDetail(props.promoCode?.id)
+      cartOrderStore.getCartDiscountDetail(props.promoCode?.id)
     }
   }
 )

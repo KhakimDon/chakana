@@ -5,7 +5,7 @@
         icon="SvgoProfileTicket"
         icon-class="text-orange !text-2xl"
         :no-clickable="hasPromoCode"
-        :title="!hasPromoCode ? $t('promo_code') : null"
+        :title="!hasPromoCode ? $t('promo_code') : ''"
         @open-details="openModal = true"
       >
         <div

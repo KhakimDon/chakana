@@ -16,13 +16,7 @@
         <div class="w-full my-6 space-y-6">
           <PaymentCardInfoHeader :title="$t('delivery_details')">
             <section class="space-y-2">
-              <PaymentCardInfo
-                icon="SvgoProfileTruck"
-                icon-class="text-orange !text-2xl"
-                :title="$t('courier_address')"
-                :subtitle="'123 Main Street'"
-                @open-details="() => {}"
-              />
+              <PaymentSectionAddress />
               <PaymentSectionClockLocation
                 :show-free-delivery="showFreeDelivery"
               />
