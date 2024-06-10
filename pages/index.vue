@@ -14,7 +14,9 @@
       </div>
     </Transition>
     <template #right>
-      <div class="fixed w-[313px] top-[86px]">
+      <div
+        class="fixed w-[313px] top-[86px] h-[calc(100vh-100px)] overflow-y-auto"
+      >
         <ClientOnly>
           <MainMap @change-coords="changeCoords" />
         </ClientOnly>

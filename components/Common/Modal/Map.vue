@@ -151,9 +151,6 @@ import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
 import { useMainStore } from '~/store/main.js'
-import { useSearchStore } from '~/store/search.js'
-
-const router = useRouter()
 
 interface Props {
   openModal?: boolean
@@ -166,7 +163,6 @@ interface Emits {
 
 defineProps<Props>()
 const $emit = defineEmits<Emits>()
-const store = useMainStore()
 const addressStore = useAddressStore()
 const { handleError } = useErrorHandling()
 const { showToast } = useCustomToast()

@@ -8,10 +8,12 @@
       />
     </div>
     <div
-      class="flex-y-center border-b cursor-pointer group justify-between border-white-100 py-2 w-full h-[52px]"
-      @click="emit('openDetails')"
+      class="flex-y-center border-b group justify-between border-white-100 py-2 w-full h-[52px]"
+      :class="{ 'cursor-pointer': !noClickable }"
+      @click="noClickable ? null : emit('openDetails')"
     >
       <div class="space-y-1">
+        <slot />
         <p
           v-if="title"
           :class="titleClass"
@@ -28,6 +30,7 @@
         </p>
       </div>
       <SvgoCommonChevron
+        v-if="!noClickable"
         class="text-2xl group-hover:text-orange transition-300 text-gray-100 rotate-180"
       />
     </div>
@@ -42,6 +45,7 @@ interface Props {
   titleClass?: string
   subtitleClass?: string
   iconClass?: string
+  noClickable?: boolean
 }
 
 defineProps<Props>()

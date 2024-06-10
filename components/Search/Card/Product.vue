@@ -68,6 +68,7 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
@@ -80,15 +81,18 @@ interface Props {
 const props = defineProps<Props>()
 
 const cartStore = useCartStore()
+const orderCartStore = useCartOrderStore()
 const count = ref(0)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
     count.value++
-    cartStore.addToCart({
-      ...product,
-      cart_count: count.value,
+    orderCartStore.addToCart(product?.id, count.value).then(() => {
+      cartStore.addToCart({
+        ...product,
+        cart_count: count.value,
+      })
     })
   }
 }
@@ -97,11 +101,15 @@ watch(
   () => count.value,
   (newValue) => {
     if (newValue === 0) {
-      cartStore.removeFromCart(props.product?.id)
+      orderCartStore.addToCart(props.product?.id, 0).then(() => {
+        cartStore.removeFromCart(props.product?.id)
+      })
     } else {
-      cartStore.updateToCart({
-        ...props.product,
-        cart_count: newValue,
+      orderCartStore.addToCart(props.product?.id, newValue).then(() => {
+        cartStore.updateToCart({
+          ...props.product,
+          cart_count: newValue,
+        })
       })
     }
   }

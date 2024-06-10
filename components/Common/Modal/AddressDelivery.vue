@@ -7,7 +7,7 @@
     @close="$emit('close')"
   >
     <div v-if="list.length">
-      <div class="flex items-center gap-4">
+      <div class="flex items-center flex-wrap gap-4 h-96 overflow-y-auto">
         <div
           v-for="(item, index) in list"
           :key="index"
@@ -22,9 +22,9 @@
               :class="addressIdx === index ? 'border-orange border-[5px]' : ''"
             ></div>
           </div>
-          <h3 class="mt-3 text-dark font-bold">{{ item.address }}</h3>
+          <h3 class="mt-3 text-dark font-bold">{{ item?.address }}</h3>
           <p class="line-clamp-1 text-xs text-gray-100 mt-1">
-            {{ item.street }}
+            {{ item?.street }}
           </p>
         </div>
       </div>
@@ -47,7 +47,7 @@
         :loading="false"
         :text="$t('confirm')"
         variant="primary"
-        @click="$emit('close')"
+        @click="confirmFunction"
       >
       </BaseButton>
     </div>
@@ -83,12 +83,18 @@ interface Props {
   show?: boolean
   list?: any
 }
+const props = defineProps<Props>()
 
 const addressIdx = ref(0)
+
+const emit = defineEmits(['close', 'openMapModal', 'selectAddress'])
 
 const handleAddress = (index: number) => {
   addressIdx.value = index
 }
 
-defineProps<Props>()
+const confirmFunction = () => {
+  emit('selectAddress', props?.list?.[addressIdx.value])
+  emit('close')
+}
 </script>
