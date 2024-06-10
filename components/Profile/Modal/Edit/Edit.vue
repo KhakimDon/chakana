@@ -128,7 +128,8 @@ const form = useForm(
   {
     name: { required },
     email: { email },
-  }
+  },
+  { $stopPropagation: true }
 )
 
 const avatar = ref<File>()
@@ -139,11 +140,9 @@ function changeAvatar(file: File | null) {
 }
 
 async function submit() {
-  console.log('qqwe')
   form.$v.value.$touch()
   if (form.$v.value.$invalid) return
   loading.value = true
-  console.log(avatar.value)
   if (avatar.value) {
     const imageFormData = new FormData()
     imageFormData.append('image', avatar.value)

@@ -14,7 +14,7 @@
       </div>
     </Transition>
     <template #right>
-      <div class="sticky top-[86px]">
+      <div class="fixed w-[313px] top-[86px]">
         <ClientOnly>
           <MainMap @change-coords="changeCoords" />
         </ClientOnly>
