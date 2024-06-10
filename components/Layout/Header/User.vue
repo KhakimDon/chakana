@@ -7,9 +7,16 @@
     <template #head>
       <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
         <img
+          v-if="user?.image"
+          :src="user?.image"
+          alt="user"
+          class="w-full h-full"
+        />
+        <img
+          v-else
+          class="w-full h-full"
           src="/images/default/user.png"
           alt="user-default"
-          class="w-full h-full"
         />
       </div>
     </template>
@@ -53,9 +60,15 @@ import {
   SvgoProfileSidebarTag,
   SvgoProfileUserCircle,
 } from '#components'
+import type { IUser } from '~/types/auth.js'
+
+interface Props {
+  user: IUser
+}
+
+defineProps<Props>()
 
 const { t } = useI18n()
-
 const showDropdown = ref(false)
 
 const list = [
