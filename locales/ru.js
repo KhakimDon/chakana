@@ -173,4 +173,13 @@ export default {
   promo_code: 'Промокод',
   card_price: 'Баланс: {price} UZS',
   use_balance: 'Использовать баланс',
+  active_price: 'Активен от минимум {price}',
+  apply_new_promo_code: 'Использовать новый промокод',
+  enter_code: 'Введите кодовое слово',
+  code: 'Кодовое слова',
+  no_promo_codes_yet: 'Нет промокодов',
+  its_clear: 'Понятно',
+  all_discounts_info:
+    'Общая сумма вашего заказа была изменена из-за весовых изменений.',
+  total: 'Итого',
 }

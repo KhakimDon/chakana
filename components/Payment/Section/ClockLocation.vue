@@ -2,7 +2,7 @@
   <PaymentCardInfo
     icon="SvgoProfileClockLocation"
     icon-class="text-purple-500 !text-2xl"
-    :title="$t('location_change_range')"
+    :title="$t('when_delivery')"
     @open-details="openModal = true"
   />
   <ModalClock v-model="openModal" :show-free-delivery="showFreeDelivery" />

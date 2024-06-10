@@ -40,40 +40,7 @@
               />
             </section>
           </PaymentCardInfoHeader>
-          <PaymentCardInfoHeader :title="$t('additional')">
-            <section class="space-y-2">
-              <PaymentCardInfo
-                icon="SvgoProfileTicket"
-                icon-class="text-orange !text-2xl"
-                :no-clickable="hasPromoCode"
-                :title="!hasPromoCode ? $t('promo_code') : null"
-              >
-                <div
-                  v-if="hasPromoCode"
-                  class="px-2 py-1 bg-orange flex-y-center gap-1 rounded-md text-white"
-                >
-                  <i18n-t
-                    keypath="promo_badge"
-                    tag="p"
-                    scope="global"
-                    class="text-white text-xs font-semibold leading-none"
-                  >
-                    <template #text>
-                      <span
-                        class="text-white text-xs font-extrabold leading-none"
-                      >
-                        (-{{ formatMoneyDecimal(limitPrice, 0) }} UZS)
-                      </span>
-                    </template>
-                  </i18n-t>
-                  <SvgoCommonClose
-                    class="bg-white/20 cursor-pointer text-white rounded-full p-0.5 text-sm"
-                    @click="removePromoCode"
-                  />
-                </div>
-              </PaymentCardInfo>
-            </section>
-          </PaymentCardInfoHeader>
+          <PaymentSectionPromoCode />
           <div
             class="flex-y-center gap-3 select-none cursor-pointer"
             @click="toggleUseBalance"
@@ -130,7 +97,6 @@ const cartStore = useCartStore()
 
 const limitPrice = ref(90000)
 const useBalance = ref(false)
-const hasPromoCode = ref(true)
 
 const toggleUseBalance = () => {
   useBalance.value = !useBalance.value
@@ -157,11 +123,6 @@ const totalCartProductsPrice = computed(() => {
     }, 0) || 0
   )
 })
-
-const removePromoCode = () => {
-  console.log('remove')
-  hasPromoCode.value = false
-}
 </script>
 
 <style scoped></style>
