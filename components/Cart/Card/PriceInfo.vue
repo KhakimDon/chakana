@@ -4,6 +4,7 @@
       {{ $t('shall_we_count') }}
     </p>
     <div
+      v-if="false"
       class="text-xs mb-3 flex-y-center gap-1 font-semibold leading-none text-gray-100"
     >
       {{ t('cary_products', { count: cartDetail?.count }) }}
@@ -20,16 +21,16 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div v-if="false" class="flex-y-center justify-between">
+      <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('delivery_price') }}
         </p>
         <p class="text-xs font-semibold leading-none text-dark">
-          {{ formatMoneyDecimal(deliveryPrice ?? 0, 0) }}
+          {{ formatMoneyDecimal(cartDetail?.delivery_price ?? 0, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div v-if="false" class="flex-y-center justify-between">
+      <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('ndc') }}
         </p>
@@ -76,11 +77,16 @@ import { formatMoneyDecimal } from '~/utils/functions/common.js'
 const { t } = useI18n()
 const cartStore = useCartStore()
 const orderCartStore = useCartOrderStore()
+const route = useRoute()
 
 // Cart details
 const cartDetail = computed<any>(() => orderCartStore?.cart?.detail)
 
-orderCartStore.getCartDetail()
+if (route.path?.includes('/payment')) {
+  orderCartStore.getCartDetailConfirm()
+} else {
+  orderCartStore.getCartDetail()
+}
 
 const cartProducts = computed(() => cartStore.products)
 

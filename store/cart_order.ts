@@ -3,7 +3,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     address: {
       id: 0,
     },
-    when_to_deliver: new Date(),
+    when_to_deliver: '',
     recipient: {
       full_name: '',
       phone: '',
@@ -144,6 +144,55 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const delivery = reactive({
+    detail: {},
+    loading: true,
+  })
+
+  function getDeliveryDetail() {
+    return new Promise((resolve, reject) => {
+      delivery.loading = true
+      useApi()
+        .$get(`/delivery/details`, {})
+        .then((res: any) => {
+          delivery.detail = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          delivery.loading = false
+        })
+    })
+  }
+
+  function getCartDetailConfirm(data?: {
+    promo_code_id?: number
+    address_id?: number
+    is_use_balance?: boolean
+  }) {
+    return new Promise((resolve, reject) => {
+      cart.loading = true
+      useApi()
+        .$get(`/cart/detail/web/confirm`, {
+          query: {
+            ...data,
+          },
+        })
+        .then((res: any) => {
+          cart.detail = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          cart.loading = false
+        })
+    })
+  }
+
   function cartClear() {
     return new Promise((resolve, reject) => {
       useApi()
@@ -216,5 +265,8 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     orderDetail,
     orderCreating,
     createOrder,
+    getCartDetailConfirm,
+    delivery,
+    getDeliveryDetail,
   }
 })

@@ -11,7 +11,7 @@
         >
           <template v-if="!loading">
             <MainSidebarItem
-              v-for="(item, index) in [...categories, ...categories]"
+              v-for="(item, index) in categories"
               :key="index"
               v-bind="{ item }"
             />
