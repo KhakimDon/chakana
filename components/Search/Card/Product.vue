@@ -74,10 +74,10 @@ const addingToCart = ref(false)
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
-    addingToCart.value = true
     debounce(
       'addToCart',
       () => {
+        addingToCart.value = true
         orderCartStore
           .addToCart(product?.id, count.value)
           .then(() => {
