@@ -4,6 +4,7 @@
       {{ $t('shall_we_count') }}
     </p>
     <div
+      v-if="false"
       class="text-xs mb-3 flex-y-center gap-1 font-semibold leading-none text-gray-100"
     >
       {{ t('cary_products', { count: cartDetail?.count }) }}

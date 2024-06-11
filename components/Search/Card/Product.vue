@@ -24,10 +24,12 @@
     </div>
     <div class="w-24 shrink-0 text-right">
       <BaseButton
-        v-if="count < 1"
+        v-if="count < 1 || addingToCart"
         class="w-24"
         :text="$t('to_basket')"
         variant="outline"
+        :disabled="addingToCart"
+        :loading="addingToCart"
         @click="addToCartFirstTime(product)"
       />
       <MainCardCounter
@@ -54,7 +56,7 @@
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products.js'
-import { formatMoneyDecimal } from '~/utils/functions/common.js'
+import { debounce, formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
   product: IProduct
@@ -67,18 +69,32 @@ const cartStore = useCartStore()
 const orderCartStore = useCartOrderStore()
 const count = ref(0)
 
+const addingToCart = ref(false)
+
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
-  console.log('addToCart', count.value)
   if (count.value <= product?.max_quantity) {
-    orderCartStore
-      .addToCart(product?.id, count.value)
-      .then(() => {
-        cartStore.getCartProducts()
-      })
-      .catch(() => {
-        count.value--
-      })
+    addingToCart.value = true
+    debounce(
+      'addToCart',
+      () => {
+        orderCartStore
+          .addToCart(product?.id, count.value)
+          .then(() => {
+            cartStore.getCartProducts()
+          })
+          .catch(() => {
+            if (count.value === 0) {
+              count.value = 1
+            }
+            count.value--
+          })
+          .finally(() => {
+            addingToCart.value = false
+          })
+      },
+      700
+    )
   }
 }
 

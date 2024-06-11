@@ -144,6 +144,29 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const delivery = reactive({
+    detail: {},
+    loading: true,
+  })
+
+  function getDeliveryDetail() {
+    return new Promise((resolve, reject) => {
+      delivery.loading = true
+      useApi()
+        .$get(`/delivery/details`, {})
+        .then((res: any) => {
+          delivery.detail = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          delivery.loading = false
+        })
+    })
+  }
+
   function getCartDetailConfirm(data?: {
     promo_code_id?: number
     address_id?: number
@@ -243,5 +266,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     orderCreating,
     createOrder,
     getCartDetailConfirm,
+    delivery,
+    getDeliveryDetail,
   }
 })
