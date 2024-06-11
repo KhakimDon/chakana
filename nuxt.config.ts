@@ -29,6 +29,12 @@ export default defineNuxtConfig({
           href: 'https://xolodilnik.uz',
         },
       ],
+      script: [
+        {
+          src: '//code.jivosite.com/widget/ri5Jw2oMql',
+          async: true,
+        },
+      ],
     },
   },
   css: [
