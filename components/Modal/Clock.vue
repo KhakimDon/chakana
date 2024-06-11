@@ -39,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
 import { useCartOrderStore } from '~/store/cart_order.js'
 
 interface Props {
@@ -65,7 +67,7 @@ function generateIntervals() {
 
   // Adjust to the next 2-hour interval
   if (currentMinute > 0) {
-    currentHour += 1
+    currentHour += 3
   }
   currentHour -= currentHour % 2
   currentMinute = 0
@@ -102,32 +104,24 @@ function generateIntervals() {
   return intervals
 }
 
-function convertTimeTo12HourFormat(time: string) {
-  // Splitting the time string into hours and minutes
-  const timeArray = time.split(':')
-  let hours = parseInt(timeArray[0])
-
-  // Converting hours to 12-hour format
-  hours = hours % 12
-  hours = hours || 12 // 0 should be converted to 12
-
-  return hours
+function getCurrentDateTimeISO(date: any) {
+  return date.format().slice(0, -6)
 }
 
 const orderCartStore = useCartOrderStore()
 function add() {
   if (selectedInterval.value === 'nearest_2_hours') {
-    const now = new Date()
-    now.setHours(now.getHours() + 2)
-    orderCartStore.orderDetail.when_to_deliver = now
-  } else {
-    const now = new Date()
-    now.setHours(
-      convertTimeTo12HourFormat(selectedInterval.value.split('-')[0]) + 1
+    const now = dayjs()
+    now.add(2, 'hours')
+    orderCartStore.orderDetail.when_to_deliver = getCurrentDateTimeISO(
+      now.add(2, 'hours')
     )
-    now.setMinutes(0)
-    now.setSeconds(0)
-    orderCartStore.orderDetail.when_to_deliver = now
+  } else {
+    const now = dayjs()
+    now.set('hours', Number(selectedInterval.value.split(':')[0]))
+    orderCartStore.orderDetail.when_to_deliver = getCurrentDateTimeISO(
+      now.set('hours', Number(selectedInterval.value.split(':')[0]))
+    )
   }
   emit('update:modelValue', false)
 }
