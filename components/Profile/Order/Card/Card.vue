@@ -81,8 +81,9 @@
     </div>
 
     <!-- Offer reorder -->
+    <!--  For later usage  -->
     <BaseButton
-      v-if="offerReorder"
+      v-if="offerReorder && false"
       variant="secondary"
       :text="$t('reorder')"
       class="w-full mt-3 font-semibold"

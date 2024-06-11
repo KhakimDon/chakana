@@ -10,7 +10,7 @@
       #{{ $route.params.id }}
     </NuxtLinkLocale>
     <ProfileOrderRate
-      v-if="status === 'delivered' && !orderStatus?.rank"
+      v-if="status === 'delivered' && !orderStatus?.rank && !ranked"
       :id="$route.params.id"
     />
     <template v-else>
@@ -49,7 +49,10 @@
         </div>
       </Transition>
       <template v-if="status === 'delivered'">
-        <div class="flex-between mt-10">
+        <div
+          v-if="products?.returned_products?.length"
+          class="flex-between mt-10"
+        >
           <h3 class="text-base text-dark font-extrabold leading-130 mb-3">
             {{ $t('returned_products') }}
           </h3>
@@ -201,10 +204,12 @@ const status = computed(() => orderStatus.value?.status)
 const products = ref()
 const productsLoading = ref(true)
 
+const ranked = ref(false)
 useApi()
   .$get(`order/products/${route.params.id}`)
   .then((res) => {
     products.value = res
+    ranked.value = true
   })
   .finally(() => (productsLoading.value = false))
 
