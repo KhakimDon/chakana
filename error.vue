@@ -15,7 +15,6 @@
           <BaseButton class="px-[26px]" :text="$t('back_home')" />
         </NuxtLinkLocale>
       </div>
-      <pre>{{ error }}</pre>
       <nuxt-img
         :src="errorCode === 404 ? '/images/error.png' : '/images/error-500.png'"
         loading="lazy"

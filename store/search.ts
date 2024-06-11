@@ -131,6 +131,28 @@ export const useSearchStore = defineStore('searchStore', () => {
     })
   }
 
+  const searchAddressList = reactive({
+    list: [],
+    loading: false,
+  })
+  function searchAddress(query: string) {
+    return new Promise((resolve, reject) => {
+      searchAddressList.loading = true
+      useApi()
+        .$get(`/get/address/suggestions?query=${query}`)
+        .then((res: any) => {
+          searchAddressList.list = res?.suggestions
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          searchAddressList.loading = false
+        })
+    })
+  }
+
   return {
     products,
     searchProducts,
@@ -145,5 +167,7 @@ export const useSearchStore = defineStore('searchStore', () => {
     clearSearchHistoryLoading,
     clearSearchHistory,
     autoCompleteItemClicked,
+    searchAddressList,
+    searchAddress,
   }
 })

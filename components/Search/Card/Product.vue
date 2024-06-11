@@ -24,11 +24,13 @@
     </div>
     <div class="w-24 shrink-0 text-right">
       <BaseButton
-        v-if="count < 1"
+        v-if="count < 1 || addingToCart"
         class="w-24"
         :text="$t('to_basket')"
         variant="outline"
-        @click="addToCart(product)"
+        :disabled="addingToCart"
+        :loading="addingToCart"
+        @click="addToCartFirstTime(product)"
       />
       <MainCardCounter
         v-else
@@ -37,6 +39,7 @@
         :max="product?.max_quantity ?? 100000"
         class="w-24 border-none bg-white-100"
         readonly
+        @click="addToCart(product)"
       />
       <p
         v-if="count > 0"
@@ -51,8 +54,9 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products.js'
-import { formatMoneyDecimal } from '~/utils/functions/common.js'
+import { debounce, formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
   product: IProduct
@@ -62,32 +66,42 @@ interface Props {
 const props = defineProps<Props>()
 
 const cartStore = useCartStore()
+const orderCartStore = useCartOrderStore()
 const count = ref(0)
+
+const addingToCart = ref(false)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
-    count.value++
-    cartStore.addToCart({
-      ...product,
-      cart_count: count.value,
-    })
+    addingToCart.value = true
+    debounce(
+      'addToCart',
+      () => {
+        orderCartStore
+          .addToCart(product?.id, count.value)
+          .then(() => {
+            cartStore.getCartProducts()
+          })
+          .catch(() => {
+            if (count.value === 0) {
+              count.value = 1
+            }
+            count.value--
+          })
+          .finally(() => {
+            addingToCart.value = false
+          })
+      },
+      700
+    )
   }
 }
 
-watch(
-  () => count.value,
-  (newValue) => {
-    if (newValue === 0) {
-      cartStore.removeFromCart(props.product?.id)
-    } else {
-      cartStore.updateToCart({
-        ...props.product,
-        cart_count: newValue,
-      })
-    }
-  }
-)
+const addToCartFirstTime = (product: any) => {
+  count.value++
+  addToCart(product)
+}
 
 const cartProduct = computed(() =>
   cartProducts.value.find((product) => product?.id === props.product?.id)
@@ -97,7 +111,7 @@ watch(
   cartProduct,
   (newValue) => {
     if (newValue) {
-      count.value = newValue.cart_count
+      count.value = newValue?.quantity
     }
   },
   { deep: true, immediate: true }
@@ -115,7 +129,7 @@ watch(
 
 onMounted(() => {
   if (cartProduct.value) {
-    count.value = cartProduct.value?.cart_count ?? 0
+    count.value = cartProduct.value?.quantity ?? 0
   }
 })
 </script>

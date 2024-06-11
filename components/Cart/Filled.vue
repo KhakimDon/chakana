@@ -46,21 +46,22 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 
 const router = useRouter()
 const { t, locale } = useI18n()
 const cartStore = useCartStore()
 const cartProducts = computed(() => cartStore.products)
 
+const orderCartStore = useCartOrderStore()
+
 const clearCart = () => {
-  cartStore.products = []
+  orderCartStore.cartClear().then(() => {
+    cartStore.products = []
+  })
 }
 
-const totalCartPrice = computed(() => {
-  return cartProducts.value.reduce((acc, product) => {
-    return acc + product?.price * product.cart_count
-  }, 0)
-})
+const totalCartPrice = computed(() => orderCartStore.cart?.detail?.total_price)
 
 const goToCart = () => {
   router.push(`/${locale.value}/cart`)
