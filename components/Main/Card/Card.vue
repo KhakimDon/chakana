@@ -50,11 +50,13 @@
     </div>
     <ClientOnly>
       <BaseButton
-        v-if="count < 1"
+        v-if="count < 1 || addingToCart"
         class="w-full"
         :text="$t('to_basket')"
         variant="outline"
-        @click="addToCart(card)"
+        :disabled="addingToCart"
+        :loading="addingToCart"
+        @click="addToCartFirstTime(card)"
       />
       <MainCardCounter
         v-else
@@ -62,6 +64,7 @@
         :default-count="count"
         :max="card?.max_quantity ?? 100000"
         readonly
+        @click="addToCart(card)"
       />
     </ClientOnly>
   </div>
@@ -71,7 +74,11 @@
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products'
-import { formatMoneyDecimal, getImageSize } from '~/utils/functions/common'
+import {
+  debounce,
+  formatMoneyDecimal,
+  getImageSize,
+} from '~/utils/functions/common'
 
 interface Props {
   card: IProduct
@@ -84,29 +91,39 @@ const orderCartStore = useCartOrderStore()
 const cartStore = useCartStore()
 const count = ref(0)
 
+const addingToCart = ref(false)
+
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
-    count.value++
-    orderCartStore
-      .addToCart(product?.id, count.value)
-      .then(() => {
-        cartStore.getCartProducts()
-      })
-      .catch(() => {
-        count.value--
-      })
+    addingToCart.value = true
+    debounce(
+      'addToCart',
+      () => {
+        orderCartStore
+          .addToCart(product?.id, count.value)
+          .then(() => {
+            cartStore.getCartProducts()
+          })
+          .catch(() => {
+            if (count.value === 0) {
+              count.value = 1
+            }
+            count.value--
+          })
+          .finally(() => {
+            addingToCart.value = false
+          })
+      },
+      700
+    )
   }
 }
 
-watch(
-  () => count.value,
-  (newValue) => {
-    orderCartStore.addToCart(props.card?.id, newValue).then(() => {
-      cartStore.getCartProducts()
-    })
-  }
-)
+const addToCartFirstTime = (product: any) => {
+  count.value++
+  addToCart(product)
+}
 
 const cartProduct = computed(() =>
   cartProducts.value.find((product) => product?.id === props.card?.id)

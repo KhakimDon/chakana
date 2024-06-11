@@ -28,7 +28,7 @@
         class="w-24"
         :text="$t('to_basket')"
         variant="outline"
-        @click="addToCart(product)"
+        @click="addToCartFirstTime(product)"
       />
       <MainCardCounter
         v-else
@@ -37,6 +37,7 @@
         :max="product?.max_quantity ?? 100000"
         class="w-24 border-none bg-white-100"
         readonly
+        @click="addToCart(product)"
       />
       <p
         v-if="count > 0"
@@ -68,8 +69,8 @@ const count = ref(0)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
+  console.log('addToCart', count.value)
   if (count.value <= product?.max_quantity) {
-    count.value++
     orderCartStore
       .addToCart(product?.id, count.value)
       .then(() => {
@@ -81,14 +82,10 @@ const addToCart = (product: any) => {
   }
 }
 
-watch(
-  () => count.value,
-  (newValue) => {
-    orderCartStore.addToCart(props.product?.id, newValue).then(() => {
-      cartStore.getCartProducts()
-    })
-  }
-)
+const addToCartFirstTime = (product: any) => {
+  count.value++
+  addToCart(product)
+}
 
 const cartProduct = computed(() =>
   cartProducts.value.find((product) => product?.id === props.product?.id)
