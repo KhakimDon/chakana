@@ -57,10 +57,7 @@
     </Transition>
     <template #right>
       <section class="space-y-5">
-        <CartCardFreeDelivery
-          :free-delivery-price="limitPrice"
-          :cart-total-price="totalCartProductsPrice"
-        />
+        <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
         <BaseButton
           class="w-full !rounded-10"
@@ -82,11 +79,13 @@ import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
 
-const limitPrice = ref(90000)
+const limitPrice = computed(
+  () => orderCartStore?.cart?.detail?.free_delivery_price ?? 0
+)
 const useBalance = ref(false)
 
 const toggleUseBalance = () => {
@@ -115,13 +114,13 @@ const goToPayment = () => {
   orderCartStore
     .createOrder({
       ...orderDetail.value,
-      when_to_deliver: orderDetail.value.when_to_deliver
-        ?.toISOString()
-        ?.split('.')[0],
+      when_to_deliver: orderDetail.value.when_to_deliver,
     })
     .then(() => {
       showToast(t('order_created'), 'success')
       cartStore.getCartProducts()
+      router.push(`/${locale.value}/profile/orders`)
+      orderCartStore.orderDetail = {}
     })
     .catch(() => {
       showToast(t('order_not_created'), 'error')
@@ -151,6 +150,14 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+const cartProducts = computed(() => cartStore?.products)
+
+onMounted(() => {
+  if (cartProducts.value?.length === 0) {
+    router.push(`/${locale.value}/cart`)
+  }
+})
 </script>
 
 <style scoped></style>
