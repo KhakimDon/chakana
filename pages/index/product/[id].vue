@@ -43,29 +43,6 @@
                 </div>
               </swiper-slide>
             </swiper>
-            <swiper
-              v-if="data?.extra_images?.length"
-              :modules="[Thumbs, Navigation]"
-              :thumbs="{ swiper: thumbsSwiper }"
-              :slides-per-view="'auto'"
-              class="mb-3 md:mb-5"
-            >
-              <swiper-slide
-                v-for="(item, index) in data?.extra_images"
-                :key="index"
-              >
-                <div
-                  class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
-                >
-                  <NuxtImg
-                    :src="item?.image"
-                    alt="card-image"
-                    class="w-full h-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-              </swiper-slide>
-            </swiper>
           </div>
           <swiper
             v-bind="thumbSettings"
@@ -78,7 +55,7 @@
             <swiper-slide
               v-for="(item, index) in data?.extra_images"
               :key="index"
-              class="w-full h-full border-2 border-transparent !w-12"
+              class="h-full border-2 border-transparent !w-12"
             >
               <div
                 class="relative bg-white-100 overflow-hidden rounded-10 w-11 h-11 cursor-pointer"
