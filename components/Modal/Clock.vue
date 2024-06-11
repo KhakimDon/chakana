@@ -118,12 +118,12 @@ const orderCartStore = useCartOrderStore()
 function add() {
   if (selectedInterval.value === 'nearest_2_hours') {
     const now = new Date()
-    now.setHours(now.getHours() + 2)
+    now.setHours(now.getHours() + 3)
     orderCartStore.orderDetail.when_to_deliver = now
   } else {
     const now = new Date()
     now.setHours(
-      convertTimeTo12HourFormat(selectedInterval.value.split('-')[0]) + 1
+      convertTimeTo12HourFormat(selectedInterval.value.split('-')[0]) + 2
     )
     now.setMinutes(0)
     now.setSeconds(0)
