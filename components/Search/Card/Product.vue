@@ -23,30 +23,50 @@
       </div>
     </div>
     <div class="w-24 shrink-0 text-right">
-      <BaseButton
-        v-if="count < 1 || addingToCart"
-        class="w-24"
-        :text="$t('to_basket')"
-        variant="outline"
-        :disabled="addingToCart"
+      <template v-if="showCount">
+        <i18n-t
+          keypath="count"
+          tag="p"
+          class="w-[92px] text-center py-1 text-sm font-normal leading-122 text-dark rounded-lg bg-white-100"
+        >
+          <template #count>
+            <span class="font-bold">
+              {{ formatMoneyDecimal(product?.quantity) }}
+            </span>
+          </template>
+        </i18n-t>
+      </template>
+      <template v-else>
+        <BaseButton
+          v-if="count < 1|| addingToCart"
+          class="w-24"
+          :text="$t('to_basket')"
+          variant="outline":disabled="addingToCart"
         :loading="addingToCart"
-        @click="addToCartFirstTime(product)"
-      />
-      <MainCardCounter
-        v-else
-        v-model="count"
-        :default-count="count"
-        :max="product?.max_quantity ?? 100000"
-        class="w-24 border-none bg-white-100"
-        readonly
-        @click="addToCart(product)"
-      />
+          @click="addToCartFirstTime(product)"
+        />
+        <MainCardCounter
+          v-else
+          v-model="count"
+          :default-count="count"
+          :max="product?.max_quantity ?? 100000"
+          class="w-24 border-none bg-white-100"
+          readonly
+        @click="addToCart(product)"/>
+      </template>
       <p
-        v-if="count > 0"
+        v-if="count > 0 || showCount"
         class="mt-1 text-xs font-medium text-dark leading-none"
+        :class="{ '!text-red line-through': returned }"
       >
-        {{ formatMoneyDecimal(count * product?.price ?? 0, 0) }}
-        <span class="text-[10px] font-medium leading-130 text-dark">UZS</span>
+        {{
+          formatMoneyDecimal((showCount ? 1 : count) * product?.price ?? 0, 0)
+        }}
+        <span
+          class="text-[10px] font-medium leading-130 text-dark"
+          :class="{ '!text-red ': returned }"
+          >UZS</span
+        >
       </p>
     </div>
   </div>
@@ -61,6 +81,8 @@ import { debounce, formatMoneyDecimal } from '~/utils/functions/common.js'
 interface Props {
   product: IProduct
   titleClass?: string
+  showCount?: boolean
+  returned?: boolean
 }
 
 const props = defineProps<Props>()
@@ -133,5 +155,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped></style>

@@ -5,4 +5,5 @@ export type TButtonVariants =
   | 'disabled'
   | 'secondary-dark'
   | 'outline'
+  | 'transparent'
 export type TButtonSizes = 'sm' | 'md'

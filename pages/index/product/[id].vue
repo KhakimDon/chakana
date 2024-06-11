@@ -2,6 +2,7 @@
   <div>
     <div>
       <MainCardBadge
+        v-if="data?.discount_percentage"
         class="px-1.5 py-1 mb-3"
         :percent="data?.discount_percentage"
         :type="data?.discount_type"
@@ -19,6 +20,29 @@
           <div
             class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
           >
+            <swiper
+              v-if="data?.extra_images?.length"
+              :modules="[Thumbs, Navigation]"
+              :thumbs="{ swiper: thumbsSwiper }"
+              class="mb-3 md:mb-5 w-full"
+              :slides-per-view="'auto'"
+            >
+              <swiper-slide
+                v-for="(item, index) in data?.extra_images"
+                :key="index"
+              >
+                <div
+                  class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
+                >
+                  <NuxtImg
+                    :src="item?.image"
+                    alt="card-image"
+                    class="w-full h-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              </swiper-slide>
+            </swiper>
             <swiper
               v-if="data?.extra_images?.length"
               :modules="[Thumbs, Navigation]"
@@ -54,7 +78,7 @@
             <swiper-slide
               v-for="(item, index) in data?.extra_images"
               :key="index"
-              class="w-full h-full border-2 border-transparent"
+              class="w-full h-full border-2 border-transparent !w-12"
             >
               <div
                 class="relative bg-white-100 overflow-hidden rounded-10 w-11 h-11 cursor-pointer"
@@ -87,6 +111,7 @@
                 <span class="text-[11px] font-[150%]">UZS</span>
               </p>
               <p
+                v-if="data?.discount_percentage"
                 class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded px-1"
               >
                 {{ data?.discount_percentage }}%
@@ -172,12 +197,14 @@
 
             <div class="flex items-end">
               <div
+                ref="description"
                 :class="open ? 'line-clamp-none' : 'line-clamp-2'"
-                class="text-gray-100 leading-140 text-sm mt-2 line-clamp-2 max-w-[380px] transition-300"
+                class="text-gray-100 leading-140 text-sm mt-2 max-w-[380px] transition-300"
                 v-html="data?.description"
               />
               <IconChevron
-                :class="open ? 'rotate-90' : ''"
+                v-if="shouldShowArrow"
+                :class="[open ? 'rotate-90' : '']"
                 class="text-orange -rotate-90 cursor-pointer"
                 @click="openDesc"
               />
@@ -206,10 +233,10 @@
       </h5>
       <Transition name="fade" mode="out-in">
         <div v-if="loading?.list" class="grid grid-cols-5 gap-4">
-          <MainCardLoading v-for="key in 16" :key />
+          <MainCardLoading v-for="key in 16" :key="key" />
         </div>
         <div v-else-if="list?.length" class="grid grid-cols-5 gap-4">
-          <MainCard v-for="(card, index) in list" :key="index" :card />
+          <MainCard v-for="(card, index) in list" :key="index" :card="card" />
           <!--            @open="selectProduct(card)"-->
         </div>
         <div v-else>
@@ -217,7 +244,7 @@
         </div>
       </Transition>
       <div v-if="loading?.button" class="grid grid-cols-5 gap-4">
-        <MainCardLoading v-for="key in 12" :key />
+        <MainCardLoading v-for="key in 12" :key="key" />
       </div>
       <div
         v-if="
@@ -244,6 +271,7 @@
     </BaseModal>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
 import { Navigation, Thumbs } from 'swiper/modules'
@@ -276,22 +304,8 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
 )
 
 const thumbSettings = {
-  slidesPerView: 12,
+  slidesPerView: 'auto',
   spaceBetween: 6,
-  breakpoints: {
-    640: {
-      slidesPerView: 5,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 6,
-      spaceBetween: 10,
-    },
-    1024: {
-      slidesPerView: 6,
-      spaceBetween: 4,
-    },
-  },
   watchSlidesProgress: true,
   modules: [Thumbs, Navigation],
 }
@@ -423,6 +437,23 @@ useSeoMeta({
   twitterSite: '@xolodilnik',
   ogImage: data.value?.main_image,
   twitterImage: data.value?.main_image,
+})
+
+const description = ref<HTMLElement | null>(null)
+const shouldShowArrow = computed(() => {
+  if (description.value) {
+    const lineHeight = parseFloat(
+      getComputedStyle(description.value).lineHeight
+    )
+    const maxHeight = lineHeight * 2 // for line-clamp-2
+    return description.value.scrollHeight > maxHeight
+  }
+  return false
+})
+
+onMounted(() => {
+  // Trigger the computation once the component is mounted
+  shouldShowArrow.value
 })
 </script>
 

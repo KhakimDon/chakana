@@ -1,32 +1,28 @@
 <template>
   <div>
-    <div class="flex-center-between border-b border-gray-300 pb-2.5">
+    <div
+      v-if="!notAll"
+      class="flex-center-between border-b border-gray-300 pb-2.5"
+      :class="itemClass"
+    >
       <FormCheckbox
         :checked="isAllChecked"
         :partial="ids?.length && !isAllChecked"
         :label="parentText"
         @update:model-value="onParentInput"
       />
-      <i
-        v-if="!notCollapse"
-        class="icon-chevron text-gray transition-300 cursor-pointer"
-        :class="{ 'rotate-180': isOpen }"
-        @click="isOpen = !isOpen"
-      />
     </div>
 
     <label
       v-for="(i, index) in list"
       :key="index"
-      class="flex items-center gap-3 py-2.5 border-b border-gray-300 last:border-[0px]"
+      class="flex items-center gap-3 py-2.5 border-b border-gray-300 last:border-0"
+      :class="itemClass"
     >
       <FormCheckbox
         :checked="ids.includes(i.id)"
         :value="i.id"
         :label="i?.name"
-        :info-icon="i?.infoIcon"
-        :info-text="i?.text"
-        :info-link="i?.path"
         @update:model-value="onInput($event, i.id)"
       />
     </label>
@@ -34,25 +30,19 @@
 </template>
 
 <script setup lang="ts">
-import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
-
 interface Props {
   modelValue: string[]
   list: {
-    title: string
+    name: string
     id: number
-    infoIcon?: boolean
-    text?: string
-    path?: string
   }[]
+  itemClass?: string
   parentText: string
-  nestedClass?: string
-  notCollapse?: boolean
+  notAll?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],
-  nestedClass: undefined,
 })
 
 interface Emits {
@@ -79,8 +69,6 @@ const parent = ref(false)
 const isAllChecked = computed(() => {
   return ids.value?.length === props?.list?.length
 })
-
-const isOpen = ref(true)
 
 function onParentInput(newValue: boolean) {
   if (newValue) {

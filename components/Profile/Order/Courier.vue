@@ -8,17 +8,18 @@
         <div class="border border-white-100 rounded-full w-12 h-12">
           <img
             class="w-full h-full rounded-full object-cover shrink-0"
-            src="https://picsum.photos/100/100"
-            alt=""
+            :src="courier.image"
+            :alt="courier.full_name"
           />
         </div>
         <p class="text-sm leading-130 font-bold text-dark">
-          Olimjonov Ibroihim
+          {{ courier.full_name }}
         </p>
       </div>
       <div class="flex items-center gap-3">
         <div class="h-9 w-px bg-gray-200"></div>
         <BaseButton
+          v-if="!noWrite"
           class="!bg-gray-200 hover:!bg-white"
           :text="$t('write_to_courier')"
           variant="secondary"
@@ -28,8 +29,8 @@
             <SvgoProfileMessage class="text-xl leading-5" />
           </template>
         </BaseButton>
-        <a href="tel:+9989094949391">
-          <BaseButton :text="'+9989094949391'" variant="green">
+        <a v-if="courier.phone" :href="`tel:${courier.phone}`">
+          <BaseButton :text="formatPhoneNumber(courier.phone)" variant="green">
             <template #prefix>
               <SvgoCommonPhone class="text-xl leading-5" />
             </template>
@@ -45,5 +46,18 @@
 </template>
 
 <script setup lang="ts">
+import { formatPhoneNumber } from '~/utils/functions/common.js'
+
 const messageModal = ref(false)
+
+interface Props {
+  courier: {
+    id: number
+    full_name: string
+    phone: string
+    image: string
+  }
+  noWrite?: boolean
+}
+defineProps<Props>()
 </script>

@@ -18,7 +18,7 @@
             v-model="search"
             :no-search-icon="false"
             :no-clear="false"
-            placeholder="Search"
+            placeholder="Se$arch"
             :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
@@ -150,7 +150,6 @@ import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
-import { useMainStore } from '~/store/main.js'
 
 interface Props {
   openModal?: boolean

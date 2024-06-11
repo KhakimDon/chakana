@@ -23,4 +23,8 @@ const orderStore = useOrderStore()
 
 const orders = computed(() => orderStore.orders.active)
 orderStore.fetchOrders()
+
+definePageMeta({
+  page: 'active',
+})
 </script>
