@@ -26,10 +26,7 @@
           </PaymentCardInfoHeader>
           <PaymentSectionPaymentMethod />
           <PaymentSectionPromoCode />
-          <div
-            class="flex-y-center gap-3 select-none cursor-pointer"
-            @click="toggleUseBalance"
-          >
+          <div class="flex-y-center gap-3 select-none cursor-pointer relative">
             <div class="shrink-0 flex-center">
               <SvgoProfileWallet class="text-2xl text-green-600" />
             </div>
@@ -48,7 +45,11 @@
                   }}
                 </p>
               </div>
-              <FormToggle v-model="useBalance" class="text-2xl" />
+              <FormToggle
+                v-model="useBalance"
+                class="text-2xl"
+                @change="toggleUseBalance"
+              />
             </div>
           </div>
         </div>
@@ -90,13 +91,12 @@ const useBalance = ref(false)
 
 const toggleUseBalance = () => {
   useBalance.value = !useBalance.value
+  orderCartStore.orderDetail.use_from_balance = useBalance.value
 }
 
 const showFreeDelivery = computed(() => {
   return totalCartProductsPrice.value > limitPrice.value
 })
-
-const cartProducts = computed(() => cartStore.products)
 
 const balancePrice = computed(() => orderCartStore.cart?.detail?.balance ?? 0)
 
@@ -117,10 +117,11 @@ const goToPayment = () => {
       ...orderDetail.value,
       when_to_deliver: orderDetail.value.when_to_deliver
         ?.toISOString()
-        .split('.')[0],
+        ?.split('.')[0],
     })
     .then(() => {
       showToast(t('order_created'), 'success')
+      cartStore.getCartProducts()
     })
     .catch(() => {
       showToast(t('order_not_created'), 'error')
@@ -128,13 +129,28 @@ const goToPayment = () => {
 }
 
 // All prices
-const totalCartProductsPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.price * product?.cart_count
-    }, 0) || 0
-  )
-})
+const totalCartProductsPrice = computed(
+  () => orderCartStore.cart?.detail?.product_price
+)
+
+watch(
+  () => orderCartStore.orderDetail,
+  (val) => {
+    if (
+      val?.promo_code_id ||
+      val?.address?.id ||
+      val?.use_from_balance ||
+      !val.use_from_balance
+    ) {
+      orderCartStore.getCartDetailConfirm({
+        promo_code_id: val.promo_code_id,
+        address_id: val.address?.id,
+        is_use_balance: val?.use_from_balance,
+      })
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <style scoped></style>

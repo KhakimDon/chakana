@@ -70,30 +70,23 @@ const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
     count.value++
-    orderCartStore.addToCart(product?.id, count.value).then(() => {
-      cartStore.addToCart({
-        ...product,
-        cart_count: count.value,
+    orderCartStore
+      .addToCart(product?.id, count.value)
+      .then(() => {
+        cartStore.getCartProducts()
       })
-    })
+      .catch(() => {
+        count.value--
+      })
   }
 }
 
 watch(
   () => count.value,
   (newValue) => {
-    if (newValue === 0) {
-      orderCartStore.addToCart(props.product?.id, 0).then(() => {
-        cartStore.removeFromCart(props.product?.id)
-      })
-    } else {
-      orderCartStore.addToCart(props.product?.id, newValue).then(() => {
-        cartStore.updateToCart({
-          ...props.product,
-          cart_count: newValue,
-        })
-      })
-    }
+    orderCartStore.addToCart(props.product?.id, newValue).then(() => {
+      cartStore.getCartProducts()
+    })
   }
 )
 
@@ -105,7 +98,7 @@ watch(
   cartProduct,
   (newValue) => {
     if (newValue) {
-      count.value = newValue.cart_count
+      count.value = newValue?.quantity
     }
   },
   { deep: true, immediate: true }
@@ -123,7 +116,7 @@ watch(
 
 onMounted(() => {
   if (cartProduct.value) {
-    count.value = cartProduct.value?.cart_count ?? 0
+    count.value = cartProduct.value?.quantity ?? 0
   }
 })
 </script>

@@ -61,11 +61,7 @@ const clearCart = () => {
   })
 }
 
-const totalCartPrice = computed(() => {
-  return cartProducts.value.reduce((acc, product) => {
-    return acc + product?.price * product.cart_count
-  }, 0)
-})
+const totalCartPrice = computed(() => orderCartStore.cart?.detail?.total_price)
 
 const goToCart = () => {
   router.push(`/${locale.value}/cart`)

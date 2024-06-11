@@ -84,7 +84,7 @@
       <section class="space-y-5">
         <CartCardFreeDelivery
           :free-delivery-price="90000"
-          :cart-total-price="totalCartProductsPrice"
+          :cart-total-price="cartDetails?.total_price ?? 0"
         />
         <CartCardPriceInfo />
         <BaseButton
@@ -124,14 +124,7 @@ const goToPayment = () => {
   router.push(`/${locale.value}/cart/payment`)
 }
 
-// All prices
-const totalCartProductsPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.price * product?.cart_count
-    }, 0) || 0
-  )
-})
+const cartDetails = computed(() => orderCartStore.cart.detail)
 
 // Fetch products
 if (!products.value?.list.length) {
@@ -153,9 +146,11 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
 
 const orderCartStore = useCartOrderStore()
 
+cartStore.getCartProducts()
+
 const clearCart = () => {
   orderCartStore.cartClear().then(() => {
-    cartStore.products = []
+    cartStore.getCartProducts()
   })
 }
 </script>

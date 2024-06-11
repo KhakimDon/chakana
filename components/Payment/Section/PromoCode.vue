@@ -48,7 +48,7 @@ const hasPromoCode = ref(false)
 const cartOrderStore = useCartOrderStore()
 const promoCodes = computed(() => cartOrderStore.promoCodes)
 
-const selectedPromoCodeId = ref('')
+const selectedPromoCodeId = ref()
 
 const selectedPromoCode = computed(() => {
   return promoCodes.value?.list?.find(
@@ -63,10 +63,11 @@ watch(
   }
 )
 
-const selectPromoCode = (code: string) => {
+const selectPromoCode = (code: number) => {
   selectedPromoCodeId.value = code
   hasPromoCode.value = true
   openModal.value = false
+  cartOrderStore.orderDetail.promo_code_id = code
 }
 
 const removePromoCode = () => {

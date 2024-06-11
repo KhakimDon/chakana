@@ -144,11 +144,19 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
-  function getCartDetailConfirm() {
+  function getCartDetailConfirm(data?: {
+    promo_code_id?: number
+    address_id?: number
+    is_use_balance?: boolean
+  }) {
     return new Promise((resolve, reject) => {
       cart.loading = true
       useApi()
-        .$get(`/cart/detail/mobile/confirm`, {})
+        .$get(`/cart/detail/web/confirm`, {
+          query: {
+            ...data,
+          },
+        })
         .then((res: any) => {
           cart.detail = res
           resolve(res)
