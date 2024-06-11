@@ -121,6 +121,7 @@ const goToPayment = () => {
     .then(() => {
       showToast(t('order_created'), 'success')
       cartStore.getCartProducts()
+      router.push(`/${locale.value}/profile/orders`)
     })
     .catch(() => {
       showToast(t('order_not_created'), 'error')
