@@ -11,7 +11,7 @@
       </div>
       <div class="space-y-0.5">
         <NuxtLinkLocale
-          :to="`/project/${product?.id}`"
+          :to="`/product/${product?.id}`"
           class="text-[13px] font-semibold hover:text-orange transition-300 leading-none text-dark"
           :class="titleClass"
         >
@@ -96,10 +96,10 @@ const addingToCart = ref(false)
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
-    addingToCart.value = true
     debounce(
       'addToCart',
       () => {
+        addingToCart.value = true
         orderCartStore
           .addToCart(product?.id, count.value)
           .then(() => {
