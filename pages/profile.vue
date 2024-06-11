@@ -22,7 +22,9 @@
     </template>
     <template #default> <NuxtPage /> </template>
     <template #right>
-      <div>right side</div>
+      <div>
+        <ProfileSidebarBalance />
+      </div>
     </template>
   </LayoutWrapper>
 </template>

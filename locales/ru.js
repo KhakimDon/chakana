@@ -215,4 +215,6 @@ export default {
   count: '{count} шт.',
   get_your_order: 'Получите ваш товар)',
   how_the_order: 'Как вам заказ?',
+  your_balance: 'Ваш баланс',
+  fill_balance: 'Пополнить баланс',
 }

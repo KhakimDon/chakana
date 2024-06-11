@@ -7,6 +7,7 @@ interface TAuthTokens {
 
 interface IState {
   user?: IProfileUser
+  userFetchTrigger: number
   showAuth: boolean
   accessToken?: string | null
   refreshToken?: string | null
@@ -16,6 +17,7 @@ interface IState {
 export const useAuthStore = defineStore('authStore', {
   state: (): IState => ({
     user: {} as IProfileUser,
+    userFetchTrigger: 0,
     showAuth: false,
     accessToken: undefined,
     refreshToken: undefined,
@@ -29,6 +31,7 @@ export const useAuthStore = defineStore('authStore', {
           .then((res) => {
             this.user = res
             this.userFetched = true
+            this.userFetchTrigger++
             resolve(res)
           })
           .catch((error) => {

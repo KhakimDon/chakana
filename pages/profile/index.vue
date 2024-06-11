@@ -21,11 +21,12 @@
         alt=""
       />
       <img
+        :key="userTrigger"
         class="relative object-cover left-7 z-10 rounded-full w-[100px] h-[100px] border-4 border-gray-300 bg-gray-300 -mt-[50px]"
         width="100%"
         height="100%"
         :src="data?.image"
-        alt=""
+        :alt="data?.name"
       />
       <div class="px-6 pb-6 flex-center-between mt-4">
         <p class="text-xl font-bold text-dark leading-130">{{ data?.name }}</p>
@@ -91,17 +92,17 @@
         </div>
       </div>
     </div>
-    <ProfileModalEdit v-model="editModal" :user="data" />
+    <ProfileModalEdit :key="data?.id" v-model="editModal" :user="data" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth.js'
 import type { Profile } from '~/types/profile'
 import { formatPhoneNumber } from '~/utils/functions/common'
 
-const { data } = await useAsyncData<Profile>('profile', () =>
-  useApi().$get('/get/detail')
-)
+const data = computed(() => useAuthStore().user)
+const userTrigger = computed(() => useAuthStore().userFetchTrigger)
 
 const editModal = ref(false)
 </script>
