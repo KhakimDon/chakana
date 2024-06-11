@@ -23,6 +23,7 @@
               v-if="data?.extra_images?.length"
               :modules="[Thumbs, Navigation]"
               :thumbs="{ swiper: thumbsSwiper }"
+              :slides-per-view="'auto'"
               class="mb-3 md:mb-5"
             >
               <swiper-slide
@@ -107,11 +108,13 @@
           <div class="flex-y-center gap-2">
             <div class="w-full flex-y-center gap-2 mt-4">
               <BaseButton
-                v-if="count < 1"
+                v-if="count < 1 || addingToCart"
                 class="w-full"
                 :text="$t('to_basket')"
                 variant="secondary"
-                @click.stop="count++"
+                :disabled="addingToCart"
+                :loading="addingToCart"
+                @click="addToCartFirstTime(data)"
               >
                 <template #prefix>
                   <IconCart />
@@ -121,8 +124,9 @@
                 v-else
                 v-model="count"
                 :default-count="count"
+                :max="data?.max_quantity ?? 100000"
                 readonly
-                @click.stop
+                @click="addToCart(data)"
               />
 
               <BaseButton
@@ -251,7 +255,9 @@ import IconExport from '~/assets/icons/Common/export.svg'
 import IconHeart from '~/assets/icons/Common/heart.svg'
 import IconHeartPlus from '~/assets/icons/Common/heart-plus.svg'
 import { shareData } from '~/data'
-import { formatMoneyDecimal, share } from '~/utils/functions/common'
+import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
+import { debounce, formatMoneyDecimal, share } from '~/utils/functions/common'
 
 const open = ref(false)
 const show = ref(false)
@@ -294,6 +300,43 @@ const setThumbsSwiper = (swiper: SwiperClass) => {
   thumbsSwiper.value = swiper
 }
 
+const orderCartStore = useCartOrderStore()
+const cartStore = useCartStore()
+const count = ref(0)
+const addingToCart = ref(false)
+const cartProducts = computed(() => cartStore.products)
+
+const addToCart = (product: any) => {
+  if (count.value <= product?.max_quantity) {
+    debounce(
+      'addToCart',
+      () => {
+        addingToCart.value = true
+        orderCartStore
+          .addToCart(product?.id, count.value)
+          .then(() => {
+            cartStore.getCartProducts()
+          })
+          .catch(() => {
+            if (count.value === 0) {
+              count.value = 1
+            }
+            count.value--
+          })
+          .finally(() => {
+            addingToCart.value = false
+          })
+      },
+      700
+    )
+  }
+}
+
+const addToCartFirstTime = (product: any) => {
+  count.value++
+  addToCart(product)
+}
+
 const isBeginning = ref(true)
 const isEnd = ref(false)
 const onChange = (e: SwiperClass) => {
@@ -322,7 +365,6 @@ const savedProducts = () => {
     })
     .finally(() => (buttonLoading.value = false))
 }
-const count = ref(0)
 
 const { data, error } = (await useAsyncData('product', async () => {
   return await useApi().$get(`/product/${route?.params.id}`)
@@ -339,6 +381,36 @@ const infiniteScrollTrigger = ref<HTMLElement | null>(null)
 useIntersectionObserver(infiniteScrollTrigger, ([{ isIntersecting }]) => {
   if (isIntersecting && !loading.list) {
     loadMore()
+  }
+})
+
+const cartProduct = computed(() =>
+  cartProducts.value.find((product) => product?.id === data.value?.id)
+)
+
+watch(
+  cartProduct,
+  (newValue) => {
+    if (newValue) {
+      count.value = newValue?.quantity
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  cartProducts,
+  (newValue) => {
+    if (newValue.length === 0) {
+      count.value = 0
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+onMounted(() => {
+  if (cartProduct.value) {
+    count.value = cartProduct.value?.quantity ?? 0
   }
 })
 
