@@ -22,12 +22,7 @@
       @slide-change="onChange"
     >
       <swiper-slide
-        v-for="(item, index) in [
-          ...variants,
-          ...variants,
-          ...variants,
-          ...variants,
-        ]"
+        v-for="(item, index) in variants"
         :key="index"
         class="!w-16 cursor-pointer"
         @click="variantsName(item)"
@@ -45,14 +40,14 @@
         <p class="text-[10px] text-center opacity-60">{{ item.name }}</p>
       </swiper-slide>
       <button
-        v-if="!isEnd"
+        v-if="!isEnd && variants?.length"
         class="bg-white btn-arrow absolute top-1/2 z-10 right-0 p-1"
         @click="slideNext"
       >
         <IconArrow class="icon-chevron text-xl" />
       </button>
       <button
-        v-if="!isBeginning"
+        v-if="!isBeginning && variants?.length"
         class="bg-white btn-arrow absolute top-1/2 z-10 left-0 p-1"
         @click="slidePrev"
       >
