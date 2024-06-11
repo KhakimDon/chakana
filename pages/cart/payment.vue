@@ -114,14 +114,13 @@ const goToPayment = () => {
   orderCartStore
     .createOrder({
       ...orderDetail.value,
-      when_to_deliver: orderDetail.value.when_to_deliver
-        ?.toISOString()
-        ?.split('.')[0],
+      when_to_deliver: orderDetail.value.when_to_deliver,
     })
     .then(() => {
       showToast(t('order_created'), 'success')
       cartStore.getCartProducts()
       router.push(`/${locale.value}/profile/orders`)
+      orderCartStore.orderDetail = {}
     })
     .catch(() => {
       showToast(t('order_not_created'), 'error')

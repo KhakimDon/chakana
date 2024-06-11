@@ -212,4 +212,5 @@ export default {
   payment_via_card: 'Оплата картой',
   order_created: 'Заказ успешно принят',
   order_not_created: 'Произошла ошибка',
+  credit_card: 'Оплата с картой',
 }
