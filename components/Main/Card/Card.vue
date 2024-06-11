@@ -26,6 +26,7 @@
           <span class="text-[11px] font-[150%]">UZS</span>
         </p>
         <p
+          v-if="card?.discount_type === 'percentage'"
           class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded px-1 translate-y-1 -rotate-[8deg]"
         >
           {{ card?.discount_percentage }}%
