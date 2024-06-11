@@ -26,6 +26,7 @@
           <span class="text-[11px] font-[150%]">UZS</span>
         </p>
         <p
+          v-if="card?.discount_type === 'percentage'"
           class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded px-1 translate-y-1 -rotate-[8deg]"
         >
           {{ card?.discount_percentage }}%
@@ -50,11 +51,13 @@
     </div>
     <ClientOnly>
       <BaseButton
-        v-if="count < 1"
+        v-if="count < 1 || addingToCart"
         class="w-full"
         :text="$t('to_basket')"
         variant="outline"
-        @click="addToCart(card)"
+        :disabled="addingToCart"
+        :loading="addingToCart"
+        @click="addToCartFirstTime(card)"
       />
       <MainCardCounter
         v-else
@@ -62,6 +65,7 @@
         :default-count="count"
         :max="card?.max_quantity ?? 100000"
         readonly
+        @click="addToCart(card)"
       />
     </ClientOnly>
   </div>
@@ -69,8 +73,13 @@
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products'
-import { formatMoneyDecimal, getImageSize } from '~/utils/functions/common'
+import {
+  debounce,
+  formatMoneyDecimal,
+  getImageSize,
+} from '~/utils/functions/common'
 
 interface Props {
   card: IProduct
@@ -79,33 +88,43 @@ interface Props {
 const props = defineProps<Props>()
 defineEmits(['open'])
 
+const orderCartStore = useCartOrderStore()
 const cartStore = useCartStore()
 const count = ref(0)
+
+const addingToCart = ref(false)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
   if (count.value <= product?.max_quantity) {
-    count.value++
-    cartStore.addToCart({
-      ...product,
-      cart_count: count.value,
-    })
+    addingToCart.value = true
+    debounce(
+      'addToCart',
+      () => {
+        orderCartStore
+          .addToCart(product?.id, count.value)
+          .then(() => {
+            cartStore.getCartProducts()
+          })
+          .catch(() => {
+            if (count.value === 0) {
+              count.value = 1
+            }
+            count.value--
+          })
+          .finally(() => {
+            addingToCart.value = false
+          })
+      },
+      700
+    )
   }
 }
 
-watch(
-  () => count.value,
-  (newValue) => {
-    if (newValue === 0) {
-      cartStore.removeFromCart(props.card?.id)
-    } else {
-      cartStore.updateToCart({
-        ...props.card,
-        cart_count: newValue,
-      })
-    }
-  }
-)
+const addToCartFirstTime = (product: any) => {
+  count.value++
+  addToCart(product)
+}
 
 const cartProduct = computed(() =>
   cartProducts.value.find((product) => product?.id === props.card?.id)
@@ -115,7 +134,7 @@ watch(
   cartProduct,
   (newValue) => {
     if (newValue) {
-      count.value = newValue.cart_count
+      count.value = newValue?.quantity
     }
   },
   { deep: true, immediate: true }
@@ -133,7 +152,7 @@ watch(
 
 onMounted(() => {
   if (cartProduct.value) {
-    count.value = cartProduct.value?.cart_count ?? 0
+    count.value = cartProduct.value?.quantity ?? 0
   }
 })
 </script>

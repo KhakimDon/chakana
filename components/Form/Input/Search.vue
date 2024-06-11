@@ -101,11 +101,4 @@ watch(
   },
   { immediate: true }
 )
-
-watch(
-  () => search.value,
-  (v) => {
-    emit('update:modelValue', v)
-  }
-)
 </script>

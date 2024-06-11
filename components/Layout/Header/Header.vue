@@ -49,7 +49,7 @@
               {{ $t('saved') }}
             </p>
           </NuxtLinkLocale>
-          <LayoutHeaderUser class="ml-2" />
+          <LayoutHeaderUser :user="user" class="ml-2" />
         </div>
       </div>
     </div>
