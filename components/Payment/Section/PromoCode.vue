@@ -21,9 +21,7 @@
           >
             <template #text>
               <span class="text-white text-xs font-extrabold leading-none">
-                (-{{
-                  formatMoneyDecimal(selectedPromoCode?.minimum_price ?? 0, 0)
-                }}
+                (-{{ formatMoneyDecimal(selectedPromoCode?.discount ?? 0, 0) }}
                 UZS)
               </span>
             </template>

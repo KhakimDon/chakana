@@ -11,13 +11,13 @@
       >
         <SvgoProfileUser class="text-orange text-2xl" />
         <div
-          class="flex-y-center gap-1 border-b border-white-100 justify-between w-full"
+          class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
         >
           <p class="text-sm font-semibold leading-tight text-dark">
             {{ $t('courier_card') }}
           </p>
-          <FormRadio v-if="!courierCard" v-model="courierCard" />
-          <FormRadio v-else />
+          <FormRadio v-if="!courierCard" v-model="courierCard" class="!p-0" />
+          <FormRadio v-else class="!p-0" />
         </div>
       </div>
       <div
@@ -26,13 +26,13 @@
       >
         <SvgoProfileMoney class="text-green text-2xl" />
         <div
-          class="flex-y-center gap-1 border-b border-white-100 justify-between w-full"
+          class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
         >
           <p class="text-sm font-semibold leading-tight text-dark">
             {{ $t('cash') }}
           </p>
-          <FormRadio v-if="!cash" v-model="cash" />
-          <FormRadio v-else />
+          <FormRadio v-if="!cash" v-model="cash" class="!p-0" />
+          <FormRadio v-else class="!p-0" />
         </div>
       </div>
       <PaymentCardInfo
@@ -48,7 +48,7 @@
           {{ $t('payment_system') }}
         </p>
       </div>
-      <CommonPaymentTypes v-model="paymentType" />
+      <CommonPaymentTypes v-model="paymentType" :providers="paymentProviders" />
       <BaseButton
         class="!py-3 w-full !mt-6"
         :loading
@@ -62,12 +62,13 @@
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { usePaymentStore } from '~/store/payment.js'
 
 interface Props {
   modelValue: boolean
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -76,12 +77,14 @@ const emit = defineEmits<{
 const loading = ref(false)
 const courierCard = ref(false)
 const cash = ref(false)
+const paymentType = ref(0)
 
 watch(
   () => cash.value,
   (val) => {
     if (val) {
       courierCard.value = false
+      paymentType.value = 0
     }
   }
 )
@@ -91,15 +94,24 @@ watch(
   (val) => {
     if (val) {
       cash.value = false
+      paymentType.value = 0
     }
   }
 )
 
-const paymentType = ref('paylov')
+watch(
+  () => paymentType.value,
+  (val) => {
+    if (val) {
+      cash.value = false
+      courierCard.value = false
+    }
+  }
+)
 
 const orderCartStore = useCartOrderStore()
 function add() {
-  orderCartStore.orderDetail.payment_method.provider_id = 0
+  orderCartStore.orderDetail.payment_method.provider_id = paymentType.value
   orderCartStore.orderDetail.payment_method.cash = cash.value
   orderCartStore.orderDetail.payment_method.card_to_the_courier =
     courierCard.value
@@ -107,4 +119,12 @@ function add() {
 
   emit('update:modelValue', false)
 }
+
+const paymentStore = usePaymentStore()
+
+onMounted(() => {
+  paymentStore.getPaymentProviderList()
+})
+
+const paymentProviders = computed(() => paymentStore.paymentProviders.list)
 </script>

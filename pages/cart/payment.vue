@@ -25,9 +25,8 @@
             </section>
           </PaymentCardInfoHeader>
           <PaymentSectionPaymentMethod />
-          <PaymentSectionPromoCode v-if="false" />
+          <PaymentSectionPromoCode />
           <div
-            v-if="false"
             class="flex-y-center gap-3 select-none cursor-pointer"
             @click="toggleUseBalance"
           >
@@ -44,7 +43,7 @@
                 <p class="text-xs font-normal leading-none text-gray-100">
                   {{
                     t('card_price', {
-                      price: formatMoneyDecimal(limitPrice, 0),
+                      price: formatMoneyDecimal(balancePrice, 0),
                     })
                   }}
                 </p>
@@ -75,7 +74,6 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
 
 import { useCustomToast } from '~/composables/useCustomToast.js'
@@ -99,6 +97,8 @@ const showFreeDelivery = computed(() => {
 })
 
 const cartProducts = computed(() => cartStore.products)
+
+const balancePrice = computed(() => orderCartStore.cart?.detail?.balance ?? 0)
 
 const goBack = () => {
   router.back()

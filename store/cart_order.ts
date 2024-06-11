@@ -3,7 +3,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     address: {
       id: 0,
     },
-    when_to_deliver: new Date(),
+    when_to_deliver: '',
     recipient: {
       full_name: '',
       phone: '',
@@ -144,6 +144,24 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  function getCartDetailConfirm() {
+    return new Promise((resolve, reject) => {
+      cart.loading = true
+      useApi()
+        .$get(`/cart/detail/mobile/confirm`, {})
+        .then((res: any) => {
+          cart.detail = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          cart.loading = false
+        })
+    })
+  }
+
   function cartClear() {
     return new Promise((resolve, reject) => {
       useApi()
@@ -216,5 +234,6 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     orderDetail,
     orderCreating,
     createOrder,
+    getCartDetailConfirm,
   }
 })

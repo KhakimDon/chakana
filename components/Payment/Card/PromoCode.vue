@@ -20,7 +20,7 @@
     >
       <template #price>
         <span class="text-xs font-bold leading-none text-dark">
-          {{ formatMoneyDecimal(promo?.minimum_price ?? 0, 0) }}
+          {{ formatMoneyDecimal(promo?.discount ?? 0, 0) }}
           <span class="text-[10px] font-bold text-dark leading-[13px]">
             UZS
           </span>
