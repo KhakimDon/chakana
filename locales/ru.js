@@ -182,4 +182,6 @@ export default {
   write_to_courier: 'Написать курьеру',
   enter_text: 'Введите текст',
   send: 'Отправить',
+  share: 'Поделиться',
+  saved_product: 'Сохранен',
 }

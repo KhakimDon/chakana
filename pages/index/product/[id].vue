@@ -1,6 +1,13 @@
 <template>
   <div>
     <div>
+      <MainCardBadge
+        class="px-1.5 py-1 mb-3"
+        :percent="data?.discount_percentage"
+        :type="data?.discount_type"
+      />
+    </div>
+    <div>
       <h1 class="text-[22px] font-bold leading-130 text-dark">
         {{ data?.name }}
       </h1>
@@ -16,7 +23,6 @@
               v-if="data?.extra_images?.length"
               :modules="[Thumbs, Navigation]"
               :thumbs="{ swiper: thumbsSwiper }"
-              space-between="20"
               class="mb-3 md:mb-5"
             >
               <swiper-slide
@@ -39,15 +45,19 @@
           <swiper
             v-bind="thumbSettings"
             class="w-full"
+            :slides-per-view="'auto'"
+            :space-between="6"
             @swiper="setThumbsSwiper"
             @slide-change="onChange"
           >
             <swiper-slide
               v-for="(item, index) in data?.extra_images"
               :key="index"
-              class="w-full h-full"
+              class="w-full h-full border-2 border-transparent"
             >
-              <div class="relative bg-white-100 rounded-10 w-11 h-11">
+              <div
+                class="relative bg-white-100 overflow-hidden rounded-10 w-11 h-11 cursor-pointer"
+              >
                 <NuxtImg
                   :src="item?.image"
                   alt="card-image"
@@ -67,7 +77,29 @@
           </swiper>
         </div>
         <div class="col-span-5">
-          <p class="text-[28px] font-bold leading-122 text-dark">
+          <div v-if="data?.discount_price">
+            <div class="flex items-center gap-1">
+              <p
+                class="text-xs leading-[12px] font-medium text-gray-100 line-through"
+              >
+                {{ formatMoneyDecimal(data?.price) }}
+                <span class="text-[11px] font-[150%]">UZS</span>
+              </p>
+              <p
+                class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded px-1"
+              >
+                {{ data?.discount_percentage }}%
+              </p>
+            </div>
+            <p
+              class="mt-2 leading-122 font-bold text-green text-[28px]"
+              :class="{ '!text-red !mt-0': data?.discount_price }"
+            >
+              {{ formatMoneyDecimal(data?.discount_price ?? data?.price) }}
+              <span class="text-[22px] font-[150%]">UZS</span>
+            </p>
+          </div>
+          <p v-else class="text-[28px] font-bold leading-122 text-dark">
             {{ formatMoneyDecimal(data?.price) }}
             <span class="text-[22px] leading-130 font-semibold">UZS</span>
           </p>
@@ -96,12 +128,24 @@
               <BaseButton
                 variant="outline"
                 class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                @click="show = true"
               >
                 <IconExport class="text-xl" />
               </BaseButton>
               <BaseButton
+                v-if="data.saved || saved"
                 variant="outline"
                 class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+              >
+                <IconHeart class="text-xl text-orange" />
+                <p>{{ $t('saved_product') }}</p>
+              </BaseButton>
+              <BaseButton
+                v-else
+                variant="outline"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                :loading="buttonLoading"
+                @click="savedProducts"
               >
                 <IconHeartPlus class="text-xl" />
               </BaseButton>
@@ -180,6 +224,20 @@
         ref="infiniteScrollTrigger"
       />
     </div>
+    <BaseModal v-model="show" :title="$t('share')">
+      <div
+        class="rounded-xl border border-white-100 flex items-center justify-between p-4"
+      >
+        <div
+          v-for="item in shareData"
+          :key="item.id"
+          class="border border-white-100 p-1.5 rounded-xl cursor-pointer"
+          @click="share(item.title, data?.name)"
+        >
+          <img :src="item.image" alt="" class="p-1.5 bg-orange/10 rounded-lg" />
+        </div>
+      </div>
+    </BaseModal>
   </div>
 </template>
 <script setup lang="ts">
@@ -190,11 +248,17 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import IconCart from '~/assets/icons/Common/cart.svg'
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconExport from '~/assets/icons/Common/export.svg'
+import IconHeart from '~/assets/icons/Common/heart.svg'
 import IconHeartPlus from '~/assets/icons/Common/heart-plus.svg'
-import { formatMoneyDecimal } from '~/utils/functions/common'
+import { shareData } from '~/data'
+import { formatMoneyDecimal, share } from '~/utils/functions/common'
 
 const open = ref(false)
-
+const show = ref(false)
+const saved = ref(false)
+const route = useRoute()
+const buttonLoading = ref(false)
+const { handleError } = useErrorHandling()
 const openDesc = () => {
   open.value = !open.value
 }
@@ -206,8 +270,8 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
 )
 
 const thumbSettings = {
-  slidesPerView: 8,
-  spaceBetween: 4,
+  slidesPerView: 12,
+  spaceBetween: 6,
   breakpoints: {
     640: {
       slidesPerView: 5,
@@ -218,8 +282,8 @@ const thumbSettings = {
       spaceBetween: 10,
     },
     1024: {
-      slidesPerView: 7,
-      spaceBetween: 12,
+      slidesPerView: 6,
+      spaceBetween: 4,
     },
   },
   watchSlidesProgress: true,
@@ -242,8 +306,22 @@ const onChange = (e: SwiperClass) => {
     isEnd.value = true
   }
 }
-
-const route = useRoute()
+const savedProducts = () => {
+  buttonLoading.value = true
+  useApi()
+    .$post('/saved/products', {
+      body: {
+        product_id: route.params.id,
+      },
+    })
+    .then((res: any) => {
+      saved.value = res.saved
+    })
+    .catch((err) => {
+      handleError(err)
+    })
+    .finally(() => (buttonLoading.value = false))
+}
 const count = ref(0)
 
 const { data, error } = (await useAsyncData('product', async () => {
@@ -276,8 +354,24 @@ useSeoMeta({
 })
 </script>
 
-<style>
+<style scoped>
 .swiper-slide-thumb-active {
-  border: 2px solid #dd3333 !important;
+  border: 2px solid #ff831b !important;
+  border-radius: 10px !important;
+  opacity: 100%;
+}
+
+.thumb-gradient {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 86px;
+  height: 100%;
+  background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 2;
+  transition: all 0.3s;
+}
+.thumb-gradient.reverse {
+  transform: rotateY(180deg);
 }
 </style>
