@@ -23,6 +23,7 @@
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/i18n": "8.0.0",
     "@nuxtjs/tailwindcss": "^6.6.5",
+    "@fingerprintjs/fingerprintjs": "^4.2.1",
     "@pinia/nuxt": "^0.4.8",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",

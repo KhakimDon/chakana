@@ -42,10 +42,7 @@ const params = reactive({
 const list = ref()
 const categories = computed(() => {
   if (route.query.categories?.length) {
-    return [
-      Number(route.params.slug),
-      ...route.query.categories?.split(',')?.map((id) => Number(id)),
-    ]
+    return [...route.query.categories?.split(',')?.map((id) => Number(id))]
   } else {
     return [Number(route.params.slug)]
   }
