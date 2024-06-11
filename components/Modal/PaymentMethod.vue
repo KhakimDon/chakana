@@ -80,15 +80,7 @@
                 class="col-span-2"
                 :title="$t('no_cards_yet')"
                 :subtitle="$t('you_still_dont_have_cards')"
-              >
-                <template #actions>
-                  <BaseButton
-                    class="mt-4"
-                    :text="$t('add_card')"
-                    @click="addCardModal = true"
-                  />
-                </template>
-              </CommonNoData>
+              />
             </template>
           </div>
         </Transition>
