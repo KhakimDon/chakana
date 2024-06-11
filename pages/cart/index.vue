@@ -13,6 +13,7 @@
             {{ $t('basket') }}
           </p>
           <div
+            v-if="cartProducts.length > 0"
             class="flex-center gap-2 group cursor-pointer select-none"
             @click="clearCart"
           >
@@ -26,7 +27,13 @@
             </p>
           </div>
         </div>
-        <div class="mt-6 max-h-96 overflow-y-auto">
+        <div v-if="loading" class="mt-6 max-h-96 space-y-5">
+          <div v-for="key in 5" :key class="shimmer rounded-10 h-16"></div>
+        </div>
+        <div
+          v-else-if="cartProducts.length && !loading"
+          class="mt-6 max-h-96 overflow-y-auto"
+        >
           <SearchCardProduct
             v-for="(product, key) in cartProducts"
             :key
@@ -34,7 +41,7 @@
             :class="{ 'bg-gray-300/50': key % 2 === 0 }"
           />
         </div>
-        <section v-if="cartProducts.length === 0" class="my-5">
+        <section v-else class="my-5">
           <CommonNoData
             :title="$t('search_nodata_title')"
             :subtitle="$t('search_nodata_subtitle')"
@@ -83,14 +90,23 @@
     <template #right>
       <section class="space-y-5">
         <CartCardFreeDelivery
-          :free-delivery-price="90000"
-          :cart-total-price="totalCartProductsPrice"
+          :cart-total-price="cartDetails?.total_price ?? 0"
         />
-        <CartCardPriceInfo />
+        <div
+          v-if="loading"
+          class="shimmer bg-white-100 rounded-10 p-4 h-[200px] space-y-3"
+        ></div>
+        <CartCardPriceInfo v-else />
+        <div
+          v-if="loading"
+          class="shimmer bg-white-100 rounded-10 p-4 h-[38px]"
+        ></div>
         <BaseButton
+          v-else
           class="w-full !rounded-10"
           :text="$t('go_to_registration')"
           variant="green"
+          :disabled="cartProducts.length === 0"
           @click="goToPayment"
         />
       </section>
@@ -117,6 +133,8 @@ const selectedProduct = ref<IProduct | null>(null)
 const cartProducts = computed(() => cartStore.products)
 const products = computed(() => mainStore.products)
 
+const loading = computed(() => cartStore.cartProductsLoading)
+
 const goBack = () => {
   router.back()
 }
@@ -124,14 +142,7 @@ const goToPayment = () => {
   router.push(`/${locale.value}/cart/payment`)
 }
 
-// All prices
-const totalCartProductsPrice = computed(() => {
-  return (
-    cartProducts.value.reduce((acc, product) => {
-      return acc + product?.price * product?.cart_count
-    }, 0) || 0
-  )
-})
+const cartDetails = computed(() => orderCartStore.cart.detail)
 
 // Fetch products
 if (!products.value?.list.length) {
@@ -153,9 +164,11 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
 
 const orderCartStore = useCartOrderStore()
 
+cartStore.getCartProducts()
+
 const clearCart = () => {
   orderCartStore.cartClear().then(() => {
-    cartStore.products = []
+    cartStore.getCartProducts()
   })
 }
 </script>
