@@ -212,6 +212,7 @@ export default {
   payment_via_card: 'Оплата картой',
   order_created: 'Заказ успешно принят',
   order_not_created: 'Произошла ошибка',
+  credit_card: 'Оплата с картой',
   count: '{count} шт.',
   get_your_order: 'Получите ваш товар)',
   how_the_order: 'Как вам заказ?',

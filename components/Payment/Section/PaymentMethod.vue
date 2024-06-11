@@ -9,6 +9,8 @@
             ? $t('cash')
             : payment.card_to_the_courier
             ? $t('courier_card')
+            : payment.card_id
+            ? $t('credit_card')
             : $t('payment_method')
         "
         @open-details="openModal = true"

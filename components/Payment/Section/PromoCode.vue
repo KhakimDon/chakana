@@ -28,7 +28,7 @@
           </i18n-t>
           <SvgoCommonClose
             class="bg-white/20 cursor-pointer text-white rounded-full p-0.5 text-sm"
-            @click="removePromoCode"
+            @click="removePromoCode(selectedPromoCode?.id ?? 0)"
           />
         </div>
       </PaymentCardInfo>
@@ -70,8 +70,10 @@ const selectPromoCode = (code: number) => {
   cartOrderStore.orderDetail.promo_code_id = code
 }
 
-const removePromoCode = () => {
+const removePromoCode = (code: number) => {
   hasPromoCode.value = false
+  cartOrderStore.orderDetail.promo_code_id = code
+  cartOrderStore.getCartDetailConfirm()
 }
 
 const openDetail = ref(false)
