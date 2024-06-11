@@ -12,9 +12,9 @@
     <ProfileOrderRate
       v-if="status === 'delivered' && !orderStatus?.rank && !ranked"
       :id="$route.params.id"
+      @ranked="ranked = true"
     />
     <template v-else>
-      <!--      <pre>{{ products }}</pre>-->
       <template v-if="status !== 'delivered' && status !== 'cancelled'">
         <BaseStepper class="my-8" :step="status" :steps />
         <h1
@@ -56,7 +56,6 @@
           <h3 class="text-base text-dark font-extrabold leading-130 mb-3">
             {{ $t('returned_products') }}
           </h3>
-          <!--        <p class="text-xs leading-130 font-normal text-gray">{{ 123 }}</p>-->
         </div>
         <Transition name="fade" mode="out-in">
           <div :key="productsLoading" class="flex flex-col">
@@ -204,12 +203,11 @@ const status = computed(() => orderStatus.value?.status)
 const products = ref()
 const productsLoading = ref(true)
 
-const ranked = ref(false)
+const ranked = ref(!orderStatus.value?.rank)
 useApi()
   .$get(`order/products/${route.params.id}`)
   .then((res) => {
     products.value = res
-    ranked.value = true
   })
   .finally(() => (productsLoading.value = false))
 

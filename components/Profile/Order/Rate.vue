@@ -50,6 +50,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
+defineEmits(['ranked'])
+
 const star = ref(0)
 const reason = ref<number[]>()
 const text = ref('')
@@ -73,6 +75,7 @@ function fetchReasons() {
     )
     .then((res) => {
       list.value = res
+      emit('ranked')
     })
     .finally(() => {
       loading.value = false

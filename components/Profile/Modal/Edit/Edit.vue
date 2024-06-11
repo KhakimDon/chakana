@@ -154,10 +154,11 @@ async function submit() {
     .updateUser(form.values)
     .then(() => {
       showToast(t('profile_updated_successfully'), 'success')
+      emit('update:modelValue', false)
+      window.location.reload()
     })
     .finally(() => {
       loading.value = false
     })
-  emit('update:modelValue', false)
 }
 </script>
