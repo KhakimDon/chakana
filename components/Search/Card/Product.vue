@@ -56,11 +56,16 @@
       <p
         v-if="count > 0 || showCount"
         class="mt-1 text-xs font-medium text-dark leading-none"
+        :class="{ '!text-red line-through': returned }"
       >
         {{
           formatMoneyDecimal((showCount ? 1 : count) * product?.price ?? 0, 0)
         }}
-        <span class="text-[10px] font-medium leading-130 text-dark">UZS</span>
+        <span
+          class="text-[10px] font-medium leading-130 text-dark"
+          :class="{ '!text-red ': returned }"
+          >UZS</span
+        >
       </p>
     </div>
   </div>
@@ -76,6 +81,7 @@ interface Props {
   product: IProduct
   titleClass?: string
   showCount?: boolean
+  returned?: boolean
 }
 
 const props = defineProps<Props>()

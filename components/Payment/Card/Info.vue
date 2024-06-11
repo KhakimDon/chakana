@@ -9,7 +9,7 @@
     </div>
     <div
       class="flex-y-center border-b group justify-between border-white-100 py-2 w-full h-[52px]"
-      :class="{ 'cursor-pointer': !noClickable }"
+      :class="[{ 'cursor-pointer': !noClickable }, textWrapperClass]"
       @click="noClickable ? null : emit('openDetails')"
     >
       <div class="space-y-1">
@@ -46,6 +46,7 @@ interface Props {
   subtitleClass?: string
   iconClass?: string
   noClickable?: boolean
+  textWrapperClass?: string
 }
 
 defineProps<Props>()

@@ -19,6 +19,7 @@
       <div class="flex items-center gap-3">
         <div class="h-9 w-px bg-gray-200"></div>
         <BaseButton
+          v-if="!noWrite"
           class="!bg-gray-200 hover:!bg-white"
           :text="$t('write_to_courier')"
           variant="secondary"
@@ -56,6 +57,7 @@ interface Props {
     phone: string
     image: string
   }
+  noWrite?: boolean
 }
 defineProps<Props>()
 </script>

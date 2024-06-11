@@ -217,4 +217,5 @@ export default {
   how_the_order: 'Как вам заказ?',
   your_balance: 'Ваш баланс',
   fill_balance: 'Пополнить баланс',
+  returned_products: 'Возвращенные товары',
 }
