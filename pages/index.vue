@@ -60,6 +60,8 @@ const cartStore = useCartStore()
 
 const cartProducts = computed(() => cartStore.products)
 
+cartStore.getCartProducts()
+
 const { list } = useListFetcher<IProduct>(`/saved/address`, 25, false)
 
 watch(

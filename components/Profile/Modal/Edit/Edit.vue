@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { email, required, url } from '@vuelidate/validators'
+import { email, required } from '@vuelidate/validators'
 
 import { useAuthStore } from '~/store/auth.js'
 import type { IUser } from '~/types/auth.js'
@@ -154,10 +154,11 @@ async function submit() {
     .updateUser(form.values)
     .then(() => {
       showToast(t('profile_updated_successfully'), 'success')
+      emit('update:modelValue', false)
+      window.location.reload()
     })
     .finally(() => {
       loading.value = false
     })
-  emit('update:modelValue', false)
 }
 </script>

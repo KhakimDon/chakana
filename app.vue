@@ -1,5 +1,8 @@
 <template>
   <div>
+    <NuxtLoadingIndicator
+      color="linear-gradient(183deg, #FF831B -51.95%, #F30 124.83%)"
+    />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

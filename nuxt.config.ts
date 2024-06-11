@@ -7,7 +7,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  ssr: true,
+  ssr: false,
   app: {
     head: {
       title: 'Холодильник Онлайн',
@@ -53,7 +53,6 @@ export default defineNuxtConfig({
         ],
       },
     ],
-    '@pinia-plugin-persistedstate/nuxt',
     '@nuxt/image',
   ],
 

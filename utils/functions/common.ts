@@ -152,3 +152,28 @@ export const getImageSize = (
 
   return newUrl?.[0] + '_' + sizes[size]
 }
+
+export const share = (network: string, title: string) => {
+  if (process.client) {
+    switch (network) {
+      case 'telegram':
+        window.open(
+          `https://t.me/share/url?url=${window.location.href}&text=${title}`,
+          '_blank'
+        )
+        break
+      case 'twitter':
+        window.open(
+          `https://twitter.com/intent/tweet?text=${title}\n+${window.location.href}`,
+          '_blank'
+        )
+        break
+      case 'facebook':
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?t=${title}\n${window.location.href}`,
+          '_blank'
+        )
+        break
+    }
+  }
+}
