@@ -213,6 +213,4 @@ export default {
   order_created: 'Заказ успешно принят',
   order_not_created: 'Произошла ошибка',
   credit_card: 'Оплата с картой',
-  share: 'Поделиться',
-  saved_product: 'Сохранен',
 }
