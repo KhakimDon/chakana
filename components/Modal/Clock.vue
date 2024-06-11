@@ -104,18 +104,6 @@ function generateIntervals() {
   return intervals
 }
 
-function convertTimeTo12HourFormat(time: string) {
-  // Splitting the time string into hours and minutes
-  const timeArray = time.split(':')
-  let hours = parseInt(timeArray[0])
-
-  // Converting hours to 12-hour format
-  hours = hours % 12
-  hours = hours || 12 // 0 should be converted to 12
-
-  return hours
-}
-
 function getCurrentDateTimeISO(date: any) {
   return date.format().slice(0, -6)
 }
