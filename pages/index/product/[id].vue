@@ -309,7 +309,7 @@ const addToCart = (product: any) => {
         orderCartStore
           .addToCart(product?.id, count.value)
           .then(() => {
-            cartStore.getCartProducts()
+            cartStore.addToCart(product, count.value)
           })
           .catch(() => {
             if (count.value === 0) {
@@ -321,7 +321,7 @@ const addToCart = (product: any) => {
             addingToCart.value = false
           })
       },
-      700
+      300
     )
   }
 }
