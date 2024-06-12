@@ -221,4 +221,13 @@ export default {
   returned_products: 'Возвращенные товары',
   logout: 'Выйти',
   are_you_sure_to_logout: 'Вы уверены, что хотите выйти?',
+  free_deliver: 'Бесплатная доставка',
+  priority_help: 'Приоритетная помощь',
+  exclusive_offers: 'Эксклюзивные предложения',
+  personalized_recommendations: 'Персонализированные рекомендации',
+  bonus_gifts_for_holidays: 'Бонусные подарки к праздникам',
+  buy_premium: 'Приобрести подписку',
+  ticket_for_payment: 'Чек на оплату',
+  premium_subscription: 'Подписка к премиум',
+  total_sum: 'Общая стоимость',
 }

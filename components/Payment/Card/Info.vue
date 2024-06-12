@@ -40,8 +40,8 @@
 <script setup lang="ts">
 interface Props {
   title: string
-  subtitle: string
   icon: string
+  subtitle?: string
   titleClass?: string
   subtitleClass?: string
   iconClass?: string
