@@ -221,4 +221,9 @@ export default {
   returned_products: 'Возвращенные товары',
   logout: 'Выйти',
   are_you_sure_to_logout: 'Вы уверены, что хотите выйти?',
+  download_more: 'Загрузить еще',
+  null: '',
+  g: 'г',
+  kg: 'кг',
+  l: 'л',
 }

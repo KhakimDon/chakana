@@ -45,8 +45,11 @@
       >
         {{ card?.name }}
       </NuxtLinkLocale>
-      <p class="mt-1.5 text-gray-100 font-medium text-xs leading-122">
-        {{ card?.weight }} {{ card?.weight_measure }}
+      <p
+        v-if="card?.product_uom_amount && card?.product_uom"
+        class="mt-1.5 text-gray-100 font-medium text-xs leading-122"
+      >
+        {{ card?.product_uom_amount }} {{ $t(card?.product_uom) }}
       </p>
     </div>
     <ClientOnly>

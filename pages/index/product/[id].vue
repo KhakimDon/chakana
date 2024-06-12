@@ -12,8 +12,11 @@
       <h1 class="text-[22px] font-bold leading-130 text-dark">
         {{ data?.name }}
       </h1>
-      <p class="text-base font-medium text-gray-100">
-        {{ data?.weight }} {{ data?.weight_measure }}
+      <p
+        v-if="data?.product_uom_amount && data?.product_uom"
+        class="text-base font-medium text-gray-100"
+      >
+        {{ data?.product_uom_amount }} {{ $t(data?.product_uom) }}
       </p>
       <div class="grid grid-cols-9 gap-5 mt-4">
         <div class="max-w-[313px] shrink-0 col-span-4">

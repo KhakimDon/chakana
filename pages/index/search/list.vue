@@ -43,7 +43,11 @@
           :title="$t('search_list_no_data_title')"
           :subtitle="$t('search_list_no_data_subtitle')"
         />
-        <BaseButton class="w-fit py-2 px-7" :text="$t('new_list')">
+        <BaseButton
+          class="w-fit py-2 px-7"
+          :text="$t('new_list')"
+          @click="openAddListModal"
+        >
           <template #prefix>
             <SvgoCommonPlus class="text-white text-xl" />
           </template>
