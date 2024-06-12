@@ -70,7 +70,7 @@
           :loading
           :text="$t('search')"
           size="md"
-          :disabled="loading || form.$v.value.$invalid"
+          :disabled="btnLoading || form.$v.value.$invalid"
           @click="add('search')"
         />
       </div>
@@ -100,6 +100,7 @@ const { t, locale } = useI18n()
 const router = useRouter()
 const listStore = useListStore()
 const loading = ref(false)
+const btnLoading = ref(false)
 const showEditor = ref(false)
 
 const clipboardData = ref()
@@ -139,10 +140,11 @@ function createCard(mode?: string) {
       form.values.created_at = new Date()
       form.values.main_name = ''
       form.values.notes = []
-      emit('update:modelValue', false)
-      listStore.getUserProductsList()
       if (mode === 'search') {
         navigateTo(`/${locale.value}/search/list-results`)
+        emit('update:modelValue', false)
+      } else {
+        listStore.getUserProductsList()
       }
     })
     .catch((err: Error) => {
@@ -168,13 +170,14 @@ function updateCard(mode?: string) {
       form.values.created_at = new Date()
       form.values.main_name = ''
       form.values.notes = []
-      emit('update:modelValue', false)
-      listStore.getUserProductsList()
       if (mode === 'search') {
         router.push({
           path: `/${locale.value}/search/list-results`,
           query: { listId: props.selectedList?.main_note_id },
         })
+        emit('update:modelValue', false)
+      } else {
+        listStore.getUserProductsList()
       }
     })
     .catch((err: Error) => {
