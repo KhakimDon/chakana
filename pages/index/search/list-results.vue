@@ -36,30 +36,38 @@
       </BaseButton>
     </div>
     <section class="w-full">
-      <div class="flex-y-center flex-wrap gap-4 my-4">
-        <div v-for="(item, key) in results?.list" :key>
-          <CommonSectionWrapper :title="item?.query" class="mt-4">
-            <Transition name="fade" mode="out-in">
-              <div
-                :key="results?.loading"
-                class="grid grid-cols-5 gap-x-4 gap-y-10"
-              >
-                <template v-if="results?.loading">
-                  <MainCardLoading v-for="key in 8" :key />
-                </template>
-                <template v-else-if="!results?.loading && results?.list.length">
+      <div v-if="results.loading">
+        <div v-for="i in 2" :key="i" class="space-y-5 mt-6">
+          <div class="h-10 rounded-10 w-28 shimmer"></div>
+          <div class="grid grid-cols-5 gap-x-4 gap-y-10">
+            <MainCardLoading v-for="key in 8" :key />
+          </div>
+        </div>
+      </div>
+      <Transition name="fade" mode="out-in">
+        <div
+          v-if="results?.list?.length && !results?.loading"
+          class="flex-y-center flex-wrap gap-4 my-4"
+        >
+          <div v-for="(item, key) in results?.list" :key class="mt-2">
+            <CommonSectionWrapper :title="item?.query">
+              <Transition name="fade" mode="out-in">
+                <div
+                  :key="results?.loading"
+                  class="grid grid-cols-5 gap-x-4 gap-y-10"
+                >
                   <MainCard
                     v-for="(card, index) in item?.products"
                     :key="index"
                     :card
                     @open="selectProduct(card)"
                   />
-                </template>
-              </div>
-            </Transition>
-          </CommonSectionWrapper>
+                </div>
+              </Transition>
+            </CommonSectionWrapper>
+          </div>
         </div>
-      </div>
+      </Transition>
       <Transition name="fade" mode="out-in">
         <div
           v-if="!results?.list?.length && !results?.loading"
