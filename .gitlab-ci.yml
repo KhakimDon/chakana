@@ -2,11 +2,12 @@ before_script:
   - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
 
 stages:
-  - build_dev
+  - build
+  - deploy_prod
   - deploy_dev
 
 build_image:
-  stage: build_dev
+  stage: build
   image: registry.uicgroup.tech/devops/docker:dind
   before_script:
     - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
@@ -30,3 +31,28 @@ deploy:
     - dev
   tags: 
     - main
+
+build_image_prod:
+  stage: build
+  image: registry.uicgroup.tech/devops/docker:dind
+  before_script:
+    - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
+  script:
+    - make vars-input KEYS=$DEV_KEYS
+    - make build-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=prod
+    - make push-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=prod
+  only:
+    - master
+    
+deploy_to_prod:
+  stage: deploy_prod
+  image: registry.uicgroup.tech/devops/docker:dind
+  script:
+    - ssh mlwktddj@192.168.15.44 "docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD"
+    - ssh mlwktddj@192.168.15.44 "docker pull registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID"
+    - ssh mlwktddj@192.168.15.44 "docker rm -f xolodilnik-frontend"
+    - ssh mlwktddj@192.168.15.44 "docker run --name xolodilnik-frontend -d -p 3888:3000 --restart always registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:$CI_PIPELINE_IID"
+  only:
+    - master
+  tags: 
+    - 228_server

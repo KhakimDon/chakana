@@ -7,17 +7,50 @@
       <NuxtPage />
     </NuxtLayout>
     <LayoutAuthModal v-model="authStore.showAuth" />
+    <CommonLoading v-if="loading" />
   </div>
 </template>
 <script setup lang="ts">
+import { load } from '@fingerprintjs/fingerprintjs'
+
 import { useAuthStore } from '~/store/auth'
 
 const authStore = useAuthStore()
+
+const loading = ref(true)
 
 const tokens = computed(() => authStore.getTokens())
 
 if (tokens.value?.access) {
   authStore.fetchUser()
+}
+
+const fingerprint = useCookie('fingerprint')
+
+if (!fingerprint.value) {
+  let fpPromise
+
+  if (process.client) {
+    fpPromise = load()
+  }
+
+  const fp = ref()
+
+  fpPromise
+    .then((fp) => fp.get())
+    .then((result) => (fp.value = result.visitorId))
+    .then(() => {
+      fingerprint.value = fp.value
+    })
+    .finally(() =>
+      useApi()
+        .$get('get/device')
+        .then(() => {
+          window.location.reload()
+        })
+    )
+} else {
+  loading.value = false
 }
 
 useSeoMeta({

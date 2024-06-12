@@ -5,7 +5,6 @@ FROM node:18.20-alpine3.19
 RUN npm install pm2 -g
 
 # Set the working directory in the container
-# WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
 

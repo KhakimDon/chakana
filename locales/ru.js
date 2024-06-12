@@ -169,8 +169,6 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
-<<<<<<< HEAD
-  reorder: 'Повторить заказ',
   address_delivery: 'Адрес доставки',
   home: 'Дом',
   other_address: 'Заказать на другой адрес',
@@ -183,8 +181,6 @@ export default {
   name_address: 'Называние адреса',
   enter_name: 'Введите название',
   enter_icon: 'Выбрать иконку',
-=======
->>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
   order_statuses: {
     accepted: 'Заказ принято',
     accepted_description: 'Заказ принят, товар скоро заберут со склада.',
@@ -198,20 +194,6 @@ export default {
   write_to_courier: 'Написать курьеру',
   enter_text: 'Введите текст',
   send: 'Отправить',
-<<<<<<< HEAD
-=======
-  address_delivery: 'Адрес доставки',
-  home: 'Дом',
-  other_address: 'Заказать на другой адрес',
-  specify_your_delivery_address: 'Укажите ваш адрес доставки',
-  no_address: 'У вас еще не добавлено ни одного адреса',
-  add_address: 'Добавить адресс',
-  map_modal_desc:
-    'Так как Холодильник возит всё очень быстро со своих собственных складов, ассортимент в вашем районе может отличаться.',
-  select_icon: 'Иконка адреса',
-  name_address: 'Называние адреса',
-  enter_name: 'Введите название',
-  enter_icon: 'Выбрать иконку',
   promo_badge: 'Иcпользуется {text}',
   promo_code: 'Промокод',
   card_price: 'Баланс: {price} UZS',
@@ -239,5 +221,4 @@ export default {
   returned_products: 'Возвращенные товары',
   logout: 'Выйти',
   are_you_sure_to_logout: 'Вы уверены, что хотите выйти?',
->>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
 }
