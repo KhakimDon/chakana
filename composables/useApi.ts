@@ -1,4 +1,5 @@
 // @ts-ignore
+import { load } from '@fingerprintjs/fingerprintjs'
 import { isJwtExpired } from 'jwt-check-expiration'
 import { NitroFetchRequest } from 'nitropack'
 import { FetchOptions } from 'ofetch'
@@ -9,6 +10,7 @@ export const useApi = (apiUrl?: string) => {
   const authStore = useAuthStore()
   const baseURL = apiUrl || (import.meta.env.VITE_API_BASE_URL as string)
   const loading = ref(false)
+  const fingerprint = useCookie('fingerprint')
   async function $service<T = unknown>(
     endpoint: NitroFetchRequest,
     options?: FetchOptions
@@ -16,7 +18,7 @@ export const useApi = (apiUrl?: string) => {
     const headers = {
       ...options?.headers,
       'Accept-Language': useCookie('i18n_redirected').value || 'ru',
-      'Device-Id': 'asdkjasjknd',
+      'Device-Id': fingerprint.value,
     }
     const tokens = computed(() => authStore.getTokens())
     if (tokens.value?.refresh) {
@@ -42,6 +44,7 @@ export const useApi = (apiUrl?: string) => {
         // await authStore.refreshToken()
       }
     }
+
     if (tokens.value?.access) {
       Object.assign(headers, {
         Authorization: 'Bearer ' + tokens.value.access,
