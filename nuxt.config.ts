@@ -7,7 +7,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  ssr: true,
+  ssr: false,
   app: {
     head: {
       title: 'Холодильник Онлайн',
@@ -27,6 +27,12 @@ export default defineNuxtConfig({
         {
           rel: 'preconnect',
           href: 'https://xolodilnik.uz',
+        },
+      ],
+      script: [
+        {
+          src: '//code.jivosite.com/widget/ri5Jw2oMql',
+          async: true,
         },
       ],
     },
@@ -53,7 +59,6 @@ export default defineNuxtConfig({
         ],
       },
     ],
-    '@pinia-plugin-persistedstate/nuxt',
     '@nuxt/image',
   ],
 

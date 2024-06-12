@@ -1,5 +1,6 @@
 <template>
   <div>
+    <
     <div class="flex-center-between mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
         {{ $t('my_cards') }}
@@ -14,6 +15,7 @@
         {{ $t('add_card') }}
       </button>
     </div>
+    >
     <Transition name="fade" mode="out-in">
       <div :key="cards.loading" class="grid grid-cols-2 gap-5">
         <template v-if="cards.loading">

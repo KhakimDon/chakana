@@ -39,12 +39,16 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
+import { useCartOrderStore } from '~/store/cart_order.js'
+
 interface Props {
   modelValue: boolean
   showFreeDelivery?: boolean
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -56,7 +60,6 @@ const selectedInterval = ref('nearest_2_hours')
 
 function generateIntervals() {
   const now = new Date()
-  console.log('now', now)
   const intervals = []
 
   let currentHour = now.getHours()
@@ -64,7 +67,7 @@ function generateIntervals() {
 
   // Adjust to the next 2-hour interval
   if (currentMinute > 0) {
-    currentHour += 1
+    currentHour += 3
   }
   currentHour -= currentHour % 2
   currentMinute = 0
@@ -100,8 +103,27 @@ function generateIntervals() {
 
   return intervals
 }
+
+function getCurrentDateTimeISO(date: any) {
+  return date.format().slice(0, -6)
+}
+
+const orderCartStore = useCartOrderStore()
 function add() {
-  console.log('selectedInterval', selectedInterval.value)
+  if (selectedInterval.value === 'nearest_2_hours') {
+    const now = dayjs()
+    now.add(2, 'hours')
+    orderCartStore.orderDetail.when_to_deliver = getCurrentDateTimeISO(
+      now.add(2, 'hours')
+    )
+  } else {
+    const now = dayjs()
+    now.set('hours', Number(selectedInterval.value.split(':')[0]))
+    orderCartStore.orderDetail.when_to_deliver = getCurrentDateTimeISO(
+      now.set('hours', Number(selectedInterval.value.split(':')[0]))
+    )
+  }
+  emit('update:modelValue', false)
 }
 
 const intervals = ref()

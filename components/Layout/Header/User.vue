@@ -10,7 +10,7 @@
           v-if="user?.image"
           :src="user?.image"
           alt="user"
-          class="w-full h-full"
+          class="w-full h-full rounded-full"
         />
         <img
           v-else

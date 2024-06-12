@@ -73,6 +73,7 @@ const isShowSuggestions = computed(() => {
   )
 })
 const clickAutocompleteItem = (text: string) => {
+  searchStore.saveSearch(text)
   router.push({ query: { query: text } })
   searchStore.autoCompleteItemClicked = true
 }

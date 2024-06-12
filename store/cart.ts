@@ -1,31 +1,44 @@
 import { defineStore } from 'pinia'
 
-export const useCartStore = defineStore('cartStore', {
-  state: () => {
-    return {
-      products: [],
+export const useCartStore = defineStore('cartStore', () => {
+  const products = ref<any[]>([])
+  const cartProductsLoading = ref(false)
+
+  function getCartProducts() {
+    return new Promise((resolve, reject) => {
+      cartProductsLoading.value = true
+      useApi()
+        .$get(`/cart/products/mobile`, {})
+        .then((res: any) => {
+          products.value = res
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+        .finally(() => {
+          cartProductsLoading.value = false
+        })
+    })
+  }
+
+  function addToCart(product: any, quantity: number) {
+    if (quantity === 0) {
+      products.value = products.value?.filter((p) => p.id !== product.id)
+    } else if (products.value?.find((p) => p?.id === product.id)) {
+      products.value.find((p) => p?.id === product.id).quantity = quantity
+    } else {
+      products.value?.push({
+        ...product,
+        quantity,
+      })
     }
-  },
-  actions: {
-    addToCart(payload: any) {
-      if (this.products.find((product) => product?.id === payload?.id)) {
-        return
-      }
-      this.products.push(payload)
-    },
-    updateToCart(payload: any) {
-      const product = this.products.find(
-        (product) => product?.id === payload?.id
-      )
-      if (product) {
-        product.cart_count = payload.cart_count
-      }
-    },
-    removeFromCart(id: any) {
-      this.products = this.products.filter(
-        (product) => Number(product?.id) !== Number(id)
-      )
-    },
-  },
-  persist: true,
+  }
+
+  return {
+    products,
+    cartProductsLoading,
+    getCartProducts,
+    addToCart,
+  }
 })

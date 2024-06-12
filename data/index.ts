@@ -118,3 +118,31 @@ export const brands = [
     link: 'https://toxtaniyoz.uz/',
   },
 ]
+
+export const shareData = [
+  {
+    id: 1,
+    title: 'twitter',
+    image: '/images/fake/twitter.svg',
+  },
+  {
+    id: 1,
+    title: 'telegram',
+    image: '/images/fake/telegram.svg',
+  },
+  {
+    id: 1,
+    title: 'facebook',
+    image: '/images/fake/facebook.svg',
+  },
+  {
+    id: 1,
+    title: 'whatsapp',
+    image: '/images/fake/whatsapp.svg',
+  },
+  {
+    id: 1,
+    title: 'copy-link',
+    image: '/images/fake/copy-link.svg',
+  },
+]
