@@ -153,6 +153,19 @@ export const useSearchStore = defineStore('searchStore', () => {
     })
   }
 
+  function saveSearch(search: string) {
+    return new Promise((resolve, reject) => {
+      useApi()
+        .$post(`/search/save?query=${search}`)
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   return {
     products,
     searchProducts,
@@ -169,5 +182,6 @@ export const useSearchStore = defineStore('searchStore', () => {
     autoCompleteItemClicked,
     searchAddressList,
     searchAddress,
+    saveSearch,
   }
 })

@@ -35,6 +35,7 @@ onMounted(() => {
   searchStore.searchPopular()
 })
 const clickBadge = (text: string) => {
+  searchStore.saveSearch(text)
   router.push({ query: { query: text } })
 }
 </script>
