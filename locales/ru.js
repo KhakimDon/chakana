@@ -108,6 +108,7 @@ export default {
     'Введите список вручную или поставьте текст из буффера обмена',
   delivered: 'Доставленный',
   canceled: 'Отменено',
+  reorder: 'Повторить заказ',
   apply: 'Применить',
   codeword: 'Кодовое слово',
   enter_codeword: 'Введите кодовое слово',
@@ -168,6 +169,7 @@ export default {
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
+<<<<<<< HEAD
   reorder: 'Повторить заказ',
   address_delivery: 'Адрес доставки',
   home: 'Дом',
@@ -181,6 +183,8 @@ export default {
   name_address: 'Называние адреса',
   enter_name: 'Введите название',
   enter_icon: 'Выбрать иконку',
+=======
+>>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
   order_statuses: {
     accepted: 'Заказ принято',
     accepted_description: 'Заказ принят, товар скоро заберут со склада.',
@@ -194,4 +198,46 @@ export default {
   write_to_courier: 'Написать курьеру',
   enter_text: 'Введите текст',
   send: 'Отправить',
+<<<<<<< HEAD
+=======
+  address_delivery: 'Адрес доставки',
+  home: 'Дом',
+  other_address: 'Заказать на другой адрес',
+  specify_your_delivery_address: 'Укажите ваш адрес доставки',
+  no_address: 'У вас еще не добавлено ни одного адреса',
+  add_address: 'Добавить адресс',
+  map_modal_desc:
+    'Так как Холодильник возит всё очень быстро со своих собственных складов, ассортимент в вашем районе может отличаться.',
+  select_icon: 'Иконка адреса',
+  name_address: 'Называние адреса',
+  enter_name: 'Введите название',
+  enter_icon: 'Выбрать иконку',
+  promo_badge: 'Иcпользуется {text}',
+  promo_code: 'Промокод',
+  card_price: 'Баланс: {price} UZS',
+  use_balance: 'Использовать баланс',
+  active_price: 'Активен от минимум {price}',
+  apply_new_promo_code: 'Использовать новый промокод',
+  enter_code: 'Введите кодовое слово',
+  code: 'Кодовое слова',
+  no_promo_codes_yet: 'Нет промокодов',
+  its_clear: 'Понятно',
+  all_discounts_info:
+    'Общая сумма вашего заказа была изменена из-за весовых изменений.',
+  total: 'Итого',
+  payment_system: 'Платежные системы',
+  courier_card: 'Картой курьеру',
+  payment_via_card: 'Оплата картой',
+  order_created: 'Заказ успешно принят',
+  order_not_created: 'Произошла ошибка',
+  credit_card: 'Оплата с картой',
+  count: '{count} шт.',
+  get_your_order: 'Получите ваш товар)',
+  how_the_order: 'Как вам заказ?',
+  your_balance: 'Ваш баланс',
+  fill_balance: 'Пополнить баланс',
+  returned_products: 'Возвращенные товары',
+  logout: 'Выйти',
+  are_you_sure_to_logout: 'Вы уверены, что хотите выйти?',
+>>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
 }

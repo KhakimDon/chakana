@@ -11,29 +11,78 @@
         <template v-else>
           <CommonNoData class="col-span-4" />
         </template>
+        <template v-if="loadingMore">
+          <MainCardLoading v-for="key in 12" :key />
+        </template>
       </div>
     </Transition>
+    <div
+      v-if="params?.count > list?.length && !loading && !loadingMore"
+      ref="target"
+    />
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
+
 import { useCategoriesStore } from '~/store/categories'
+import { debounce } from '~/utils/functions/common'
 
 const categoriesStore = useCategoriesStore()
 const route = useRoute()
 
 const loading = ref(true)
+const loadingMore = ref(false)
+const params = reactive({
+  page: 1,
+  page_size: 24,
+  count: 0,
+})
+
 const list = ref()
+const categories = computed(() => {
+  if (route.query.categories?.length) {
+    return [...route.query.categories?.split(',')?.map((id) => Number(id))]
+  } else {
+    return [Number(route.params.slug)]
+  }
+})
 
-useApi()
-  .$get(`/products/${route.params.slug}?page=1&page_size=20`)
-  .then((res: any) => {
-    list.value = res.items
-  })
-  .finally(() => {
-    loading.value = false
-  })
+function fetchData(force = true) {
+  if (force) {
+    loading.value = true
+    params.page = 1
+  } else {
+    params.page += 1
+    loadingMore.value = true
+  }
+  useApi()
+    .$post(`/products/category`, {
+      params: {
+        page: params.page,
+        page_size: params.page_size,
+      },
+      body: {
+        ids: categories.value,
+      },
+    })
+    .then((res: any) => {
+      if (force) {
+        list.value = res.items
+      } else {
+        list.value = [...list.value, ...res.items]
+      }
+      params.count = res.count
+    })
+    .finally(() => {
+      loadingMore.value = false
+      loading.value = false
+    })
+}
 
-// ToDo: convert to useAsyncData and use seo meta
+fetchData()
+
+// ToDo: convert to useAsyncData and use seo meta with one request
 function getSingle() {
   useApi()
     .$get(`category/${route.params.slug}`)
@@ -43,11 +92,30 @@ function getSingle() {
 }
 getSingle()
 
-// useSeoMeta({
-//   title: data.value?.name,
-//   description: 'Xolodilnik - Xolodilnik',
-//   ogTitle: data.value?.name,
-//   twitterTitle: data.value?.name,
-//   twitterCard: 'summary',
-// })
+const target = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  if (isIntersecting) {
+    fetchData(false)
+  }
+})
+
+watch(
+  () => categories?.value,
+  () => {
+    debounce('fetch-categories', () => fetchData(), 500)
+  }
+)
+
+const { data } = await useAsyncData<any>('single', () =>
+  useApi().$get(`category/${route.params.slug}`)
+)
+
+useSeoMeta({
+  title: data.value?.name,
+  description: data.value?.name,
+  ogTitle: data.value?.name,
+  twitterTitle: data.value?.name,
+  twitterCard: 'summary',
+})
 </script>

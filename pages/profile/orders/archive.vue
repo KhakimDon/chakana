@@ -24,4 +24,8 @@ const orderStore = useOrderStore()
 
 const orders = computed(() => orderStore.orders.archive)
 orderStore.fetchOrders('archive')
+
+definePageMeta({
+  page: 'archive',
+})
 </script>

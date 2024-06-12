@@ -18,7 +18,11 @@
             v-model="search"
             :no-search-icon="false"
             :no-clear="false"
+<<<<<<< HEAD
             placeholder="Search"
+=======
+            placeholder="Se$arch"
+>>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
             :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
@@ -149,10 +153,7 @@ import {
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
-import { useMainStore } from '~/store/main.js'
-import { useSearchStore } from '~/store/search.js'
-
-const router = useRouter()
+import { useAddressStore } from '~/store/address.js'
 
 interface Props {
   openModal?: boolean
@@ -165,14 +166,12 @@ interface Emits {
 
 defineProps<Props>()
 const $emit = defineEmits<Emits>()
-
-const seachStore = useSearchStore()
-const store = useMainStore()
+const addressStore = useAddressStore()
 const { handleError } = useErrorHandling()
 const { showToast } = useCustomToast()
 
-const searchAddressList = computed(() => seachStore.searchAddressList.list)
-const addressClick = computed(() => store.addressMap.list)
+const searchAddressList = computed(() => addressStore.searchAddressList.list)
+const addressClick = computed(() => addressStore.addressMap.list)
 
 const buttonLoading = ref<boolean>(false)
 const coordinates = ref([41.377541, 69.237922])
@@ -183,6 +182,7 @@ const search = ref<string>('')
 const isFocus = ref<boolean>(false)
 const openSearchList = ref<boolean>(false)
 const nameAddress = ref<string>('')
+const error = ref<boolean>(false)
 
 const settings = {
   apiKey: CONFIG.YANDEX_KEY,
@@ -200,7 +200,7 @@ const setLocation = async (event: any) => {
   const coords = event.get('coords')
   coordinates.value = coords
   coordinates.value = coords
-  store.fetchAddress(coords[0], coords[1])
+  addressStore.fetchAddress(coords[0], coords[1])
 }
 
 const addAddress = () => {
@@ -213,7 +213,7 @@ const addAddress = () => {
 
 const searchQuery = (e: string) => {
   search.value = e
-  seachStore.searchAddress(search.value)
+  addressStore.searchAddress(search.value)
   openSearchList.value = true
 }
 
@@ -256,9 +256,15 @@ function sendAddress() {
 }
 
 watch(
+<<<<<<< HEAD
   () => search.value || selectIcons.value || nameAddress.value,
   (val) => {
     if (val) {
+=======
+  () => selectIcons.value,
+  () => {
+    if (search.value) {
+>>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
       error.value = false
     } else {
       error.value = true

@@ -4,7 +4,7 @@
       <slot name="left" />
     </aside>
     <div v-if="hasFixed" class="col-span-2" />
-    <section class="col-span-7 ml-5">
+    <section class="col-span-7">
       <slot />
     </section>
     <aside class="col-span-3">

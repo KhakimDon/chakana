@@ -100,6 +100,7 @@ const variants: Record<TButtonVariants, string> = {
   secondary:
     'bg-white-100 text-dark md:hover:bg-white md:hover:border-orange md:hover:text-orange',
   'secondary-dark': 'bg-gray-200 text-dark md:hover:bg-gray-300',
+  transparent: 'bg-white/20 hover:bg-white/30 text-white',
 }
 
 const sizes: Record<TButtonSizes, string> = {
