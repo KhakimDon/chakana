@@ -18,8 +18,11 @@
         >
           {{ product?.name }}
         </NuxtLinkLocale>
-        <p class="text-xs font-medium leading-130 text-gray-400">
-          {{ product?.weight }} {{ product?.weight_measure }}
+        <p
+          v-if="product?.product_uom_amount && product?.product_uom"
+          class="mt-1.5 text-gray-100 font-medium text-xs leading-122"
+        >
+          {{ product?.product_uom_amount }} {{ $t(product?.product_uom) }}
         </p>
       </div>
     </div>

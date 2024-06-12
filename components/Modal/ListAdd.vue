@@ -135,13 +135,16 @@ function createCard(mode?: string) {
         notes: form.values.notes,
       },
     })
-    .then(() => {
+    .then((res: any) => {
       form.$v.value.$reset()
       form.values.created_at = new Date()
       form.values.main_name = ''
       form.values.notes = []
       if (mode === 'search') {
-        navigateTo(`/${locale.value}/search/list-results`)
+        router.push({
+          path: `/${locale.value}/search/list-results`,
+          query: { listId: res?.main_note_id },
+        })
         emit('update:modelValue', false)
       } else {
         listStore.getUserProductsList()

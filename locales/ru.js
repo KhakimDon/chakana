@@ -222,4 +222,8 @@ export default {
   logout: 'Выйти',
   are_you_sure_to_logout: 'Вы уверены, что хотите выйти?',
   download_more: 'Загрузить еще',
+  null: '',
+  g: 'г',
+  kg: 'кг',
+  l: 'л',
 }

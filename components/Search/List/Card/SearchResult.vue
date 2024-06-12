@@ -19,6 +19,9 @@
             :loading
             :disabled="loading"
             variant="secondary"
+            :class="{
+              'md:!border-transparent': loading,
+            }"
             @click="getProductsByQuery(item?.query)"
           >
             <template #prefix>
