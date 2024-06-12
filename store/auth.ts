@@ -13,7 +13,6 @@ interface IState {
   refreshToken?: string | null
   userFetched: boolean
 }
-
 export const useAuthStore = defineStore('authStore', {
   state: (): IState => ({
     user: {} as IProfileUser,
