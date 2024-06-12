@@ -140,9 +140,4 @@ export const shareData = [
     title: 'whatsapp',
     image: '/images/fake/whatsapp.svg',
   },
-  {
-    id: 1,
-    title: 'copy-link',
-    image: '/images/fake/copy-link.svg',
-  },
 ]

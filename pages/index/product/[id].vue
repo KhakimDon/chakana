@@ -249,6 +249,19 @@
         >
           <img :src="item.image" alt="" class="p-1.5 bg-orange/10 rounded-lg" />
         </div>
+        <div
+          class="border border-white-100 p-1.5 rounded-xl cursor-pointer relative"
+          @click="copyUrl"
+        >
+          <img
+            src="/images/fake/copy-link.svg"
+            alt=""
+            class="p-1.5 bg-orange/10 rounded-lg"
+          />
+          <CommonTooltip with-trigger :show="copied">{{
+            $t('copied')
+          }}</CommonTooltip>
+        </div>
       </div>
     </BaseModal>
   </div>
@@ -284,6 +297,15 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
   25,
   true
 )
+
+const copied = ref(false)
+async function copyUrl() {
+  copied.value = true
+  await navigator.clipboard.writeText(window.location.href)
+  setTimeout(() => {
+    copied.value = false
+  }, 1500)
+}
 
 const thumbSettings = {
   slidesPerView: 'auto',
@@ -357,7 +379,7 @@ const savedProducts = () => {
       if (res.saved) {
         saved.value = res.saved
       } else {
-        saved.value = res.saved
+        saved.value = false
       }
     })
     .catch((err) => {
