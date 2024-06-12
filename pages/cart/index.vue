@@ -117,6 +117,7 @@
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
 
+import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useMainStore } from '~/store/main.js'
@@ -138,8 +139,16 @@ const loading = computed(() => cartStore.cartProductsLoading)
 const goBack = () => {
   router.back()
 }
+
+const authStore = useAuthStore()
+
+const token = computed(() => authStore.accessToken)
 const goToPayment = () => {
-  router.push(`/${locale.value}/cart/payment`)
+  if (token.value) {
+    router.push(`/${locale.value}/cart/payment`)
+  } else {
+    authStore.showAuth = true
+  }
 }
 
 const cartDetails = computed(() => orderCartStore.cart.detail)
