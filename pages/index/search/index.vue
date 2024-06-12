@@ -29,24 +29,7 @@
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
-    <section v-if="products.loading && search" class="my-5 space-y-3">
-      <div
-        v-for="key in 10"
-        :key
-        class="w-full flex gap-2 items-center rounded-10 p-2 border border-white-100 bg-white"
-      >
-        <div
-          class="border bg-white shrink-0 border-white-100 w-16 relative h-[52px] rounded-10 px-0.5 shimmer"
-        />
-        <div class="flex items-center justify-between w-full gap-3">
-          <div class="space-y-1 w-full">
-            <div class="h-7 w-3/4 shimmer rounded-10"></div>
-            <div class="h-5 w-10 shimmer rounded-10"></div>
-          </div>
-          <div class="h-10 w-24 shimmer rounded-10"></div>
-        </div>
-      </div>
-    </section>
+    <SearchCardLoading v-if="products.loading && search" :count="10" />
     <section
       v-else-if="products.list?.length && search && !products.loading"
       class="my-5"
@@ -78,24 +61,7 @@
       <SearchSectionNewProducts />
     </section>
     <template v-if="products?.params?.loading">
-      <div class="my-5 space-y-3">
-        <div
-          v-for="key in 5"
-          :key
-          class="w-full flex gap-2 items-center rounded-10 p-2 border border-white-100 bg-white"
-        >
-          <div
-            class="border bg-white shrink-0 border-white-100 w-16 relative h-[52px] rounded-10 px-0.5 shimmer"
-          />
-          <div class="flex items-center justify-between w-full gap-3">
-            <div class="space-y-1 w-full">
-              <div class="h-7 w-3/4 shimmer rounded-10"></div>
-              <div class="h-5 w-10 shimmer rounded-10"></div>
-            </div>
-            <div class="h-10 w-24 shimmer rounded-10"></div>
-          </div>
-        </div>
-      </div>
+      <SearchCardLoading :count="5" />
     </template>
   </div>
 </template>
