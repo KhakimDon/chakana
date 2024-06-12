@@ -1,18 +1,17 @@
 <template>
   <BaseModal
-    v-bind="{ show }"
+    :model-value="show"
     body-class="!max-w-[424px]"
     :title="$t('address_delivery')"
     disable-outer-close
     @close="$emit('close')"
   >
     <div v-if="list.length">
-      <div class="flex items-center gap-4">
-        <CartCardAdress v-bind="{ list }" />
+      <div class="grid grid-cols-2 gap-4 overflow-y-scroll max-h-[230px]">
+        <CartCardAdress v-bind="{ list }" @handle-address="handleAddress" />
       </div>
       <BaseButton
         class="mt-6 w-full group"
-        :loading="false"
         :text="$t('other_address')"
         variant="secondary"
         @click="$emit('openMapModal')"
@@ -28,20 +27,15 @@
         :loading="false"
         :text="$t('confirm')"
         variant="primary"
-        @click="$emit('close')"
+        @click="$emit('handle-address', addressItem)"
       >
       </BaseButton>
     </div>
     <div v-else>
-      <div class="mx-auto flex-center mt-[45px]">
-        <img src="/images/svg/nodatamap.svg" alt="NodataMap" />
-      </div>
-      <p class="text-center text-dark font-semibold leading-130 mt-3 mb-[45px]">
-        {{ $t('no_address') }}
-      </p>
+      <NoDataMap />
       <BaseButton
         class="mt-4 w-full group"
-        :loading="false"
+        :loading="buttonLoading"
         :text="$t('add_address')"
         variant="primary"
         @click="$emit('openMapModal')"
@@ -59,16 +53,25 @@
 <script setup lang="ts">
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconPlus from '~/assets/icons/Common/plus.svg'
+import NoDataMap from '~/components/Common/NoData/NoDataMap.vue'
 
 interface Props {
-  show?: boolean
+  show: boolean
   list?: any
+  buttonLoading?: boolean
 }
 
-const addressIdx = ref(0)
+interface Emits {
+  (e: 'close', v: boolean): void
+  (e: 'open-map-modal', v: boolean): void
+  (e: 'handle-address', v: object): void
+}
 
-const handleAddress = (index: number) => {
-  addressIdx.value = index
+const $emit = defineEmits<Emits>()
+const addressItem = ref(null)
+
+const handleAddress = (item: object) => {
+  addressItem.value = item
 }
 
 defineProps<Props>()

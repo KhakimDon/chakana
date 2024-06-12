@@ -18,7 +18,7 @@
             v-model="search"
             :no-search-icon="false"
             :no-clear="false"
-            placeholder="Search"
+            :placeholder="$t('enter_address')"
             :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
@@ -31,16 +31,12 @@
             >
               <ul>
                 <li
-                  v-for="item in [...searchAddressList, ...searchAddressList]"
+                  v-for="item in searchAddressList"
                   :key="item.id"
-                  class="cursor-pointer"
+                  class="cursor-pointer px-4 py-3 border border-white-100 text-dark text-sm leading-130 font-semibold last:border-b-0 hover:bg-gray-200 transition-300"
+                  @click="changeCoords(item)"
                 >
-                  <p
-                    class="px-4 py-3 border border-white-100 text-dark text-sm leading-130 font-semibold last:border-b-0 hover:bg-gray-200 transition-300"
-                    @click="changeCoords(item)"
-                  >
-                    {{ item.address }}
-                  </p>
+                  {{ item.address }}
                 </li>
               </ul>
             </div>
@@ -89,7 +85,7 @@
           class="bg-white flex items-center justify-between shadow-card w-[590px] absolute bottom-[10px] text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
         >
           <span class="max-w-[400px] truncate">{{ search }}</span>
-          <IEditCircle
+          <IconEditCircle
             class="text-white text-xl cursor-pointer"
             @click="showAddAddress = false"
           />
@@ -146,7 +142,7 @@ import {
   ymapMarker as YmapMarker,
 } from 'vue-yandex-maps'
 
-import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
+import IconEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
@@ -195,7 +191,7 @@ loadYmap({ ...settings })
 
 const { list: icons } = useListFetcher('get/icons', 10, false)
 
-const setLocation = async (event: any) => {
+const setLocation = (event: any) => {
   search.value = addressClick.value?.street
   const coords = event.get('coords')
   coordinates.value = coords

@@ -194,4 +194,5 @@ export default {
   name_address: 'Называние адреса',
   enter_name: 'Введите название',
   enter_icon: 'Выбрать иконку',
+  enter_address: 'Введите адрес...',
 }

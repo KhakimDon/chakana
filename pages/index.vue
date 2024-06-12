@@ -27,8 +27,10 @@
     <CommonModalAddressDelivery
       v-model="show"
       :list="list"
+      :button-loading="buttonLoading"
       @close="show = false"
       @open-map-modal="openMapModal"
+      @handle-address="handleAddress"
     />
     <CommonModalMap
       v-model="openModal"
@@ -47,6 +49,8 @@ const route = useRoute()
 const categoriesStore = useCategoriesStore()
 const show = ref(false)
 const openModal = ref(false)
+const { handleError } = useErrorHandling()
+const buttonLoading = ref(false)
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
 const categories = computed(() => categoriesStore.categories.list)
@@ -74,6 +78,32 @@ const changeCoords = () => {
 const openMapModal = () => {
   show.value = false
   openModal.value = true
+}
+
+const handleAddress = (item: object) => {
+  buttonLoading.value = true
+  useApi()
+    .$get(`/saved/address/${item.id}`)
+    .then((res: any) => {
+      if (res) {
+        useApi().$post(`/saved/address`, {
+          body: {
+            icon_id: res.icon_id,
+            title: res.title,
+            street: res.street,
+            zip: res.zip,
+            latitude: res.latitude,
+            longitude: res.longitude,
+          },
+        })
+      }
+    })
+    .catch((err: any) => {
+      handleError(err)
+    })
+    .finally(() => {
+      buttonLoading.value = false
+    })
 }
 
 const openSavedAddress = () => {
