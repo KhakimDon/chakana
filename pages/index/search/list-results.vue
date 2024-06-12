@@ -49,23 +49,12 @@
           v-if="results?.list?.length && !results?.loading"
           class="flex-y-center flex-wrap gap-4 my-4"
         >
-          <div v-for="(item, key) in results?.list" :key class="mt-2">
-            <CommonSectionWrapper :title="item?.query">
-              <Transition name="fade" mode="out-in">
-                <div
-                  :key="results?.loading"
-                  class="grid grid-cols-5 gap-x-4 gap-y-10"
-                >
-                  <MainCard
-                    v-for="(card, index) in item?.products"
-                    :key="index"
-                    :card
-                    @open="selectProduct(card)"
-                  />
-                </div>
-              </Transition>
-            </CommonSectionWrapper>
-          </div>
+          <SearchListCardSearchResult
+            v-for="(item, key) in results?.list"
+            :key
+            :item
+            @select="selectProduct"
+          />
         </div>
       </Transition>
       <Transition name="fade" mode="out-in">
