@@ -18,11 +18,7 @@
             v-model="search"
             :no-search-icon="false"
             :no-clear="false"
-<<<<<<< HEAD
-            placeholder="Search"
-=======
             placeholder="Se$arch"
->>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
             :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
@@ -176,7 +172,6 @@ const addressClick = computed(() => addressStore.addressMap.list)
 const buttonLoading = ref<boolean>(false)
 const coordinates = ref([41.377541, 69.237922])
 const showAddAddress = ref(false)
-const error = ref(false)
 const selectIcons = ref<number | string | { [key: string]: string | number }>()
 const search = ref<string>('')
 const isFocus = ref<boolean>(false)
@@ -256,15 +251,9 @@ function sendAddress() {
 }
 
 watch(
-<<<<<<< HEAD
-  () => search.value || selectIcons.value || nameAddress.value,
-  (val) => {
-    if (val) {
-=======
   () => selectIcons.value,
   () => {
     if (search.value) {
->>>>>>> 6cc0683c575a63be1b1143c4f65ecaa75be470b9
       error.value = false
     } else {
       error.value = true
