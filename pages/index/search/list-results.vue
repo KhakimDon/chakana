@@ -142,11 +142,21 @@ function selectProduct(product: IProduct) {
   showProduct.value = true
 }
 
+const searchByNoteAndOrderProducts = computed(
+  () => listStore.searchByNoteAndOrderProducts
+)
+
 const showCheckingList = ref(false)
 const getCheckingAgainstList = () => {
   showCheckingList.value = true
-  listStore.getUserProductsByNotesWithOrder(selectedList.value?.notes)
+  if (!searchByNoteAndOrderProducts.value?.list?.length) {
+    listStore.getUserProductsByNotesWithOrder(selectedList.value?.notes)
+  }
 }
+
+onUnmounted(() => {
+  listStore.searchByNoteProducts.list = []
+})
 </script>
 
 <style scoped></style>
