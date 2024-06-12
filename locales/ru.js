@@ -230,4 +230,10 @@ export default {
   ticket_for_payment: 'Чек на оплату',
   premium_subscription: 'Подписка к премиум',
   total_sum: 'Общая стоимость',
+  enter_amount: 'Введите сумму',
+  amount: 'Сумма',
+  payment_successful: 'Оплата прошло успешно',
+  payment_way: 'Способ пополнения',
+  commission: 'Комиссия',
+  transfer_date: 'Дата трансфера',
 }

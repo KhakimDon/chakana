@@ -8,7 +8,7 @@
     </p>
     <div class="flex items-end gap-1">
       <p class="text-lg font-bold leading-5 text-white">
-        {{ formatMoneyDecimal(1200) }}
+        {{ formatMoneyDecimal(balance) }}
       </p>
       <p class="text-xs leading-120 font-medium text-white">UZS</p>
     </div>
@@ -17,6 +17,7 @@
       class="w-full"
       variant="transparent"
       :text="$t('fill_balance')"
+      @click="fillBalanceModal = true"
     />
     <span
       class="w-[104px] h-[104px] bg-white/10 rounded-full flex-center absolute -top-6 -right-[14px]"
@@ -29,10 +30,17 @@
       alt=""
     />
     <!--    <ModalPaymentMethod model-value />-->
+    <ProfileModalFillBalance v-model="fillBalanceModal" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useBalanceStore } from '~/store/profile/balance.js'
 import { formatMoneyDecimal } from '~/utils/functions/common'
+
+const balanceStore = useBalanceStore()
+const balance = computed(() => balanceStore.balance)
+await useAsyncData('balance', () => balanceStore.fetchBalance())
+
+const fillBalanceModal = ref(false)
 </script>
-<style scoped></style>
