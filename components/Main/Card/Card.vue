@@ -119,7 +119,7 @@ const addToCart = (product: any) => {
             addingToCart.value = false
           })
       },
-      700
+      300
     )
   }
 }
