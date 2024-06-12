@@ -27,12 +27,12 @@
             </p>
           </div>
         </div>
-        <div v-if="loading" class="mt-6 max-h-96 space-y-5">
+        <div v-if="loading" class="mt-6 h-96 space-y-5">
           <div v-for="key in 5" :key class="shimmer rounded-10 h-16"></div>
         </div>
         <div
           v-else-if="cartProducts.length && !loading"
-          class="mt-6 max-h-96 overflow-y-auto"
+          class="mt-6 h-96 overflow-y-auto"
         >
           <SearchCardProduct
             v-for="(product, key) in cartProducts"
