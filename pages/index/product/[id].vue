@@ -142,6 +142,8 @@
                 v-if="data.saved || saved"
                 variant="outline"
                 class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                :loading="buttonLoading"
+                @click="savedProducts"
               >
                 <IconHeart class="text-xl text-orange" />
                 <p>{{ $t('saved_product') }}</p>
@@ -349,7 +351,11 @@ const savedProducts = () => {
       },
     })
     .then((res: any) => {
-      saved.value = res.saved
+      if (res.saved) {
+        saved.value = res.saved
+      } else {
+        saved.value = res.saved
+      }
     })
     .catch((err) => {
       handleError(err)
