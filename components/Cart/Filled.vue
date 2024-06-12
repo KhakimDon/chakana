@@ -45,6 +45,7 @@
           :product="product"
           class="!p-0"
           title-class="line-clamp-2"
+          :class="{ '!mt-5': key === 0 }"
         />
       </div>
     </div>
