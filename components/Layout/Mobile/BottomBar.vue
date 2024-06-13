@@ -14,7 +14,10 @@
         <div v-if="total > 0">
           <p class="text-white text-[10px] font-bold leading-3">
             {{ formatMoneyDecimal(totalPrice, 0) }}
-            <span class="text-white/60">{{ $t('sum') }}</span>
+            <span
+              class="text-white/60 text-white text-[10px] font-bold leading-3"
+              >{{ $t('sum') }}</span
+            >
           </p>
           <p class="text-white/60 text-[10px] font-medium leading-3">
             {{ t('cary_products', { count: total }) }}
@@ -43,9 +46,9 @@
 </template>
 
 <script setup lang="ts">
-import { formatMoneyDecimal } from '../../../utils/functions/common.js'
 import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
