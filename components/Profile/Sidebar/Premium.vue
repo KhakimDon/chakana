@@ -106,7 +106,11 @@
         </BaseButton>
       </div>
     </BaseModal>
-    <ProfileModalGetPremium v-model="subscriptionModal" :subscription />
+    <ProfileModalGetPremium
+      v-model="subscriptionModal"
+      :subscription
+      @close="premiumModal = false"
+    />
   </div>
 </template>
 

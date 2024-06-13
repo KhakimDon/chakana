@@ -1,63 +1,18 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('buy_premium')"
+    :title="$t('fill_balance')"
+    disable-outer-close
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="relative">
-      <template v-if="success">
-        <div
-          class="w-[92px] h-[92px] mx-auto flex-center rounded-full bg-[linear-gradient(180deg,_#13B541_0%,_#00992B_100%)] relative mb-6"
-        >
-          <span
-            class="rounded-full border-[3px] border-white/20 absolute inset-0 z-10 pointer-events-none"
-          ></span>
-          <SvgoCommonTick class="text-white text-[60px]" />
-        </div>
-        <h3
-          class="text-xl leading-130 font-extrabold text-dark text-center mb-2"
-        >
-          {{ formatMoneyDecimal(59900) }} UZS
-        </h3>
-        <p
-          class="text-sm font-normal leading-140 text-gray-100 text-center mb-6"
-        >
-          {{ $t('payment_successful') }}
-        </p>
-        <div class="p-4 rounded-xl bg-gray-300">
-          <div class="flex flex-col gap-3 pb-4 border-b border-gray-200 mb-4">
-            <div
-              v-for="(item, index) in infoList"
-              :key="index"
-              class="flex justify-between"
-            >
-              <p class="text-sm leading-130 font-medium text-gray-100">
-                {{ item.title }}
-              </p>
-              <div class="flex items-end gap-1">
-                <p class="text-sm leading-130 font-bold text-dark">
-                  {{ item.value }}
-                </p>
-                <span
-                  v-if="item.subValue"
-                  class="text-xs uppercase font-bold"
-                  >{{ item.subValue }}</span
-                >
-              </div>
-            </div>
-          </div>
-          <div class="flex-center-between">
-            <p class="text-base leading-130 font-extrabold text-dark">
-              {{ $t('total_sum') }}
-            </p>
-            <p
-              class="flex items-end text-xl font-extrabold leading-130 gap-1 text-green"
-            >
-              {{ formatMoneyDecimal(59900) }}
-              <span class="text-sm leading-140">UZS</span>
-            </p>
-          </div>
-        </div>
+      <template v-if="status">
+        <ProfileModalFillBalanceStatus
+          :status
+          :info="paymentInfo"
+          @back="$emit('update:modelValue', false)"
+          @again="add"
+        />
       </template>
       <template v-else>
         <div
@@ -102,7 +57,13 @@
               v-model="amount"
               v-maska="moneyMask"
               :placeholder="$t('enter_amount')"
-            />
+            >
+              <template #suffix>
+                <p class="mr-2 text-base font-medium sm:text-sm text-dark">
+                  UZS
+                </p>
+              </template>
+            </FormInput>
           </FormGroup>
           <div class="flex gap-1 mt-3">
             <button
@@ -187,9 +148,10 @@
           :providers="paymentProviders"
         />
         <BaseButton
+          :disabled="invalidForm"
           class="!py-3 w-full !mt-6"
           :loading
-          :text="$t('save')"
+          :text="$t('fill')"
           size="md"
           @click="add"
         />
@@ -208,9 +170,8 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs'
-
 import { usePaymentStore } from '~/store/payment.js'
+import { useBalanceStore } from '~/store/profile/balance.js'
 import { useCardsStore } from '~/store/profile/cards.js'
 import { useSubscriptionsStore } from '~/store/profile/subscription.js'
 import { formatMoneyDecimal, moneyMask } from '~/utils/functions/common.js'
@@ -219,38 +180,31 @@ interface Props {
   modelValue: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const { t } = useI18n()
+const { handleError } = useErrorHandling()
+
+const balanceStore = useBalanceStore()
+const balance = computed(() => balanceStore.balance)
 
 const prices = [50000, 100000, 150000]
 
 const loading = ref(false)
-const success = ref(true)
+const status = ref<'success' | 'error' | 'pending'>('error')
 const amount = ref(0)
-const balance = ref(false)
 const cardId = ref(0)
 const paymentType = ref(0)
 
-watch(
-  () => balance.value,
-  (val) => {
-    if (val) {
-      paymentType.value = 0
-      cardId.value = 0
-    }
-  }
-)
+const paymentInfo = ref({})
 
 watch(
   () => paymentType.value,
   (val) => {
     if (val) {
-      balance.value = false
       cardId.value = 0
     }
   }
@@ -260,22 +214,41 @@ watch(
   () => cardId.value,
   (val) => {
     if (val) {
-      balance.value = false
       paymentType.value = 0
     }
   }
 )
 
-const subscriptionStore = useSubscriptionsStore()
+const invalidForm = computed(
+  () => !amount.value || (!cardId.value && !paymentType.value)
+)
+
 function add() {
   // subscriptionStore.getSubscription()
   const data = {
-    card_id: cardId.value,
-    is_use_balance: balance.value,
-    provider: paymentType.value,
+    card_id: cardId.value || undefined,
+    provider: paymentType.value || undefined,
+    amount: amount.value?.replaceAll(/\s/g, ''),
   }
-  console.log(balance.value, cardId.value, paymentType.value)
-  // emit('update:modelValue', false)
+  status.value = 'error'
+  if (!invalidForm.value) {
+    loading.value = true
+    balanceStore
+      .fillBalance(data)
+      .then((res) => {
+        status.value = 'success'
+        balanceStore.fetchBalance()
+        if (res.payment_type === 'card') {
+          paymentInfo.value = res
+        }
+      })
+      .catch(() => {
+        status.value = 'error'
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  }
 }
 
 const paymentStore = usePaymentStore()
@@ -293,26 +266,15 @@ function addedCard() {
   addCardModal.value = false
   cardsStore.fetchCards()
 }
-
 cardsStore.fetchCards()
 
-const infoList = computed(() => [
-  {
-    title: t('payment_way'),
-    value: 'Paylov',
-  },
-  {
-    title: t('commission'),
-    value: '0%',
-  },
-  {
-    title: t('transfer_date'),
-    value: dayjs(new Date()).format('DD.MM.YYYY, HH:mm:ss'),
-  },
-  {
-    title: t('amount'),
-    value: formatMoneyDecimal(amount.value),
-    subValue: 'uzs',
-  },
-])
+watch(
+  () => props.modelValue,
+  () => {
+    amount.value = 0
+    cardId.value = 0
+    paymentType.value = 0
+    status.value = undefined
+  }
+)
 </script>

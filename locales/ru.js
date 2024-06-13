@@ -218,6 +218,7 @@ export default {
   how_the_order: 'Как вам заказ?',
   your_balance: 'Ваш баланс',
   fill_balance: 'Пополнить баланс',
+  fill: 'Пополнить',
   returned_products: 'Возвращенные товары',
   logout: 'Выйти',
   are_you_sure_to_logout: 'Вы уверены, что хотите выйти?',
@@ -236,4 +237,9 @@ export default {
   payment_way: 'Способ пополнения',
   commission: 'Комиссия',
   transfer_date: 'Дата трансфера',
+  try_again: 'Повторить ещё раз',
+  payment_pending: 'Оплата в ожидании',
+  payment_canceled_or_failed: 'Платеж отклонен или произошла ошибка',
+  wait_payment_systems: 'Ожидаем ответа от платежной системы',
+  you_bought_premium: 'Вы купили премиум',
 }

@@ -19,10 +19,10 @@ export const useSubscriptionsStore = defineStore('subscriptionsStore', {
           this.subscription = res[0]
         })
     },
-    getSubscription() {
+    getSubscription(data) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$get('/user-subscription/create')
+          .$post('/user-subscription/create', { body: data })
           .then((res) => {
             resolve(res)
           })

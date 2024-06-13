@@ -15,11 +15,20 @@
       </button>
     </div>
     <div class="bg-gray-300 rounded-xl">
-      <img
-        class="w-full rounded-t-xl relative z-0"
-        src="/images/profile-pattern.webp"
-        alt=""
-      />
+      <div class="relative">
+        <img
+          class="w-full rounded-t-xl relative z-0"
+          src="/images/profile-pattern.webp"
+          alt="Pattern"
+        />
+        <p
+          v-if="data?.is_premium"
+          class="px-2 py-1 rounded-full flex-y-center gap-1 text-base font-semibold leading-130 text-white absolute bottom-4 right-6 bg-orange border border-white/20"
+        >
+          <SvgoProfileSidebarCrownStroke class="text-xl leading-5 text-white" />
+          Premium
+        </p>
+      </div>
       <img
         :key="userTrigger"
         class="relative object-cover left-7 z-10 rounded-full w-[100px] h-[100px] border-4 border-gray-300 bg-gray-300 -mt-[50px]"

@@ -10,17 +10,17 @@ export const useBalanceStore = defineStore('balanceStore', {
           this.balance = res.balance
         })
     },
-    // getSubscription() {
-    //   return new Promise((resolve, reject) => {
-    //     useApi()
-    //       .$get('/user-subscription/create')
-    //       .then((res) => {
-    //         resolve(res)
-    //       })
-    //       .catch((err) => {
-    //         reject(err)
-    //       })
-    //   })
-    // },
+    fillBalance(data) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$post('/add/balance', { body: data })
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
   },
 })

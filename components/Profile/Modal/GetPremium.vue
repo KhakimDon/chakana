@@ -102,7 +102,9 @@
               {{ $t('use_balance') }}
             </p>
             <p class="text-xs leading-130 font-normal text-gray-100">
-              {{ $t('card_price', { price: formatMoneyDecimal(120000) }) }}
+              {{
+                $t('card_price', { price: formatMoneyDecimal(balanceAmount) })
+              }}
             </p>
           </div>
           <FormRadio v-if="!balance" v-model="balance" class="!p-0" />
@@ -129,7 +131,9 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth.js'
 import { usePaymentStore } from '~/store/payment.js'
+import { useBalanceStore } from '~/store/profile/balance.js'
 import { useCardsStore } from '~/store/profile/cards.js'
 import {
   type ISubscription,
@@ -146,7 +150,14 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
+  (e: 'close'): void
 }>()
+
+const { handleError } = useErrorHandling()
+const { showToast } = useCustomToast()
+const { t } = useI18n()
+
+const balanceAmount = computed(() => useBalanceStore().balance)
 
 const loading = ref(false)
 const balance = ref(false)
@@ -184,14 +195,25 @@ watch(
 )
 
 const subscriptionStore = useSubscriptionsStore()
+const authStore = useAuthStore()
 function add() {
   // subscriptionStore.getSubscription()
   const data = {
-    card_id: cardId.value,
+    card_id: cardId.value || undefined,
     is_use_balance: balance.value,
-    provider: paymentType.value,
+    provider: paymentType.value || undefined,
   }
-  console.log(balance.value, cardId.value, paymentType.value)
+  subscriptionStore
+    .getSubscription(data)
+    .then(() => {
+      showToast(t('you_bought_premium'), 'success')
+      authStore.fetchUser()
+      emit('update:modelValue', false)
+      emit('close')
+    })
+    .catch((err) => {
+      handleError(err)
+    })
   // emit('update:modelValue', false)
 }
 

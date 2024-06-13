@@ -2,8 +2,8 @@
   <LayoutWrapper>
     <template #left>
       <div class="sticky top-[86px]">
-        <ProfileSidebarPremium />
-        <ProfileSidebarMenu class="my-4" :menu />
+        <ProfileSidebarPremium v-if="!hasPremium" class="mb-4" />
+        <ProfileSidebarMenu class="mb-4" :menu />
         <button
           class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
           @click="logoutModal = true"
@@ -68,6 +68,8 @@ import { useAuthStore } from '~/store/auth.js'
 const router = useRouter()
 const localePath = useLocalePath()
 const { t } = useI18n()
+
+const hasPremium = computed(() => useAuthStore().user?.is_premium)
 
 const menu = [
   {
