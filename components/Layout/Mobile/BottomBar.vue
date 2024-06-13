@@ -3,9 +3,9 @@
     class="fixed left-0 right-0 px-10 bottom-0 h-[140px] w-full bg-gradient-to-t from-white from-80% to-transparent z-10"
   >
     <div class="flex items-center justify-between w-full mt-[52px]">
-      <div>
+      <NuxtLinkLocale to="/saved">
         <SvgoCommonHeartOutline class="text-[28px]" />
-      </div>
+      </NuxtLinkLocale>
       <NuxtLinkLocale
         to="/cart"
         class="flex-y-center px-4 h-[44px] gap-2 py-2 bg-green rounded-full text-white"
@@ -27,7 +27,10 @@
           {{ $t('basket') }}
         </p>
       </NuxtLinkLocale>
-      <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
+      <NuxtLinkLocale
+        to="/profile"
+        class="w-9 h-9 rounded-full linear-border-image cursor-pointer"
+      >
         <img
           v-if="user?.image"
           :src="user?.image"
@@ -40,7 +43,7 @@
           src="/images/default/user.png"
           alt="user-default"
         />
-      </div>
+      </NuxtLinkLocale>
     </div>
   </nav>
 </template>
