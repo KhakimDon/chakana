@@ -17,7 +17,7 @@
       />
     </section>
   </PaymentCardInfoHeader>
-  <ModalPaymentMethod v-model="openModal" />
+  <CommonModalPaymentMethod v-model="openModal" />
 </template>
 
 <script setup lang="ts">

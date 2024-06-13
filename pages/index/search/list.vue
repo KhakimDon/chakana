@@ -54,7 +54,7 @@
         </BaseButton>
       </div>
     </section>
-    <ModalListAdd v-model="addListModal" :selected-list="selectedList" />
+    <PaymentModalListAdd v-model="addListModal" :selected-list="selectedList" />
   </main>
 </template>
 

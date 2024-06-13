@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="sticky bg-white py-5 top-[69px] w-full z-10">
+    <section class="sticky bg-white py-5 w-full z-10 top-0 md:top-[69px]">
       <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
         <NuxtLinkLocale to="/" class="group">
           <IconChevron
@@ -25,14 +25,14 @@
       </div>
     </section>
 
-    <section v-if="!search">
+    <section v-if="!search" class="mb-[85px] md:mb-0">
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
     <SearchCardLoading v-if="products.loading && search" :count="10" />
     <section
       v-else-if="products.list?.length && search && !products.loading"
-      class="my-5"
+      class="my-5 mb-0 md:mb-[85px]"
     >
       <SearchCardProduct
         v-for="(product, key) in products.list"

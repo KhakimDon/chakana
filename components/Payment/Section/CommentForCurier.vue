@@ -5,7 +5,7 @@
     :title="comment ? comment : $t('courier_comment')"
     @open-details="openModal = true"
   />
-  <ModalCommentForCurier v-model="openModal" />
+  <PaymentModalCommentForCurier v-model="openModal" />
 </template>
 
 <script setup lang="ts">

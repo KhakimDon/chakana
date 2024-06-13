@@ -37,6 +37,7 @@
         :loading
         :text="$t('save')"
         size="md"
+        :disabled="form.$v.value.$invalid"
         @click="add"
       />
     </div>
@@ -47,6 +48,7 @@
 import { minLength, required } from '@vuelidate/validators'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { isValidPhone } from '~/utils/functions/common.js'
 
 interface Props {
   modelValue: boolean
@@ -67,7 +69,7 @@ const form = useForm(
   },
   {
     name: { required, minLength: minLength(3) },
-    phone: { required },
+    phone: { required, isValidPhone },
   }
 )
 

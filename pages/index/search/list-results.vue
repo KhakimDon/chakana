@@ -76,7 +76,7 @@
       :product="selectedProduct"
       @close="showProduct = false"
     />
-    <ModalListChecking
+    <PaymentModalListChecking
       v-model="showCheckingList"
       :single-list="selectedList"
       @close="showCheckingList = false"

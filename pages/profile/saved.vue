@@ -1,21 +1,3 @@
-<!--<template>-->
-<!--  <div>-->
-<!--    <div class="flex-center-between mb-4">-->
-<!--      <h1 class="text-xl font-extrabold leading-7 text-dark">-->
-<!--        {{ $t('saved_list') }}-->
-<!--      </h1>-->
-<!--      <button-->
-<!--        class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"-->
-<!--      >-->
-<!--        <SvgoCommonPlus-->
-<!--          class="text-xl leading-5 text-red transition-300 group-hover:text-orange"-->
-<!--        />-->
-<!--        {{ $t('new_list') }}-->
-<!--      </button>-->
-<!--    </div>-->
-<!--    <SearchListCard />-->
-<!--  </div>-->
-<!--</template>-->
 <template>
   <main>
     <div class="flex-center-between mb-4">
@@ -63,7 +45,7 @@
         </BaseButton>
       </div>
     </section>
-    <ModalListAdd
+    <PaymentModalListAdd
       v-model="addListModal"
       has-save
       :selected-list="selectedList"
