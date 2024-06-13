@@ -8,10 +8,7 @@
       </NuxtLinkLocale>
     </template>
     <Transition name="fade" mode="out-in">
-      <div
-        :key="loading.list"
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-10"
-      >
+      <div :key="loading.list" class="grid grid-cols-5 gap-x-4 gap-y-10">
         <template v-if="loading?.list">
           <MainCardLoading v-for="key in 16" :key />
         </template>
