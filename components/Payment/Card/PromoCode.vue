@@ -7,7 +7,7 @@
       <p class="text-sm font-bold leading-130 text-dark">{{ promo?.code }}</p>
       <div class="flex-y-center justify-end gap-2">
         <p class="text-green text-xs font-medium leading-none">
-          {{ dayjs(promo?.date).format('DD.MM.YYYY') }}
+          {{ dayjs(promo?.expire).format('DD.MM.YYYY') }}
         </p>
         <FormRadio v-if="selected" class="!p-0 max-w-[20px]" />
         <FormRadio v-else value="true" class="!p-0 max-w-[20px]" />
