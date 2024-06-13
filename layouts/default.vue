@@ -1,7 +1,11 @@
 <template>
   <div>
-    <LayoutHeader class="fixed top-0 bg-white z-10" />
-    <div class="mt-4 pb-10 mt-[86px]">
+    <LayoutHeader
+      v-if="useMobile('desktop')"
+      class="fixed top-0 bg-white z-10"
+    />
+    <LayoutHeaderMobile v-else class="fixed top-0 bg-white z-10" />
+    <div class="pb-10 md:mt-[86px]">
       <slot />
     </div>
   </div>

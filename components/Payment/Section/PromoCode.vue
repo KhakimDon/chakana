@@ -34,8 +34,14 @@
       </PaymentCardInfo>
     </section>
   </PaymentCardInfoHeader>
-  <ModalPromoCode v-model="openModal" @confirm-promo-code="selectPromoCode" />
-  <ModalDiscountDetails v-model="openDetail" :promo-code="selectedPromoCode" />
+  <PaymentModalPromoCode
+    v-model="openModal"
+    @confirm-promo-code="selectPromoCode"
+  />
+  <PaymentModalDiscountDetails
+    v-model="openDetail"
+    :promo-code="selectedPromoCode"
+  />
 </template>
 
 <script setup lang="ts">

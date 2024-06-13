@@ -9,7 +9,10 @@
     "
     @open-details="openModal = true"
   />
-  <ModalClock v-model="openModal" :show-free-delivery="showFreeDelivery" />
+  <PaymentModalClock
+    v-model="openModal"
+    :show-free-delivery="showFreeDelivery"
+  />
 </template>
 
 <script setup lang="ts">
