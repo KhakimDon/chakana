@@ -39,6 +39,7 @@ const props = defineProps<Props>()
 
 const cartOrderStore = useCartOrderStore()
 
+cartOrderStore.getCartDetail()
 cartOrderStore.getDeliveryDetail()
 
 const delivery = computed(() => cartOrderStore.delivery)

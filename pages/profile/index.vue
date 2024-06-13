@@ -98,7 +98,6 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/store/auth.js'
-import type { Profile } from '~/types/profile'
 import { formatPhoneNumber } from '~/utils/functions/common'
 
 const data = computed(() => useAuthStore().user)
