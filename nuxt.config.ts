@@ -46,6 +46,7 @@ export default defineNuxtConfig({
     'swiper/css',
   ],
   modules: [
+    '@nuxtjs/device',
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
     '@nuxtjs/i18n',
