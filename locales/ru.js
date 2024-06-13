@@ -152,7 +152,7 @@ export default {
   text_comment: 'Текст комментария',
   enter_comment: 'Введите текст комментария',
   recipient_details: 'Данные получателя',
-  interval: '{range} сегодня',
+  interval: '{range} завтра',
   nearest_2_hours: 'Ближайщие 2 часа',
   when_delivery: 'Когда доставить?',
   free_delivery_badge: 'Доставка бесплатно',
@@ -226,4 +226,5 @@ export default {
   g: 'г',
   kg: 'кг',
   l: 'л',
+  comment_limit_alert: 'Комментарий не может быть больше 10 символов',
 }
