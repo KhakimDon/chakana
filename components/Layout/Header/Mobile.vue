@@ -2,7 +2,7 @@
   <header
     v-if="!isSearchPage"
     :key="locale"
-    class="w-full border-b border-white-100 py-4"
+    class="w-full border-b border-white-100 py-4 z-20"
   >
     <div class="container flex-y-center justify-between gap-4">
       <div class="rounded-lg bg-white-100 p-1.5 shrink-0">

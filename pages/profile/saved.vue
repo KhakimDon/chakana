@@ -11,12 +11,16 @@
         <SvgoCommonPlus
           class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
         />
-        {{ $t('new_list') }}
+        <span class="hidden md:inline">{{ $t('new_list') }}</span>
       </button>
     </div>
     <section class="w-full">
       <div v-if="lists?.loading" class="flex-y-center flex-wrap gap-3 my-4">
-        <div v-for="key in 7" :key class="w-44 h-52 shimmer rounded-10"></div>
+        <div
+          v-for="key in 7"
+          :key
+          class="w-full md:w-44 h-52 shimmer rounded-10"
+        ></div>
       </div>
       <div
         v-else-if="lists?.list?.length && !lists?.loading"

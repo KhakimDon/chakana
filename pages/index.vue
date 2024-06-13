@@ -40,9 +40,11 @@
       />
     </LayoutWrapper>
     <LayoutMobile v-else>
-      <div :key="$route.name">
-        <NuxtPage />
-      </div>
+      <Transition name="fade" mode="out-in">
+        <div :key="$route.name">
+          <NuxtPage />
+        </div>
+      </Transition>
     </LayoutMobile>
   </main>
 </template>

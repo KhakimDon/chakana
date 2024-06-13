@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-fit min-h-[211px] w-44 p-3 group rounded-10 flex flex-col bg-gray-300"
+    class="h-fit min-h-[211px] w-full md:w-44 p-3 group rounded-10 flex flex-col bg-gray-300"
   >
     <div class="flex-y-center mb-3 justify-between">
       <p
