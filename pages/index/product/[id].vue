@@ -3,23 +3,33 @@
     <div>
       <MainCardBadge
         v-if="data?.discount_percentage"
-        class="px-1.5 py-1 mb-3"
+        class="px-1.5 py-1 mb-3 hidden md:flex"
         :percent="data?.discount_percentage"
         :type="data?.discount_type"
       />
-    </div>
-    <div>
-      <h1 class="text-[22px] font-bold leading-130 text-dark">
+      <div
+        class="flex items-center gap-1 text-gray-100 cursor-pointer group"
+        @click="router.back()"
+      >
+        <IconChevron
+          class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
+          @click="openDesc"
+        />
+        <p class="text-gray-100 group-hover:text-orange transition-300">
+          {{ $t('back') }}
+        </p>
+      </div>
+      <h1
+        class="text-[22px] font-bold leading-130 text-dark mb-4 hidden md:block"
+      >
         {{ data?.name }}
       </h1>
-      <p
-        v-if="data?.product_uom_amount && data?.product_uom"
-        class="text-base font-medium text-gray-100"
-      >
-        {{ data?.product_uom_amount }} {{ $t(data?.product_uom) }}
-      </p>
-      <div class="grid grid-cols-9 gap-5 mt-4">
-        <div class="max-w-[313px] shrink-0 col-span-4">
+    </div>
+    <div>
+      <div class="grid grid-cols-1 md:grid-cols-9 gap-5 mt-4">
+        <div
+          class="max-w-[100%] md:max-w-[313px] shrink-0 col-span-12 md:col-span-4"
+        >
           <div
             class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
           >
@@ -81,7 +91,24 @@
             />
           </swiper>
         </div>
-        <div class="col-span-5">
+        <div class="col-span-12 md:col-span-5">
+          <MainCardBadge
+            v-if="data?.discount_percentage"
+            class="px-1.5 py-1 mb-3 flex md:hidden"
+            :percent="data?.discount_percentage"
+            :type="data?.discount_type"
+          />
+          <h1
+            class="text-[22px] font-bold leading-130 text-dark mb-4 block md:hidden"
+          >
+            {{ data?.name }}
+          </h1>
+          <p
+            v-if="data?.product_uom_amount && data?.product_uom"
+            class="text-base font-medium text-gray-100 hidden md:flex"
+          >
+            {{ data?.product_uom_amount }} {{ $t(data?.product_uom) }}
+          </p>
           <div v-if="data?.discount_price">
             <div class="flex items-center gap-1">
               <p
@@ -149,7 +176,7 @@
                 @click="savedProducts"
               >
                 <IconHeart class="text-xl text-orange" />
-                <p>{{ $t('saved_product') }}</p>
+                <p class="hidden md:block">{{ $t('saved_product') }}</p>
               </BaseButton>
               <BaseButton
                 v-else
@@ -217,7 +244,10 @@
         <div v-if="loading?.list" class="grid grid-cols-5 gap-4">
           <MainCardLoading v-for="key in 16" :key="key" />
         </div>
-        <div v-else-if="list?.length" class="grid grid-cols-5 gap-4">
+        <div
+          v-else-if="list?.length"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+        >
           <MainCard v-for="(card, index) in list" :key="index" :card="card" />
           <!--            @open="selectProduct(card)"-->
         </div>
@@ -225,7 +255,10 @@
           <CommonNoData class="col-span-4" />
         </div>
       </Transition>
-      <div v-if="loading?.button" class="grid grid-cols-5 gap-4">
+      <div
+        v-if="loading?.button"
+        class="grid md:grid-cols-4 lg:grid-cols-5 gap-4"
+      >
         <MainCardLoading v-for="key in 12" :key="key" />
       </div>
       <div
@@ -297,6 +330,8 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
   25,
   true
 )
+
+const router = useRouter()
 
 const copied = ref(false)
 async function copyUrl() {

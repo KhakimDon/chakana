@@ -166,6 +166,7 @@ export default {
   send_notification: 'Отправить уведомления',
   choose_language: 'Выберите язык',
   go_back: 'Вернуться назад',
+  back: 'Назад',
   no_notifications_yet: 'Уведомлений пока нет',
   you_have_not_received_any_notifications:
     "You haven't received any notifications yet",
@@ -226,4 +227,5 @@ export default {
   g: 'г',
   kg: 'кг',
   l: 'л',
+  saved_products: 'Сохраненные товары',
 }
