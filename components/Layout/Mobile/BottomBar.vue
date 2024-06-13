@@ -1,0 +1,93 @@
+<template>
+  <nav
+    class="fixed left-0 right-0 px-10 bottom-0 h-[140px] w-full bg-gradient-to-t from-white from-80% to-transparent z-10"
+  >
+    <div class="flex items-center justify-between w-full mt-[52px]">
+      <div>
+        <SvgoCommonHeartOutline class="text-[28px]" />
+      </div>
+      <NuxtLinkLocale
+        to="/cart"
+        class="flex-y-center px-4 h-[44px] gap-2 py-2 bg-green rounded-full text-white"
+      >
+        <SvgoCommonCart class="text-[28px]" />
+        <div v-if="total > 0">
+          <p class="text-white text-[10px] font-bold leading-3">
+            {{ formatMoneyDecimal(totalPrice, 0) }}
+            <span class="text-white/60">{{ $t('sum') }}</span>
+          </p>
+          <p class="text-white/60 text-[10px] font-medium leading-3">
+            {{ t('cary_products', { count: total }) }}
+          </p>
+        </div>
+        <p v-else class="text-white text-[15px] font-bold leading-tight">
+          {{ $t('basket') }}
+        </p>
+      </NuxtLinkLocale>
+      <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
+        <img
+          v-if="user?.image"
+          :src="user?.image"
+          alt="user"
+          class="w-full h-full rounded-full"
+        />
+        <img
+          v-else
+          class="w-full h-full"
+          src="/images/default/user.png"
+          alt="user-default"
+        />
+      </div>
+    </div>
+  </nav>
+</template>
+
+<script setup lang="ts">
+import { formatMoneyDecimal } from '../../../utils/functions/common.js'
+import { useAuthStore } from '~/store/auth.js'
+import { useCartStore } from '~/store/cart.js'
+
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const { t } = useI18n()
+
+const cartProducts = computed(() => cartStore.products)
+
+const total = computed(() =>
+  cartProducts.value.reduce((acc, product) => acc + product?.quantity, 0)
+)
+
+const totalPrice = computed(() =>
+  cartProducts.value.reduce((acc, product) => {
+    return acc + product?.price * product?.quantity
+  }, 0)
+)
+
+const user = computed(() => authStore.user)
+</script>
+
+<style scoped>
+.linear-border-image {
+  background: radial-gradient(
+        circle at 100% 100%,
+        #ffffff 0,
+        #ffffff 17px,
+        transparent 17px
+      )
+      0% 0%/19px 19px no-repeat,
+    radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 17px, transparent 17px)
+      100% 0%/19px 19px no-repeat,
+    radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 17px, transparent 17px)
+      0% 100%/19px 19px no-repeat,
+    radial-gradient(circle at 0 0, #ffffff 0, #ffffff 17px, transparent 17px)
+      100% 100%/19px 19px no-repeat,
+    linear-gradient(#ffffff, #ffffff) 50% 50% / calc(100% - 4px)
+      calc(100% - 38px) no-repeat,
+    linear-gradient(#ffffff, #ffffff) 50% 50% / calc(100% - 38px)
+      calc(100% - 4px) no-repeat,
+    linear-gradient(#ff831b 0%, #ff3300 100%);
+  border-radius: 19px;
+  padding: 2px;
+  box-sizing: border-box;
+}
+</style>

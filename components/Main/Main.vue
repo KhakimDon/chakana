@@ -1,10 +1,15 @@
 <template>
   <div class="w-full">
     <Transition name="fade" mode="out-in">
-      <div :key="banners?.loading" class="h-[150px]">
-        <div v-if="!banners?.loading" class="grid grid-cols-2 gap-3">
+      <div :key="banners?.loading" class="h-[150px] mt-[85px] md:mt-0">
+        <div
+          v-if="!banners?.loading"
+          class="grid grid-cols-1 md:grid-cols-2 gap-3"
+        >
           <a
-            v-for="(banner, index) in banners?.list"
+            v-for="(banner, index) in useMobile('desktop')
+              ? banners?.list
+              : banners?.list.slice(0, 1)"
             :key="index"
             :href="banner?.redirect_url"
             target="_blank"
@@ -22,7 +27,7 @@
         </div>
       </div>
     </Transition>
-    <div class="w-full flex-y-center gap-2 mt-4">
+    <div v-if="useMobile('desktop')" class="w-full flex-y-center gap-2 mt-4">
       <NuxtLinkLocale to="/search" class="w-full" @click.stop>
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
       </NuxtLinkLocale>
@@ -38,7 +43,7 @@
       <Transition name="fade" mode="out-in">
         <div
           :key="discounts?.loading"
-          class="grid grid-cols-5 gap-x-4 gap-y-10"
+          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"
         >
           <template v-if="discounts?.loading">
             <MainCardLoading v-for="key in 16" :key />
@@ -62,7 +67,10 @@
     </CommonSectionWrapper>
     <CommonSectionWrapper title="profitable_shelf" class="my-6">
       <Transition name="fade" mode="out-in">
-        <div :key="products?.loading" class="grid grid-cols-5 gap-x-4 gap-y-10">
+        <div
+          :key="products?.loading"
+          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"
+        >
           <template v-if="products?.loading">
             <MainCardLoading v-for="key in 16" :key />
           </template>
