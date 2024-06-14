@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section class="mt-[85px] mb-24 space-y-6">
     <div>
       <MainCardBadge
         v-if="data?.discount_percentage"
@@ -8,7 +8,7 @@
         :type="data?.discount_type"
       />
       <div
-        class="flex items-center gap-1 text-gray-100 cursor-pointer group"
+        class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
         @click="router.back()"
       >
         <IconChevron
@@ -297,7 +297,7 @@
         </div>
       </div>
     </BaseModal>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
