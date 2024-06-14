@@ -14,7 +14,7 @@
       v-else
       class="w-full !rounded-10"
       :text="$t('go_to_registration')"
-      variant="primary"
+      variant="green"
       :disabled="cartProducts.length === 0"
       @click="goToPayment"
     />
