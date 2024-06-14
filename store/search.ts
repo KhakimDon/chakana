@@ -4,15 +4,36 @@ export const useSearchStore = defineStore('searchStore', () => {
   const products = reactive({
     list: [],
     loading: true,
+    params: {
+      page: 1,
+      page_size: 15,
+      total: 0,
+      loading: false,
+    },
   })
 
-  function searchProducts(query: string) {
+  function searchProducts(query: string, force = true) {
     return new Promise((resolve, reject) => {
-      products.loading = true
+      if (force) {
+        products.params.page = 1
+      } else {
+        products.params.page += 1
+        products.params.loading = true
+      }
       useApi()
-        .$get(`/search?query=${query}`)
+        .$get(`/search?query=${query}`, {
+          params: {
+            page_size: products.params.page_size,
+            page: products.params.page,
+          },
+        })
         .then((res: any) => {
-          products.list = res?.items
+          if (force) {
+            products.list = res?.items
+          } else {
+            products.list = products.list.concat(res?.items)
+          }
+          products.params.total = res?.count
           resolve(res)
         })
         .catch((error) => {
@@ -20,6 +41,7 @@ export const useSearchStore = defineStore('searchStore', () => {
         })
         .finally(() => {
           products.loading = false
+          products.params.loading = false
         })
     })
   }
@@ -153,6 +175,19 @@ export const useSearchStore = defineStore('searchStore', () => {
     })
   }
 
+  function saveSearch(search: string) {
+    return new Promise((resolve, reject) => {
+      useApi()
+        .$post(`/search/save?query=${search}`)
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   return {
     products,
     searchProducts,
@@ -169,5 +204,6 @@ export const useSearchStore = defineStore('searchStore', () => {
     autoCompleteItemClicked,
     searchAddressList,
     searchAddress,
+    saveSearch,
   }
 })

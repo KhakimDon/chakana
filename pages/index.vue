@@ -1,43 +1,52 @@
 <template>
-  <LayoutWrapper has-fixed>
-    <template #left>
-      <div class="w-[202px]">
-        <MainSidebar
-          :loading="categoriesLoading"
-          v-bind="{ categories, single }"
-        />
-      </div>
-    </template>
-    <Transition name="fade" mode="out-in">
-      <div :key="$route.name">
-        <NuxtPage />
-      </div>
-    </Transition>
-    <template #right>
-      <div
-        class="fixed w-[313px] top-[86px] h-[calc(100vh-100px)] overflow-y-auto"
-      >
-        <ClientOnly>
-          <MainMap @change-coords="changeCoords" />
-        </ClientOnly>
-        <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
-          <CartEmpty v-if="cartProducts.length === 0" />
-          <CartFilled v-else />
-        </Transition>
-      </div>
-    </template>
-    <CommonModalAddressDelivery
-      v-model="show"
-      :list="list"
-      @close="show = false"
-      @open-map-modal="openMapModal"
-    />
-    <CommonModalMap
-      v-model="openModal"
-      @close="openModal = false"
-      @open-saved-adress="openSavedAddress"
-    />
-  </LayoutWrapper>
+  <main>
+    <LayoutWrapper v-if="useMobile('desktop')" has-fixed>
+      <template #left>
+        <div class="w-[202px]">
+          <MainSidebar
+            :loading="categoriesLoading"
+            v-bind="{ categories, single }"
+          />
+        </div>
+      </template>
+      <Transition name="fade" mode="out-in">
+        <div :key="$route.name">
+          <NuxtPage />
+        </div>
+      </Transition>
+      <template #right>
+        <div
+          class="fixed w-[313px] top-[86px] h-[calc(100vh-100px)] overflow-y-auto"
+        >
+          <ClientOnly>
+            <MainMap @change-coords="changeCoords" />
+          </ClientOnly>
+          <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
+            <CartEmpty v-if="cartProducts.length === 0" />
+            <CartFilled v-else />
+          </Transition>
+        </div>
+      </template>
+      <CommonModalAddressDelivery
+        v-model="show"
+        :list="list"
+        @close="show = false"
+        @open-map-modal="openMapModal"
+      />
+      <CommonModalMap
+        v-model="openModal"
+        @close="openModal = false"
+        @open-saved-adress="openSavedAddress"
+      />
+    </LayoutWrapper>
+    <LayoutMobile v-else>
+      <Transition name="fade" mode="out-in">
+        <div :key="$route.name">
+          <NuxtPage />
+        </div>
+      </Transition>
+    </LayoutMobile>
+  </main>
 </template>
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'

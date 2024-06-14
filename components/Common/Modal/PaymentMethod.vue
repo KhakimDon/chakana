@@ -76,11 +76,11 @@
               </div>
             </template>
             <template v-else>
-              <CommonNoData
-                class="col-span-2"
-                :title="$t('no_cards_yet')"
-                :subtitle="$t('you_still_dont_have_cards')"
-              />
+              <p
+                class="text-center py-3 text-xs text-gray-100 font-normal leading-none"
+              >
+                {{ $t('no_cards_yet') }}
+              </p>
             </template>
           </div>
         </Transition>

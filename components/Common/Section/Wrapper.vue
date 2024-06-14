@@ -1,5 +1,6 @@
 <template>
   <div>
+    <slot name="header" />
     <div class="flex-center-between w-full mb-5" :class="headerClass">
       <div class="flex items-center gap-2 group">
         <slot name="beforeTitle" />

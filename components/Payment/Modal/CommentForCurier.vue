@@ -43,6 +43,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
+const { t } = useI18n()
+const { showToast } = useCustomToast()
 const loading = ref(false)
 
 const form = useForm(
@@ -63,6 +65,8 @@ function add() {
     orderCartStore.orderDetail.comment_to_courier = form.values.comment
     loading.value = false
     emit('update:modelValue', false)
+  } else {
+    showToast(t('comment_limit_alert'), 'error')
   }
 }
 

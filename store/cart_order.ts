@@ -193,8 +193,11 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const clearingCart = ref(false)
+
   function cartClear() {
     return new Promise((resolve, reject) => {
+      clearingCart.value = true
       useApi()
         .$post(`/cart/clear`, {})
         .then((res: any) => {
@@ -202,6 +205,9 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
         })
         .catch((error) => {
           reject(error)
+        })
+        .finally(() => {
+          clearingCart.value = false
         })
     })
   }
@@ -260,6 +266,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     getCartDiscountDetail,
     cart,
     getCartDetail,
+    clearingCart,
     cartClear,
     addToCart,
     orderDetail,

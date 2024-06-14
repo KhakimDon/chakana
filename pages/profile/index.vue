@@ -11,7 +11,7 @@
         <SvgoCommonEditPenSquare
           class="text-xl leading-5 text-gray-100 transition-300 group-hover:text-orange"
         />
-        {{ $t('edit_info') }}
+        <span class="hidden sm:inline">{{ $t('edit_info') }}</span>
       </button>
     </div>
     <div class="bg-gray-300 rounded-xl">
@@ -38,11 +38,13 @@
           <SvgoCommonEditPenSquare
             class="text-xl leading-5 text-gray-100 transition-300 group-hover:text-orange"
           />
-          {{ $t('edit_info') }}
+          <span class="hidden sm:inline">{{ $t('edit_info') }}</span>
         </button>
       </div>
     </div>
-    <div class="px-5 py-4 grid grid-cols-2 gap-4 bg-gray-300 rounded-xl mt-5">
+    <div
+      class="px-5 py-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-300 rounded-xl mt-5"
+    >
       <div class="flex flex-col gap-3">
         <p class="text-lg font-bold leading-130 text-dark">
           {{ $t('contacts') }}
@@ -98,7 +100,6 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/store/auth.js'
-import type { Profile } from '~/types/profile'
 import { formatPhoneNumber } from '~/utils/functions/common'
 
 const data = computed(() => useAuthStore().user)

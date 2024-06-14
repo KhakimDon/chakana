@@ -118,9 +118,9 @@ function add() {
     )
   } else {
     const now = dayjs()
-    now.set('hours', Number(selectedInterval.value.split(':')[0]))
+    now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     orderCartStore.orderDetail.when_to_deliver = getCurrentDateTimeISO(
-      now.set('hours', Number(selectedInterval.value.split(':')[0]))
+      now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     )
   }
   emit('update:modelValue', false)
