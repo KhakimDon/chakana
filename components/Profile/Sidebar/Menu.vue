@@ -7,6 +7,7 @@
         :to="i.link"
         class="py-2 flex items-center gap-1.5 w-full group"
         exact-active-class="active"
+        @click="$emit('menu-click', i)"
       >
         <!--        active-class="active"-->
         <span
@@ -29,14 +30,20 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 
+type MenuItem = {
+  title: string
+  link: string
+  icon: Component
+  iconClass: string
+  iconWrapperClass: string
+}
+
 interface Props {
-  menu: {
-    title: string
-    link: string
-    icon: Component
-    iconClass: string
-    iconWrapperClass: string
-  }[]
+  menu: MenuItem[]
 }
 defineProps<Props>()
+
+defineEmits<{
+  (e: 'menu-click', item: MenuItem): void
+}>()
 </script>

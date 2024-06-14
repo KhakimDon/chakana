@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="max-md:pt-4">
+    <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <h1 class="text-xl font-extrabold leading-7 text-dark mb-4">
       {{ $t('settings') }}
     </h1>
