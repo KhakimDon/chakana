@@ -1,7 +1,10 @@
 <template>
   <CommonSectionWrapper title="brands">
     <Transition name="fade" mode="out-in">
-      <div :key="brands?.loading" class="grid grid-cols-5 gap-4">
+      <div
+        :key="brands?.loading"
+        class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+      >
         <template v-if="brands?.loading">
           <MainBrandsCardLoading v-for="key in 16" :key />
         </template>
