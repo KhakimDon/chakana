@@ -28,7 +28,7 @@
       src="/images/wallet.webp"
       alt=""
     />
-    <!--    <ModalPaymentMethod model-value />-->
+    <!--    <CommonModalPaymentMethod model-value />-->
   </div>
 </template>
 

@@ -1,15 +1,22 @@
 <template>
-  <section class="space-y-5 mt-5">
-    <CartCardFreeDelivery :cart-total-price="totalCartPrice" />
-
-    <p class="text-xl font-extrabold text-dark">{{ $t('basket') }}</p>
-    <div class="space-y-5">
-      <div class="flex-y-center justify-between">
-        <p class="text-sm font-semibold leading-130 text-dark">
-          {{ t('cary_products', { count: cartProducts.length }) }}
+  <Transition name="fade" mode="out-in">
+    <div :key="$route.name">
+      <div
+        class="hidden md:flex flex-y-center gap-1 cursor-pointer"
+        @click="goBack"
+      >
+        <SvgoCommonChevron class="text-base text-gray-100" />
+        <p class="text-sm font-semibold text-gray-100">
+          {{ $t('go_back') }}
+        </p>
+      </div>
+      <div class="flex-y-center justify-between mt-3">
+        <p class="text-[22px] font-extrabold leading-7">
+          {{ $t('basket') }}
         </p>
         <div
-          class="flex-center gap-2 group cursor-pointer select-none"
+          v-if="cartProducts.length > 0"
+          class="hidden md:flex flex-center gap-2 group cursor-pointer select-none"
           :class="{ 'pointer-events-none': loading }"
           @click="clearCart"
         >
@@ -34,55 +41,59 @@
           <p
             class="text-xs font-semibold text-gray-100 group-hover:text-red transition-300"
           >
-            {{ $t('clear_all') }}
+            {{ $t('clear_basket') }}
           </p>
         </div>
       </div>
-      <div class="h-72 overflow-y-auto space-y-5">
+      <template v-if="loading">
+        <SearchCardLoading :count="5" />
+      </template>
+      <div
+        v-else-if="cartProducts.length && !loading"
+        class="mt-6 h-56 md:h-96 overflow-y-auto"
+      >
         <SearchCardProduct
           v-for="(product, key) in cartProducts"
           :key
           :product="product"
-          class="!p-0"
-          title-class="line-clamp-2"
-          :class="{ '!mt-5': key === 0 }"
+          :class="{ 'bg-gray-300/50': key % 2 === 0 }"
         />
       </div>
+      <section v-else class="my-5">
+        <CommonNoData
+          :title="$t('search_nodata_title')"
+          :subtitle="$t('search_nodata_subtitle')"
+          image="/images/no-data/no-searches.png"
+        />
+        <SearchSectionNewProducts />
+      </section>
+      <slot />
     </div>
-    <BaseButton
-      class="w-full !rounded-10"
-      :text="$t('go_to_cart')"
-      variant="primary"
-      @click="goToCart"
-    />
-  </section>
+  </Transition>
 </template>
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 
+const { locale } = useI18n()
 const router = useRouter()
-const { t, locale } = useI18n()
+
 const cartStore = useCartStore()
+const orderCartStore = useCartOrderStore()
+
 const cartProducts = computed(() => cartStore.products)
 
-const orderCartStore = useCartOrderStore()
+const goBack = () => {
+  router.push(`/${locale.value}`)
+}
+
+const loading = computed(() => cartStore.cartProductsLoading)
 
 const clearCart = () => {
   orderCartStore.cartClear().then(() => {
-    cartStore.products = []
+    cartStore.getCartProducts()
   })
-}
-
-const totalCartPrice = computed(
-  () => orderCartStore.cart?.detail?.total_price ?? 0
-)
-
-const loading = computed(() => orderCartStore.clearingCart)
-
-const goToCart = () => {
-  router.push(`/${locale.value}/cart`)
 }
 </script>
 

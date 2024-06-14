@@ -14,7 +14,7 @@
       </FormGroup>
       <div
         v-else-if="promoCodes?.list?.length && !promoCodes?.loading"
-        class="space-y-3 max-h-96 overflow-y-auto pr-3"
+        class="space-y-3 max-h-96 overflow-y-auto md:pr-3"
       >
         <div
           v-for="(promo, index) in promoCodes?.list"
@@ -30,7 +30,7 @@
             </p>
             <div class="flex-y-center justify-end gap-2">
               <p class="text-green text-xs font-medium leading-none">
-                {{ dayjs(promo?.date).format('DD.MM.YYYY') }}
+                {{ dayjs(promo?.expire).format('DD.MM.YYYY') }}
               </p>
               <FormRadio
                 v-if="selected === promo?.id"

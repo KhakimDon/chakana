@@ -2,7 +2,7 @@
   <transition name="fade" mode="out-in">
     <div
       v-if="isShowSuggestions"
-      class="absolute left-8 suggestions-shadow rounded-xl h-fit max-h-[300px] z-10 bg-white top-12 w-[calc(100%-80px)]"
+      class="absolute suggestions-shadow rounded-xl h-fit max-h-[300px] md:w-[calc(100%-80px)] md:left-8 w-full z-10 bg-white top-12"
     >
       <div class="h-[60px] p-4 border-b border-white-100">
         <p class="text-dark text-base font-bold leading-7">
@@ -73,6 +73,7 @@ const isShowSuggestions = computed(() => {
   )
 })
 const clickAutocompleteItem = (text: string) => {
+  searchStore.saveSearch(text)
   router.push({ query: { query: text } })
   searchStore.autoCompleteItemClicked = true
 }
