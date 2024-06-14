@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mt-2">
+  <div class="w-full mt-4 md:mt-2">
     <div>
       <Transition name="fade-in">
         <swiper
@@ -37,7 +37,9 @@
             loading="lazy"
           />
         </div>
-        <p class="text-[10px] text-center opacity-60">{{ item.name }}</p>
+        <p class="text-[10px] text-center opacity-60 line-clamp-2 mt-2">
+          {{ item.name }}
+        </p>
       </swiper-slide>
       <button
         v-if="!isEnd && variants?.length"
