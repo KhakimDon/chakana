@@ -65,4 +65,17 @@ useSeoMeta({
   ogImage: '/og.png',
   twitterImage: '/og.png',
 })
+
+onMounted(() => {
+  if (useMobile('desktop')) {
+    useHead({
+      script: [
+        {
+          src: '//code.jivosite.com/widget/ri5Jw2oMql',
+          async: true,
+        },
+      ],
+    })
+  }
+})
 </script>
