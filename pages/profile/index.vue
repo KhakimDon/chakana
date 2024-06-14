@@ -5,25 +5,26 @@
         {{ $t('my_infos') }}
       </h1>
       <button
+        v-if="false"
         class="flex-y-center gap-1 font-semibold text-sm text-center leading-5 text-gray-100 group transition-300 hover:text-orange"
         @click="editModal = true"
       >
         <SvgoCommonEditPenSquare
           class="text-xl leading-5 text-gray-100 transition-300 group-hover:text-orange"
         />
-        <span class="hidden sm:inline">{{ $t('edit_info') }}</span>
+        <span class="hidden md:inline">{{ $t('edit_info') }}</span>
       </button>
     </div>
     <div class="bg-gray-300 rounded-xl">
       <div class="relative">
         <img
-          class="w-full rounded-t-xl relative z-0"
+          class="w-full max-md:h-[100px] rounded-t-xl relative z-0"
           src="/images/profile-pattern.webp"
           alt="Pattern"
         />
         <p
           v-if="data?.is_premium"
-          class="px-2 py-1 rounded-full flex-y-center gap-1 text-base font-semibold leading-130 text-white absolute bottom-4 right-6 bg-orange border border-white/20"
+          class="px-2 py-1 rounded-full flex-y-center gap-1 text-sm md:text-base font-semibold leading-130 text-white absolute bottom-4 right-6 bg-orange border border-white/20"
         >
           <SvgoProfileSidebarCrownStroke class="text-xl leading-5 text-white" />
           Premium
@@ -47,7 +48,7 @@
           <SvgoCommonEditPenSquare
             class="text-xl leading-5 text-gray-100 transition-300 group-hover:text-orange"
           />
-          <span class="hidden sm:inline">{{ $t('edit_info') }}</span>
+          <span class="hidden md:inline">{{ $t('edit_info') }}</span>
         </button>
       </div>
     </div>

@@ -51,9 +51,10 @@
     </template>
   </LayoutWrapper>
   <LayoutMobile v-else>
-    <section class="mt-[85px] mb-24 space-y-6">
+    <section class="mt-[85px] mb-24 space-y-4">
       <NuxtPage />
       <ProfileSidebarPremium />
+      <ProfileSidebarBalance />
       <ProfileSidebarMenu class="my-4" :menu />
       <button
         class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"

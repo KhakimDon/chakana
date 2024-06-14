@@ -7,6 +7,7 @@
         :to="i.link"
         class="py-2 flex items-center gap-1.5 w-full group"
         exact-active-class="active"
+        @click="$emit('menu-click', i)"
       >
         <!--        active-class="active"-->
         <span
