@@ -30,14 +30,20 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 
+type MenuItem = {
+  title: string
+  link: string
+  icon: Component
+  iconClass: string
+  iconWrapperClass: string
+}
+
 interface Props {
-  menu: {
-    title: string
-    link: string
-    icon: Component
-    iconClass: string
-    iconWrapperClass: string
-  }[]
+  menu: MenuItem[]
 }
 defineProps<Props>()
+
+defineEmits<{
+  (e: 'menu-click', item: MenuItem): void
+}>()
 </script>

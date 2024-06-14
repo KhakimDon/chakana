@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="max-md:pt-4">
     <NuxtLinkLocale
       to="/profile/orders"
       class="inline-flex items-center gap-2 text-[22px] font-extrabold leading-7 text-dark group"
@@ -16,7 +16,7 @@
     />
     <template v-else>
       <template v-if="status !== 'delivered' && status !== 'cancelled'">
-        <BaseStepper class="my-8" :step="status" :steps />
+        <BaseStepper class="my-6 md:my-8" :step="status" :steps />
         <h1
           class="text-center text-2xl font-extrabold leading-130 text-dark mb-1"
         >

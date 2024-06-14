@@ -14,7 +14,7 @@
 
     <p
       v-if="title"
-      class="text-lg leading-130 font-bold text-dark text-center mx-auto mt-6 max-w-[50%]"
+      class="text-lg leading-130 font-bold text-dark text-center mx-auto mt-6 md:max-w-[50%]"
       :class="titleClass"
     >
       {{ $t(title) }}
@@ -22,7 +22,7 @@
     <slot name="subtitle">
       <p
         v-if="subtitle"
-        class="mt-2 text-xs leading-130 text-gray-100 max-w-[50%] mx-auto text-center"
+        class="mt-2 text-xs leading-130 text-gray-100 md:max-w-[50%] mx-auto text-center"
         :class="subtitleClass"
       >
         {{ $t(subtitle) }}

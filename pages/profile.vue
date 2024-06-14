@@ -51,47 +51,7 @@
     </template>
   </LayoutWrapper>
   <LayoutMobile v-else>
-    <section class="mt-[85px] mb-24 space-y-4">
-      <NuxtPage />
-      <ProfileSidebarPremium />
-      <ProfileSidebarBalance />
-      <ProfileSidebarMenu class="my-4" :menu />
-      <button
-        class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
-        @click="logoutModal = true"
-      >
-        <span
-          class="w-6 h-6 rounded-md flex-center transition-300 group-hover:bg-red/20"
-        >
-          <SvgoCommonLogOut class="text-xl leading-5 transition-300 text-red" />
-        </span>
-        <span class="text-xs leading-130 font-semibold text-dark">
-          {{ $t('logout_from_account') }}
-        </span>
-      </button>
-      <BaseModal v-model="logoutModal" :title="$t('logout_from_account')">
-        <div>
-          <p class="text-sm leading-140 text-dark whitespace-pre-line">
-            {{ $t('are_you_sure_to_logout') }}
-          </p>
-          <div class="grid grid-cols-2 gap-4 mt-6">
-            <BaseButton
-              class="!py-3 !rounded-[10px]"
-              :text="$t('cancel')"
-              size="md"
-              variant="secondary"
-              @click="logoutModal = false"
-            />
-            <BaseButton
-              class="!py-3 !rounded-[10px]"
-              :text="$t('logout')"
-              size="md"
-              @click="logout"
-            />
-          </div>
-        </div>
-      </BaseModal>
-    </section>
+    <NuxtPage />
   </LayoutMobile>
 </template>
 
@@ -121,7 +81,7 @@ const hasPremium = computed(() => useAuthStore().user?.is_premium)
 
 const menu = [
   {
-    link: '/profile',
+    link: '/profile/edit',
     title: t('my_infos'),
     icon: SvgoProfileUserCircle,
     iconClass: 'text-orange group-[.active]:text-white',
