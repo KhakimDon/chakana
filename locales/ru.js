@@ -249,5 +249,5 @@ export default {
   g: 'г',
   kg: 'кг',
   l: 'л',
-  comment_limit_alert: 'Комментарий не может быть больше 10 символов',
+  saved_products: 'Сохраненные товары',
 }
