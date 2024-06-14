@@ -14,7 +14,7 @@
       </FormGroup>
       <div
         v-else-if="promoCodes?.list?.length && !promoCodes?.loading"
-        class="space-y-3 max-h-96 overflow-y-auto pr-3"
+        class="space-y-3 max-h-96 overflow-y-auto md:pr-3"
       >
         <div
           v-for="(promo, index) in promoCodes?.list"

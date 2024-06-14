@@ -10,7 +10,7 @@
     <div class="flex flex-col gap-5">
       <div class="bg-gray-300 p-4 rounded-xl">
         <FormGroup class="!gap-1" :label="$t('enter_codeword')">
-          <div class="flex">
+          <div class="flex flex-col md:flex-row gap-4">
             <FormInput
               v-model="form.values.promocode"
               class="w-full mr-3 !bg-white caret-orange"
