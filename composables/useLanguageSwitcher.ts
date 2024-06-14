@@ -34,10 +34,9 @@ export const useLanguageSwitcher = () => {
         const storeDefinition = defineStore(storeName, state)
         const store = storeDefinition(activepinia)
 
-        // Todo: Sanjar qilib beradi, bo'lmasa boshidan otamiz!
-        // if (store.$id !== 'search-store' && store.$id !== 'authStore') {
-        //   store.$reset()
-        // }
+        if (store.$id === 'categories') {
+          store.$reset()
+        }
       })
     }
   }

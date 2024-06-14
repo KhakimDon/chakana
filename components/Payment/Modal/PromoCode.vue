@@ -30,7 +30,7 @@
             </p>
             <div class="flex-y-center justify-end gap-2">
               <p class="text-green text-xs font-medium leading-none">
-                {{ dayjs(promo?.date).format('DD.MM.YYYY') }}
+                {{ dayjs(promo?.expire).format('DD.MM.YYYY') }}
               </p>
               <FormRadio
                 v-if="selected === promo?.id"

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cartStore', () => {
-  const products = ref([])
+  const products = ref<any[]>([])
   const cartProductsLoading = ref(false)
 
   function getCartProducts() {
@@ -22,9 +22,23 @@ export const useCartStore = defineStore('cartStore', () => {
     })
   }
 
+  function addToCart(product: any, quantity: number) {
+    if (quantity === 0) {
+      products.value = products.value?.filter((p) => p.id !== product.id)
+    } else if (products.value?.find((p) => p?.id === product.id)) {
+      products.value.find((p) => p?.id === product.id).quantity = quantity
+    } else {
+      products.value?.push({
+        ...product,
+        quantity,
+      })
+    }
+  }
+
   return {
     products,
     cartProductsLoading,
     getCartProducts,
+    addToCart,
   }
 })

@@ -65,6 +65,11 @@ import {
 } from '#components'
 import { useAuthStore } from '~/store/auth.js'
 
+definePageMeta({
+  middleware: ['auth'],
+  page: 'MyProfile',
+})
+
 const router = useRouter()
 const localePath = useLocalePath()
 const { t } = useI18n()

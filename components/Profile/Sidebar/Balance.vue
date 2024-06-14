@@ -29,7 +29,7 @@
       src="/images/wallet.webp"
       alt=""
     />
-    <!--    <ModalPaymentMethod model-value />-->
+    <!--    <CommonModalPaymentMethod model-value />-->
     <ProfileModalFillBalance v-model="fillBalanceModal" />
   </div>
 </template>

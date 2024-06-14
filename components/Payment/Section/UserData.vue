@@ -5,7 +5,7 @@
     :title="userData?.length > 10 ? userData : $t('recipient_details')"
     @open-details="openModal = true"
   />
-  <ModalUserData v-model="openModal" />
+  <PaymentModalUserData v-model="openModal" />
 </template>
 
 <script setup lang="ts">

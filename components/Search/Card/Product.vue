@@ -12,13 +12,17 @@
       <div class="space-y-0.5">
         <NuxtLinkLocale
           :to="`/product/${product?.id}`"
-          class="text-[13px] font-semibold hover:text-orange transition-300 leading-none text-dark"
+          class="font-semibold hover:text-orange md:text-[13px] md:leading-none text-[12px] line-clamp-3 max-w-[120px] md:max-w-full transition-300 text-dark"
           :class="titleClass"
+          @click="saveSearchHistory"
         >
           {{ product?.name }}
         </NuxtLinkLocale>
-        <p class="text-xs font-medium leading-130 text-gray-400">
-          {{ product?.weight }} {{ product?.weight_measure }}
+        <p
+          v-if="product?.product_uom_amount && product?.product_uom"
+          class="mt-1.5 text-gray-100 font-medium text-xs leading-122"
+        >
+          {{ product?.product_uom_amount }} {{ $t(product?.product_uom) }}
         </p>
       </div>
     </div>
@@ -38,11 +42,12 @@
       </template>
       <template v-else>
         <BaseButton
-          v-if="count < 1|| addingToCart"
+          v-if="count < 1 || addingToCart"
           class="w-24"
           :text="$t('to_basket')"
-          variant="outline":disabled="addingToCart"
-        :loading="addingToCart"
+          variant="outline"
+          :disabled="addingToCart"
+          :loading="addingToCart"
           @click="addToCartFirstTime(product)"
         />
         <MainCardCounter
@@ -52,7 +57,8 @@
           :max="product?.max_quantity ?? 100000"
           class="w-24 border-none bg-white-100"
           readonly
-        @click="addToCart(product)"/>
+          @click="addToCart(product)"
+        />
       </template>
       <p
         v-if="count > 0 || showCount"
@@ -75,6 +81,7 @@
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useSearchStore } from '~/store/search.js'
 import type { IProduct } from '~/types/products.js'
 import { debounce, formatMoneyDecimal } from '~/utils/functions/common.js'
 
@@ -103,7 +110,7 @@ const addToCart = (product: any) => {
         orderCartStore
           .addToCart(product?.id, count.value)
           .then(() => {
-            cartStore.getCartProducts()
+            cartStore.addToCart(product, count.value)
           })
           .catch(() => {
             if (count.value === 0) {
@@ -115,7 +122,7 @@ const addToCart = (product: any) => {
             addingToCart.value = false
           })
       },
-      700
+      300
     )
   }
 }
@@ -154,4 +161,13 @@ onMounted(() => {
     count.value = cartProduct.value?.quantity ?? 0
   }
 })
+
+const route = useRoute()
+const searchStore = useSearchStore()
+
+const saveSearchHistory = () => {
+  if (route.query.query) {
+    searchStore.saveSearch(String(route.query.query))
+  }
+}
 </script>

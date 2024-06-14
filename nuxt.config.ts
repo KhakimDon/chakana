@@ -29,6 +29,12 @@ export default defineNuxtConfig({
           href: 'https://xolodilnik.uz',
         },
       ],
+      script: [
+        {
+          src: '//code.jivosite.com/widget/ri5Jw2oMql',
+          async: true,
+        },
+      ],
     },
   },
   css: [
@@ -40,6 +46,7 @@ export default defineNuxtConfig({
     'swiper/css',
   ],
   modules: [
+    '@nuxtjs/device',
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
     '@nuxtjs/i18n',

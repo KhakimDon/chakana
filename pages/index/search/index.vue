@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="sticky bg-white py-5 top-[69px] w-full z-10">
+    <section class="sticky bg-white py-5 w-full z-10 top-0 md:top-[69px]">
       <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
         <NuxtLinkLocale to="/" class="group">
           <IconChevron
@@ -25,26 +25,28 @@
       </div>
     </section>
 
-    <section v-if="!search">
+    <section v-if="!search" class="mb-[85px] md:mb-0">
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
-    <section v-if="products.loading && search" class="my-5 space-y-3">
-      <div
-        v-for="key in 10"
-        :key
-        class="shimmer w-full h-16 rounded-10 pl-0 border-b border-white-100"
-      />
-    </section>
+    <SearchCardLoading v-if="products.loading && search" :count="10" />
     <section
       v-else-if="products.list?.length && search && !products.loading"
-      class="my-5"
+      class="my-5 mb-0 md:mb-[85px]"
     >
       <SearchCardProduct
         v-for="(product, key) in products.list"
         :key
         :product="product"
         :class="{ 'bg-gray-300/50': key % 2 === 0 }"
+      />
+      <div
+        v-if="
+          products.params?.total > products?.list.length &&
+          !products?.loading &&
+          !products?.params?.loading
+        "
+        ref="target"
       />
     </section>
     <section
@@ -58,10 +60,13 @@
       />
       <SearchSectionNewProducts />
     </section>
+    <template v-if="products?.params?.loading">
+      <SearchCardLoading :count="5" />
+    </template>
   </div>
 </template>
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useIntersectionObserver } from '@vueuse/core'
 
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconList from '~/assets/icons/Common/list.svg'
@@ -106,6 +111,7 @@ const updateSearch = (val: string) => {
 
 watch(search, (val: string) => {
   if (val) {
+    outsideClicked.value = false
     router.push({ query: { query: val } }).then(() => {
       updateSearch(val)
     })
@@ -125,6 +131,20 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+onMounted(() => {
+  if (route.query.query) {
+    outsideClicked.value = true
+  }
+})
+
+const target = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(target, ([{ isIntersecting }]) => {
+  if (isIntersecting) {
+    searchStore.searchProducts(String(search.value), false)
+  }
+})
 </script>
 <style scoped>
 .suggestions-shadow {
