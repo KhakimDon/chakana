@@ -1,9 +1,9 @@
 <template>
   <nav
-    class="fixed left-0 right-0 px-10 bottom-0 h-[140px] w-full bg-gradient-to-t from-white from-80% to-transparent z-10"
+    class="fixed left-0 right-0 px-10 bottom-0 h-[120px] w-full bg-gradient-to-t from-white from-80% to-transparent z-10"
   >
     <div class="flex items-center justify-between w-full mt-[52px]">
-      <NuxtLinkLocale to="/saved">
+      <NuxtLinkLocale to="/saved" class="w-9 h-9 rounded-full">
         <SvgoCommonHeartOutline class="text-[28px]" />
       </NuxtLinkLocale>
       <NuxtLinkLocale
@@ -27,9 +27,9 @@
           {{ $t('basket') }}
         </p>
       </NuxtLinkLocale>
-      <NuxtLinkLocale
-        to="/profile"
+      <div
         class="w-9 h-9 rounded-full linear-border-image cursor-pointer"
+        @click="openProfile"
       >
         <img
           v-if="user?.image"
@@ -43,7 +43,7 @@
           src="/images/default/user.png"
           alt="user-default"
         />
-      </NuxtLinkLocale>
+      </div>
     </div>
   </nav>
 </template>
@@ -55,8 +55,9 @@ import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
+const router = useRouter()
 const cartProducts = computed(() => cartStore.products)
 
 const total = computed(() =>
@@ -69,7 +70,16 @@ const totalPrice = computed(() =>
   }, 0)
 )
 
+const token = computed(() => authStore.accessToken)
 const user = computed(() => authStore.user)
+
+const openProfile = () => {
+  if (token.value) {
+    router.push(`/${locale.value}/profile`)
+  } else {
+    authStore.showAuth = true
+  }
+}
 </script>
 
 <style scoped>
