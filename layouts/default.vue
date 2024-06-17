@@ -8,6 +8,6 @@
     <div class="max-md:min-h-[calc(100vh-68px-64px)]">
       <slot />
     </div>
-    <LayoutMobileBottomBar />
+    <LayoutMobileBottomBar v-if="!useMobile('desktop')" />
   </div>
 </template>
