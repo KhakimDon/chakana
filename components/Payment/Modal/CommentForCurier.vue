@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :has-back="$route.path === `/${locale}/cart`"
+    :has-back="isCartRoute"
     :title="$t('courier_comment')"
     @update:model-value="$emit('update:modelValue', $event)"
     @back="backToUserData"
@@ -46,7 +46,13 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
+const route = useRoute()
 const { t, locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return route.path === `/${locale.value}/cart`
+})
+
 const { showToast } = useCustomToast()
 const loading = ref(false)
 
@@ -74,7 +80,9 @@ function add() {
     loading.value = true
     orderCartStore.orderDetail.comment_to_courier = form.values.comment
     loading.value = false
-    modalStore.promoModel = true
+    if (isCartRoute.value) {
+      modalStore.promoModel = true
+    }
     emit('update:modelValue', false)
   } else {
     showToast(t('comment_limit_alert'), 'error')

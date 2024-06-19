@@ -25,6 +25,7 @@ import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
 const route = useRoute()
+const { locale } = useI18n()
 const modalStore = useModalStore()
 const selectedLocation = ref()
 
@@ -32,7 +33,7 @@ const orderCartStore = useCartOrderStore()
 const selectedAddress = (address: object) => {
   selectedLocation.value = address
   orderCartStore.orderDetail.address.id = address?.id
-  if (route.path !== '/cart/payment') {
+  if (route.path !== `/${locale.value}/cart/payment`) {
     modalStore.addressModel = false
     modalStore.addressMapModel = false
     modalStore.clockModel = true
@@ -50,6 +51,17 @@ const openSavedAddress = () => {
   modalStore.addressModel = true
   resetList()
 }
+
+watch(
+  () => list.value,
+  (val) => {
+    if (val?.length) {
+      selectedLocation.value = val.find(
+        (item) => item.id === orderCartStore.orderDetail.address.id
+      )
+    }
+  }
+)
 </script>
 
 <style scoped></style>

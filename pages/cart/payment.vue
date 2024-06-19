@@ -92,6 +92,11 @@ watch(
   },
   { immediate: true, deep: true }
 )
+onMounted(() => {
+  if (!orderCartStore.orderDetail.address.id) {
+    router.push(`/${locale.value}/cart`)
+  }
+})
 </script>
 
 <style scoped></style>

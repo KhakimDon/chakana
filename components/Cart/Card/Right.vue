@@ -46,11 +46,6 @@ const goToPayment = () => {
   if (token.value) {
     if (!modalStore.addressModel && !orderCartStore.orderDetail.address?.id) {
       modalStore.addressModel = true
-    } else if (
-      !modalStore.clockModel &&
-      !orderCartStore.orderDetail.when_to_deliver
-    ) {
-      modalStore.addressModel = true
     } else {
       router.push(`/${locale.value}/cart/payment`)
     }

@@ -1,8 +1,8 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :has-back="$route.path === `/${locale}/cart`"
-    :title="$t('promo_code')"
+    :has-back="isCartRoute"
+    :title="addNew ? $t('new_promo') : $t('promo_code')"
     @update:model-value="$emit('update:modelValue', $event)"
     @back="backToList"
   >
@@ -108,7 +108,13 @@ const emit = defineEmits<{
   (e: 'confirmPromoCode', value: string): void
 }>()
 
+const route = useRoute()
 const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return route.path === `/${locale.value}/cart`
+})
+
 const addNew = ref(false)
 
 const cartOrderStore = useCartOrderStore()
@@ -174,7 +180,9 @@ const choosePromo = (promoId: string) => {
 
 const confirmPromoCode = () => {
   if (selected.value) {
-    modalStore.paymentModel = true
+    if (isCartRoute.value) {
+      modalStore.paymentModel = true
+    }
     emit('confirmPromoCode', selected.value)
     selected.value = ''
   }

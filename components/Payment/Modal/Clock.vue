@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :has-back="$route.path === `/${locale}/cart`"
+    :has-back="isCartRoute"
     :title="$t('when_delivery')"
     @update:model-value="$emit('update:modelValue', $event)"
     @back="$emit('openSavedAddress')"
@@ -58,7 +58,12 @@ const emit = defineEmits<{
   (e: 'openSavedAddress'): void
 }>()
 
+const route = useRoute()
 const { t, locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return route.path === `/${locale.value}/cart`
+})
 
 const selectedInterval = ref('nearest_2_hours')
 
@@ -128,7 +133,9 @@ function add() {
       now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     )
   }
-  modalStore.userModel = true
+  if (isCartRoute.value) {
+    modalStore.userModel = true
+  }
   emit('update:modelValue', false)
 }
 

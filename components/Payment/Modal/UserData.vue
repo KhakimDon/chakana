@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :has-back="$route.path === `/${locale}/cart`"
+    :has-back="isCartRoute"
     :title="$t('recipient_details')"
     @update:model-value="$emit('update:modelValue', $event)"
     @back="bacToClock"
@@ -65,7 +65,13 @@ const emit = defineEmits<{
 
 const modalStore = useModalStore()
 
+const route = useRoute()
 const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return route.path === `/${locale.value}/cart`
+})
+
 const loading = ref(false)
 
 const form = useForm(
@@ -93,7 +99,9 @@ function add() {
     orderCartStore.orderDetail.recipient.full_name = form.values.name
     orderCartStore.orderDetail.recipient.phone = form.values.phone
     loading.value = false
-    modalStore.commentModel = true
+    if (isCartRoute.value) {
+      modalStore.commentModel = true
+    }
     emit('update:modelValue', false)
   }
 }
