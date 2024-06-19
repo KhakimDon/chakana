@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-[85px] mb-24 space-y-6 md:mt-0">
+  <section class="mb-24 space-y-6">
     <CommonSectionWrapper title-link :title="single.title" class="my-6">
       <template #beforeTitle>
         <NuxtLinkLocale to="/brands">

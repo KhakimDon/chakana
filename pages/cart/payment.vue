@@ -16,7 +16,7 @@
     <PaymentFullInfos />
   </LayoutWrapper>
   <LayoutMobile v-else>
-    <section class="mt-[85px] mb-24 space-y-6">
+    <section class="mb-24 space-y-6">
       <PaymentFullInfos />
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
