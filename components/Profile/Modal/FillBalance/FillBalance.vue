@@ -16,7 +16,7 @@
       </template>
       <template v-else>
         <div
-          class="px-5 -mx-5 -mt-3 py-6 bg-gray-300 border-b border-white-100"
+          class="px-5 -mx-5 -mt-3 py-4 sm:py-6 bg-gray-300 border-b border-white-100"
         >
           <div
             class="px-3 py-2.5 flex items-center gap-2.5 bg-[linear-gradient(93deg,_#13B541_-3.28%,_#0F8630_67.71%)] rounded-xl relative after:z-[1] after:border-[1.5px] after:border-white/15 after:pointer-events-none after:absolute after:inset-0 after:rounded-xl"
@@ -51,7 +51,7 @@
             </div>
           </div>
         </div>
-        <div class="border-b border-gray-300 pt-5 pb-3 mb-4">
+        <div class="border-b border-gray-300 pt-4 sm:pt-5 pb-3 mb-2 sm:mb-4">
           <FormGroup :label="$t('amount')">
             <FormInput
               v-model="amount"
@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="border-b border-white-100 -mx-5 px-5 pb-4">
-          <div class="flex-y-center gap-1 py-4">
+          <div class="flex-y-center gap-1 py-2 sm:py-4">
             <SvgoProfileCard class="!text-[#2590BE] text-2xl" />
             <p class="text-sm font-semibold leading-tight text-dark">
               {{ $t('payment_via_card') }}
@@ -107,7 +107,7 @@
                     :alt="item.processing"
                   />
                   <div
-                    class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full group-last:border-b-0"
+                    class="flex-y-center gap-1 border-b border-white-100 py-3 sm:py-4 justify-between w-full group-last:border-b-0"
                   >
                     <p class="text-sm font-semibold leading-tight text-dark">
                       {{ item?.card_number }}
@@ -137,7 +137,7 @@
             </template>
           </BaseButton>
         </div>
-        <div class="flex-y-center gap-1 my-2.5">
+        <div class="flex-y-center gap-1 my-2 sm:my-2.5">
           <SvgoProfileCoins class="text-orange text-2xl" />
           <p class="text-sm font-semibold leading-tight text-dark">
             {{ $t('payment_system') }}
@@ -149,7 +149,7 @@
         />
         <BaseButton
           :disabled="invalidForm"
-          class="!py-3 w-full !mt-6"
+          class="!py-3 w-full !mt-3 sm:!mt-6"
           :loading
           :text="$t('fill')"
           size="md"

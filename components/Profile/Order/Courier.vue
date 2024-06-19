@@ -39,18 +39,31 @@
       </div>
     </div>
     <BaseModal v-model="messageModal" :title="$t('write_to_courier')">
-      <FormTextarea :rows="5" :placeholder="$t('enter_text')" />
-      <BaseButton class="mt-4 w-full" :text="$t('send')" />
+      <FormTextarea
+        v-model="form.values.message"
+        :error="form.$v.value.message.$error"
+        :rows="5"
+        :placeholder="$t('enter_text')"
+      />
+      <BaseButton
+        class="mt-4 w-full"
+        :loading
+        :text="$t('send')"
+        @click="submit"
+      />
     </BaseModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import { required } from '@vuelidate/validators'
+
 import { formatPhoneNumber } from '~/utils/functions/common.js'
 
 const messageModal = ref(false)
 
 interface Props {
+  orderId: number
   courier: {
     id: number
     full_name: string
@@ -60,4 +73,35 @@ interface Props {
   noWrite?: boolean
 }
 defineProps<Props>()
+
+const route = useRoute()
+const { t } = useI18n()
+
+const form = useForm(
+  {
+    message: '',
+  },
+  {
+    message: { required },
+  }
+)
+
+const loading = ref(false)
+function submit() {
+  form.$v.value.$touch()
+  if (form.$v.value.$invalid) return
+  loading.value = true
+  useApi()
+    .$post(`/send/message/to/courier/${route.params.id}`, { body: form.values })
+    .then(() => {
+      messageModal.value = false
+      useCustomToast().showToast(t('your_message_successfully_sent'), 'success')
+    })
+    .catch((err) => {
+      useErrorHandling().handleError(err)
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
 </script>

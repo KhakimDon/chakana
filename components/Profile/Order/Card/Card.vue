@@ -3,7 +3,7 @@
     <div class="p-3 bg-gray-300 rounded-xl">
       <!-- Card header -->
       <div
-        class="grid gap-[0.9px] h-40 rounded-lg border border-white-100 cursor-pointer overflow-hidden"
+        class="grid gap-px h-40 rounded-lg border border-white-100 cursor-pointer overflow-hidden"
         :class="[
           images.length > 2 ? 'grid-rows-2' : 'grid-rows-1',
           { 'grid-cols-2': images.length > 1 },

@@ -6,10 +6,6 @@ export const usePromocodesStore = defineStore('promocodesStore', {
       list: [] as IPromocodeDetail[],
       loading: true,
     },
-    applyResult: {
-      success: true,
-      message: '',
-    },
   }),
   actions: {
     fetchPromocodes() {
@@ -22,25 +18,12 @@ export const usePromocodesStore = defineStore('promocodesStore', {
           this.promocodes.loading = false
         })
     },
-    applyPromocode(code: string) {
-      return useApi()
-        .$post('/promo-code/apply', {
-          body: {
-            code,
-          },
-        })
-        .then(() => {
-          this.applyResult.success = true
-          this.applyResult.message = 'Promocode applied successfully!'
-          promocodesStore.fetchPromocodes()
-        })
-        .catch((error) => {
-          // const { handleError } = useErrorHandling()
-          // handleError(error)
-
-          this.applyResult.success = false
-          this.applyResult.message = error?._data?.detail.code
-        })
+    async applyPromocode(code: string) {
+      return await useApi().$post('/promo-code/apply', {
+        body: {
+          code,
+        },
+      })
     },
   },
 })

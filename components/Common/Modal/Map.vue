@@ -2,7 +2,9 @@
   <BaseModal
     v-bind="{ show: openModal }"
     :has-back="!showAddAddress"
-    :body-class="!showAddAddress ? 'min-w-[868px]' : '!min-w-[646px]'"
+    :body-class="
+      !showAddAddress ? 'max-w-[868px] !w-full' : '!max-w-[646px] !w-full'
+    "
     :title="$t('specify_your_delivery_address')"
     disable-outer-close
     @back="$emit('open-saved-adress')"
@@ -12,8 +14,8 @@
       <p class="text-dark-100 text-sm font-medium leading-140">
         {{ $t('map_modal_desc') }}
       </p>
-      <div class="grid grid-cols-12 mt-4 gap-4">
-        <div class="relative col-span-9">
+      <div class="grid grid-cols-12 mt-4 gap-x-4 gap-y-2">
+        <div class="relative col-span-12 sm:col-span-8 md:col-span-9">
           <FormInputSearch
             v-model="search"
             :no-search-icon="false"
@@ -47,7 +49,7 @@
           </Transition>
         </div>
         <BaseButton
-          class="col-span-3"
+          class="col-span-12 sm:col-span-4 md:col-span-3"
           :loading="false"
           :text="$t('confirm')"
           variant="primary"
@@ -59,7 +61,7 @@
           id="myMap"
           ref="yMap"
           :settings="settings"
-          class="ymap h-[440px] w-[828px] mt-4 rounde-lg"
+          class="ymap h-[300px] md:h-[440px] w-full mt-4 rounded-lg"
           :coords="coordinates"
           @click="setLocation($event)"
         >
@@ -75,7 +77,7 @@
             id="myMap"
             ref="yMap"
             :settings="settings"
-            class="h-[180px] w-[606px] mt-4 rounded-lg"
+            class="h-[180px] w-full mt-4 rounded-lg"
             :coords="coordinates"
           >
             <!--      @click="changeCoords"-->
@@ -86,49 +88,48 @@
           </YandexMap>
         </ClientOnly>
         <p
-          class="bg-white flex items-center justify-between shadow-card w-[590px] absolute bottom-[10px] text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
+          class="bg-white flex items-center justify-between shadow-card absolute left-1.5 md:left-2.5 right-1.5 md:right-2.5 bottom-1.5 md:bottom-2.5 text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
         >
-          <span class="max-w-[400px] truncate">{{ search }}</span>
+          <span class="max-w-[250px] md:max-w-[400px] truncate">{{
+            search
+          }}</span>
           <IEditCircle
             class="text-white text-xl cursor-pointer"
             @click="showAddAddress = false"
           />
         </p>
       </div>
-      <div class="flex items-center mt-6 gap-4">
-        <label class="text-dark text-sm font-medium leading-130">
-          {{ $t('select_icon') }}
+      <div class="mt-6 gap-x-4 gap-y-2 grid sm:grid-cols-2">
+        <FormGroup :label="$t('select_icon')">
           <FormSelect
             v-model="selectIcons"
             :options="icons"
             label-key="title"
             value-key="id"
+            head-styles="h-11"
             :placeholder="$t('select_icon')"
-            class="w-[295px] mt-1"
             is-radio
             :error="error"
           />
-        </label>
-        <label class="text-dark text-sm font-medium leading-130">
-          {{ $t('name_address') }}
+        </FormGroup>
+        <FormGroup :label="$t('name_address')">
           <FormInput
             v-model="nameAddress"
             :placeholder="$t('name_address')"
-            class="w-[290px] mt-1"
             :error="error"
           />
-        </label>
+        </FormGroup>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 mt-6">
         <BaseButton
-          class="mt-6 w-full group"
+          class="w-full group"
           :loading="false"
           :text="$t('cancel')"
           variant="secondary"
           @click="$emit('close')"
         />
         <BaseButton
-          class="mt-6 w-full group"
+          class="w-full group"
           :loading="buttonLoading"
           :text="$t('add')"
           variant="primary"

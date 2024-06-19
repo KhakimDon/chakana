@@ -250,4 +250,7 @@ export default {
   kg: 'кг',
   l: 'л',
   saved_products: 'Сохраненные товары',
+  your_message_successfully_sent: 'Ваш сообщение успешно отправлено',
+  your_feedback_has_been_sent: 'Ваш отзыв отправлен',
+  promocode_applied: 'Промокод применен',
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-md:pt-4">
+  <div>
     <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <div class="flex flex-col gap-4 mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
