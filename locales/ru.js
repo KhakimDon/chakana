@@ -198,6 +198,7 @@ export default {
   send: 'Отправить',
   promo_badge: 'Иcпользуется {text}',
   promo_code: 'Промокод',
+  new_promo: 'Новый промокод',
   card_price: 'Баланс: {price} UZS',
   use_balance: 'Использовать баланс',
   active_price: 'Активен от минимум {price}',
@@ -250,4 +251,5 @@ export default {
   kg: 'кг',
   l: 'л',
   saved_products: 'Сохраненные товары',
+  comment_limit_alert: 'Минимальный лимит комментариев — 10 символов.',
 }

@@ -192,10 +192,10 @@ const { list: icons } = useListFetcher('get/icons', 10, false)
 
 const setLocation = async (event: any) => {
   search.value = addressClick.value?.street
-  const coords = event.get('coords')
+  const coords = event?.get('coords')
   coordinates.value = coords
   coordinates.value = coords
-  addressStore.fetchAddress(coords[0], coords[1])
+  await addressStore.fetchAddress(coords[0], coords[1])
 }
 
 const addAddress = () => {
