@@ -8,6 +8,7 @@ export const useAddressStore = defineStore('addressStore', {
       list: [],
       loading: true,
     },
+    coordinates: [],
   }),
   actions: {
     fetchAddress(lat: number, long: number) {

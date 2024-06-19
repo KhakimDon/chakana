@@ -254,4 +254,6 @@ export default {
   comment_limit_alert: 'Минимальный лимит комментариев — 10 символов.',
   all_categories: 'Все категории',
   filter: 'Фильтр',
+  amir_temur: 'Amir Temur xiyoboni',
+  change_address: 'Изменить адрес',
 }
