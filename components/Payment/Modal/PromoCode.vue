@@ -1,8 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="$route.path === `/${locale}/cart`"
     :title="$t('promo_code')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="backToList"
   >
     <div class="space-y-4">
       <FormGroup v-if="addNew" :label="$t('enter_code')">
@@ -92,6 +94,7 @@ import { minLength, required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
@@ -105,6 +108,7 @@ const emit = defineEmits<{
   (e: 'confirmPromoCode', value: string): void
 }>()
 
+const { locale } = useI18n()
 const addNew = ref(false)
 
 const cartOrderStore = useCartOrderStore()
@@ -120,6 +124,18 @@ const form = useForm(
     code: { required, minLength: minLength(3) },
   }
 )
+
+const modalStore = useModalStore()
+
+const backToList = () => {
+  if (addNew.value) {
+    modalStore.promoModel = true
+    addNew.value = false
+  } else {
+    modalStore.promoModel = false
+    modalStore.commentModel = true
+  }
+}
 
 const loading = computed(() => cartOrderStore.applyingPromoCode)
 function apply() {
@@ -158,6 +174,7 @@ const choosePromo = (promoId: string) => {
 
 const confirmPromoCode = () => {
   if (selected.value) {
+    modalStore.paymentModel = true
     emit('confirmPromoCode', selected.value)
     selected.value = ''
   }

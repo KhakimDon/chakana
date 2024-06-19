@@ -13,6 +13,7 @@
         />
       </section>
     </template>
+    <PaymentFullInfos />
   </LayoutWrapper>
   <LayoutMobile v-else>
     <section class="mt-[85px] mb-24 space-y-6">
@@ -91,14 +92,6 @@ watch(
   },
   { immediate: true, deep: true }
 )
-
-const cartProducts = computed(() => cartStore?.products)
-
-onMounted(() => {
-  if (cartProducts.value?.length === 0) {
-    router.push(`/${locale.value}/cart`)
-  }
-})
 </script>
 
 <style scoped></style>

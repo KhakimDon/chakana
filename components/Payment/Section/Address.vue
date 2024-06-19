@@ -4,17 +4,17 @@
     icon-class="text-orange !text-2xl"
     :title="$t('courier_address')"
     :subtitle="selectedLocation?.address"
-    @open-details="openModal = true"
+    @open-details="openSavedAddress"
   />
   <CommonModalAddressDelivery
-    v-model="openModal"
+    v-model="modalStore.addressModel"
     :list="list"
     @select-address="selectedAddress"
-    @close="openModal = false"
+    @close="modalStore.addressModel = false"
     @open-map-modal="openMapModal"
   />
   <CommonModalMap
-    v-model="openMapModalRef"
+    v-model="modalStore.addressMapModel"
     @close="openSavedAddress"
     @open-saved-adress="openSavedAddress"
   />
@@ -22,26 +22,32 @@
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
-const openModal = ref(false)
-const openMapModalRef = ref(false)
+const route = useRoute()
+const modalStore = useModalStore()
 const selectedLocation = ref()
 
 const orderCartStore = useCartOrderStore()
 const selectedAddress = (address: object) => {
   selectedLocation.value = address
   orderCartStore.orderDetail.address.id = address?.id
+  if (route.path !== '/cart/payment') {
+    modalStore.addressModel = false
+    modalStore.addressMapModel = false
+    modalStore.clockModel = true
+  }
 }
 const { list, resetList } = useListFetcher(`/saved/address`, 25, false, '')
 
 const openMapModal = () => {
-  openModal.value = false
-  openMapModalRef.value = true
+  modalStore.addressModel = false
+  modalStore.addressMapModel = true
 }
 
 const openSavedAddress = () => {
-  openMapModalRef.value = false
-  openModal.value = true
+  modalStore.addressMapModel = false
+  modalStore.addressModel = true
   resetList()
 }
 </script>

@@ -1,8 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="$route.path === `/${locale}/cart`"
     :title="$t('payment_method')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="backToPromoCode"
   >
     <div>
       <div
@@ -119,6 +121,7 @@
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 import { usePaymentStore } from '~/store/payment.js'
 import { useCardsStore } from '~/store/profile/cards.js'
 
@@ -131,6 +134,9 @@ defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
+
+const router = useRouter()
+const { locale } = useI18n()
 
 const loading = ref(false)
 const courierCard = ref(false)
@@ -182,6 +188,13 @@ watch(
   }
 )
 
+const modalStore = useModalStore()
+
+const backToPromoCode = () => {
+  modalStore.paymentModel = false
+  modalStore.promoModel = true
+}
+
 const orderCartStore = useCartOrderStore()
 function add() {
   orderCartStore.orderDetail.payment_method.provider_id = paymentType.value
@@ -190,6 +203,7 @@ function add() {
     courierCard.value
   orderCartStore.orderDetail.payment_method.card_id = cardId.value
 
+  router.push(`/${locale.value}/cart/payment`)
   emit('update:modelValue', false)
 }
 

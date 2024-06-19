@@ -1,8 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="$route.path === `/${locale}/cart`"
     :title="$t('recipient_details')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="bacToClock"
   >
     <div class="space-y-4">
       <FormGroup :label="$t('full_name')">
@@ -48,6 +50,7 @@
 import { minLength, required } from '@vuelidate/validators'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 import { isValidPhone } from '~/utils/functions/common.js'
 
 interface Props {
@@ -60,6 +63,9 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
+const modalStore = useModalStore()
+
+const { locale } = useI18n()
 const loading = ref(false)
 
 const form = useForm(
@@ -73,6 +79,11 @@ const form = useForm(
   }
 )
 
+function bacToClock() {
+  modalStore.userModel = false
+  modalStore.clockModel = true
+}
+
 const orderCartStore = useCartOrderStore()
 
 function add() {
@@ -82,6 +93,7 @@ function add() {
     orderCartStore.orderDetail.recipient.full_name = form.values.name
     orderCartStore.orderDetail.recipient.phone = form.values.phone
     loading.value = false
+    modalStore.commentModel = true
     emit('update:modelValue', false)
   }
 }

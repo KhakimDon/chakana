@@ -250,4 +250,5 @@ export default {
   kg: 'кг',
   l: 'л',
   saved_products: 'Сохраненные товары',
+  comment_limit_alert: 'Минимальный лимит комментариев — 10 символов.',
 }

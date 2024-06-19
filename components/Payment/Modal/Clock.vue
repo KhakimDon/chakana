@@ -1,8 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="$route.path === `/${locale}/cart`"
     :title="$t('when_delivery')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="$emit('openSavedAddress')"
   >
     <div class="space-y-4">
       <p
@@ -42,6 +44,7 @@
 import dayjs from 'dayjs'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 interface Props {
   modelValue: boolean
@@ -52,9 +55,10 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
+  (e: 'openSavedAddress'): void
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const selectedInterval = ref('nearest_2_hours')
 
@@ -108,6 +112,7 @@ function getCurrentDateTimeISO(date: any) {
   return date.format().slice(0, -6)
 }
 
+const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 function add() {
   if (selectedInterval.value === 'nearest_2_hours') {
@@ -123,6 +128,7 @@ function add() {
       now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     )
   }
+  modalStore.userModel = true
   emit('update:modelValue', false)
 }
 

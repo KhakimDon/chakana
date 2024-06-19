@@ -18,6 +18,7 @@
       :disabled="cartProducts.length === 0"
       @click="goToPayment"
     />
+    <PaymentFullInfos class="hidden" />
   </section>
 </template>
 
@@ -25,6 +26,7 @@
 import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 const { locale } = useI18n()
 const router = useRouter()
@@ -36,12 +38,22 @@ const cartProducts = computed(() => cartStore.products)
 const loading = computed(() => cartStore.cartProductsLoading)
 const cartDetails = computed(() => orderCartStore.cart.detail)
 
+const modalStore = useModalStore()
 const authStore = useAuthStore()
 
 const token = computed(() => authStore.accessToken)
 const goToPayment = () => {
   if (token.value) {
-    router.push(`/${locale.value}/cart/payment`)
+    if (!modalStore.addressModel && !orderCartStore.orderDetail.address?.id) {
+      modalStore.addressModel = true
+    } else if (
+      !modalStore.clockModel &&
+      !orderCartStore.orderDetail.when_to_deliver
+    ) {
+      modalStore.addressModel = true
+    } else {
+      router.push(`/${locale.value}/cart/payment`)
+    }
   } else {
     authStore.showAuth = true
   }

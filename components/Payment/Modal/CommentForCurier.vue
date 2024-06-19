@@ -1,8 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="$route.path === `/${locale}/cart`"
     :title="$t('courier_comment')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="backToUserData"
   >
     <div>
       <p class="text-sm font-medium leading-tight mb-4">
@@ -32,6 +34,7 @@
 import { minLength, required } from '@vuelidate/validators'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 interface Props {
   modelValue: boolean
@@ -43,7 +46,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { showToast } = useCustomToast()
 const loading = ref(false)
 
@@ -56,6 +59,13 @@ const form = useForm(
   }
 )
 
+const modalStore = useModalStore()
+
+const backToUserData = () => {
+  modalStore.commentModel = false
+  modalStore.userModel = true
+}
+
 const orderCartStore = useCartOrderStore()
 
 function add() {
@@ -64,6 +74,7 @@ function add() {
     loading.value = true
     orderCartStore.orderDetail.comment_to_courier = form.values.comment
     loading.value = false
+    modalStore.promoModel = true
     emit('update:modelValue', false)
   } else {
     showToast(t('comment_limit_alert'), 'error')
