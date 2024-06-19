@@ -9,7 +9,7 @@
       </template>
     </LayoutWrapper>
     <LayoutMobile v-else>
-      <section class="mt-[85px] mb-24 space-y-6">
+      <section class="mb-24 space-y-6">
         <CartFull />
         <CartCardRight />
         <CartSectionProducts />

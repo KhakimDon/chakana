@@ -21,8 +21,15 @@
       </div>
     </div>
     <section class="w-full">
-      <div v-if="lists?.loading" class="flex-y-center flex-wrap gap-3 my-4">
-        <div v-for="key in 7" :key class="w-44 h-52 shimmer rounded-10"></div>
+      <div
+        v-if="!lists?.loading"
+        class="flex-y-center flex-wrap gap-2 md:gap-3 my-4"
+      >
+        <div
+          v-for="key in 7"
+          :key
+          class="w-40 h-48 md:w-44 md:h-52 shimmer rounded-10"
+        ></div>
       </div>
       <div
         v-else-if="lists?.list?.length && !lists?.loading"
