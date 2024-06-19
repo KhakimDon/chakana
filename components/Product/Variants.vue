@@ -70,7 +70,6 @@
 <script setup lang="ts">
 import { Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { defineProps, ref } from 'vue'
 
 import IconArrow from '~/assets/icons/Common/arrow.svg'
 

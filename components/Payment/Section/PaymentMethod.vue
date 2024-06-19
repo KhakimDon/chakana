@@ -13,17 +13,18 @@
             ? $t('credit_card')
             : $t('payment_method')
         "
-        @open-details="openModal = true"
+        @open-details="modalStore.paymentModel = true"
       />
     </section>
   </PaymentCardInfoHeader>
-  <CommonModalPaymentMethod v-model="openModal" />
+  <CommonModalPaymentMethod v-model="modalStore.paymentModel" />
 </template>
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
-const openModal = ref(false)
+const modalStore = useModalStore()
 
 const orderCartStore = useCartOrderStore()
 
