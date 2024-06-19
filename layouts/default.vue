@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="max-md:pb-16">
     <LayoutHeader
       v-if="useMobile('desktop')"
       class="sticky top-0 bg-white z-10"
