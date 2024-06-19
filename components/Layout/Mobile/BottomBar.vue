@@ -90,11 +90,11 @@ const openProfile = () => {
         #ffffff 17px,
         transparent 17px
       )
-      0% 0%/19px 19px no-repeat,
+      0 0/19px 19px no-repeat,
     radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 17px, transparent 17px)
-      100% 0%/19px 19px no-repeat,
+      100% 0/19px 19px no-repeat,
     radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 17px, transparent 17px)
-      0% 100%/19px 19px no-repeat,
+      0 100%/19px 19px no-repeat,
     radial-gradient(circle at 0 0, #ffffff 0, #ffffff 17px, transparent 17px)
       100% 100%/19px 19px no-repeat,
     linear-gradient(#ffffff, #ffffff) 50% 50% / calc(100% - 4px)
