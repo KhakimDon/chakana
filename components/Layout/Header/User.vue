@@ -73,7 +73,7 @@ const showDropdown = ref(false)
 
 const list = [
   {
-    link: '/profile',
+    link: '/profile/edit',
     title: t('my_infos'),
     icon: SvgoProfileUserCircle,
   },
