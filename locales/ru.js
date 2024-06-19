@@ -250,4 +250,6 @@ export default {
   kg: 'кг',
   l: 'л',
   saved_products: 'Сохраненные товары',
+  all_categories: 'Все категории',
+  filter: 'Фильтр',
 }
