@@ -1,7 +1,35 @@
 <template>
-  <CommonSectionWrapper title="take_and_go" class="mt-4">
+  <CommonSectionWrapper
+    :title="useMobile('desktop') ? 'take_and_go' : single?.name"
+    class="md:mt-4"
+  >
+    <template #top>
+      <NuxtLinkLocale
+        to="/categories"
+        class="flex items-center gap-1 text-gray-100 cursor-pointer group mb-3"
+      >
+        <IconChevron
+          class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
+        />
+        <p class="text-gray-100 group-hover:text-orange transition-300">
+          {{ $t('back') }}
+        </p>
+      </NuxtLinkLocale>
+    </template>
+    <template #action>
+      <BaseButton
+        variant="secondary"
+        class="!size-8 !p-0"
+        @click="isOpenFilter = true"
+      >
+        <IconFilter class="text-gray-100 text-[22px]" />
+      </BaseButton>
+    </template>
     <Transition name="fade" mode="out-in">
-      <div :key="loading" class="grid grid-cols-4 gap-x-4 gap-y-10">
+      <div
+        :key="loading"
+        class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-10"
+      >
         <template v-if="loading">
           <MainCardLoading v-for="key in 16" :key />
         </template>
@@ -9,7 +37,7 @@
           <MainCard v-for="(card, index) in list" :key="index" :card />
         </template>
         <template v-else>
-          <CommonNoData class="col-span-4" />
+          <CommonNoData class="col-span-2 sm:col-span-4" />
         </template>
         <template v-if="loadingMore">
           <MainCardLoading v-for="key in 12" :key />
@@ -20,19 +48,27 @@
       v-if="params?.count > list?.length && !loading && !loadingMore"
       ref="target"
     />
+
+    <Transition name="from-right" mode="out-in">
+      <MainCategoriesFilter v-if="isOpenFilter" @close="isOpenFilter = false" />
+    </Transition>
   </CommonSectionWrapper>
 </template>
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
 
+import IconChevron from '~/assets/icons/Common/chevron.svg'
+import IconFilter from '~/assets/icons/Common/filter.svg'
 import { useCategoriesStore } from '~/store/categories'
 import { debounce } from '~/utils/functions/common'
 
 const categoriesStore = useCategoriesStore()
 const route = useRoute()
 
+const isOpenFilter = ref(false)
 const loading = ref(true)
 const loadingMore = ref(false)
+const single = computed(() => categoriesStore.single)
 const params = reactive({
   page: 1,
   page_size: 24,
@@ -119,3 +155,22 @@ useSeoMeta({
   twitterCard: 'summary',
 })
 </script>
+
+<style scoped>
+.from-right-enter-active,
+.from-right-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.from-right-enter-from,
+.from-right-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.from-right-enter-to,
+.from-right-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+</style>
