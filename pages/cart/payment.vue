@@ -13,9 +13,10 @@
         />
       </section>
     </template>
+    <PaymentFullInfos />
   </LayoutWrapper>
   <LayoutMobile v-else>
-    <section class="mt-[85px] mb-24 space-y-6">
+    <section class="mb-24 space-y-6">
       <PaymentFullInfos />
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
@@ -91,11 +92,8 @@ watch(
   },
   { immediate: true, deep: true }
 )
-
-const cartProducts = computed(() => cartStore?.products)
-
 onMounted(() => {
-  if (cartProducts.value?.length === 0) {
+  if (!orderCartStore.orderDetail.address.id) {
     router.push(`/${locale.value}/cart`)
   }
 })

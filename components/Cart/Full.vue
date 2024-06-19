@@ -65,7 +65,6 @@
           :subtitle="$t('search_nodata_subtitle')"
           image="/images/no-data/no-searches.png"
         />
-        <SearchSectionNewProducts />
       </section>
       <slot />
     </div>

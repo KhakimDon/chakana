@@ -1,11 +1,11 @@
 <template>
   <nav
-    class="sticky left-0 right-0 px-10 py-2.5 bottom-0 w-full bg-gradient-to-t from-white from-80% to-transparent z-10 flex items-center"
+    class="fixed left-0 right-0 px-10 py-2.5 bottom-0 w-full bg-gradient-to-t from-white from-80% to-transparent z-10 flex items-center"
   >
     <div class="flex items-center justify-between w-full">
-      <NuxtLinkLocale to="/saved" class="w-9 h-9 rounded-full">
+      <div class="w-9 h-9 rounded-full cursor-pointer" @click="openSaved">
         <SvgoCommonHeartOutline class="text-[28px]" />
-      </NuxtLinkLocale>
+      </div>
       <NuxtLinkLocale
         to="/cart"
         class="flex-y-center px-4 h-[44px] gap-2 py-2 bg-green rounded-full text-white"
@@ -73,6 +73,14 @@ const totalPrice = computed(() =>
 const token = computed(() => authStore.accessToken)
 const user = computed(() => authStore.user)
 
+const openSaved = () => {
+  if (token.value) {
+    router.push(`/${locale.value}/saved`)
+  } else {
+    authStore.showAuth = true
+  }
+}
+
 const openProfile = () => {
   if (token.value) {
     router.push(`/${locale.value}/profile`)
@@ -90,11 +98,11 @@ const openProfile = () => {
         #ffffff 17px,
         transparent 17px
       )
-      0% 0%/19px 19px no-repeat,
+      0 0/19px 19px no-repeat,
     radial-gradient(circle at 0 100%, #ffffff 0, #ffffff 17px, transparent 17px)
-      100% 0%/19px 19px no-repeat,
+      100% 0/19px 19px no-repeat,
     radial-gradient(circle at 100% 0, #ffffff 0, #ffffff 17px, transparent 17px)
-      0% 100%/19px 19px no-repeat,
+      0 100%/19px 19px no-repeat,
     radial-gradient(circle at 0 0, #ffffff 0, #ffffff 17px, transparent 17px)
       100% 100%/19px 19px no-repeat,
     linear-gradient(#ffffff, #ffffff) 50% 50% / calc(100% - 4px)
