@@ -20,7 +20,7 @@
             v-model="search"
             :no-search-icon="false"
             :no-clear="false"
-            placeholder="Se$arch"
+            :placeholder="$t('search')"
             :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
