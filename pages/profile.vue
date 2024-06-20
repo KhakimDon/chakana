@@ -51,7 +51,7 @@
     </template>
   </LayoutWrapper>
   <LayoutMobile v-else>
-    <NuxtPage />
+    <NuxtPage :transition="{ name: 'fade', mode: 'out-in' }" />
   </LayoutMobile>
 </template>
 
