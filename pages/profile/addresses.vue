@@ -5,7 +5,7 @@ const addAddressModal = ref(false)
 </script>
 
 <template>
-  <div class="max-md:pt-4">
+  <div>
     <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <div class="flex-center-between mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
@@ -21,7 +21,7 @@ const addAddressModal = ref(false)
         {{ $t('add_address') }}
       </button>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       <div
         v-for="(item, index) in list"
         :key="index"
