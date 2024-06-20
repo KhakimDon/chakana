@@ -13,7 +13,6 @@
       >
         <IconChevron
           class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
-          @click="openDesc"
         />
         <p class="text-gray-100 group-hover:text-orange transition-300">
           {{ $t('back') }}
