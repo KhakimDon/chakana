@@ -16,7 +16,7 @@
         </p>
         <div
           v-if="cartProducts.length > 0"
-          class="hidden md:flex flex-center gap-2 group cursor-pointer select-none"
+          class="flex flex-center gap-2 group cursor-pointer select-none"
           :class="{ 'pointer-events-none': loading }"
           @click="clearCart"
         >

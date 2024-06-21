@@ -150,6 +150,7 @@ function apply() {
     cartOrderStore.applyPromoCode(form.values.code).then(() => {
       addNew.value = false
       selected.value = ''
+      cartOrderStore.getPromoCodeList()
     })
   }
 }
