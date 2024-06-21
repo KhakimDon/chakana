@@ -14,7 +14,7 @@
         </p>
         <div class="flex items-end gap-1">
           <p
-            class="text-base md:text-lg font-semibold md:font-bold leading-5 text-white"
+            class="text-base md:text-lg font-semibold md:font-bold !leading-5 text-white"
           >
             {{ formatMoneyDecimal(balance) }}
           </p>

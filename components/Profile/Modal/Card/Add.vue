@@ -69,6 +69,7 @@ const emit = defineEmits<{
 }>()
 
 const { showToast } = useCustomToast()
+const { handleError } = useErrorHandling()
 
 const { t } = useI18n()
 
@@ -108,7 +109,7 @@ function createCard() {
       step.value = 2
     })
     .catch((err: Error) => {
-      const { handleError } = useErrorHandling()
+      console.log(err)
       handleError(err)
     })
     .finally(() => {
