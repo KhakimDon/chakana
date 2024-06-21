@@ -250,6 +250,8 @@ export default {
   g: 'г',
   kg: 'кг',
   l: 'л',
+  comment_limit_alert: 'Комментарий не может быть больше 10 символов',
+  saved_product: 'Сохранен',
   saved_products: 'Сохраненные товары',
   comment_limit_alert: 'Минимальный лимит комментариев — 10 символов.',
   all_categories: 'Все категории',
