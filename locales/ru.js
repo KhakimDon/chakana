@@ -259,4 +259,8 @@ export default {
   your_message_successfully_sent: 'Ваш сообщение успешно отправлено',
   your_feedback_has_been_sent: 'Ваш отзыв отправлен',
   promocode_applied: 'Промокод применен',
+  auto_order: 'Автозаказ',
+  new_auto_order: 'Новый автозаказ',
+  name: 'Название',
+  date_delivery: 'Дата доставки',
 }

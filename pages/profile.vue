@@ -81,23 +81,30 @@ const hasPremium = computed(() => useAuthStore().user?.is_premium)
 
 const menu = [
   {
+    link: '/profile/auto-order',
+    title: t('auto_order'),
+    icon: 'SvgoCommonCalendar',
+    iconClass: 'text-orange group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
+  },
+  {
     link: '/profile/edit',
     title: t('my_infos'),
-    icon: SvgoProfileUserCircle,
+    icon: 'SvgoProfileUserCircle',
     iconClass: 'text-orange group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
   },
   {
     link: '/profile/orders',
     title: t('orders'),
-    icon: SvgoProfileSidebarCart,
+    icon: 'SvgoProfileSidebarCart',
     iconClass: 'text-blue-100 group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-blue-100 group-hover:bg-blue-100/20',
   },
   {
     link: '/profile/addresses',
     title: t('addresses'),
-    icon: SvgoProfileSidebarLocation,
+    icon: 'SvgoProfileSidebarLocation',
     iconClass: 'text-[#088339] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#088339] group-hover:bg-[#088339]/20',
@@ -105,14 +112,14 @@ const menu = [
   {
     link: '/profile/my-cards',
     title: t('my_cards'),
-    icon: SvgoProfileCard,
+    icon: 'SvgoProfileCard',
     iconClass: 'text-blue-100 group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-blue-100 group-hover:bg-blue-100/20',
   },
   {
     link: '/profile/notifications',
     title: t('notifications'),
-    icon: SvgoCommonBell,
+    icon: 'SvgoCommonBell',
     iconClass: 'text-[#F7C954] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#F7C954] group-hover:bg-[#F7C954]/20',
@@ -120,7 +127,7 @@ const menu = [
   {
     link: '/profile/saved',
     title: t('saved_list'),
-    icon: SvgoProfileSidebarMenuList,
+    icon: 'SvgoProfileSidebarMenuList',
     iconClass: 'text-[#9747FF] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#9747FF] group-hover:bg-[#9747FF]/20',
@@ -128,7 +135,7 @@ const menu = [
   {
     link: '/profile/promocodes',
     title: t('discounts_and_promocodes'),
-    icon: SvgoProfileSidebarTag,
+    icon: 'SvgoProfileSidebarTag',
     iconClass: 'text-[#F5C005] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#F5C005]  group-hover:bg-[#F5C005]/20',
@@ -136,7 +143,7 @@ const menu = [
   {
     link: '/profile/settings',
     title: t('settings'),
-    icon: SvgoProfileSidebarSettings,
+    icon: 'SvgoProfileSidebarSettings',
     iconClass: 'text-[#FF831B] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#FF831B]  group-hover:bg-[#FF831B]/20',

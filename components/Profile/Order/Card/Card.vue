@@ -33,20 +33,22 @@
 
       <!-- Card body -->
       <div class="my-3">
-        <div class="flex justify-between mb-1.5">
-          <p class="text-gray-100 text-xs font-semibold leading-130">
-            {{ $t('order_number') }}:
-          </p>
-          <span class="text-sm font-bold text-dark leading-130">
-            #{{ item.id }}
-          </span>
-        </div>
+        <slot name="body" :data="item">
+          <div class="flex justify-between mb-1.5">
+            <p class="text-gray-100 text-xs font-semibold leading-130">
+              {{ $t('order_number') }}:
+            </p>
+            <span class="text-sm font-bold text-dark leading-130">
+              #{{ item.id }}
+            </span>
+          </div>
 
-        <ProfileOrderCardBadge :type="item?.status" />
+          <ProfileOrderCardBadge :type="item?.status" />
+        </slot>
 
         <hr class="my-2.5 border-gray-200" />
 
-        <div class="flex justify-between mb-1.5 text-xs">
+        <div v-if="!autoOrder" class="flex justify-between mb-1.5 text-xs">
           <p class="text-gray-100 font-semibold leading-130">
             {{ $t('order_date') }}:
           </p>
@@ -64,7 +66,9 @@
       </div>
 
       <!-- Card footer -->
-      <NuxtLinkLocale :to="`/profile/order/${item.id}`">
+      <NuxtLinkLocale
+        :to="`/profile/${autoOrder ? 'auto-order' : 'order'}/${item.id}`"
+      >
         <BaseButton
           variant="outline"
           :text="$t('more_info_product')"
@@ -83,13 +87,16 @@
     <!-- Offer reorder -->
     <!--  For later usage  -->
     <BaseButton
-      v-if="offerReorder && false"
+      v-if="(offerReorder && false) || autoOrder"
       variant="secondary"
       :text="$t('reorder')"
       class="w-full mt-3 font-semibold"
     >
       <template #prefix>
-        <SvgoCommonRefresh class="text-xl leading-5" />
+        <component
+          :is="autoOrder ? 'SvgoCommonTrash' : 'SvgoCommonRefresh'"
+          class="text-xl leading-5"
+        />
       </template>
     </BaseButton>
   </div>
@@ -104,6 +111,7 @@ import { formatMoneyDecimal } from '~/utils/functions/common.js'
 interface Props {
   item: IOrderCard
   offerReorder?: boolean
+  autoOrder?: boolean
 }
 
 const props = defineProps<Props>()
