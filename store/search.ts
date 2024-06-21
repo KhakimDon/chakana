@@ -16,6 +16,7 @@ export const useSearchStore = defineStore('searchStore', () => {
     return new Promise((resolve, reject) => {
       if (force) {
         products.params.page = 1
+        products.loading = true
       } else {
         products.params.page += 1
         products.params.loading = true
