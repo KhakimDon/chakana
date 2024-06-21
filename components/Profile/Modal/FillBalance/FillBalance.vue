@@ -186,8 +186,6 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const { handleError } = useErrorHandling()
-
 const balanceStore = useBalanceStore()
 const balance = computed(() => balanceStore.balance)
 

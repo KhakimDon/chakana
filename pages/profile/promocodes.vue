@@ -14,7 +14,7 @@
           <div class="flex flex-col md:flex-row gap-y-2 gap-x-4">
             <FormInput
               v-model="form.values.promocode"
-              class="w-full mr-3 !bg-white caret-orange"
+              class="w-full !bg-white caret-orange"
               :class="{
                 animated: form.$v.value.promocode.$error && animate,
               }"
