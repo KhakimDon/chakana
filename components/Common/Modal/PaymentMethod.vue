@@ -197,7 +197,7 @@ const modalStore = useModalStore()
 
 const backToPromoCode = () => {
   modalStore.paymentModel = false
-  modalStore.promoModel = true
+  modalStore.commentModel = true
 }
 
 const orderCartStore = useCartOrderStore()

@@ -15,7 +15,7 @@
           v-model="form.values.comment"
           :error="form.$v.value.comment.$error"
           class="px-3"
-          input-class="!pl-2 text-sm font-medium leading-tight h-32"
+          input-class="!pl-2 text-base md:text-sm font-medium leading-tight h-32"
           :placeholder="$t('enter_comment')"
         />
       </FormGroup>
@@ -81,7 +81,7 @@ function add() {
     orderCartStore.orderDetail.comment_to_courier = form.values.comment
     loading.value = false
     if (isCartRoute.value) {
-      modalStore.promoModel = true
+      modalStore.paymentModel = true
     }
     emit('update:modelValue', false)
   } else {
