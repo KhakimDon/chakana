@@ -155,6 +155,13 @@ watch(
   (value: boolean) => {
     if (value) {
       step.value = 1
+    } else {
+      form.$v.value.$reset()
+      form.values = {
+        card_number: '',
+        expiry_date: '',
+        otp_code: '',
+      }
     }
   }
 )
