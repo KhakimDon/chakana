@@ -22,7 +22,7 @@
     </div>
     <section class="w-full">
       <div
-        v-if="!lists?.loading"
+        v-if="lists?.loading"
         class="flex-y-center flex-wrap gap-2 md:gap-3 my-4"
       >
         <div

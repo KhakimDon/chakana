@@ -6,7 +6,7 @@
       >
         <NuxtImg
           :src="product?.main_image"
-          class="w-full h-fit absolute -bottom-1 object-cover object-center"
+          class="w-full h-auto absolute -bottom-1 object-contain object-center"
         />
       </div>
       <div class="space-y-0.5">

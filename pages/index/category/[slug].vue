@@ -3,7 +3,7 @@
     :title="useMobile('desktop') ? 'take_and_go' : single?.name"
     class="md:mt-4"
   >
-    <template #top>
+    <template v-if="!useMobile('desktop')" #top>
       <NuxtLinkLocale
         to="/categories"
         class="flex items-center gap-1 text-gray-100 cursor-pointer group mb-3"
@@ -16,7 +16,7 @@
         </p>
       </NuxtLinkLocale>
     </template>
-    <template #action>
+    <template v-if="!useMobile('desktop')" #action>
       <BaseButton
         variant="secondary"
         class="!size-8 !p-0"
