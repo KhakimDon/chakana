@@ -73,9 +73,9 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       onlyOnRoot: true, // recommended
-      fallbackLocale: 'uz',
+      fallbackLocale: 'ru',
     },
-    defaultLocale: 'uz',
+    defaultLocale: 'ru',
     strategy: 'prefix_and_default',
   },
   nitro: {

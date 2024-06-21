@@ -2,9 +2,9 @@
   <nav
     class="fixed left-0 right-0 px-10 py-2.5 bottom-0 w-full bg-gradient-to-t from-white from-80% to-transparent z-10 flex items-center"
   >
-    <div class="flex items-center justify-between w-full">
+    <div class="flex items-center justify-between w-full pt-5">
       <div class="w-9 h-9 rounded-full cursor-pointer" @click="openSaved">
-        <SvgoCommonHeartOutline class="text-[28px]" />
+        <IconHeart class="text-[28px] text-gray-100" />
       </div>
       <NuxtLinkLocale
         to="/cart"
@@ -49,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import IconHeart from '~/assets/icons/Common/heart-stroke.svg'
 import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
