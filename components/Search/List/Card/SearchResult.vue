@@ -2,7 +2,7 @@
   <CommonSectionWrapper :title="item?.query">
     <Transition name="fade" mode="out-in">
       <div :key="item?.query" class="space-y-10">
-        <div :key class="grid grid-cols-5 gap-x-4 gap-y-10">
+        <div :key class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10">
           <MainCard
             v-for="(card, index) in item?.products"
             :key="index"
