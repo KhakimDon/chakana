@@ -7,14 +7,14 @@
       >
         <MainCardBadge
           v-if="card?.discount_type === 'percentage'"
-          class="absolute -top-2 left-2"
+          class="absolute bottom-1.5 left-2"
           :percent="card?.discount_percentage"
           :type="card?.discount_type"
         />
         <nuxt-img
           :src="getImageSize(card?.main_image, 'small')"
           alt="card-image"
-          class="w-[95px] h-full object-contain"
+          class="w-[135px] h-full object-contain -translate-y-6"
           loading="lazy"
         />
       </div>

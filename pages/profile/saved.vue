@@ -1,5 +1,6 @@
 <template>
   <main>
+    <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <div class="flex-center-between mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
         {{ $t('saved_list') }}
@@ -35,7 +36,7 @@
           @delete="deleteList"
         />
       </div>
-      <div v-else class="flex-center flex-col gap-3 mt-40">
+      <div v-else class="flex-center flex-col gap-3 md:mt-40">
         <CommonNoData
           class="w-full"
           image="/images/no-data/no-searches.png"

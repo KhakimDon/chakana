@@ -145,10 +145,10 @@ function createCard(mode?: string) {
           path: `/${locale.value}/search/list-results`,
           query: { listId: res?.main_note_id },
         })
-        emit('update:modelValue', false)
       } else {
         listStore.getUserProductsList()
       }
+      emit('update:modelValue', false)
     })
     .catch((err: Error) => {
       const { handleError } = useErrorHandling()
