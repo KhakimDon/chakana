@@ -7,6 +7,7 @@
   >
     <FormAvatarUpload
       :default-image="user?.image"
+      :has-image="user?.has_image"
       class="mb-6"
       @change="changeAvatar"
     />
