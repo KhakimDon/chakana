@@ -37,17 +37,25 @@ export const useListFetcher = <T>(
       ...customParams,
     })
 
-    if (params.page > 0) {
-      if (search) {
+    if (search) {
+      if (params.page > 1) {
         list.value = [...(list.value ?? []), ...data.suggestions]
+      } else {
+        list.value = data.suggestions
       }
-      if (itself && !search) {
+    }
+    if (itself && !search) {
+      if (params.page > 1) {
         list.value = [...(list.value ?? []), ...data.items]
-      } else if (!itself && !search) {
-        list.value = [...(list.value ?? []), ...data]
+      } else {
+        list.value = data.items
       }
-    } else {
-      list.value = data.items
+    } else if (!itself && !search) {
+      if (params.page > 1) {
+        list.value = [...(list.value ?? []), ...data]
+      } else {
+        list.value = data
+      }
     }
 
     paginationData.count = data?.count
@@ -64,6 +72,7 @@ export const useListFetcher = <T>(
 
   const resetList = () => {
     params.page = 1
+    loading.list = true
     fetchApplications()
   }
 

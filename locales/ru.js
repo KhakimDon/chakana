@@ -252,4 +252,7 @@ export default {
   saved_products: 'Сохраненные товары',
   comment_limit_alert: 'Комментарий не может быть больше 10 символов',
   success_send: 'Успешно отправлено',
+  success_edited: 'Успешно изменено',
+  success_deleted: 'Успешно удалено',
+  edit: 'Редактировать',
 }

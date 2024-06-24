@@ -1,14 +1,12 @@
 <template>
   <BaseModal
-    v-bind="{ show: openModal }"
+    :model-value="modelValue"
     :has-back="!showAddAddress"
-    :body-class="
-      !showAddAddress ? 'max-w-[868px] !w-full' : '!max-w-[646px] !w-full'
-    "
-    :title="$t('specify_your_delivery_address')"
+    body-class="!max-w-[868px] !w-full"
+    :title="defaultAddress ? $t('edit') : $t('specify_your_delivery_address')"
     disable-outer-close
-    @back="$emit('open-saved-adress')"
-    @close="$emit('close')"
+    @back="emit('open-saved-adress')"
+    @update:model-value="emit('update:model-value', $event)"
   >
     <div v-if="!showAddAddress">
       <p class="text-dark-100 text-sm font-medium leading-140">
@@ -21,7 +19,6 @@
             :no-search-icon="false"
             :no-clear="false"
             :placeholder="$t('search')"
-            :error="error"
             @search="searchQuery"
             @focus="isFocus = true"
             @blur="isFocus = false"
@@ -29,11 +26,11 @@
           <Transition name="fade" mode="out-in">
             <div
               v-if="openSearchList && searchAddressList.length && isFocus"
-              class="bg-white w-full h-[400px] absolute rounded-xl shadow-map z-10 overflow-hidden overflow-y-scroll mt-2"
+              class="bg-white w-full max-h-[400px] absolute rounded-xl shadow-map z-10 overflow-hidden overflow-y-scroll mt-2"
             >
               <ul>
                 <li
-                  v-for="item in [...searchAddressList, ...searchAddressList]"
+                  v-for="item in searchAddressList"
                   :key="item.id"
                   class="cursor-pointer"
                 >
@@ -113,25 +110,33 @@
           />
         </FormGroup>
         <FormGroup :label="$t('name_address')">
-          <FormInput
-            v-model="nameAddress"
-            :placeholder="$t('name_address')"
-            :error="error"
-          />
+          <FormInput v-model="nameAddress" :placeholder="$t('name_address')" />
         </FormGroup>
       </div>
       <div class="flex items-center gap-4 mt-6">
         <BaseButton
+          v-if="!defaultAddress"
           class="w-full group"
-          :loading="false"
           :text="$t('cancel')"
           variant="secondary"
-          @click="$emit('close')"
+          @click="showAddAddress = false"
         />
+        <BaseButton
+          v-else
+          class="w-full group"
+          :text="$t('delete')"
+          variant="secondary"
+          :loading="deleteLoading"
+          @click="deleteAddress"
+        >
+          <template #prefix>
+            <SvgoCommonTrash class="text-2xl leading-6" />
+          </template>
+        </BaseButton>
         <BaseButton
           class="w-full group"
           :loading="buttonLoading"
-          :text="$t('add')"
+          :text="defaultAddress ? $t('save') : $t('add')"
           variant="primary"
           @click="sendAddress"
         />
@@ -153,16 +158,20 @@ import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
 
 interface Props {
-  openModal?: boolean
-  list?: any
+  modelValue: boolean
+  defaultAddress?: any
 }
+const props = defineProps<Props>()
 
 interface Emits {
-  (e: 'close', v: boolean): void
+  (e: 'open-saved-adress'): void
+  (e: 'edited'): void
+  (e: 'update:model-value', value: boolean): void
 }
+const emit = defineEmits<Emits>()
 
-defineProps<Props>()
-const $emit = defineEmits<Emits>()
+const { t } = useI18n()
+
 const addressStore = useAddressStore()
 const { handleError } = useErrorHandling()
 const { showToast } = useCustomToast()
@@ -174,7 +183,7 @@ const buttonLoading = ref<boolean>(false)
 const coordinates = ref([41.377541, 69.237922])
 const showAddAddress = ref(false)
 const selectIcons = ref<number | string | { [key: string]: string | number }>()
-const search = ref<string>('')
+const search = ref<string>(props.defaultAddress?.street)
 const isFocus = ref<boolean>(false)
 const openSearchList = ref<boolean>(false)
 const nameAddress = ref<string>('')
@@ -227,30 +236,11 @@ const changeCoords = (item: any) => {
 function sendAddress() {
   if (search.value && selectIcons.value && nameAddress.value) {
     buttonLoading.value = true
-    useApi()
-      .$post('/saved/address', {
-        body: {
-          icon_id: selectIcons.value,
-          title: nameAddress.value,
-          street: addressClick.value.street,
-          zip: addressClick.value.zip,
-          latitude: coordinates.value[0],
-          longitude: coordinates.value[1],
-        },
-      })
-      .then((res: any) => {
-        if (res.saved) {
-          showToast(t('success_send'), 'success')
-        }
-      })
-      .catch((err: any) => {
-        handleError(err)
-      })
-      .finally(() => {
-        buttonLoading.value = false
-        showAddAddress.value = false
-        $emit('close')
-      })
+    if (props.defaultAddress) {
+      editAddress()
+    } else {
+      saveAddress()
+    }
   } else {
     error.value = true
   }
@@ -263,7 +253,7 @@ watch(
   }
 )
 
-onMounted(() => {
+function getCurrentLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((currentPosition) => {
       coordinates.value = [
@@ -276,7 +266,103 @@ onMounted(() => {
   } else {
     console.log('Geolocation is not supported in this browser')
   }
+}
+
+onMounted(() => {
+  getCurrentLocation()
 })
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value && props.defaultAddress) {
+      search.value = props.defaultAddress?.street
+      selectIcons.value = props.defaultAddress?.icon_id
+      nameAddress.value = props.defaultAddress?.title
+      coordinates.value = [
+        props.defaultAddress?.latitude,
+        props.defaultAddress?.longitude,
+      ]
+      showAddAddress.value = true
+    } else {
+      showAddAddress.value = false
+      search.value = ''
+      // selectIcons.value = ''
+      nameAddress.value = ''
+      getCurrentLocation()
+    }
+  },
+  { immediate: true }
+)
+
+function saveAddress() {
+  useApi()
+    .$post('/saved/address', {
+      body: {
+        icon_id: selectIcons.value,
+        title: nameAddress.value,
+        street: addressClick.value.street,
+        zip: addressClick.value.zip,
+        latitude: coordinates.value[0],
+        longitude: coordinates.value[1],
+      },
+    })
+    .then((res: any) => {
+      if (res.saved) {
+        showToast(t('success_send'), 'success')
+      }
+    })
+    .catch((err: any) => {
+      handleError(err)
+    })
+    .finally(() => {
+      buttonLoading.value = false
+      showAddAddress.value = false
+      emit('update:model-value', false)
+    })
+}
+
+function editAddress() {
+  useApi()
+    .$put(`/saved/address/${props.defaultAddress?.id}`, {
+      body: {
+        icon_id: selectIcons.value,
+        title: nameAddress.value,
+        street: addressClick.value.street,
+        zip: addressClick.value.zip.toString(),
+        latitude: coordinates.value[0],
+        longitude: coordinates.value[1],
+      },
+    })
+    .then(() => {
+      showToast(t('success_edited'), 'success')
+      showAddAddress.value = false
+      emit('update:model-value', false)
+      emit('edited')
+    })
+    .catch((err: any) => {
+      handleError(err)
+    })
+    .finally(() => {
+      buttonLoading.value = false
+    })
+}
+
+const deleteLoading = ref(false)
+function deleteAddress() {
+  deleteLoading.value = true
+  useApi()
+    .$delete(`/saved/address/${props.defaultAddress?.id}`)
+    .then(() => {
+      showToast(t('success_deleted'), 'success')
+    })
+    .catch((err: any) => {
+      handleError(err)
+    })
+    .finally(() => {
+      deleteLoading.value = false
+    })
+}
 </script>
 <style scoped>
 /* width */
