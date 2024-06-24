@@ -50,7 +50,7 @@
       </template>
       <div
         v-else-if="cartProducts.length && !loading"
-        class="mt-6 h-56 md:h-96 overflow-y-auto"
+        class="mt-6 h-56 md:h-96 overflow-y-auto pt-5"
       >
         <SearchCardProduct
           v-for="(product, key) in cartProducts"
