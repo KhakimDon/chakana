@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <h1 class="text-xl font-extrabold leading-7 text-dark mb-4">
       {{ $t('settings') }}
     </h1>
@@ -38,7 +39,7 @@
     <BaseModal v-model="languageModal" :title="$t('choose_language')">
       <FormRadioGroup
         v-model="language"
-        class="-mx-5 -mt-5 mb-5"
+        class="-mx-5 -mt-5 mb-3 md:mb-5"
         value-key="code"
         item-class="flex-row-reverse justify-between"
         :items="languagesList"
@@ -62,8 +63,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { SvgoCommonBell, SvgoCommonGlobe } from '#components'
-
 const { currentLanguage, languagesList, changeLocale } = useLanguageSwitcher()
 
 const listLinks = ref([
@@ -71,13 +70,13 @@ const listLinks = ref([
     name: 'language',
     subtitle: currentLanguage.value?.nameFull,
     wrapperClass: 'hover:border-orange hover:bg-orange/10',
-    icon: SvgoCommonGlobe,
+    icon: 'SvgoCommonGlobe',
     iconClass: 'text-orange',
     value: 'language',
   },
   {
     name: 'send_notification',
-    icon: SvgoCommonBell,
+    icon: 'SvgoCommonBell',
     wrapperClass: 'hover:border-[#F7C954] hover:bg-[#F7C954]/10',
     iconClass: 'text-[#F7C954]',
     value: 'notification',

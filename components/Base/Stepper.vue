@@ -2,7 +2,7 @@
   <div class="flex-center gap-2">
     <template v-for="(item, index) in steps" :key="item.id">
       <div
-        class="w-12 h-12 border rounded-xl flex-center transition-300"
+        class="w-12 h-12 shrink-0 border rounded-xl flex-center transition-300"
         :class="detectIconClass(index)"
       >
         <component :is="item.icon" class="text-[32px] leading-[32px]" />

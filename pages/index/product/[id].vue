@@ -1,25 +1,34 @@
 <template>
-  <div>
+  <section class="mt-[85px] mb-24 space-y-6">
     <div>
       <MainCardBadge
         v-if="data?.discount_percentage"
-        class="px-1.5 py-1 mb-3"
+        class="px-1.5 py-1 mb-3 hidden md:flex"
         :percent="data?.discount_percentage"
         :type="data?.discount_type"
       />
-    </div>
-    <div>
-      <h1 class="text-[22px] font-bold leading-130 text-dark">
+      <div
+        class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
+        @click="router.back()"
+      >
+        <IconChevron
+          class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
+        />
+        <p class="text-gray-100 group-hover:text-orange transition-300">
+          {{ $t('back') }}
+        </p>
+      </div>
+      <h1
+        class="text-[22px] font-bold leading-130 text-dark mb-4 hidden md:block"
+      >
         {{ data?.name }}
       </h1>
-      <p
-        v-if="data?.product_uom_amount && data?.product_uom"
-        class="text-base font-medium text-gray-100"
-      >
-        {{ data?.product_uom_amount }} {{ $t(data?.product_uom) }}
-      </p>
-      <div class="grid grid-cols-9 gap-5 mt-4">
-        <div class="max-w-[313px] shrink-0 col-span-4">
+    </div>
+    <div>
+      <div class="grid grid-cols-1 md:grid-cols-9 gap-5 mt-4">
+        <div
+          class="max-w-[100%] md:max-w-[313px] shrink-0 col-span-12 md:col-span-4"
+        >
           <div
             class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
           >
@@ -81,7 +90,24 @@
             />
           </swiper>
         </div>
-        <div class="col-span-5">
+        <div class="col-span-12 md:col-span-5">
+          <MainCardBadge
+            v-if="data?.discount_percentage"
+            class="px-1.5 py-1 mb-3 flex md:hidden"
+            :percent="data?.discount_percentage"
+            :type="data?.discount_type"
+          />
+          <h1
+            class="text-[22px] font-bold leading-130 text-dark mb-4 block md:hidden"
+          >
+            {{ data?.name }}
+          </h1>
+          <p
+            v-if="data?.product_uom_amount && data?.product_uom"
+            class="text-base font-medium text-gray-100 hidden md:flex"
+          >
+            {{ data?.product_uom_amount }} {{ $t(data?.product_uom) }}
+          </p>
           <div v-if="data?.discount_price">
             <div class="flex items-center gap-1">
               <p
@@ -145,9 +171,11 @@
                 v-if="data.saved || saved"
                 variant="outline"
                 class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                :loading="buttonLoading"
+                @click="savedProducts"
               >
                 <IconHeart class="text-xl text-orange" />
-                <p>{{ $t('saved_product') }}</p>
+                <p class="hidden md:block">{{ $t('saved_product') }}</p>
               </BaseButton>
               <BaseButton
                 v-else
@@ -215,7 +243,10 @@
         <div v-if="loading?.list" class="grid grid-cols-5 gap-4">
           <MainCardLoading v-for="key in 16" :key="key" />
         </div>
-        <div v-else-if="list?.length" class="grid grid-cols-5 gap-4">
+        <div
+          v-else-if="list?.length"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8"
+        >
           <MainCard v-for="(card, index) in list" :key="index" :card="card" />
           <!--            @open="selectProduct(card)"-->
         </div>
@@ -223,7 +254,10 @@
           <CommonNoData class="col-span-4" />
         </div>
       </Transition>
-      <div v-if="loading?.button" class="grid grid-cols-5 gap-4">
+      <div
+        v-if="loading?.button"
+        class="grid md:grid-cols-4 lg:grid-cols-5 gap-4"
+      >
         <MainCardLoading v-for="key in 12" :key="key" />
       </div>
       <div
@@ -247,9 +281,22 @@
         >
           <img :src="item.image" alt="" class="p-1.5 bg-orange/10 rounded-lg" />
         </div>
+        <div
+          class="border border-white-100 p-1.5 rounded-xl cursor-pointer relative"
+          @click="copyUrl"
+        >
+          <img
+            src="/images/fake/copy-link.svg"
+            alt=""
+            class="p-1.5 bg-orange/10 rounded-lg"
+          />
+          <CommonTooltip with-trigger :show="copied">{{
+            $t('copied')
+          }}</CommonTooltip>
+        </div>
       </div>
     </BaseModal>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -282,6 +329,17 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
   25,
   true
 )
+
+const router = useRouter()
+
+const copied = ref(false)
+async function copyUrl() {
+  copied.value = true
+  await navigator.clipboard.writeText(window.location.href)
+  setTimeout(() => {
+    copied.value = false
+  }, 1500)
+}
 
 const thumbSettings = {
   slidesPerView: 'auto',
@@ -352,7 +410,11 @@ const savedProducts = () => {
       },
     })
     .then((res: any) => {
-      saved.value = res.saved
+      if (res.saved) {
+        saved.value = res.saved
+      } else {
+        saved.value = false
+      }
     })
     .catch((err) => {
       handleError(err)

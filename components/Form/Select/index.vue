@@ -6,7 +6,7 @@
       tabindex="1"
       :class="[
         selectedOptionStyles,
-        error ? '!border-red bg-red-100' : '',
+        error ? '!border-red' : '',
         { 'focus-within:border-gray-100': disabled },
         headStyles,
       ]"

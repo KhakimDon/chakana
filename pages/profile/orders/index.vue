@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <template v-if="orders.loading">
       <ProfileOrderCardLoading v-for="i in 6" :key="i" />
     </template>

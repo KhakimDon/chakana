@@ -1,49 +1,49 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('payment_method')"
+    :title="$t('buy_premium')"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <div>
-      <div
-        class="flex-y-center gap-1 select-none cursor-pointer"
-        @click="courierCard = !courierCard"
-      >
-        <SvgoProfileUser class="text-orange text-2xl" />
+      <div class="p-4 rounded-xl bg-gray-300 mb-2">
+        <h3 class="text-base font-extrabold leading-130 text-dark mb-4">
+          {{ $t('ticket_for_payment') }}
+        </h3>
         <div
-          class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
+          class="flex items-end justify-between pb-4 border-b text-gray-200 mb-4"
         >
-          <p class="text-sm font-semibold leading-tight text-dark">
-            {{ $t('courier_card') }}
+          <p class="text-dark font-semibold leading-130 text-sm">
+            {{ $t('premium_subscription') }}
           </p>
-          <FormRadio v-if="!courierCard" v-model="courierCard" class="!p-0" />
-          <FormRadio v-else class="!p-0" />
+          <p
+            class="flex items-end gap-1 text-sm font-bold leading-130 text-dark"
+          >
+            {{ formatMoneyDecimal(subscription.price) }}
+            <span class="text-xs">UZS</span>
+          </p>
+        </div>
+        <div class="flex items-end justify-between">
+          <p class="text-dark font-extrabold leading-130 text-base">
+            {{ $t('total_sum') }}
+          </p>
+          <p
+            class="flex items-end gap-1 text-xl font-extrabold leading-130 text-green"
+          >
+            {{ formatMoneyDecimal(subscription.price) }}
+            <span class="text-sm">UZS</span>
+          </p>
         </div>
       </div>
-      <div
-        class="flex-y-center gap-1 select-none cursor-pointer"
-        @click="cash = !cash"
-      >
-        <SvgoProfileMoney class="text-green text-2xl" />
-        <div
-          class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
-        >
-          <p class="text-sm font-semibold leading-tight text-dark">
-            {{ $t('cash') }}
-          </p>
-          <FormRadio v-if="!cash" v-model="cash" class="!p-0" />
-          <FormRadio v-else class="!p-0" />
-        </div>
-      </div>
-      <div>
-        <div class="flex-y-center gap-1 my-4">
+
+      <div class="border-b border-white-100 -mx-5 px-5 pb-4">
+        <div class="flex-y-center gap-1 py-4">
           <SvgoProfileCard class="!text-blue-100 text-2xl" />
           <p class="text-sm font-semibold leading-tight text-dark">
             {{ $t('payment_via_card') }}
           </p>
         </div>
         <Transition name="fade" mode="out-in">
-          <div :key="cards.loading" class="w-full mb-3">
+          <div :key="cards.loading" class="w-full mb-2">
             <template v-if="cards.loading">
               <ProfileMyCardLoading v-for="i in 4" :key="i" />
             </template>
@@ -51,7 +51,7 @@
               <div
                 v-for="item in cards.list"
                 :key="item.id"
-                class="flex-y-center gap-1 select-none cursor-pointer"
+                class="flex-y-center gap-1 select-none cursor-pointer group"
                 @click="cardId = item.id"
               >
                 <img
@@ -61,7 +61,7 @@
                   :alt="item.processing"
                 />
                 <div
-                  class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
+                  class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full group-last:border-b-0"
                 >
                   <p class="text-sm font-semibold leading-tight text-dark">
                     {{ item?.card_number }}
@@ -75,17 +75,10 @@
                 </div>
               </div>
             </template>
-            <template v-else>
-              <CommonNoData
-                class="col-span-2"
-                :title="$t('no_cards_yet')"
-                :subtitle="$t('you_still_dont_have_cards')"
-              />
-            </template>
           </div>
         </Transition>
         <BaseButton
-          class="!py-3 w-full group"
+          class="!py-1.5 w-full group"
           variant="secondary"
           :text="$t('add_card')"
           size="md"
@@ -98,7 +91,27 @@
           </template>
         </BaseButton>
       </div>
-      <div class="flex-y-center gap-1 my-4">
+      <div
+        class="flex-y-center gap-1 select-none cursor-pointer border-b border-white-100 -mx-5 px-5"
+        @click="balance = true"
+      >
+        <SvgoProfileWallet class="text-blue-100 text-2xl" />
+        <div class="flex-y-center gap-1 py-3 justify-between w-full">
+          <div>
+            <p class="text-sm font-semibold leading-tight text-dark">
+              {{ $t('use_balance') }}
+            </p>
+            <p class="text-xs leading-130 font-normal text-gray-100">
+              {{
+                $t('card_price', { price: formatMoneyDecimal(balanceAmount) })
+              }}
+            </p>
+          </div>
+          <FormRadio v-if="!balance" v-model="balance" class="!p-0" />
+          <FormRadio v-else class="!p-0" />
+        </div>
+      </div>
+      <div class="flex-y-center gap-1 my-2.5">
         <SvgoProfileCoins class="text-orange text-2xl" />
         <p class="text-sm font-semibold leading-tight text-dark">
           {{ $t('payment_system') }}
@@ -118,42 +131,43 @@
 </template>
 
 <script setup lang="ts">
-import { useCartOrderStore } from '~/store/cart_order.js'
+import { useAuthStore } from '~/store/auth.js'
 import { usePaymentStore } from '~/store/payment.js'
+import { useBalanceStore } from '~/store/profile/balance.js'
 import { useCardsStore } from '~/store/profile/cards.js'
+import {
+  type ISubscription,
+  useSubscriptionsStore,
+} from '~/store/profile/subscription.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
   modelValue: boolean
+  subscription: ISubscription
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
+  (e: 'close'): void
 }>()
 
+const { handleError } = useErrorHandling()
+const { showToast } = useCustomToast()
+const { t } = useI18n()
+
+const balanceAmount = computed(() => useBalanceStore().balance)
+
 const loading = ref(false)
-const courierCard = ref(false)
-const cash = ref(false)
+const balance = ref(false)
 const cardId = ref(0)
 const paymentType = ref(0)
 
 watch(
-  () => cash.value,
+  () => balance.value,
   (val) => {
     if (val) {
-      courierCard.value = false
-      paymentType.value = 0
-      cardId.value = 0
-    }
-  }
-)
-
-watch(
-  () => courierCard.value,
-  (val) => {
-    if (val) {
-      cash.value = false
       paymentType.value = 0
       cardId.value = 0
     }
@@ -164,8 +178,7 @@ watch(
   () => paymentType.value,
   (val) => {
     if (val) {
-      cash.value = false
-      courierCard.value = false
+      balance.value = false
       cardId.value = 0
     }
   }
@@ -175,22 +188,33 @@ watch(
   () => cardId.value,
   (val) => {
     if (val) {
-      cash.value = false
-      courierCard.value = false
+      balance.value = false
       paymentType.value = 0
     }
   }
 )
 
-const orderCartStore = useCartOrderStore()
+const subscriptionStore = useSubscriptionsStore()
+const authStore = useAuthStore()
 function add() {
-  orderCartStore.orderDetail.payment_method.provider_id = paymentType.value
-  orderCartStore.orderDetail.payment_method.cash = cash.value
-  orderCartStore.orderDetail.payment_method.card_to_the_courier =
-    courierCard.value
-  orderCartStore.orderDetail.payment_method.card_id = cardId.value
-
-  emit('update:modelValue', false)
+  // subscriptionStore.getSubscription()
+  const data = {
+    card_id: cardId.value || undefined,
+    is_use_balance: balance.value,
+    provider: paymentType.value || undefined,
+  }
+  subscriptionStore
+    .getSubscription(data)
+    .then(() => {
+      showToast(t('you_bought_premium'), 'success')
+      authStore.fetchUser()
+      emit('update:modelValue', false)
+      emit('close')
+    })
+    .catch((err) => {
+      handleError(err)
+    })
+  // emit('update:modelValue', false)
 }
 
 const paymentStore = usePaymentStore()

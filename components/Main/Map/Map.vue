@@ -4,7 +4,7 @@
       {{ $t('your_address') }}
     </p>
     <p class="mt-0.5 text-sm leading-130 font-bold text-dark mb-4">
-      улица Адхама Рахмата, 15
+      {{ title }}
     </p>
     <div class="relative overflow-hidden rounded-xl">
       <YandexMap
@@ -19,13 +19,20 @@
       </YandexMap>
     </div>
 
-    <div class="flex-y-center gap-3 mt-4">
-      <BaseButton class="w-full" :text="$t('yes_it_is')" />
+    <div v-if="!savedCoords?.length" class="flex-y-center gap-3 mt-4">
+      <BaseButton class="w-full" :text="$t('yes_it_is')" @click="submit" />
       <BaseButton
         class="w-full"
         :text="$t('no_other')"
         variant="secondary-dark"
         @click="$emit('change-coords')"
+      />
+    </div>
+    <div v-else class="flex-y-center gap-3 mt-4">
+      <BaseButton
+        class="w-full"
+        :text="$t('change_address')"
+        @click="clearCoords"
       />
     </div>
   </div>
@@ -38,8 +45,16 @@ import {
 } from 'vue-yandex-maps'
 
 import { CONFIG } from '~/config'
+import { useAddressStore } from '~/store/address'
 
-const coordinates = ref([41.377541, 69.237922])
+const { t } = useI18n()
+
+const addressStore = useAddressStore()
+
+const savedCoords = computed(() => addressStore.coordinates)
+
+const coordinates = ref([41.310329, 69.279935])
+const title = ref(t('amir_temur'))
 
 const settings = {
   apiKey: CONFIG.YANDEX_KEY,
@@ -49,6 +64,19 @@ const settings = {
   version: '2.1',
 }
 loadYmap({ ...settings })
+
+function getLocation() {
+  useApi()
+    .$get('get/address', {
+      params: {
+        latitude: coordinates.value[0],
+        longitude: coordinates.value[1],
+      },
+    })
+    .then((res: any) => {
+      title.value = res.full
+    })
+}
 
 onMounted(() => {
   if (process.client) {
@@ -62,6 +90,8 @@ onMounted(() => {
                 position.coords.latitude,
                 position.coords.longitude,
               ]
+
+              getLocation()
             })
           }, 5000)
         } else if (res?.state === 'granted') {
@@ -70,16 +100,25 @@ onMounted(() => {
               position.coords.latitude,
               position.coords.longitude,
             ]
+            getLocation()
           })
         } else {
-          coordinates.value = [41.377541, 69.237922]
+          coordinates.value = [41.310329, 69.279935]
         }
       })
       .catch(() => {
-        coordinates.value = [41.377541, 69.237922]
+        coordinates.value = [41.310329, 69.279935]
       })
   }
 })
+
+function submit() {
+  addressStore.coordinates = coordinates.value
+}
+
+function clearCoords() {
+  addressStore.coordinates = []
+}
 </script>
 
 <style>

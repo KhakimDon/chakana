@@ -105,7 +105,7 @@ const variants: Record<TButtonVariants, string> = {
 
 const sizes: Record<TButtonSizes, string> = {
   sm: `py-2 px-2 text-sm font-medium leading-130`,
-  md: 'py-2 px-4 font-semibold text-sm leading-5',
+  md: 'py-3 px-4 font-semibold text-sm leading-5',
 }
 
 const loaderFill = computed(() => {

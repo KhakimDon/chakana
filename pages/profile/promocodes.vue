@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <div class="flex-center-between mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
         {{ $t('discounts_and_promocodes') }}
@@ -8,18 +9,16 @@
 
     <!-- Enter promocode -->
     <div class="flex flex-col gap-5">
-      <div class="bg-gray-300 p-4 rounded-xl">
+      <div class="bg-gray-300 max-md:-mx-4 p-4 sm:rounded-xl">
         <FormGroup class="!gap-1" :label="$t('enter_codeword')">
-          <div class="flex">
+          <div class="flex flex-col md:flex-row gap-y-2 gap-x-4">
             <FormInput
               v-model="form.values.promocode"
-              class="w-full mr-3 !bg-white caret-orange"
+              class="w-full !bg-white caret-orange"
               :class="{
-                animated:
-                  (form.$v.value.promocode.$error || !applyResult.success) &&
-                  animate,
+                animated: form.$v.value.promocode.$error && animate,
               }"
-              :error="form.$v.value.promocode.$error || !applyResult.success"
+              :error="form.$v.value.promocode.$error"
               input-class="placeholder:font-medium"
               :placeholder="$t('codeword')"
               @enter="applyPromocode"
@@ -27,14 +26,16 @@
             />
             <BaseButton
               :text="$t('apply')"
-              class="!p-3"
+              class="sm:!p-3"
               @click="applyPromocode"
             />
           </div>
         </FormGroup>
       </div>
 
-      <div class="flex flex-col gap-3 bg-gray-300 p-4 rounded-xl">
+      <div
+        class="flex flex-col gap-3 bg-gray-300 max-sm:-mx-4 p-4 sm:rounded-xl"
+      >
         <template v-if="promocodes?.loading">
           <ProfilePromocodesCardLoading v-for="key in 4" :key />
         </template>
@@ -57,9 +58,9 @@ import { required } from '@vuelidate/validators'
 
 import { usePromocodesStore } from '~/store/profile/promocodes'
 
+const { t } = useI18n()
 const promocodesStore = usePromocodesStore()
 const animate = ref(false)
-const applyResult = computed(() => promocodesStore.applyResult)
 const promocodes = computed(() => promocodesStore.promocodes)
 
 promocodesStore.fetchPromocodes()
@@ -73,6 +74,7 @@ const form = useForm(
   }
 )
 
+const loading = ref(false)
 const applyPromocode = () => {
   form.$v.value.$touch()
   if (form.$v.value.$invalid) {
@@ -80,11 +82,23 @@ const applyPromocode = () => {
     return
   }
 
-  promocodesStore.applyPromocode(form.values.promocode)
-
-  if (!applyResult.value.success) {
-    animate.value = true
-  }
+  loading.value = true
+  promocodesStore
+    .applyPromocode(form.values.promocode)
+    .then(() => {
+      useCustomToast().showToast(t('promocode_applied'), 'success')
+      promocodesStore.promocodes.loading = true
+      promocodesStore.fetchPromocodes()
+      form.values.promocode = ''
+      form.$v.value.$reset()
+    })
+    .catch((e) => {
+      useErrorHandling().handleError(e)
+      animate.value = true
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
 const handleAnimationEnd = () => {

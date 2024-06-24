@@ -3,16 +3,16 @@
     icon="SvgoProfileUserCircle"
     icon-class="text-teal-700 !text-2xl"
     :title="userData?.length > 10 ? userData : $t('recipient_details')"
-    @open-details="openModal = true"
+    @open-details="modalStore.userModel = true"
   />
-  <ModalUserData v-model="openModal" />
+  <PaymentModalUserData v-model="modalStore.userModel" />
 </template>
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
-const openModal = ref(false)
-
+const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const userData = computed(

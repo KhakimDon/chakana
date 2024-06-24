@@ -1,6 +1,10 @@
 <template>
   <div>
-    <LayoutHeader />
+    <LayoutHeader
+      v-if="useMobile('desktop')"
+      class="sticky top-0 bg-white z-10"
+    />
+    <LayoutHeaderMobile v-else class="sticky top-0 bg-white z-10" />
 
     <div class="min-h-[calc(100vh-70px)] relative container flex items-center">
       <div>
@@ -15,10 +19,10 @@
           <BaseButton class="px-[26px]" :text="$t('back_home')" />
         </NuxtLinkLocale>
       </div>
-      <nuxt-img
+      <img
         :src="errorCode === 404 ? '/images/error.png' : '/images/error-500.png'"
-        loading="lazy"
-        class="absolute-y max-w-[715px] right-10"
+        alt="error"
+        class="absolute-y hidden md:block md:max-w-[715px] right-10"
       />
     </div>
   </div>

@@ -8,7 +8,7 @@
           />
         </NuxtLinkLocale>
         <div>
-          <p class="text-xl font-extrabold text-dark">
+          <p class="text-base md:text-xl font-extrabold text-dark">
             {{ $t('from_your_request') }}
           </p>
           <p class="text-sm font-medium leading-130 text-gray-100">
@@ -39,7 +39,7 @@
       <div v-if="results.loading">
         <div v-for="i in 2" :key="i" class="space-y-5 mt-6">
           <div class="h-10 rounded-10 w-28 shimmer"></div>
-          <div class="grid grid-cols-5 gap-x-4 gap-y-10">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10">
             <MainCardLoading v-for="key in 8" :key />
           </div>
         </div>
@@ -76,7 +76,7 @@
       :product="selectedProduct"
       @close="showProduct = false"
     />
-    <ModalListChecking
+    <PaymentModalListChecking
       v-model="showCheckingList"
       :single-list="selectedList"
       @close="showCheckingList = false"

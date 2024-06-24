@@ -2,6 +2,7 @@
   <FormInput
     :id="id"
     v-model="search"
+    :error="error"
     :input-class="[
       'sm:!text-2xs !py-2.5',
       {
@@ -62,6 +63,7 @@ interface Props {
   noClear?: boolean
   id?: string
   iconCloseStyles?: string
+  error?: boolean
 }
 const props = defineProps<Props>()
 
@@ -83,6 +85,19 @@ watch(
       'search',
       () => {
         emit('update:modelValue', v)
+      },
+      700
+    )
+  }
+)
+
+watch(
+  () => search.value,
+  (v) => {
+    debounce(
+      'search',
+      () => {
+        emit('search', v)
       },
       700
     )

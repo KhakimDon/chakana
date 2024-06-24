@@ -6,7 +6,7 @@
         icon-class="text-orange !text-2xl"
         :no-clickable="hasPromoCode"
         :title="!hasPromoCode ? $t('promo_code') : ''"
-        @open-details="openModal = true"
+        @open-details="modalStore.promoModel = true"
       >
         <div
           v-if="hasPromoCode"
@@ -34,19 +34,32 @@
       </PaymentCardInfo>
     </section>
   </PaymentCardInfoHeader>
-  <ModalPromoCode v-model="openModal" @confirm-promo-code="selectPromoCode" />
-  <ModalDiscountDetails v-model="openDetail" :promo-code="selectedPromoCode" />
+  <PaymentModalPromoCode
+    v-model="modalStore.promoModel"
+    @confirm-promo-code="selectPromoCode"
+  />
+  <PaymentModalDiscountDetails
+    v-model="openDetail"
+    :promo-code="selectedPromoCode"
+  />
 </template>
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const openModal = ref(false)
+const modalStore = useModalStore()
 const hasPromoCode = ref(false)
 
 const cartOrderStore = useCartOrderStore()
-const promoCodes = computed(() => cartOrderStore.promoCodes)
+const promoCodes = computed(() => {
+  if (cartOrderStore.orderDetail.promo_code_id) {
+    hasPromoCode.value = true
+    selectedPromoCodeId.value = cartOrderStore.orderDetail.promo_code_id
+  }
+  return cartOrderStore.promoCodes
+})
 
 const selectedPromoCodeId = ref()
 
@@ -66,7 +79,7 @@ watch(
 const selectPromoCode = (code: number) => {
   selectedPromoCodeId.value = code
   hasPromoCode.value = true
-  openModal.value = false
+  modalStore.promoModel = false
   cartOrderStore.orderDetail.promo_code_id = code
 }
 

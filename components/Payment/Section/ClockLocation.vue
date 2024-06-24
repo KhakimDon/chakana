@@ -7,28 +7,38 @@
         ? dayjs(whenDelivery).format('DD.MM.YYYY HH:mm')
         : $t('when_delivery')
     "
-    @open-details="openModal = true"
+    @open-details="modalStore.clockModel = true"
   />
-  <ModalClock v-model="openModal" :show-free-delivery="showFreeDelivery" />
+  <PaymentModalClock
+    v-model="modalStore.clockModel"
+    :show-free-delivery="showFreeDelivery"
+    @open-saved-address="backToAddress"
+  />
 </template>
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 interface Props {
   showFreeDelivery?: boolean
 }
 
 defineProps<Props>()
-const openModal = ref(false)
 
+const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const whenDelivery = computed(() => {
   return orderCartStore.orderDetail.when_to_deliver
 })
+
+const backToAddress = () => {
+  modalStore.clockModel = false
+  modalStore.addressModel = true
+}
 </script>
 
 <style scoped></style>
