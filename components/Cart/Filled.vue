@@ -49,18 +49,35 @@
         />
       </div>
     </div>
-    <BaseButton
-      class="w-full !rounded-10"
-      :text="$t('go_to_cart')"
-      variant="primary"
-      @click="goToCart"
-    />
+    <div
+      class="mt-5 border-t border-gray-200 mb-6 pt-5 flex-y-center justify-between"
+    >
+      <p class="text-base font-semibold leading-normal text-gray-100">
+        {{ $t('total_price') }}
+      </p>
+      <p
+        class="text-dark whitespace-nowrap line-clamp-1 text-xl font-bold leading-normal"
+      >
+        {{ formatMoneyDecimal(totalCartPrice, 0) }}
+        <span class="text-xs font-bold text-gray-100 leading-snug"> UZS </span>
+      </p>
+    </div>
+    <BaseButton class="w-full !rounded-10" variant="primary" @click="goToCart">
+      <p class="space-x-1">
+        <span>{{ $t('go_to_cart') }}</span>
+        <span
+          class="p-0.5 bg-white/25 rounded-md px-1 text-white text-xs font-medium leading-tight"
+          >{{ formatMoneyDecimal(totalCartPrice, 0) }} UZS</span
+        >
+      </p>
+    </BaseButton>
   </section>
 </template>
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const router = useRouter()
 const { t, locale } = useI18n()

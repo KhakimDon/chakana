@@ -4,7 +4,7 @@ import UIToast from '~/components/Common/Toast.vue'
 
 const options = {
   position: 'top-right',
-  timeout: 50000,
+  timeout: 5000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
   pauseOnHover: true,

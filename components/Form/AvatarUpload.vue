@@ -4,7 +4,7 @@
       id="file-avatar"
       :key="image"
       type="file"
-      class="w-0 h-0 absolute pointer-events-none"
+      class="w-0 h-0 absolute pointer-events-none opacity-0"
       accept=".jpg, .png, .jpeg, .svg"
       @change="handleChange"
     />
@@ -30,7 +30,7 @@
     </div>
     <CollapseTransition>
       <button
-        v-if="image"
+        v-if="hasImage"
         class="text-xs leading-5 font-medium text-red"
         @click="removeImage"
       >
@@ -47,6 +47,7 @@ import IconPhotoAdd from '~/assets/icons/Common/photo-add.svg'
 
 interface Props {
   defaultImage?: string | File
+  hasImage?: boolean
 }
 
 const props = defineProps<Props>()
