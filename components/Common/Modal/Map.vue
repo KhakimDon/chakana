@@ -240,7 +240,7 @@ function sendAddress() {
       })
       .then((res: any) => {
         if (res.saved) {
-          showToast('Muvaffaqiyatli yuborildi', 'success')
+          showToast(t('success_send'), 'success')
         }
       })
       .catch((err: any) => {
