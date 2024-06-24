@@ -227,4 +227,5 @@ export default {
   g: 'г',
   kg: 'кг',
   l: 'л',
+  success_send: 'Успешно отправлено',
 }

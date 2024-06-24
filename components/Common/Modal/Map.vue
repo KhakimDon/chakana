@@ -166,6 +166,7 @@ const store = useMainStore()
 const addressStore = useAddressStore()
 const { handleError } = useErrorHandling()
 const { showToast } = useCustomToast()
+const { t } = useI18n()
 
 const searchAddressList = computed(() => addressStore.searchAddressList.list)
 const addressClick = computed(() => addressStore.addressMap.list)
@@ -235,7 +236,7 @@ function sendAddress() {
       })
       .then((res: any) => {
         if (res.saved) {
-          showToast('Muvaffaqiyatli yuborildi', 'success')
+          showToast(t('success_send'), 'success')
         }
       })
       .catch((err: any) => {
