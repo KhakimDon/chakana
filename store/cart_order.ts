@@ -19,6 +19,18 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     use_from_balance: false,
   })
 
+  const autoOrderDetail = reactive({
+    name: '',
+    when_to_deliver: '',
+    payment_method: {
+      card_to_the_courier: false,
+      cash: false,
+      card_id: 0,
+      provider_id: 0,
+    },
+    weekday: 1,
+  })
+
   const promoCodes = reactive({
     list: [],
     loading: true,
@@ -42,6 +54,29 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
         })
         .finally(() => {
           promoCodes.loading = false
+        })
+    })
+  }
+
+  const weekdays = reactive({
+    list: [],
+    loading: true,
+  })
+
+  function getWeekdaysList() {
+    return new Promise((resolve, reject) => {
+      weekdays.loading = true
+      useApi()
+        .$get(`/weekdays`, {})
+        .then((res: any) => {
+          weekdays.list = res
+          resolve(res)
+        })
+        .catch((error: any) => {
+          reject(error)
+        })
+        .finally(() => {
+          weekdays.loading = false
         })
     })
   }
@@ -270,10 +305,13 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     cartClear,
     addToCart,
     orderDetail,
+    autoOrderDetail,
     orderCreating,
     createOrder,
     getCartDetailConfirm,
     delivery,
     getDeliveryDetail,
+    weekdays,
+    getWeekdaysList,
   }
 })

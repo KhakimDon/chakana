@@ -250,7 +250,6 @@ export default {
   g: 'г',
   kg: 'кг',
   l: 'л',
-  comment_limit_alert: 'Комментарий не может быть больше 10 символов',
   saved_product: 'Сохранен',
   saved_products: 'Сохраненные товары',
   comment_limit_alert: 'Минимальный лимит комментариев — 10 символов.',
@@ -265,4 +264,8 @@ export default {
   new_auto_order: 'Новый автозаказ',
   name: 'Название',
   date_delivery: 'Дата доставки',
+  save_auto_order: 'Сохранить на автозаказ',
+  auto_order_title: 'Название автозаказа',
+  enter_auto_order_title: 'Введите название автозаказа',
+  with_balance: 'Через баланс',
 }

@@ -4,8 +4,9 @@
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
+        <AutoOrderCard />
         <BaseButton
-          class="w-full !rounded-10"
+          class="w-full !rounded-10 !py-2"
           :text="$t('payment')"
           variant="green"
           :loading="loading"
@@ -21,6 +22,7 @@
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
+        <AutoOrderCard />
         <BaseButton
           class="w-full !rounded-10"
           :text="$t('payment')"

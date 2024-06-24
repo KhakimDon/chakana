@@ -7,6 +7,11 @@ export const useModalStore = defineStore('modalStore', {
     commentModel: false,
     promoModel: false,
     paymentModel: false,
+    autoOrderModel: {
+      name: false,
+      whenToDelivery: false,
+      payment: false,
+    },
   }),
   actions: {},
 })
