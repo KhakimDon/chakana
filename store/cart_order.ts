@@ -1,3 +1,5 @@
+import type { UnwrapRef } from 'vue'
+
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
   const orderDetail = reactive({
     address: {
@@ -289,6 +291,46 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const autoOrderCreating = ref(false)
+
+  function createAutoOrder(body: {
+    payment_type: UnwrapRef<
+      UnwrapRef<
+        UnwrapRef<{
+          provider_id: number
+          card_to_the_courier: boolean
+          cash: boolean
+          card_id: number
+        }>
+      >
+    >
+    weekdays: number[]
+    name: string
+    recipient: UnwrapRef<
+      UnwrapRef<UnwrapRef<{ full_name: string; phone: string }>>
+    >
+    delivery_time: string
+    shipping_address: { address_id: number }
+    card_id: number
+  }) {
+    return new Promise((resolve, reject) => {
+      autoOrderCreating.value = true
+      useApi()
+        .$post(`/auto-order/create`, {
+          body,
+        })
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error: any) => {
+          reject(error)
+        })
+        .finally(() => {
+          autoOrderCreating.value = false
+        })
+    })
+  }
+
   return {
     promoCodes,
     getPromoCodeList,
@@ -313,5 +355,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     getDeliveryDetail,
     weekdays,
     getWeekdaysList,
+    autoOrderCreating,
+    createAutoOrder,
   }
 })

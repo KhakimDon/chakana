@@ -21,10 +21,12 @@
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits(['change'])
 const isAutoOrder = ref(false)
 
 const toggleAutoOrder = () => {
   isAutoOrder.value = !isAutoOrder.value
+  emit('change', isAutoOrder.value)
 }
 </script>
 
