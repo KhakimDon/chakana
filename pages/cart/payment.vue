@@ -67,6 +67,8 @@ const goToPayment = () => {
       card_id: autoOrderDetail.value.payment_method.card_id,
       shipping_address: {
         address_id: orderDetail.value.address.id,
+        latitude: null,
+        longitude: null,
       },
       recipient: orderDetail.value.recipient,
     })
