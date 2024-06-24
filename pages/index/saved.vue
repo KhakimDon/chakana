@@ -57,6 +57,10 @@ import type { IProduct } from '~/types/products.js'
 
 const router = useRouter()
 
+definePageMeta({
+  middleware: ['auth'],
+})
+
 const { list, loading, loadMore, paginationData } = useListFetcher<IProduct>(
   `/saved/products`,
   5,

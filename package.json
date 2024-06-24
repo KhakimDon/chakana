@@ -28,6 +28,7 @@
     "@pinia/nuxt": "^0.4.8",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
+    "@vueuse/core": "^10.11.0",
     "dayjs": "^1.11.11",
     "eslint": "^8.34.0",
     "eslint-plugin-import": "^2.27.5",

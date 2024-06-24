@@ -63,7 +63,7 @@
           :settings="settings"
           class="ymap h-[300px] md:h-[440px] w-full mt-4 rounded-lg"
           :coords="coordinates"
-          @click="setLocation($event)"
+          @click="setLocation"
         >
           <!--      @click="changeCoords"-->
           <YmapMarker :coords="coordinates" :icon="'/images/svg/map-pin.svg'" />
@@ -191,12 +191,17 @@ loadYmap({ ...settings })
 
 const { list: icons } = useListFetcher('get/icons', 10, false)
 
+const getAddress = async (coords?: any) => {
+  await addressStore.fetchAddress(coords[0], coords[1]).then(() => {
+    search.value = addressClick.value?.street
+  })
+}
+
 const setLocation = async (event: any) => {
-  search.value = addressClick.value?.street
-  const coords = event?.get('coords')
+  const coords = !event?.target ? event?.get('coords') : coordinates.value
   coordinates.value = coords
   coordinates.value = coords
-  await addressStore.fetchAddress(coords[0], coords[1])
+  await getAddress(coords)
 }
 
 const addAddress = () => {
@@ -254,13 +259,24 @@ function sendAddress() {
 watch(
   () => selectIcons.value,
   () => {
-    if (search.value) {
-      error.value = false
-    } else {
-      error.value = true
-    }
+    error.value = !search.value
   }
 )
+
+onMounted(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((currentPosition) => {
+      coordinates.value = [
+        currentPosition.coords.latitude,
+        currentPosition.coords.longitude,
+      ]
+
+      getAddress(coordinates.value)
+    })
+  } else {
+    console.log('Geolocation is not supported in this browser')
+  }
+})
 </script>
 <style scoped>
 /* width */

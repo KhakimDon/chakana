@@ -67,7 +67,6 @@
         />
         <BaseButton
           class="!py-3 w-full"
-          :loading
           :text="$t('search')"
           size="md"
           :disabled="btnLoading || form.$v.value.$invalid"

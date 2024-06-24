@@ -91,6 +91,19 @@ watch(
   }
 )
 
+watch(
+  () => search.value,
+  (v) => {
+    debounce(
+      'search',
+      () => {
+        emit('search', v)
+      },
+      700
+    )
+  }
+)
+
 function clearInput() {
   search.value = ''
   emit('clear')
