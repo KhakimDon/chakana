@@ -14,11 +14,26 @@
       v-else
       class="w-full !rounded-10 !py-2"
       :text="$t('go_to_registration')"
-      variant="green"
+      variant="outline-primary"
       :disabled="cartProducts.length === 0"
       @click="goToPayment"
     />
+    <div
+      v-if="loading"
+      class="shimmer bg-white-100 rounded-10 p-4 h-[38px]"
+    ></div>
+    <BaseButton
+      v-else
+      class="w-full !rounded-10 !py-2"
+      :text="$t('save_auto_order')"
+      variant="primary"
+      :disabled="cartProducts.length === 0"
+      @click="goToAutoOrderPayment"
+    />
     <PaymentFullInfos class="hidden" />
+    <AutoOrderModalOrderName v-model="modalStore.autoOrderModel.name" />
+    <AutoOrderModalClock v-model="modalStore.autoOrderModel.whenToDelivery" />
+    <AutoOrderModalPaymentMethod v-model="modalStore.autoOrderModel.payment" />
   </section>
 </template>
 
@@ -44,8 +59,25 @@ const authStore = useAuthStore()
 const token = computed(() => authStore.accessToken)
 const goToPayment = () => {
   if (token.value) {
+    router.push(`/${locale.value}/cart`)
     if (!modalStore.addressModel && !orderCartStore.orderDetail.address?.id) {
       modalStore.addressModel = true
+    } else {
+      router.push(`/${locale.value}/cart/payment`)
+    }
+  } else {
+    authStore.showAuth = true
+  }
+}
+
+const goToAutoOrderPayment = () => {
+  if (token.value) {
+    router.push(`/${locale.value}/cart/?order=auto`)
+    if (
+      !modalStore.autoOrderModel.name &&
+      !orderCartStore.autoOrderDetail.name
+    ) {
+      modalStore.autoOrderModel.name = true
     } else {
       router.push(`/${locale.value}/cart/payment`)
     }

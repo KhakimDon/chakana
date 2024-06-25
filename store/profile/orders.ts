@@ -13,6 +13,10 @@ export const useOrderStore = defineStore('orderStore', {
         loading: true,
       },
     },
+    autoOrder: {
+      list: [] as IOrderCard[],
+      loading: true,
+    },
   }),
   actions: {
     fetchOrders(type: 'active' | 'archive' = 'active') {
@@ -25,6 +29,30 @@ export const useOrderStore = defineStore('orderStore', {
         .finally(() => {
           this.orders[type].loading = false
         })
+    },
+
+    fetchAutoOrders() {
+      useApi()
+        .$get('/auto-order/list')
+        .then((res: IOrderCard[]) => {
+          this.autoOrder.list = res.items
+        })
+        .finally(() => {
+          this.autoOrder.loading = false
+        })
+    },
+    deleteAutoOrder(id: number) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$delete(`/auto-order/${id}`)
+          .then((res) => {
+            this.fetchAutoOrders()
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
     },
   },
 })

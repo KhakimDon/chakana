@@ -11,7 +11,7 @@
   />
   <PaymentModalClock
     v-model="modalStore.clockModel"
-    :show-free-delivery="showFreeDelivery"
+    :show-free-delivery="false"
     @open-saved-address="backToAddress"
   />
 </template>
@@ -21,12 +21,6 @@ import dayjs from 'dayjs'
 
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
-
-interface Props {
-  showFreeDelivery?: boolean
-}
-
-defineProps<Props>()
 
 const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()

@@ -38,9 +38,18 @@ const selectedAddress = (address: object) => {
   }
   orderCartStore.orderDetail.address.id = selectedLocation.value?.id
   modalStore.addressModel = false
-  if (route.path !== `/${locale.value}/cart/payment`) {
+  if (
+    route.path !== `/${locale.value}/cart/payment` ||
+    route.path !== `/${locale.value}/cart/payment/`
+  ) {
     modalStore.addressMapModel = false
-    modalStore.clockModel = true
+    console.log(route.query?.order)
+    console.log(route.query?.order === 'auto')
+    if (route.query?.order === 'auto') {
+      modalStore.autoOrderModel.whenToDelivery = true
+    } else {
+      modalStore.clockModel = true
+    }
   }
 }
 const { list, resetList } = useListFetcher(`/saved/address`, 25, false, '')

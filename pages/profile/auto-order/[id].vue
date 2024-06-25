@@ -1,14 +1,24 @@
 <template>
   <div>
-    <NuxtLinkLocale
-      to="/profile/orders"
-      class="inline-flex items-center gap-1 md:gap-2 text-lg md:text-[22px] font-extrabold leading-7 text-dark group"
-    >
-      <SvgoCommonChevron
-        class="text-xl md:text-[28px] leading-5 md:leading-[28px] text-dark group-hover:-translate-x-0.5 transition-300"
-      />
-      Правильное питание
-    </NuxtLinkLocale>
+    <div class="flex-center-between">
+      <NuxtLinkLocale
+        to="/profile/orders"
+        class="inline-flex items-center gap-1 md:gap-2 text-lg md:text-[22px] font-extrabold leading-7 text-dark group"
+      >
+        <SvgoCommonChevron
+          class="text-xl md:text-[28px] leading-5 md:leading-[28px] text-dark group-hover:-translate-x-0.5 transition-300"
+        />
+        {{ data.name }}
+      </NuxtLinkLocale>
+      <button
+        class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
+      >
+        <SvgoCommonPlus
+          class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
+        />
+        {{ $t('add_product') }}
+      </button>
+    </div>
     <Transition name="fade" mode="out-in">
       <div :key="productsLoading" class="mt-4 md:mt-8 flex flex-col">
         <template v-if="productsLoading">
@@ -20,10 +30,9 @@
         </template>
         <template v-else>
           <SearchCardProduct
-            v-for="(item, index) in products?.delivered_products"
+            v-for="(item, index) in products"
             :key="index"
             :product="item"
-            show-count
             class="even:bg-gray-300/50"
           />
         </template>
@@ -32,22 +41,29 @@
     <h3 class="text-base text-dark font-extrabold leading-130 mb-3 mt-5">
       {{ $t('delivery_details') }}
     </h3>
+
     <PaymentCardInfo
-      icon="SvgoProfileTruck"
-      icon-class="text-orange !text-2xl"
-      :title="$t('courier_address')"
-      :subtitle="data.delivery?.address"
+      icon="SvgoCommonEdit"
+      icon-class="!text-[#9747FF] !text-2xl"
+      :title="$t('auto_order_title')"
+      :subtitle="data.name"
     />
     <PaymentCardInfo
       icon="SvgoProfileClockLocation"
-      icon-class="text-purple-500 !text-2xl"
-      :title="dayjs(data.delivery?.date).format('DD.MM.YYYY HH:mm')"
+      icon-class="!text-[#9747FF] !text-2xl"
+      :title="data.delivery_date"
     />
     <PaymentCardInfo
       icon="SvgoProfileUserCircle"
-      icon-class="text-[#088377] !text-2xl"
+      icon-class="!text-[#088377] !text-2xl"
+      :title="data.recipient"
+    />
+    <PaymentCardInfo
+      icon="SvgoProfileClockLocation"
+      icon-class="!text-orange !text-2xl"
+      :title="$t('courier_address')"
+      :subtitle="data.shipping_address"
       text-wrapper-class="border-none"
-      :title="`${data.delivery?.customer?.full_name}, ${data.delivery?.customer?.phone}`"
     />
     <h3 class="text-base text-dark font-extrabold leading-130 mb-3 mt-6">
       {{ $t('payment_method') }}
@@ -74,16 +90,17 @@
       "
     />
     <BaseButton
-      v-if="status === 'delivered' || status === 'cancelled'"
-      class="w-full sticky bottom-7"
-      :text="$t('reorder')"
-      :loading="reorderLoading"
-      @click="reOrder"
+      class="w-full sticky bottom-7 !py-2.5"
+      variant="secondary"
+      :text="$t('delete_order')"
+      :loading="deleteLoading"
+      @click="deleteAutoOrder"
     >
       <template #prefix>
-        <SvgoCommonRefresh class="text-2xl leading-6" />
+        <SvgoCommonTrash class="text-2xl leading-6" />
       </template>
     </BaseButton>
+    <AutoOrderModalOrderName :model-value="true" />
   </div>
 </template>
 
@@ -97,71 +114,44 @@ import {
   SvgoCommonTick,
   SvgoProfileSidebarCart,
 } from '#components'
+import { useOrderStore } from '~/store/profile/orders.js'
 import type { IOrderDetail } from '~/types/profile.js'
 
 const route = useRoute()
-const router = useRouter()
 
-const localePath = useLocalePath()
+const { showToast } = useCustomToast()
+const { handleError } = useErrorHandling()
+const { t } = useI18n()
 
-const steps = [
-  {
-    id: 'accepted',
-    icon: SvgoCommonTick,
-  },
-  {
-    id: 'collected',
-    icon: SvgoProfileSidebarCart,
-  },
-  {
-    id: 'on_the_way',
-    icon: SvgoCommonMap,
-  },
-  {
-    id: 'delivered',
-    icon: SvgoCommonFlag,
-  },
-]
-const step = ref(1)
-
-const { data } = await useAsyncData('orderSingle', () =>
-  useApi().$get<IOrderDetail>(`/order/detail/${route.params.id}`)
+const { data, error } = await useAsyncData('orderSingle', () =>
+  useApi().$get<IOrderDetail>(`/auto-order/${route.params.id}`)
 )
-
-const { data: orderStatus } = await useAsyncData('orderStatus', () =>
-  useApi().$get(`/order/status/${route.params.id}`)
-)
-const status = computed(() => orderStatus.value?.status)
+if (error.value) showError({ statusCode: 404 })
 
 const products = ref()
 const productsLoading = ref(true)
 
-const ranked = ref(orderStatus.value?.rank)
 useApi()
-  .$get(`order/products/${route.params.id}`)
+  .$get(`auto-order/products/${route.params.id}`)
   .then((res) => {
     products.value = res
   })
   .finally(() => (productsLoading.value = false))
 
-const reorderLoading = ref(false)
-function reOrder() {
-  reorderLoading.value = true
-  const list = products.value?.delivered_products.map((el) => {
-    return {
-      product_id: el.id,
-      count: el.quantity,
-    }
-  })
-  useApi()
-    .$post(`/cart/add/mobile`, {
-      body: {
-        products: list,
-      },
-    })
+const orderStore = useOrderStore()
+const deleteLoading = ref(false)
+function deleteAutoOrder() {
+  deleteLoading.value = true
+  orderStore
+    .deleteAutoOrder(data.value.id)
     .then(() => {
-      router.push(localePath('/cart'))
+      showToast(t('auto_order_deleted_successfully'), 'success')
     })
-    .finally(() => (reorderLoading.value = false))
+    .catch((err) => {
+      handleError(err)
+    })
+    .finally(() => {
+      deleteLoading.value = false
+    })
 }
 </script>

@@ -6,6 +6,13 @@
     @update:model-value="$emit('update:modelValue', $event)"
     @back="backToUserData"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div>
       <p class="text-sm font-medium leading-tight mb-4">
         {{ $t('courier_comment_info') }}
@@ -33,6 +40,7 @@
 <script setup lang="ts">
 import { minLength, required } from '@vuelidate/validators'
 
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
@@ -50,7 +58,10 @@ const route = useRoute()
 const { t, locale } = useI18n()
 
 const isCartRoute = computed(() => {
-  return route.path === `/${locale.value}/cart`
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
 })
 
 const { showToast } = useCustomToast()
@@ -81,7 +92,7 @@ function add() {
     orderCartStore.orderDetail.comment_to_courier = form.values.comment
     loading.value = false
     if (isCartRoute.value) {
-      modalStore.paymentModel = true
+      modalStore.promoModel = true
     }
     emit('update:modelValue', false)
   } else {
@@ -95,4 +106,6 @@ watch(
     form.$v.value.$reset()
   }
 )
+
+const step = ref('comment')
 </script>

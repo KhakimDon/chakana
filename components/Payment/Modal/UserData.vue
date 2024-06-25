@@ -6,6 +6,13 @@
     @update:model-value="$emit('update:modelValue', $event)"
     @back="bacToClock"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div class="space-y-4">
       <FormGroup :label="$t('full_name')">
         <FormInput
@@ -49,6 +56,7 @@
 <script setup lang="ts">
 import { minLength, required } from '@vuelidate/validators'
 
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 import { isValidPhone } from '~/utils/functions/common.js'
@@ -69,7 +77,10 @@ const route = useRoute()
 const { locale } = useI18n()
 
 const isCartRoute = computed(() => {
-  return route.path === `/${locale.value}/cart`
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
 })
 
 const loading = ref(false)
@@ -87,7 +98,11 @@ const form = useForm(
 
 function bacToClock() {
   modalStore.userModel = false
-  modalStore.clockModel = true
+  if (route.query?.order === 'auto') {
+    modalStore.autoOrderModel.whenToDelivery = true
+  } else {
+    modalStore.clockModel = true
+  }
 }
 
 const orderCartStore = useCartOrderStore()
@@ -112,4 +127,6 @@ watch(
     form.$v.value.$reset()
   }
 )
+
+const step = ref('user')
 </script>

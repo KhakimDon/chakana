@@ -4,9 +4,7 @@
     icon-class="text-purple-500 !text-2xl"
     text-wrapper-class="!border-gray-200"
     :title="
-      whenDelivery
-        ? dayjs(whenDelivery).format('DD.MM.YYYY HH:mm')
-        : $t('when_delivery')
+      whenDelivery ? dayjs(whenDelivery).format('HH:mm') : $t('when_delivery')
     "
     @open-details="modalStore.autoOrderModel.whenToDelivery = true"
   />
@@ -33,7 +31,7 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const whenDelivery = computed(() => {
-  return orderCartStore.orderDetail.when_to_deliver
+  return orderCartStore.autoOrderDetail.when_to_deliver
 })
 
 const backToName = () => {

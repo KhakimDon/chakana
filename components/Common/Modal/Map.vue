@@ -318,6 +318,7 @@ function saveAddress() {
     .finally(() => {
       buttonLoading.value = false
       showAddAddress.value = false
+      emit('open-saved-adress')
       emit('update:model-value', false)
     })
 }

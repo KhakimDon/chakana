@@ -1,13 +1,18 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    has-back
     :title="$t('when_delivery')"
+    :has-back="$route?.query?.order === 'auto'"
     @update:model-value="$emit('update:modelValue', $event)"
-    @back="$emit('openSavedAddress')"
+    @back="goToAddress"
   >
     <div class="space-y-4">
-      <BaseStepper :steps :step step-class="!w-full" />
+      <BaseStepper
+        v-if="isCartRoute"
+        :steps="autoOrderSteps"
+        :step
+        step-class="!w-full"
+      />
       <AutoOrderCardWeekdays class="!mt-5" />
       <p
         v-if="showFreeDelivery"
@@ -47,11 +52,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import {
-  SvgoCommonEdit,
-  SvgoProfileClockLocation,
-  SvgoProfileMoney,
-} from '#components'
+import { autoOrderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
@@ -67,12 +68,10 @@ const emit = defineEmits<{
   (e: 'openSavedAddress'): void
 }>()
 
-const { t } = useI18n()
-
 const selectedInterval = ref('nearest_2_hours')
 
 function generateIntervals() {
-  const now = new Date('2023-01-01 09:00:00')
+  const now = new Date('2023-01-01 01:00:00')
   const intervals = []
 
   let currentHour = now.getHours()
@@ -124,6 +123,7 @@ function getCurrentDateTimeISO(date: any) {
 const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 function add() {
+  // TODO: when to deliver format like this 09:00 (start only)
   if (selectedInterval.value === 'nearest_2_hours') {
     const now = dayjs()
     now.add(2, 'hours')
@@ -137,7 +137,9 @@ function add() {
       now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     )
   }
-  modalStore.autoOrderModel.payment = true
+  if (route.query?.order === 'auto' && isCartRoute.value) {
+    modalStore.userModel = true
+  }
   emit('update:modelValue', false)
 }
 
@@ -149,18 +151,18 @@ onMounted(() => {
 
 const step = ref('when_to_deliver')
 
-const steps = [
-  {
-    id: 'name',
-    icon: SvgoCommonEdit,
-  },
-  {
-    id: 'when_to_deliver',
-    icon: SvgoProfileClockLocation,
-  },
-  {
-    id: 'payment',
-    icon: SvgoProfileMoney,
-  },
-]
+const route = useRoute()
+const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
+
+const goToAddress = () => {
+  modalStore.autoOrderModel.whenToDelivery = false
+  modalStore.addressModel = true
+}
 </script>

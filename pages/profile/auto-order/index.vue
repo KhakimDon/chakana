@@ -24,6 +24,8 @@
           :key="item.id"
           :item="item"
           auto-order
+          :extra-button-loading="deleteLoading"
+          @delete="deleteAutoOrder"
         >
           <template #body="{ data }">
             <div class="flex justify-between mb-1.5 flex-col gap-0.5">
@@ -31,7 +33,7 @@
                 {{ $t('name') }}:
               </p>
               <span class="text-sm font-bold text-dark leading-130">
-                #{{ data.id }}
+                {{ data.name }}
               </span>
             </div>
             <div class="flex justify-between mb-1.5 flex-col gap-0.5 mt-2.5">
@@ -39,7 +41,7 @@
                 {{ $t('date_delivery') }}:
               </p>
               <span class="text-sm font-bold text-dark leading-130">
-                #{{ data.id }}
+                {{ data.delivery_date }}
               </span>
             </div>
           </template>
@@ -57,10 +59,6 @@ import { useOrderStore } from '~/store/profile/orders.js'
 
 const orderStore = useOrderStore()
 
-const orders = computed(() => orderStore.orders.active)
-orderStore.fetchOrders()
-
-definePageMeta({
-  page: 'active',
-})
+const orders = computed(() => orderStore.autoOrder)
+orderStore.fetchAutoOrders()
 </script>

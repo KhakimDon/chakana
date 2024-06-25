@@ -16,9 +16,7 @@
         <PaymentCardInfoHeader :title="$t('delivery_details')">
           <section class="space-y-2">
             <PaymentSectionAddress />
-            <PaymentSectionClockLocation
-              :show-free-delivery="showFreeDelivery"
-            />
+            <PaymentSectionClockLocation />
             <PaymentSectionUserData />
             <PaymentSectionCommentForCurier />
           </section>
@@ -63,24 +61,12 @@ const router = useRouter()
 
 const orderCartStore = useCartOrderStore()
 
-const limitPrice = computed(
-  () => orderCartStore?.cart?.detail?.free_delivery_price ?? 0
-)
-
 const useBalance = ref(false)
 
 const toggleUseBalance = () => {
   useBalance.value = !useBalance.value
   orderCartStore.orderDetail.use_from_balance = useBalance.value
 }
-
-const totalCartProductsPrice = computed(
-  () => orderCartStore.cart?.detail?.product_price
-)
-
-const showFreeDelivery = computed(() => {
-  return totalCartProductsPrice.value > limitPrice.value
-})
 
 const balancePrice = computed(() => orderCartStore.cart?.detail?.balance ?? 0)
 

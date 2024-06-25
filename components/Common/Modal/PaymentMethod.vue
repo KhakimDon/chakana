@@ -6,6 +6,13 @@
     @update:model-value="$emit('update:modelValue', $event)"
     @back="backToPromoCode"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div>
       <div
         class="flex-y-center gap-1 select-none cursor-pointer"
@@ -120,6 +127,7 @@
 </template>
 
 <script setup lang="ts">
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 import { usePaymentStore } from '~/store/payment.js'
@@ -140,7 +148,10 @@ const route = useRoute()
 const { locale } = useI18n()
 
 const isCartRoute = computed(() => {
-  return route.path === `/${locale.value}/cart`
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
 })
 
 const loading = ref(false)
@@ -197,7 +208,7 @@ const modalStore = useModalStore()
 
 const backToPromoCode = () => {
   modalStore.paymentModel = false
-  modalStore.commentModel = true
+  modalStore.promoModel = true
 }
 
 const orderCartStore = useCartOrderStore()
@@ -231,4 +242,6 @@ function addedCard() {
 }
 
 cardsStore.fetchCards()
+
+const step = ref('payment')
 </script>
