@@ -9,7 +9,7 @@
   <CommonModalAddressDelivery
     v-model="modalStore.addressModel"
     :list="list"
-    @select-address="selectedAddress"
+    @handle-address="selectedAddress"
     @close="modalStore.addressModel = false"
     @open-map-modal="openMapModal"
   />
