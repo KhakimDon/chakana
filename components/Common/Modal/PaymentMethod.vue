@@ -12,7 +12,6 @@
       :step
       step-class="!w-full"
       class="!mb-5"
-      :class="$route?.query?.order === 'auto' ? '!scale-90' : ''"
     />
     <div>
       <div

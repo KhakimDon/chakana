@@ -14,7 +14,6 @@
       :step
       step-class="!w-full"
       class="!mb-5"
-      :class="$route?.query?.order === 'auto' ? '!scale-90' : ''"
     />
     <div v-if="list.length">
       <div class="grid grid-cols-2 gap-4 overflow-y-scroll max-h-[230px]">

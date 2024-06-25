@@ -12,7 +12,6 @@
       :step
       step-class="!w-full"
       class="!mb-5"
-      :class="$route?.query?.order === 'auto' ? '!scale-90' : ''"
     />
     <div class="space-y-4">
       <FormGroup v-if="addNew" :label="$t('enter_code')">
@@ -192,7 +191,11 @@ const choosePromo = (promoId: string) => {
 
 const confirmPromoCode = () => {
   if (isCartRoute.value) {
-    modalStore.paymentModel = true
+    if (route.query?.order === 'auto') {
+      modalStore.autoOrderModel.payment = true
+    } else {
+      modalStore.paymentModel = true
+    }
   }
   emit('confirmPromoCode', selected.value)
   selected.value = ''

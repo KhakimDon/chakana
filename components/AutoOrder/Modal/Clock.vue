@@ -2,7 +2,9 @@
   <BaseModal
     :model-value="modelValue"
     :title="$t('when_delivery')"
+    :has-back="$route?.query?.order === 'auto'"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="goToAddress"
   >
     <div class="space-y-4">
       <BaseStepper
@@ -50,11 +52,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import {
-  SvgoCommonEdit,
-  SvgoProfileClockLocation,
-  SvgoProfileMoney,
-} from '#components'
 import { autoOrderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
@@ -140,7 +137,9 @@ function add() {
       now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     )
   }
-  modalStore.autoOrderModel.payment = true
+  if (route.query?.order === 'auto' && isCartRoute.value) {
+    modalStore.userModel = true
+  }
   emit('update:modelValue', false)
 }
 
@@ -161,4 +160,9 @@ const isCartRoute = computed(() => {
     route.path === `/${locale.value}/cart/`
   )
 })
+
+const goToAddress = () => {
+  modalStore.autoOrderModel.whenToDelivery = false
+  modalStore.addressModel = true
+}
 </script>

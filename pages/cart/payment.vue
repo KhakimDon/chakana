@@ -22,7 +22,7 @@
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
-        <AutoOrderCard />
+        <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           class="w-full !rounded-10"
           :text="$t('payment')"
@@ -37,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
 
 import { useCustomToast } from '~/composables/useCustomToast.js'
@@ -55,39 +56,54 @@ const orderCartStore = useCartOrderStore()
 const isPremiumUser = computed(() => authStore.user?.is_premium)
 const orderDetail = computed(() => orderCartStore.orderDetail)
 const autoOrderDetail = computed(() => orderCartStore.autoOrderDetail)
-const loading = computed(() => orderCartStore.orderCreating)
+const loading = computed(
+  () => orderCartStore.orderCreating || orderCartStore.autoOrderCreating
+)
 
 const { showToast } = useCustomToast()
 
 const goToPayment = () => {
   if (isAutoOrder.value) {
-    orderCartStore.createAutoOrder({
-      name: autoOrderDetail.value.name,
-      weekdays: [autoOrderDetail.value.weekday],
-      delivery_time: autoOrderDetail.value.when_to_deliver,
-      payment_type: autoOrderDetail.value.payment_method,
-      card_id: autoOrderDetail.value.payment_method.card_id,
-      shipping_address: {
-        address_id: orderDetail.value.address.id,
-        latitude: null,
-        longitude: null,
-      },
-      recipient: orderDetail.value.recipient,
-      products: computed(() => cartStore.products).value?.map((product) => ({
-        product_id: product?.id,
-        count: product?.quantity,
-      })),
-    })
+    orderCartStore
+      .createAutoOrder({
+        name: autoOrderDetail.value.name,
+        weekdays: [autoOrderDetail.value.weekday],
+        delivery_time: dayjs(autoOrderDetail.value.when_to_deliver).format(
+          'HH:mm'
+        ),
+        payment_type: autoOrderDetail.value.payment_method,
+        card_id: autoOrderDetail.value.payment_method.card_id,
+        shipping_address: {
+          address_id: orderDetail.value.address.id,
+          latitude: null,
+          longitude: null,
+        },
+        recipient: orderDetail.value.recipient,
+        products: computed(() => cartStore.products).value?.map((product) => ({
+          product_id: product?.id,
+          count: product?.quantity,
+        })),
+      })
+      .then(() => {
+        showToast(t('auto_order_created'), 'success')
+        cartStore.getCartProducts()
+        router.push(`/${locale.value}/profile/orders`)
+        orderCartStore.orderDetail = {}
+        orderCartStore.autoOrderDetail = {}
+      })
+      .catch(() => {
+        showToast(t('order_not_created'), 'error')
+      })
   } else {
     orderCartStore
       .createOrder({
         ...orderDetail.value,
         when_to_deliver: orderDetail.value.when_to_deliver,
       })
-      .then(() => {
+      .then((res: any) => {
         showToast(t('order_created'), 'success')
         cartStore.getCartProducts()
-        router.push(`/${locale.value}/profile/orders`)
+        router.push(`/${locale.value}/profile/orders/${res.order_id}`)
         orderCartStore.orderDetail = {}
       })
       .catch(() => {
@@ -123,6 +139,12 @@ onMounted(() => {
   if (!orderCartStore.orderDetail.address.id) {
     router.push(`/${locale.value}/cart`)
   }
+})
+
+const route = useRoute()
+
+onMounted(() => {
+  isAutoOrder.value = route.query?.order === 'auto'
 })
 </script>
 

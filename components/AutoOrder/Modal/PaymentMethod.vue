@@ -211,7 +211,7 @@ function add() {
   orderCartStore.autoOrderDetail.payment_method.card_id = cardId.value
 
   if (isCartRoute.value) {
-    router.push(`/${locale.value}/cart/payment`)
+    router.push(`/${locale.value}/cart/payment?order=auto`)
   }
   emit('update:modelValue', false)
 }

@@ -32,6 +32,8 @@
     />
     <PaymentFullInfos class="hidden" />
     <AutoOrderModalOrderName v-model="modalStore.autoOrderModel.name" />
+    <AutoOrderModalClock v-model="modalStore.autoOrderModel.whenToDelivery" />
+    <AutoOrderModalPaymentMethod v-model="modalStore.autoOrderModel.payment" />
   </section>
 </template>
 

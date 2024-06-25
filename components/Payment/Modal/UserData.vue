@@ -12,7 +12,6 @@
       :step
       step-class="!w-full"
       class="!mb-5"
-      :class="$route?.query?.order === 'auto' ? '!scale-90' : ''"
     />
     <div class="space-y-4">
       <FormGroup :label="$t('full_name')">
@@ -99,7 +98,11 @@ const form = useForm(
 
 function bacToClock() {
   modalStore.userModel = false
-  modalStore.clockModel = true
+  if (route.query?.order === 'auto') {
+    modalStore.autoOrderModel.whenToDelivery = true
+  } else {
+    modalStore.clockModel = true
+  }
 }
 
 const orderCartStore = useCartOrderStore()

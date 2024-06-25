@@ -28,6 +28,14 @@ const toggleAutoOrder = () => {
   isAutoOrder.value = !isAutoOrder.value
   emit('change', isAutoOrder.value)
 }
+
+const route = useRoute()
+
+onMounted(() => {
+  if (route.query?.order === 'auto') {
+    isAutoOrder.value = true
+  }
+})
 </script>
 
 <style scoped></style>

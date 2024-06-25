@@ -10,7 +10,7 @@
         :steps="$route?.query?.order === 'auto' ? autoOrderSteps : steps"
         :step
         step-class="!w-full"
-        class="!mb-5 !scale-95"
+        class="!mb-5"
       />
       <FormGroup :label="$t('name')">
         <FormInput
