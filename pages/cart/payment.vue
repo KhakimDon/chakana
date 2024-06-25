@@ -4,8 +4,9 @@
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
+        <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
-          class="w-full !rounded-10"
+          class="w-full !rounded-10 !py-2"
           :text="$t('payment')"
           variant="green"
           :loading="loading"
@@ -21,6 +22,7 @@
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
+        <AutoOrderCard />
         <BaseButton
           class="w-full !rounded-10"
           :text="$t('payment')"
@@ -38,35 +40,60 @@
 import { useI18n } from 'vue-i18n'
 
 import { useCustomToast } from '~/composables/useCustomToast.js'
+import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+
+const isAutoOrder = ref(false)
 
 const { t, locale } = useI18n()
 const router = useRouter()
 const cartStore = useCartStore()
-
+const authStore = useAuthStore()
 const orderCartStore = useCartOrderStore()
 
+const isPremiumUser = computed(() => authStore.user?.is_premium)
 const orderDetail = computed(() => orderCartStore.orderDetail)
+const autoOrderDetail = computed(() => orderCartStore.autoOrderDetail)
 const loading = computed(() => orderCartStore.orderCreating)
 
 const { showToast } = useCustomToast()
 
 const goToPayment = () => {
-  orderCartStore
-    .createOrder({
-      ...orderDetail.value,
-      when_to_deliver: orderDetail.value.when_to_deliver,
+  if (isAutoOrder.value) {
+    orderCartStore.createAutoOrder({
+      name: autoOrderDetail.value.name,
+      weekdays: [autoOrderDetail.value.weekday],
+      delivery_time: autoOrderDetail.value.when_to_deliver,
+      payment_type: autoOrderDetail.value.payment_method,
+      card_id: autoOrderDetail.value.payment_method.card_id,
+      shipping_address: {
+        address_id: orderDetail.value.address.id,
+        latitude: null,
+        longitude: null,
+      },
+      recipient: orderDetail.value.recipient,
+      products: computed(() => cartStore.products).value?.map((product) => ({
+        product_id: product?.id,
+        count: product?.quantity,
+      })),
     })
-    .then(() => {
-      showToast(t('order_created'), 'success')
-      cartStore.getCartProducts()
-      router.push(`/${locale.value}/profile/orders`)
-      orderCartStore.orderDetail = {}
-    })
-    .catch(() => {
-      showToast(t('order_not_created'), 'error')
-    })
+  } else {
+    orderCartStore
+      .createOrder({
+        ...orderDetail.value,
+        when_to_deliver: orderDetail.value.when_to_deliver,
+      })
+      .then(() => {
+        showToast(t('order_created'), 'success')
+        cartStore.getCartProducts()
+        router.push(`/${locale.value}/profile/orders`)
+        orderCartStore.orderDetail = {}
+      })
+      .catch(() => {
+        showToast(t('order_not_created'), 'error')
+      })
+  }
 }
 
 // All prices

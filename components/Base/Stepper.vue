@@ -9,7 +9,7 @@
       </div>
       <div
         class="h-px w-12 last:hidden transition-300"
-        :class="index < activeIndex ? 'bg-orange' : 'bg-gray-200'"
+        :class="[index < activeIndex ? 'bg-orange' : 'bg-gray-200', stepClass]"
       />
     </template>
   </div>
@@ -24,6 +24,7 @@ interface Props {
     icon: Component
   }[]
   step: number | string
+  stepClass?: string
 }
 const props = defineProps<Props>()
 

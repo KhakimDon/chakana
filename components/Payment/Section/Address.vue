@@ -9,7 +9,7 @@
   <CommonModalAddressDelivery
     v-model="modalStore.addressModel"
     :list="list"
-    @select-address="selectedAddress"
+    @handle-address="selectedAddress"
     @close="modalStore.addressModel = false"
     @open-map-modal="openMapModal"
   />
@@ -31,10 +31,14 @@ const selectedLocation = ref()
 
 const orderCartStore = useCartOrderStore()
 const selectedAddress = (address: object) => {
-  selectedLocation.value = address
-  orderCartStore.orderDetail.address.id = address?.id
+  if (address) {
+    selectedLocation.value = address
+  } else {
+    selectedLocation.value = list.value[0]
+  }
+  orderCartStore.orderDetail.address.id = selectedLocation.value?.id
+  modalStore.addressModel = false
   if (route.path !== `/${locale.value}/cart/payment`) {
-    modalStore.addressModel = false
     modalStore.addressMapModel = false
     modalStore.clockModel = true
   }

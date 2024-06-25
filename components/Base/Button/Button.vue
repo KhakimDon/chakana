@@ -7,7 +7,6 @@
         '!cursor-progress': loading || loadingMore,
         'disabled:!bg-gray-100': !loading && !loadingMore,
       },
-      ,
     ]"
     class="rounded-lg border border-transparent relative transition-300 active:scale-95 disabled:!bg-white-100 disabled:text-gray disabled:!cursor-not-allowed"
     :disabled="loading || loadingMore || disabled"
@@ -97,6 +96,8 @@ const variants: Record<TButtonVariants, string> = {
   green: 'bg-green text-white hover:!from-green-600 hover:!to-green-500',
   disabled: 'text-white bg-gray-100',
   outline: 'border border-white-100 text-dark hover:bg-orange hover:text-white',
+  'outline-primary':
+    '!border !border-orange text-orange hover:bg-orange hover:text-white',
   secondary:
     'bg-white-100 text-dark md:hover:bg-white md:hover:border-orange md:hover:text-orange',
   'secondary-dark': 'bg-gray-200 text-dark md:hover:bg-gray-300',
