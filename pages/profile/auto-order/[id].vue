@@ -100,6 +100,7 @@
         <SvgoCommonTrash class="text-2xl leading-6" />
       </template>
     </BaseButton>
+    <AutoOrderModalOrderName :model-value="true" />
   </div>
 </template>
 
