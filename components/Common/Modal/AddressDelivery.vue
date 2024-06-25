@@ -1,36 +1,17 @@
 <template>
   <BaseModal
-    v-bind="{ show }"
+    :model-value="show"
     body-class="!max-w-[424px]"
     :title="$t('address_delivery')"
     disable-outer-close
     @close="$emit('close')"
   >
     <div v-if="list.length">
-      <div class="flex items-center flex-wrap gap-4 h-96 overflow-y-auto">
-        <div
-          v-for="(item, index) in list"
-          :key="index"
-          :class="addressIdx === index ? '!border-orange' : ''"
-          class="bg-gray-300 p-3 rounded-xl w-full cursor-pointer group border border-transparent hover:border-orange transition-300"
-          @click="handleAddress(index)"
-        >
-          <div class="flex-center-between">
-            <img :src="item.icon" alt="" width="24px" height="24px" />
-            <div
-              class="bg-white rounded-full w-5 h-5 border-2 border-gray-200 transition-300"
-              :class="addressIdx === index ? 'border-orange border-[5px]' : ''"
-            ></div>
-          </div>
-          <h3 class="mt-3 text-dark font-bold">{{ item?.address }}</h3>
-          <p class="line-clamp-1 text-xs text-gray-100 mt-1">
-            {{ item?.street }}
-          </p>
-        </div>
+      <div class="grid grid-cols-2 gap-4 overflow-y-scroll max-h-[230px]">
+        <CartCardAdress v-bind="{ list }" @handle-address="handleAddress" />
       </div>
       <BaseButton
         class="mt-6 w-full group"
-        :loading="false"
         :text="$t('other_address')"
         variant="secondary"
         @click="$emit('openMapModal')"
@@ -41,26 +22,20 @@
           />
         </template>
       </BaseButton>
-      <!--    ToDo: Primary button ishlamaydi keyinroq ishlatib qo'yaman-->
       <BaseButton
         class="mt-4 w-full group"
         :loading="false"
         :text="$t('confirm')"
         variant="primary"
-        @click="confirmFunction"
+        @click="$emit('handle-address', addressItem)"
       >
       </BaseButton>
     </div>
     <div v-else>
-      <div class="mx-auto flex-center mt-[45px]">
-        <img src="/images/svg/nodatamap.svg" alt="NodataMap" />
-      </div>
-      <p class="text-center text-dark font-semibold leading-130 mt-3 mb-[45px]">
-        {{ $t('no_address') }}
-      </p>
+      <NoDataMap />
       <BaseButton
         class="mt-4 w-full group"
-        :loading="false"
+        :loading="buttonLoading"
         :text="$t('add_address')"
         variant="primary"
         @click="$emit('openMapModal')"
@@ -78,23 +53,26 @@
 <script setup lang="ts">
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconPlus from '~/assets/icons/Common/plus.svg'
+import NoDataMap from '~/components/Common/NoData/NoDataMap.vue'
 
 interface Props {
-  show?: boolean
+  show: boolean
   list?: any
-}
-const props = defineProps<Props>()
-
-const addressIdx = ref(0)
-
-const emit = defineEmits(['close', 'openMapModal', 'selectAddress'])
-
-const handleAddress = (index: number) => {
-  addressIdx.value = index
+  buttonLoading?: boolean
 }
 
-const confirmFunction = () => {
-  emit('selectAddress', props?.list?.[addressIdx.value])
-  emit('close')
+interface Emits {
+  (e: 'close', v: boolean): void
+  (e: 'open-map-modal', v: boolean): void
+  (e: 'handle-address', v: object): void
 }
+
+const $emit = defineEmits<Emits>()
+const addressItem = ref(null)
+
+const handleAddress = (item: object) => {
+  addressItem.value = item
+}
+
+defineProps<Props>()
 </script>

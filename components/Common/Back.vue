@@ -6,10 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteLocation } from 'vue-router'
+import type { RouteLocationRaw } from '#vue-router'
 
 interface Props {
-  to?: RouteLocation
+  to?: RouteLocationRaw
 }
 defineProps<Props>()
 </script>
