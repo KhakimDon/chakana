@@ -191,9 +191,10 @@ const steps = [
 ]
 const step = ref(1)
 
-const { data } = await useAsyncData('orderSingle', () =>
+const { data, error } = await useAsyncData('orderSingle', () =>
   useApi().$get<IOrderDetail>(`/order/detail/${route.params.id}`)
 )
+if (error.value) showError({ statusCode: 404 })
 
 const { data: orderStatus } = await useAsyncData('orderStatus', () =>
   useApi().$get(`/order/status/${route.params.id}`)

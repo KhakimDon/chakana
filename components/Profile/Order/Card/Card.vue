@@ -59,7 +59,7 @@
 
         <div class="flex items-end text-dark font-extrabold">
           <p class="text-xl mr-0.5 leading-130">
-            {{ formatMoneyDecimal(item.total_real_price) }}
+            {{ formatMoneyDecimal(item.total_real_price ?? item.price) }}
           </p>
           <span class="text-[15px] leading-140">UZS</span>
         </div>
@@ -72,7 +72,7 @@
         <BaseButton
           variant="outline"
           :text="$t('more_info_product')"
-          class="group bg-white border-white-100 rounded-[10px] w-full font-semibold"
+          class="group bg-white border-white-100 rounded-[10px] w-full font-semibold !py-2"
           main-class="justify-between text-[13px] leading-120"
         >
           <template #suffix>
@@ -89,8 +89,10 @@
     <BaseButton
       v-if="(offerReorder && false) || autoOrder"
       variant="secondary"
-      :text="$t('reorder')"
+      :text="$t(autoOrder ? 'delete_order' : 'reorder')"
       class="w-full mt-3 font-semibold"
+      :loading="deleteLoading"
+      @click="extraAction"
     >
       <template #prefix>
         <component
@@ -105,6 +107,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+import { useOrderStore } from '~/store/profile/orders.js'
 import type { IOrderCard } from '~/types/profile.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
@@ -113,12 +116,39 @@ interface Props {
   offerReorder?: boolean
   autoOrder?: boolean
 }
-
 const props = defineProps<Props>()
+
+interface Emits {
+  (e: 'delete', v: number): void
+}
+const emit = defineEmits<Emits>()
+
+const { showToast } = useCustomToast()
+const { handleError } = useErrorHandling()
+const { t } = useI18n()
 
 // max 4 images
 const images = computed(() => {
   if (props.item.images.length > 4) return props.item.images.slice(0, 4)
   else return props.item.images
 })
+
+const orderStore = useOrderStore()
+const deleteLoading = ref(false)
+function extraAction() {
+  if (props.autoOrder) {
+    deleteLoading.value = true
+    orderStore
+      .deleteAutoOrder(props.item.id)
+      .then(() => {
+        showToast(t('auto_order_deleted_successfully'), 'success')
+      })
+      .catch((err) => {
+        handleError(err)
+      })
+      .finally(() => {
+        deleteLoading.value = false
+      })
+  }
+}
 </script>

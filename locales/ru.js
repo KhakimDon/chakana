@@ -264,4 +264,7 @@ export default {
   auto_order_title: 'Название автозаказа',
   enter_auto_order_title: 'Введите название автозаказа',
   with_balance: 'Через баланс',
+  delete_order: 'Удалить заказа',
+  auto_order_deleted_successfully: 'Автозаказ успешно удален',
+  add_product: 'Добавить товар',
 }
