@@ -1,3 +1,5 @@
+import type { UnwrapRef } from 'vue'
+
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
   const orderDetail = reactive({
     address: {
@@ -17,6 +19,18 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     },
     promo_code_id: 0,
     use_from_balance: false,
+  })
+
+  const autoOrderDetail = reactive({
+    name: '',
+    when_to_deliver: '',
+    payment_method: {
+      card_to_the_courier: false,
+      cash: false,
+      card_id: 0,
+      provider_id: 0,
+    },
+    weekday: 1,
   })
 
   const promoCodes = reactive({
@@ -42,6 +56,29 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
         })
         .finally(() => {
           promoCodes.loading = false
+        })
+    })
+  }
+
+  const weekdays = reactive({
+    list: [],
+    loading: true,
+  })
+
+  function getWeekdaysList() {
+    return new Promise((resolve, reject) => {
+      weekdays.loading = true
+      useApi()
+        .$get(`/weekdays`, {})
+        .then((res: any) => {
+          weekdays.list = res
+          resolve(res)
+        })
+        .catch((error: any) => {
+          reject(error)
+        })
+        .finally(() => {
+          weekdays.loading = false
         })
     })
   }
@@ -254,6 +291,46 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const autoOrderCreating = ref(false)
+
+  function createAutoOrder(body: {
+    payment_type: UnwrapRef<
+      UnwrapRef<
+        UnwrapRef<{
+          provider_id: number
+          card_to_the_courier: boolean
+          cash: boolean
+          card_id: number
+        }>
+      >
+    >
+    weekdays: number[]
+    name: string
+    recipient: UnwrapRef<
+      UnwrapRef<UnwrapRef<{ full_name: string; phone: string }>>
+    >
+    delivery_time: string
+    shipping_address: { address_id: number }
+    card_id: number
+  }) {
+    return new Promise((resolve, reject) => {
+      autoOrderCreating.value = true
+      useApi()
+        .$post(`/auto-order/create`, {
+          body,
+        })
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error: any) => {
+          reject(error)
+        })
+        .finally(() => {
+          autoOrderCreating.value = false
+        })
+    })
+  }
+
   return {
     promoCodes,
     getPromoCodeList,
@@ -270,10 +347,15 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     cartClear,
     addToCart,
     orderDetail,
+    autoOrderDetail,
     orderCreating,
     createOrder,
     getCartDetailConfirm,
     delivery,
     getDeliveryDetail,
+    weekdays,
+    getWeekdaysList,
+    autoOrderCreating,
+    createAutoOrder,
   }
 })
