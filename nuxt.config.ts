@@ -64,7 +64,6 @@ export default defineNuxtConfig({
       { code: 'ru', iso: 'ru-RU', file: 'ru' },
       { code: 'uz', iso: 'uz', file: 'uz' },
       { code: 'en', iso: 'en', file: 'en' },
-      { code: 'uzc', iso: 'uzc', file: 'uzc' },
     ],
     lazy: true,
     useCookie: true,
