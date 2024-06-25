@@ -1,4 +1,4 @@
-import type { IProfileUser, IUser, IUserForm } from '~/types/auth'
+import type { IUser } from '~/types/auth'
 
 interface TAuthTokens {
   refresh_token?: string
@@ -6,16 +6,17 @@ interface TAuthTokens {
 }
 
 interface IState {
-  user?: IProfileUser
+  user?: IUser
   userFetchTrigger: number
   showAuth: boolean
   accessToken?: string | null
   refreshToken?: string | null
   userFetched: boolean
 }
+
 export const useAuthStore = defineStore('authStore', {
   state: (): IState => ({
-    user: {} as IProfileUser,
+    user: {} as IUser,
     userFetchTrigger: 0,
     showAuth: false,
     accessToken: undefined,
@@ -26,7 +27,7 @@ export const useAuthStore = defineStore('authStore', {
     fetchUser() {
       return new Promise((resolve, reject) => {
         useApi()
-          .$get<IProfileUser>('get/detail')
+          .$get<IUser>('get/detail')
           .then((res) => {
             this.user = res
             this.userFetched = true
@@ -38,10 +39,10 @@ export const useAuthStore = defineStore('authStore', {
           })
       })
     },
-    updateUser(user: IProfileUser) {
+    updateUser(user: IUser) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$put<IProfileUser>('update/detail', {
+          .$put<IUser>('update/detail', {
             body: user,
           })
           .then((res) => {

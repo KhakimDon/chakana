@@ -310,8 +310,9 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
       UnwrapRef<UnwrapRef<{ full_name: string; phone: string }>>
     >
     delivery_time: string
-    shipping_address: { address_id: number }
+    shipping_address: { latitude: null; address_id: number; longitude: null }
     card_id: number
+    products: { product_id: any; count: any }[] | undefined
   }) {
     return new Promise((resolve, reject) => {
       autoOrderCreating.value = true
