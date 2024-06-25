@@ -6,6 +6,13 @@
     @update:model-value="$emit('update:modelValue', $event)"
     @back="$emit('openSavedAddress')"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div class="space-y-4">
       <p
         v-if="showFreeDelivery"
@@ -43,6 +50,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+import { orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
@@ -62,7 +70,10 @@ const route = useRoute()
 const { t, locale } = useI18n()
 
 const isCartRoute = computed(() => {
-  return route.path === `/${locale.value}/cart`
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
 })
 
 const selectedInterval = ref('nearest_2_hours')
@@ -119,6 +130,7 @@ function getCurrentDateTimeISO(date: any) {
 
 const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
+
 function add() {
   if (selectedInterval.value === 'nearest_2_hours') {
     const now = dayjs()
@@ -144,4 +156,6 @@ const intervals = ref()
 onMounted(() => {
   intervals.value = ['nearest_2_hours', ...generateIntervals()]
 })
+
+const step = ref('when_to_deliver')
 </script>

@@ -57,6 +57,7 @@ const authStore = useAuthStore()
 const token = computed(() => authStore.accessToken)
 const goToPayment = () => {
   if (token.value) {
+    router.push(`/${locale.value}/cart`)
     if (!modalStore.addressModel && !orderCartStore.orderDetail.address?.id) {
       modalStore.addressModel = true
     } else {
@@ -69,6 +70,7 @@ const goToPayment = () => {
 
 const goToAutoOrderPayment = () => {
   if (token.value) {
+    router.push(`/${locale.value}/cart/?order=auto`)
     if (
       !modalStore.autoOrderModel.name &&
       !orderCartStore.autoOrderDetail.name

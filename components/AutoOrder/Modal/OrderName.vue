@@ -5,7 +5,13 @@
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="space-y-4">
-      <BaseStepper :steps :step step-class="!w-full" />
+      <BaseStepper
+        v-if="isCartRoute"
+        :steps="$route?.query?.order === 'auto' ? autoOrderSteps : steps"
+        :step
+        step-class="!w-full"
+        class="!mb-5 !scale-95"
+      />
       <FormGroup :label="$t('name')">
         <FormInput
           v-model="form.values.name"
@@ -28,11 +34,7 @@
 <script setup lang="ts">
 import { minLength, required } from '@vuelidate/validators'
 
-import {
-  SvgoCommonEdit,
-  SvgoProfileClockLocation,
-  SvgoProfileMoney,
-} from '#components'
+import { autoOrderSteps, steps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
@@ -59,6 +61,16 @@ const form = useForm(
   }
 )
 
+const route = useRoute()
+const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
+
 const orderCartStore = useCartOrderStore()
 
 function add() {
@@ -67,7 +79,9 @@ function add() {
     loading.value = true
     orderCartStore.autoOrderDetail.name = form.values.name
     loading.value = false
-    modalStore.autoOrderModel.whenToDelivery = true
+    if (isCartRoute.value) {
+      modalStore.addressModel = true
+    }
     emit('update:modelValue', false)
   }
 }
@@ -80,21 +94,6 @@ watch(
 )
 
 const step = ref('name')
-
-const steps = [
-  {
-    id: 'name',
-    icon: SvgoCommonEdit,
-  },
-  {
-    id: 'when_to_deliver',
-    icon: SvgoProfileClockLocation,
-  },
-  {
-    id: 'payment',
-    icon: SvgoProfileMoney,
-  },
-]
 
 onMounted(() => {
   form.values.name = orderCartStore.autoOrderDetail.name

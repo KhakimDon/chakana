@@ -2,7 +2,7 @@
   <BaseModal
     v-bind="{ show }"
     no-header
-    body-class="!max-w-[424px]"
+    body-class="!max-w-[484px]"
     @close="$emit('close')"
   >
     <div class="flex justify-end w-full mb-5">

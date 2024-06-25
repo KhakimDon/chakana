@@ -44,7 +44,8 @@
           {{ $t('discount') }}
         </p>
         <p class="text-xs font-semibold leading-none text-red">
-          -{{ formatMoneyDecimal(cartDetail?.discount_price, 0) }}
+          {{ cartDetail?.discount?.detail?.total > 0 ? '-' : '' }}
+          {{ formatMoneyDecimal(cartDetail?.discount_price, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>

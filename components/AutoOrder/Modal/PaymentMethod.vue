@@ -1,13 +1,17 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    has-back
     :title="$t('payment_method')"
     @update:model-value="$emit('update:modelValue', $event)"
-    @back="backToWhenToDelivery"
   >
     <div>
-      <BaseStepper :steps :step step-class="!w-full" class="!mb-5" />
+      <BaseStepper
+        v-if="isCartRoute"
+        :steps="autoOrderSteps"
+        :step
+        step-class="!w-full"
+        class="!mb-5"
+      />
       <div
         class="flex-y-center gap-1 select-none cursor-pointer"
         @click="courierCard = !courierCard"
@@ -35,21 +39,6 @@
             {{ $t('cash') }}
           </p>
           <FormRadio v-if="!cash" v-model="cash" class="!p-0" />
-          <FormRadio v-else class="!p-0" />
-        </div>
-      </div>
-      <div
-        class="flex-y-center gap-1 select-none cursor-pointer"
-        @click="withBalance = !withBalance"
-      >
-        <SvgoProfileWallet class="text-green text-2xl" />
-        <div
-          class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
-        >
-          <p class="text-sm font-semibold leading-tight text-dark">
-            {{ $t('with_balance') }}
-          </p>
-          <FormRadio v-if="!withBalance" v-model="withBalance" class="!p-0" />
           <FormRadio v-else class="!p-0" />
         </div>
       </div>
@@ -136,11 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  SvgoCommonEdit,
-  SvgoProfileClockLocation,
-  SvgoProfileMoney,
-} from '#components'
+import { autoOrderSteps, steps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 import { usePaymentStore } from '~/store/payment.js'
@@ -161,34 +146,23 @@ const route = useRoute()
 const { locale } = useI18n()
 
 const isCartRoute = computed(() => {
-  return route.path === `/${locale.value}/cart`
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
 })
 
 const loading = ref(false)
 const courierCard = ref(false)
 const cash = ref(false)
-const withBalance = ref(false)
 const cardId = ref(0)
 const paymentType = ref(0)
-
-watch(
-  () => withBalance.value,
-  (val) => {
-    if (val) {
-      courierCard.value = false
-      cash.value = false
-      paymentType.value = 0
-      cardId.value = 0
-    }
-  }
-)
 
 watch(
   () => cash.value,
   (val) => {
     if (val) {
       courierCard.value = false
-      withBalance.value = false
       paymentType.value = 0
       cardId.value = 0
     }
@@ -200,7 +174,6 @@ watch(
   (val) => {
     if (val) {
       cash.value = false
-      withBalance.value = false
       paymentType.value = 0
       cardId.value = 0
     }
@@ -213,7 +186,6 @@ watch(
     if (val) {
       cash.value = false
       courierCard.value = false
-      withBalance.value = false
       cardId.value = 0
     }
   }
@@ -225,18 +197,10 @@ watch(
     if (val) {
       cash.value = false
       courierCard.value = false
-      withBalance.value = false
       paymentType.value = 0
     }
   }
 )
-
-const modalStore = useModalStore()
-
-const backToWhenToDelivery = () => {
-  modalStore.autoOrderModel.payment = false
-  modalStore.autoOrderModel.whenToDelivery = true
-}
 
 const orderCartStore = useCartOrderStore()
 function add() {
@@ -271,19 +235,4 @@ function addedCard() {
 cardsStore.fetchCards()
 
 const step = ref('payment')
-
-const steps = [
-  {
-    id: 'name',
-    icon: SvgoCommonEdit,
-  },
-  {
-    id: 'when_to_deliver',
-    icon: SvgoProfileClockLocation,
-  },
-  {
-    id: 'payment',
-    icon: SvgoProfileMoney,
-  },
-]
 </script>
