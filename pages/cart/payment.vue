@@ -136,15 +136,16 @@ const totalCartProductsPrice = computed(
 //   { immediate: true, deep: true }
 // )
 onMounted(() => {
-  if (!orderCartStore.orderDetail.id) {
-    router.push(`/${locale.value}/cart`)
-  }
+  // if (!orderCartStore.orderDetail.id) {
+  //   router.push(`/${locale.value}/cart`)
+  // }
 })
 
-const route = useRoute()
-
 onMounted(() => {
-  isAutoOrder.value = route.query?.order === 'auto'
+  if (useCookie('order_data').value) {
+    useCartOrderStore().orderDetail = useCookie('order_data').value
+    isAutoOrder.value = useCartOrderStore().orderDetail.isAuto
+  }
 })
 </script>
 

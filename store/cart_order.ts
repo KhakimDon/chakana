@@ -1,25 +1,5 @@
-import type { UnwrapRef } from 'vue'
-
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
-  const orderDetail = reactive({
-    address: {
-      id: 0,
-    },
-    when_to_deliver: '',
-    recipient: {
-      full_name: '',
-      phone: '',
-    },
-    comment_to_courier: '',
-    payment_method: {
-      card_to_the_courier: false,
-      cash: false,
-      card_id: 0,
-      provider_id: 0,
-    },
-    promo_code_id: 0,
-    use_from_balance: false,
-  })
+  const orderDetail = ref()
 
   const autoOrderDetail = reactive({
     name: '',

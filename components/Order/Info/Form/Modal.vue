@@ -84,8 +84,12 @@ function confirm() {
     ...steps.value[stepIndex.value].form.values,
   }
   if (stepIndex.value === steps.value.length - 1) {
-    useCartOrderStore().orderDetail = data
+    useCartOrderStore().orderDetail = {
+      ...data,
+      isAuto: props.isAuto,
+    }
     emit('update:modelValue', false)
+    useCookie('order_data').value = useCartOrderStore().orderDetail
     router.push(localePath('/cart/payment'))
     return
   }

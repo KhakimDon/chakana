@@ -61,7 +61,7 @@ const goToPayment = () => {
   if (token.value) {
     showOrder.value = true
     isAuto.value = false
-    if (!modalStore.addressModel && !orderCartStore.orderDetail.address?.id) {
+    if (!modalStore.addressModel && !orderCartStore.orderDetail?.id) {
       modalStore.addressModel = true
       // } else {
       //   router.push(`/${locale.value}/cart/payment`)

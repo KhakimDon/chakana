@@ -56,9 +56,9 @@ const hasPromoCode = ref(false)
 
 const cartOrderStore = useCartOrderStore()
 const promoCodes = computed(() => {
-  if (cartOrderStore.orderDetail.promo_code_id) {
+  if (cartOrderStore.orderDetail?.promo_code_id) {
     hasPromoCode.value = true
-    selectedPromoCodeId.value = cartOrderStore.orderDetail.promo_code_id
+    selectedPromoCodeId.value = cartOrderStore.orderDetail?.promo_code_id
   }
   return cartOrderStore.promoCodes
 })

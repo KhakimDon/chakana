@@ -1,8 +1,10 @@
 <template>
   <div>
     <CartCardAddress
+      :key="defaultId"
       :list
       :loading
+      :default-id="defaultId"
       @handle-address="handleAddress"
       @add="showAddModal = true"
     />
@@ -28,6 +30,7 @@
 <script setup lang="ts">
 interface Props {
   form: any
+  defaultId?: string
 }
 const props = defineProps<Props>()
 

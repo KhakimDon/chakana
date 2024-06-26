@@ -6,7 +6,11 @@
     :subtitle="defaultAddress?.address"
     @open-details="showEdit = true"
   />
-  <OrderInfoEditAddress v-model="showEdit" @save="saveAddress" />
+  <OrderInfoEditAddress
+    v-model="showEdit"
+    :default-id="orderCartStore.orderDetail?.id"
+    @save="saveAddress"
+  />
 </template>
 
 <script setup lang="ts">
@@ -17,13 +21,13 @@ const showEdit = ref(false)
 
 const orderCartStore = useCartOrderStore()
 const defaultAddress = computed(() => {
-  orderCartStore.orderDetail.address_info
+  return orderCartStore.orderDetail?.address_info
 })
 
 function saveAddress(data: any) {
   orderCartStore.orderDetail.address_info = data.address_info
   orderCartStore.orderDetail.id = data.address_info.id
-  console.log(data)
+  console.log(orderCartStore.orderDetail)
 }
 
 const route = useRoute()

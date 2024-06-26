@@ -15,6 +15,6 @@ import { useModalStore } from '~/store/modal.js'
 const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
-const comment = computed(() => orderCartStore.orderDetail.comment_to_courier)
+const comment = computed(() => orderCartStore.orderDetail?.comment_to_courier)
 </script>
 <style scoped></style>

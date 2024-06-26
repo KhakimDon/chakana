@@ -31,7 +31,7 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const whenDelivery = computed(() => {
-  return orderCartStore.autoOrderDetail.when_to_deliver
+  return orderCartStore.autoOrderDetail?.when_to_deliver
 })
 
 const backToName = () => {
