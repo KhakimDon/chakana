@@ -1,10 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('recipient_details')"
+    :title="$t('courier_comment')"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <OrderInfoFormUserInfo :form />
+    <OrderInfoFormComment :form />
     <BaseButton
       class="!py-3 w-full !mt-6"
       :text="$t('save')"
@@ -14,8 +14,6 @@
   </BaseModal>
 </template>
 <script setup lang="ts">
-import { required } from '@vuelidate/validators'
-
 interface Props {
   modelValue: boolean
   defaultInfo?: any
@@ -27,10 +25,7 @@ const emit = defineEmits<{
   (e: 'save', value: any): void
 }>()
 
-const form = useForm(props.defaultInfo, {
-  full_name: { required },
-  phone: { required },
-})
+const form = useForm(props.defaultInfo, {})
 
 watch(
   () => props.modelValue,

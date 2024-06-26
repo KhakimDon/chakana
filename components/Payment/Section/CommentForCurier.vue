@@ -5,7 +5,11 @@
     :title="comment ? comment : $t('courier_comment')"
     @open-details="modalStore.commentModel = true"
   />
-  <PaymentModalCommentForCurier v-model="modalStore.commentModel" />
+  <OrderInfoEditComment
+    v-model="modalStore.commentModel"
+    :default-info="{ comment_to_courier: comment }"
+    @save="saveComment"
+  />
 </template>
 
 <script setup lang="ts">
@@ -16,5 +20,8 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const comment = computed(() => orderCartStore.orderDetail?.comment_to_courier)
+
+function saveComment(data: any) {
+  orderCartStore.orderDetail.comment_to_courier = data.comment_to_courier
+}
 </script>
-<style scoped></style>

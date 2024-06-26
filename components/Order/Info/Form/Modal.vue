@@ -114,7 +114,7 @@ const orderSteps = [
   {
     id: 'user',
     icon: 'SvgoProfileUserCircle',
-    title: 'address_delivery',
+    title: 'recipient_details',
     component: LazyOrderInfoFormUserInfo,
     form: orderFormUserInfo,
   },
