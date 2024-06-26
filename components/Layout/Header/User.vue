@@ -1,52 +1,76 @@
 <template>
-  <BaseDropdown
-    body-class="!w-[260px]"
-    :show="showDropdown"
-    @toggle="showDropdown = $event"
-  >
-    <template #head>
-      <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
-        <img
-          v-if="user?.image"
-          :src="user?.image"
-          alt="user"
-          class="w-full h-full rounded-full"
-        />
-        <img
-          v-else
-          class="w-full h-full"
-          src="/images/default/user.png"
-          alt="user-default"
-        />
-      </div>
-    </template>
-    <template #body>
-      <div>
-        <NuxtLinkLocale
-          v-for="(item, index) in list"
-          :key="index"
-          :to="item.link"
-          class="flex-y-center gap-3 w-full relative px-3 last:pb-3 first:pt-3 py-2.5 group cursor-pointer"
-          @click="showDropdown = false"
-        >
-          <component
-            :is="item.icon"
-            class="text-2xl text-gray font-bold"
-            :class="item.iconClass"
+  <div>
+    <BaseDropdown
+      body-class="!w-[260px]"
+      :show="showDropdown"
+      @toggle="showDropdown = $event"
+    >
+      <template #head>
+        <div class="w-9 h-9 rounded-full linear-border-image cursor-pointer">
+          <img
+            v-if="user?.image"
+            :src="user?.image"
+            alt="user"
+            class="w-full h-full object-contain object-center rounded-full"
           />
-          <p
-            class="text-sm font-semibold leading-130 text-dark transition-300 group-hover:text-orange"
-            :class="{ 'group-hover:text-red': item.link === 'logout' }"
+          <img
+            v-else
+            class="w-full h-full"
+            src="/images/default/user.png"
+            alt="user-default"
+          />
+        </div>
+      </template>
+      <template #body>
+        <div>
+          <NuxtLinkLocale
+            v-for="(item, index) in list"
+            :key="index"
+            :to="item.link"
+            class="flex-y-center gap-3 w-full relative px-3 last:pb-3 first:pt-3 py-2.5 group cursor-pointer"
+            @click="hideDropdown(item)"
           >
-            {{ item?.title }}
-          </p>
-          <div
-            class="h-px w-[calc(100%-48px)] bg-gray-300 absolute bottom-0 right-0"
+            <component
+              :is="item.icon"
+              class="text-2xl text-gray font-bold"
+              :class="item.iconClass"
+            />
+            <p
+              class="text-sm font-semibold leading-130 text-dark transition-300 group-hover:text-orange"
+              :class="{ 'group-hover:text-red': item.link === 'logout' }"
+            >
+              {{ item?.title }}
+            </p>
+            <div
+              class="h-px w-[calc(100%-48px)] bg-gray-300 absolute bottom-0 right-0"
+            />
+          </NuxtLinkLocale>
+        </div>
+      </template>
+    </BaseDropdown>
+    <BaseModal v-model="logoutModal" :title="$t('logout_from_account')">
+      <div>
+        <p class="text-sm leading-140 text-dark whitespace-pre-line">
+          {{ $t('are_you_sure_to_logout') }}
+        </p>
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <BaseButton
+            class="!py-3 !rounded-[10px]"
+            :text="$t('cancel')"
+            size="md"
+            variant="secondary"
+            @click="logoutModal = false"
           />
-        </NuxtLinkLocale>
+          <BaseButton
+            class="!py-3 !rounded-[10px]"
+            :text="$t('logout')"
+            size="md"
+            @click="logout"
+          />
+        </div>
       </div>
-    </template>
-  </BaseDropdown>
+    </BaseModal>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -60,6 +84,7 @@ import {
   SvgoProfileSidebarTag,
   SvgoProfileUserCircle,
 } from '#components'
+import { useAuthStore } from '~/store/auth.js'
 import type { IUser } from '~/types/auth.js'
 
 interface Props {
@@ -70,6 +95,7 @@ defineProps<Props>()
 
 const { t } = useI18n()
 const showDropdown = ref(false)
+const localePath = useLocalePath()
 
 const list = [
   {
@@ -114,6 +140,25 @@ const list = [
     iconClass: 'text-red',
   },
 ]
+
+const logoutModal = ref(false)
+
+const hideDropdown = (item: any) => {
+  if (item.link === 'logout') {
+    logoutModal.value = true
+    showDropdown.value = false
+  } else {
+    showDropdown.value = false
+  }
+}
+
+const router = useRouter()
+
+async function logout() {
+  await useAuthStore().logOut()
+  logoutModal.value = false
+  router.push(localePath('/'))
+}
 </script>
 
 <style scoped>

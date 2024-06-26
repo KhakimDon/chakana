@@ -97,12 +97,16 @@ function sendSms() {
   useAuthStore()
     .sendSms(params.value.phone)
     .then((res: any) => {
-      params.value.isRegister = res.register
       step.value = 'confirm'
       params.value.session = res.session
+      useCookie('auth-session').value = res.session
     })
     .catch((err) => {
-      handleError(err)
+      if (err._data.detail.code === 'sms_already_sent') {
+        step.value = 'confirm'
+      } else {
+        handleError(err)
+      }
     })
     .finally(() => (buttonLoading.value = false))
 }
@@ -113,11 +117,12 @@ function confirmCode() {
     .$post('/verify', {
       body: {
         phone_number: params.value.phone,
-        session: params.value.session,
+        session: params.value.session || useCookie('auth-session').value,
         otp_code: confirmForm.values.code,
       },
     })
-    .then(() => {
+    .then((res: any) => {
+      params.value.isRegister = res.register
       if (params.value.isRegister) {
         step.value = 'register'
       } else {
@@ -138,7 +143,7 @@ function register() {
         name: registerForm.values.name || undefined,
         instagram: registerForm.values.instagram || undefined,
         telegram: registerForm.values.telegram || undefined,
-        session: params.value.session,
+        session: params.value.session || useCookie('auth-session').value,
         phone_number: params.value.phone,
         otp_code: confirmForm.values.code,
       },
@@ -166,6 +171,7 @@ function register() {
           })
         }
         authStore.showAuth = false
+        useCookie('auth-session').value = null
       }, 300)
     })
     .catch((err) => {

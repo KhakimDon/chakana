@@ -7,7 +7,6 @@
             v-for="(card, index) in item?.products"
             :key="index"
             :card
-            @open="emit('select', card)"
           />
         </div>
         <Transition name="fade" mode="out-in">

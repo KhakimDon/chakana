@@ -66,7 +66,10 @@
         :class="{ '!text-red line-through': returned }"
       >
         {{
-          formatMoneyDecimal((showCount ? 1 : count) * product?.price ?? 0, 0)
+          formatMoneyDecimal(
+            (showCount ? 1 : count) * product?.discount_price ?? 0,
+            0
+          )
         }}
         <span
           class="text-[10px] font-medium leading-130 text-dark"

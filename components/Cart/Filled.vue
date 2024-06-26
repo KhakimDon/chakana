@@ -11,7 +11,7 @@
         <div
           class="flex-center gap-2 group cursor-pointer select-none"
           :class="{ 'pointer-events-none': loading }"
-          @click="clearCart"
+          @click="showDeleteConfirm = true"
         >
           <svg
             v-if="loading"
@@ -38,7 +38,7 @@
           </p>
         </div>
       </div>
-      <div class="h-72 overflow-y-auto space-y-5">
+      <div class="max-h-72 h-fit overflow-y-auto space-y-5">
         <SearchCardProduct
           v-for="(product, key) in cartProducts"
           :key
@@ -71,10 +71,12 @@
         >
       </p>
     </BaseButton>
+    <DeleteConfirm v-model="showDeleteConfirm" @do-action="clearCart" />
   </section>
 </template>
 
 <script setup lang="ts">
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
@@ -84,9 +86,12 @@ const { t, locale } = useI18n()
 const cartStore = useCartStore()
 const cartProducts = computed(() => cartStore.products)
 
+const showDeleteConfirm = ref(false)
+
 const orderCartStore = useCartOrderStore()
 
 const clearCart = () => {
+  showDeleteConfirm.value = false
   orderCartStore.cartClear().then(() => {
     cartStore.products = []
   })

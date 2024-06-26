@@ -82,7 +82,7 @@ watch(
   () => search.value,
   (v) => {
     debounce(
-      'search',
+      'search_model_value',
       () => {
         emit('update:modelValue', v)
       },

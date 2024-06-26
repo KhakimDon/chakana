@@ -12,7 +12,7 @@
     ></div>
     <BaseButton
       v-else
-      class="w-full !rounded-10 !py-2"
+      class="w-full !rounded-10 !py-2 !border-orange disabled:!border-white-100"
       :text="$t('go_to_registration')"
       variant="outline-primary"
       :disabled="cartProducts.length === 0"

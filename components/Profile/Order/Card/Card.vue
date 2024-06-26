@@ -59,7 +59,7 @@
 
         <div class="flex items-end text-dark font-extrabold">
           <p class="text-xl mr-0.5 leading-130">
-            {{ formatMoneyDecimal(item.total_real_price ?? item.price) }}
+            {{ formatMoneyDecimal(item.amount_untaxed ?? item.price) }}
           </p>
           <span class="text-[15px] leading-140">UZS</span>
         </div>

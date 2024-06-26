@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-[85px] mb-24 space-y-6">
+  <section class="mb-24 space-y-6">
     <div>
       <MainCardBadge
         v-if="data?.discount_percentage"

@@ -14,6 +14,7 @@
           class="w-full !h-10"
           @focus="focusInput"
           @clear="search = ''"
+          @keydown.enter="outsideClicked = true"
         />
         <NuxtLinkLocale
           to="/search/list"
