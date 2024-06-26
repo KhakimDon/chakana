@@ -25,6 +25,7 @@
         class="absolute-y hidden md:block md:max-w-[715px] right-10"
       />
     </div>
+    <pre>{{ error }}</pre>
   </div>
 </template>
 <script setup lang="ts">

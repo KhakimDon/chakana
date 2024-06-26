@@ -74,7 +74,7 @@ const goToPayment = () => {
         payment_type: autoOrderDetail.value.payment_method,
         card_id: autoOrderDetail.value.payment_method.card_id,
         shipping_address: {
-          address_id: orderDetail.value.address.id,
+          address_id: orderDetail.value.id,
           latitude: null,
           longitude: null,
         },
@@ -136,7 +136,7 @@ watch(
   { immediate: true, deep: true }
 )
 onMounted(() => {
-  if (!orderCartStore.orderDetail.address.id) {
+  if (!orderCartStore.orderDetail.id) {
     router.push(`/${locale.value}/cart`)
   }
 })

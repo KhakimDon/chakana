@@ -5,7 +5,7 @@
     body-class="!max-w-[868px] !w-full"
     :title="defaultAddress ? $t('edit') : $t('specify_your_delivery_address')"
     disable-outer-close
-    @back="emit('open-saved-adress')"
+    @back="emit('update:model-value', false)"
     @update:model-value="emit('update:model-value', $event)"
   >
     <div v-if="!showAddAddress">

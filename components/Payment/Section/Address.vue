@@ -36,7 +36,7 @@ const selectedAddress = (address: object) => {
   } else {
     selectedLocation.value = list.value[0]
   }
-  orderCartStore.orderDetail.address.id = selectedLocation.value?.id
+  orderCartStore.orderDetail.id = selectedLocation.value?.id
   modalStore.addressModel = false
   if (
     route.path !== `/${locale.value}/cart/payment` ||
@@ -70,7 +70,7 @@ watch(
   (val) => {
     if (val?.length) {
       selectedLocation.value = val.find(
-        (item) => item.id === orderCartStore.orderDetail.address.id
+        (item) => item.id === orderCartStore.orderDetail.id
       )
     }
   }

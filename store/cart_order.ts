@@ -293,27 +293,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
 
   const autoOrderCreating = ref(false)
 
-  function createAutoOrder(body: {
-    payment_type: UnwrapRef<
-      UnwrapRef<
-        UnwrapRef<{
-          provider_id: number
-          card_to_the_courier: boolean
-          cash: boolean
-          card_id: number
-        }>
-      >
-    >
-    weekdays: number[]
-    name: string
-    recipient: UnwrapRef<
-      UnwrapRef<UnwrapRef<{ full_name: string; phone: string }>>
-    >
-    delivery_time: string
-    shipping_address: { latitude: null; address_id: number; longitude: null }
-    card_id: number
-    products: { product_id: any; count: any }[] | undefined
-  }) {
+  function createAutoOrder(body: any) {
     return new Promise((resolve, reject) => {
       autoOrderCreating.value = true
       useApi()

@@ -7,9 +7,9 @@
         :title="
           payment?.cash
             ? $t('cash')
-            : payment.card_to_the_courier
+            : payment?.card_to_courier
             ? $t('courier_card')
-            : payment.card_id
+            : payment?.card_id
             ? $t('credit_card')
             : $t('payment_method')
         "
@@ -28,7 +28,7 @@ const modalStore = useModalStore()
 
 const orderCartStore = useCartOrderStore()
 
-const payment = computed(() => orderCartStore.orderDetail.payment_method)
+const payment = computed(() => orderCartStore.orderDetail)
 </script>
 
 <style scoped></style>

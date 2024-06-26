@@ -30,7 +30,7 @@
         @click="selectedInterval = interval"
       >
         <p v-if="key !== 0">{{ t('interval', { range: interval }) }}</p>
-        <p v-else>{{ $t(interval) }}</p>
+        <p v-else>{{ interval }}</p>
         <SvgoCommonCheck
           v-if="selectedInterval === interval"
           class="text-orange text-xl !mb-0"

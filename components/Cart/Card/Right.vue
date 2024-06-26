@@ -34,6 +34,7 @@
     <AutoOrderModalOrderName v-model="modalStore.autoOrderModel.name" />
     <AutoOrderModalClock v-model="modalStore.autoOrderModel.whenToDelivery" />
     <AutoOrderModalPaymentMethod v-model="modalStore.autoOrderModel.payment" />
+    <OrderInfoFormModal model-value is-auto />
   </section>
 </template>
 
