@@ -106,8 +106,8 @@ const goToPayment = () => {
         router.push(`/${locale.value}/profile/orders/${res.order_id}`)
         orderCartStore.orderDetail = {}
       })
-      .catch(() => {
-        showToast(t('order_not_created'), 'error')
+      .catch((error: any) => {
+        showToast(error?.detail?.detail ?? t('order_not_created'), 'error')
       })
   }
 }

@@ -14,7 +14,6 @@
               v-for="(card, index) in products?.list"
               :key="index"
               :card
-              @open="selectProduct(card)"
             />
           </template>
           <template v-if="products?.params?.loading">
@@ -31,11 +30,6 @@
         ref="target"
       />
     </CommonSectionWrapper>
-    <MainModalInfo
-      v-model="showProduct"
-      :product="selectedProduct"
-      @close="showProduct = false"
-    />
   </section>
 </template>
 
@@ -43,23 +37,14 @@
 import { useIntersectionObserver } from '@vueuse/core'
 
 import { useMainStore } from '~/store/main.js'
-import type { IProduct } from '~/types/products.js'
 
 const mainStore = useMainStore()
-
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
 
 const products = computed(() => mainStore.products)
 
 // Fetch products
 if (!products.value?.list.length) {
   mainStore.fetchProducts()
-}
-
-function selectProduct(product: IProduct) {
-  selectedProduct.value = product
-  showProduct.value = true
 }
 
 const target = ref<HTMLElement | null>(null)

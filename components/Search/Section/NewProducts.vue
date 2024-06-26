@@ -16,35 +16,21 @@
               v-for="(card, index) in newProducts?.list"
               :key="index"
               :card
-              @open="selectProduct(card)"
             />
           </template>
         </div>
       </Transition>
     </CommonSectionWrapper>
-    <MainModalInfo
-      :show="showProduct"
-      :product="selectedProduct"
-      @close="showProduct = false"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 // New products section
 import { useMainStore } from '~/store/main'
-import type { IProduct } from '~/types/products'
 
 const mainStore = useMainStore()
 
 const newProducts = computed(() => mainStore.products)
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
-
-function selectProduct(product: IProduct) {
-  selectedProduct.value = product
-  showProduct.value = true
-}
 
 if (!newProducts.value?.list.length) {
   mainStore.fetchProducts()

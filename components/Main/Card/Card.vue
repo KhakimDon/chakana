@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-between gap-5 cursor-pointer">
-    <div>
+    <NuxtLinkLocale :to="'/product/' + card?.id">
       <div
         class="w-full h-[113px] rounded-10 bg-white-100 flex-center relative"
         @click="$emit('open')"
@@ -39,19 +39,18 @@
         {{ formatMoneyDecimal(card?.discount_price ?? card?.price) }}
         <span class="text-[11px] font-[150%]">UZS</span>
       </p>
-      <NuxtLinkLocale
+      <p
         class="mt-2 text-xs leading-122 text-dark font-semibold line-clamp-2 hover:text-orange transition-300"
-        :to="'/product/' + card?.id"
       >
         {{ card?.name }}
-      </NuxtLinkLocale>
+      </p>
       <p
         v-if="card?.product_uom_amount && card?.product_uom"
         class="mt-1.5 text-gray-100 font-medium text-xs leading-122"
       >
         {{ card?.product_uom_amount }} {{ $t(card?.product_uom) }}
       </p>
-    </div>
+    </NuxtLinkLocale>
     <ClientOnly>
       <BaseButton
         v-if="count < 1 || addingToCart"
