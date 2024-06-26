@@ -74,5 +74,3 @@ const goBack = () => {
   router.back()
 }
 </script>
-
-<style scoped></style>

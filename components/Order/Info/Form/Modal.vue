@@ -31,6 +31,8 @@
   </BaseModal>
 </template>
 <script setup lang="ts">
+import { useEventListener } from '@vueuse/core'
+
 import {
   LazyOrderInfoFormAddress,
   LazyOrderInfoFormComment,
@@ -145,4 +147,17 @@ const steps = computed(() =>
 )
 const stepIndex = ref(0)
 const step = computed(() => steps.value[stepIndex.value].id)
+
+const beforeRefresh = (event) => {
+  event.preventDefault()
+}
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      useEventListener(document, 'beforeunload', beforeRefresh)
+    }
+  }
+)
 </script>

@@ -30,11 +30,7 @@
       :disabled="cartProducts.length === 0"
       @click="goToAutoOrderPayment"
     />
-    <PaymentFullInfos class="hidden" />
-    <AutoOrderModalOrderName v-model="modalStore.autoOrderModel.name" />
-    <AutoOrderModalClock v-model="modalStore.autoOrderModel.whenToDelivery" />
-    <AutoOrderModalPaymentMethod v-model="modalStore.autoOrderModel.payment" />
-    <OrderInfoFormModal model-value is-auto />
+    <OrderInfoFormModal v-model="showOrder" :is-auto="isAuto" />
   </section>
 </template>
 
@@ -50,6 +46,9 @@ const router = useRouter()
 const orderCartStore = useCartOrderStore()
 const cartStore = useCartStore()
 
+const showOrder = ref(false)
+const isAuto = ref(false)
+
 const cartProducts = computed(() => cartStore.products)
 const loading = computed(() => cartStore.cartProductsLoading)
 const cartDetails = computed(() => orderCartStore.cart.detail)
@@ -60,11 +59,12 @@ const authStore = useAuthStore()
 const token = computed(() => authStore.accessToken)
 const goToPayment = () => {
   if (token.value) {
-    router.push(`/${locale.value}/cart`)
+    showOrder.value = true
+    isAuto.value = false
     if (!modalStore.addressModel && !orderCartStore.orderDetail.address?.id) {
       modalStore.addressModel = true
-    } else {
-      router.push(`/${locale.value}/cart/payment`)
+      // } else {
+      //   router.push(`/${locale.value}/cart/payment`)
     }
   } else {
     authStore.showAuth = true
@@ -73,14 +73,15 @@ const goToPayment = () => {
 
 const goToAutoOrderPayment = () => {
   if (token.value) {
-    router.push(`/${locale.value}/cart/?order=auto`)
+    showOrder.value = true
+    isAuto.value = true
     if (
       !modalStore.autoOrderModel.name &&
       !orderCartStore.autoOrderDetail.name
     ) {
       modalStore.autoOrderModel.name = true
-    } else {
-      router.push(`/${locale.value}/cart/payment`)
+      // } else {
+      //   router.push(`/${locale.value}/cart/payment`)
     }
   } else {
     authStore.showAuth = true
