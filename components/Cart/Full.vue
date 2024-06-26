@@ -18,7 +18,7 @@
           v-if="cartProducts.length > 0"
           class="flex flex-center gap-2 group cursor-pointer select-none"
           :class="{ 'pointer-events-none': loading }"
-          @click="clearCart"
+          @click="showDeleteConfirm = true"
         >
           <svg
             v-if="loading"
@@ -67,11 +67,13 @@
         />
       </section>
       <slot />
+      <DeleteConfirm v-model="showDeleteConfirm" @do-action="clearCart" />
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 
@@ -89,7 +91,10 @@ const goBack = () => {
 
 const loading = computed(() => cartStore.cartProductsLoading)
 
+const showDeleteConfirm = ref(false)
+
 const clearCart = () => {
+  showDeleteConfirm.value = false
   orderCartStore.cartClear().then(() => {
     cartStore.getCartProducts()
   })

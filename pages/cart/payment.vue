@@ -103,7 +103,7 @@ const goToPayment = () => {
       .then((res: any) => {
         showToast(t('order_created'), 'success')
         cartStore.getCartProducts()
-        router.push(`/${locale.value}/profile/orders/${res.order_id}`)
+        router.push(`/${locale.value}/profile/order/${res.order_id}`)
         orderCartStore.orderDetail = {}
       })
       .catch((error: any) => {
