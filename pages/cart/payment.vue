@@ -120,12 +120,7 @@ const totalCartProductsPrice = computed(
 watch(
   () => orderCartStore.orderDetail,
   (val) => {
-    if (
-      val?.promo_code_id ||
-      val?.address?.id ||
-      val?.use_from_balance ||
-      !val.use_from_balance
-    ) {
+    if (val?.id) {
       orderCartStore.getCartDetailConfirm({
         promo_code_id: val.promo_code_id,
         address_id: val.address?.id,
@@ -136,15 +131,16 @@ watch(
   { immediate: true, deep: true }
 )
 onMounted(() => {
-  if (!orderCartStore.orderDetail.id) {
-    router.push(`/${locale.value}/cart`)
-  }
+  // if (!orderCartStore.orderDetail.id) {
+  //   router.push(`/${locale.value}/cart`)
+  // }
 })
 
-const route = useRoute()
-
 onMounted(() => {
-  isAutoOrder.value = route.query?.order === 'auto'
+  if (useCookie('order_data').value) {
+    useCartOrderStore().orderDetail = useCookie('order_data').value
+    isAutoOrder.value = useCartOrderStore().orderDetail.isAuto
+  }
 })
 </script>
 

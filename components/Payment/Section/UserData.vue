@@ -17,9 +17,9 @@ const orderCartStore = useCartOrderStore()
 
 const userData = computed(
   () =>
-    orderCartStore.orderDetail.full_name +
+    orderCartStore.orderDetail?.full_name +
     ', +998 ' +
-    orderCartStore.orderDetail.phone
+    orderCartStore.orderDetail?.phone
 )
 </script>
 

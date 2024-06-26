@@ -26,7 +26,7 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const whenDelivery = computed(() => {
-  return orderCartStore.orderDetail.delivery_time
+  return orderCartStore.orderDetail?.delivery_time
 })
 
 const backToAddress = () => {

@@ -82,7 +82,11 @@ function confirm() {
     ...steps.value[stepIndex.value].form.values,
   }
   if (stepIndex.value === 6) {
-    useCartOrderStore().orderDetail = data
+    useCartOrderStore().orderDetail = {
+      ...data,
+      isAuto: props.isAuto,
+    }
+    useCookie('order_data').value = useCartOrderStore().orderDetail
     router.push(localePath('/cart/payment'))
     return
   }

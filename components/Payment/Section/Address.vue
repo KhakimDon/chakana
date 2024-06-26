@@ -70,7 +70,7 @@ watch(
   (val) => {
     if (val?.length) {
       selectedLocation.value = val.find(
-        (item) => item.id === orderCartStore.orderDetail.id
+        (item) => item.id === orderCartStore.orderDetail?.id
       )
     }
   }
