@@ -16,7 +16,9 @@
         <PaymentCardInfoHeader :title="$t('delivery_details')">
           <section class="space-y-2">
             <PaymentSectionAddress />
-            <PaymentSectionClockLocation />
+            <PaymentSectionClockLocation
+              v-if="!orderCartStore.orderDetail?.isAuto"
+            />
             <PaymentSectionUserData />
             <PaymentSectionCommentForCurier />
           </section>

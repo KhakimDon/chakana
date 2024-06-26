@@ -27,7 +27,6 @@ const defaultAddress = computed(() => {
 function saveAddress(data: any) {
   orderCartStore.orderDetail.address_info = data.address_info
   orderCartStore.orderDetail.id = data.address_info.id
-  console.log(orderCartStore.orderDetail)
 }
 
 const route = useRoute()

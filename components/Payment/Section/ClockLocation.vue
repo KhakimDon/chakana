@@ -2,11 +2,7 @@
   <PaymentCardInfo
     icon="SvgoProfileClockLocation"
     icon-class="text-purple-500 !text-2xl"
-    :title="
-      whenDelivery
-        ? dayjs(whenDelivery).format('DD.MM.YYYY HH:mm')
-        : $t('when_delivery')
-    "
+    :title="dayjs(whenDelivery).format('DD.MM.YYYY HH:mm')"
     @open-details="modalStore.clockModel = true"
   />
   <PaymentModalClock
