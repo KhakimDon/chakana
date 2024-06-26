@@ -147,6 +147,16 @@ onMounted(() => {
     isAutoOrder.value = useCartOrderStore().orderDetail.isAuto
   }
 })
+
+watch(
+  () => useCartOrderStore().orderDetail,
+  (val) => {
+    useCookie('order_data').value = val
+  },
+  {
+    deep: true,
+  }
+)
 </script>
 
 <style scoped></style>
