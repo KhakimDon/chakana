@@ -74,8 +74,6 @@
 </template>
 
 <script setup lang="ts">
-import { localePath } from 'vue-i18n-routing'
-
 import {
   SvgoCommonBell,
   SvgoCommonLogOut,
@@ -97,6 +95,7 @@ defineProps<Props>()
 
 const { t } = useI18n()
 const showDropdown = ref(false)
+const localePath = useLocalePath()
 
 const list = [
   {
