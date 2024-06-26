@@ -25,7 +25,7 @@
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           class="w-full !rounded-10"
-          :text="$t('payment')"
+          :text="isAutoOrder ? $t('save_auto_order') : $t('payment')"
           variant="green"
           :loading="loading"
           @click="goToPayment"
@@ -86,8 +86,8 @@ const goToPayment = () => {
       })
       .then(() => {
         showToast(t('auto_order_created'), 'success')
-        cartStore.getCartProducts()
-        router.push(`/${locale.value}/profile/orders`)
+        orderCartStore.cartClear()
+        router.push(`/${locale.value}/profile/auto-order`)
         orderCartStore.orderDetail = {}
         orderCartStore.autoOrderDetail = {}
       })
