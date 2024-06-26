@@ -3,38 +3,39 @@
     icon="SvgoProfileTruck"
     icon-class="text-orange !text-2xl"
     :title="$t('courier_address')"
-    :subtitle="selectedLocation?.address"
-    @open-details="openSavedAddress"
+    :subtitle="defaultAddress?.address"
+    @open-details="showEdit = true"
   />
-  <CommonModalAddressDelivery
-    v-model="modalStore.addressModel"
-    :list="list"
-    @handle-address="selectedAddress"
-    @close="modalStore.addressModel = false"
-    @open-map-modal="openMapModal"
-  />
-  <CommonModalMap
-    v-model="modalStore.addressMapModel"
-    @close="openSavedAddress"
-    @open-saved-adress="openSavedAddress"
-  />
+  <OrderInfoEditAddress v-model="showEdit" @save="saveAddress" />
 </template>
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
+const showEdit = ref(false)
+
+const orderCartStore = useCartOrderStore()
+const defaultAddress = computed(() => {
+  orderCartStore.orderDetail.address_info
+})
+
+function saveAddress(data: any) {
+  orderCartStore.orderDetail.address_info = data.address_info
+  orderCartStore.orderDetail.id = data.address_info.id
+  console.log(data)
+}
+
 const route = useRoute()
 const { locale } = useI18n()
 const modalStore = useModalStore()
 const selectedLocation = ref()
 
-const orderCartStore = useCartOrderStore()
 const selectedAddress = (address: object) => {
   if (address) {
     selectedLocation.value = address
   } else {
-    selectedLocation.value = list.value[0]
+    // selectedLocation.value = list.value[0]
   }
   orderCartStore.orderDetail.id = selectedLocation.value?.id
   modalStore.addressModel = false
@@ -52,29 +53,4 @@ const selectedAddress = (address: object) => {
     }
   }
 }
-const { list, resetList } = useListFetcher(`/saved/address`, 25, false, '')
-
-const openMapModal = () => {
-  modalStore.addressModel = false
-  modalStore.addressMapModel = true
-}
-
-const openSavedAddress = () => {
-  modalStore.addressMapModel = false
-  modalStore.addressModel = true
-  resetList()
-}
-
-watch(
-  () => list.value,
-  (val) => {
-    if (val?.length) {
-      selectedLocation.value = val.find(
-        (item) => item.id === orderCartStore.orderDetail.id
-      )
-    }
-  }
-)
 </script>
-
-<style scoped></style>

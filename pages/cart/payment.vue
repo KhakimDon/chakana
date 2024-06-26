@@ -117,24 +117,24 @@ const totalCartProductsPrice = computed(
   () => orderCartStore.cart?.detail?.product_price
 )
 
-watch(
-  () => orderCartStore.orderDetail,
-  (val) => {
-    if (
-      val?.promo_code_id ||
-      val?.address?.id ||
-      val?.use_from_balance ||
-      !val.use_from_balance
-    ) {
-      orderCartStore.getCartDetailConfirm({
-        promo_code_id: val.promo_code_id,
-        address_id: val.address?.id,
-        is_use_balance: val?.use_from_balance,
-      })
-    }
-  },
-  { immediate: true, deep: true }
-)
+// watch(
+//   () => orderCartStore.orderDetail,
+//   (val) => {
+//     if (
+//       val?.promo_code_id ||
+//       val?.address?.id ||
+//       val?.use_from_balance ||
+//       !val.use_from_balance
+//     ) {
+//       orderCartStore.getCartDetailConfirm({
+//         promo_code_id: val.promo_code_id,
+//         address_id: val.address?.id,
+//         is_use_balance: val?.use_from_balance,
+//       })
+//     }
+//   },
+//   { immediate: true, deep: true }
+// )
 onMounted(() => {
   if (!orderCartStore.orderDetail.id) {
     router.push(`/${locale.value}/cart`)

@@ -22,7 +22,7 @@
       <BaseButton
         class="!py-3 w-full !mt-6"
         :loading
-        :text="stepIndex === 6 ? $t('save') : $t('next')"
+        :text="stepIndex === steps.length - 1 ? $t('save') : $t('next')"
         :disabled="disabledConfirm"
         size="md"
         @click="confirm"
@@ -72,8 +72,10 @@ const loading = ref(false)
 const disabledConfirm = computed(
   () =>
     steps.value[stepIndex.value].form.$v.value.$invalid ||
-    (stepIndex.value === 6 &&
-      Object.values(steps.value[6].form.values).every((e) => !e))
+    (stepIndex.value === steps.value.length - 1 &&
+      Object.values(steps.value[steps.value.length - 1].form.values).every(
+        (e) => !e
+      ))
 )
 let data = {}
 function confirm() {
@@ -81,8 +83,9 @@ function confirm() {
     ...data,
     ...steps.value[stepIndex.value].form.values,
   }
-  if (stepIndex.value === 6) {
+  if (stepIndex.value === steps.value.length - 1) {
     useCartOrderStore().orderDetail = data
+    emit('update:modelValue', false)
     router.push(localePath('/cart/payment'))
     return
   }

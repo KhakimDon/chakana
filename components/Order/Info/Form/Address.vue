@@ -35,9 +35,9 @@ interface Emits {
   (e: 'open-map-modal', v: boolean): void
   (e: 'handle-address', v: object): void
 }
-const emit = defineEmits<Emits>()
+defineEmits<Emits>()
 
-const { values, $v } = unref(props.form)
+const { values } = unref(props.form)
 
 const handleAddress = (item: any) => {
   values.id = item.id
