@@ -55,7 +55,7 @@
     <ClientOnly>
       <BaseButton
         v-if="count < 1 || addingToCart"
-        class="w-full"
+        class="w-full !py-2"
         :text="$t('to_basket')"
         variant="outline"
         :disabled="addingToCart"
