@@ -75,7 +75,7 @@ interface Props {
 defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'doAction'): void
+  (e: 'doAction', id: string): void
   (e: 'update:modelValue', value: boolean): void
 }>()
 
@@ -113,8 +113,8 @@ const callToReason = async () => {
       ids: checkbox.value,
       text: form.values.otherReason,
     })
-    .then(() => {
-      emit('doAction')
+    .then((res) => {
+      emit('doAction', res?.id)
       emit('update:modelValue', false)
     })
     .finally(() => {
