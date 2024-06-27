@@ -4,12 +4,14 @@
       <PaymentCardInfo
         icon="SvgoProfileTicket"
         icon-class="text-orange !text-2xl"
-        :no-clickable="hasPromoCode"
-        :title="!hasPromoCode ? $t('promo_code') : ''"
-        @open-details="modalStore.promoModel = true"
+        :no-clickable="!!cartOrderStore.orderDetail?.promo_code_id"
+        :title="
+          !cartOrderStore.orderDetail?.promo_code_id ? $t('promo_code') : ''
+        "
+        @open-details="editPromo = true"
       >
         <div
-          v-if="hasPromoCode"
+          v-if="cartOrderStore.orderDetail?.promo_code_id"
           class="px-2 py-1 bg-orange flex-y-center gap-1 rounded-md text-white"
         >
           <i18n-t
@@ -21,9 +23,8 @@
           >
             <template #text>
               <span class="text-white text-xs font-extrabold leading-none">
-                (
-                {{ selectedPromoCode?.discount?.detail?.total > 0 ? '-' : '' }}
-                {{ formatMoneyDecimal(selectedPromoCode?.discount ?? 0, 0) }}
+                ({{ selectedPromoCode?.discount > 0 ? '-' : '' }}
+                {{ formatMoneyDecimal(promoInfo?.discount ?? 0, 0) }}
                 UZS)
               </span>
             </template>
@@ -36,13 +37,10 @@
       </PaymentCardInfo>
     </section>
   </PaymentCardInfoHeader>
-  <PaymentModalPromoCode
-    v-model="modalStore.promoModel"
-    @confirm-promo-code="selectPromoCode"
-  />
-  <PaymentModalDiscountDetails
-    v-model="openDetail"
-    :promo-code="selectedPromoCode"
+  <OrderInfoEditPromocode
+    v-model="editPromo"
+    :default-info="cartOrderStore.orderDetail"
+    @save="selectPromoCode"
   />
 </template>
 
@@ -51,15 +49,14 @@ import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const modalStore = useModalStore()
+const editPromo = ref(false)
+
+const promoInfo = computed(() => cartOrderStore.orderDetail?.promo_info)
+
 const hasPromoCode = ref(false)
 
 const cartOrderStore = useCartOrderStore()
 const promoCodes = computed(() => {
-  if (cartOrderStore.orderDetail?.promo_code_id) {
-    hasPromoCode.value = true
-    selectedPromoCodeId.value = cartOrderStore.orderDetail?.promo_code_id
-  }
   return cartOrderStore.promoCodes
 })
 
@@ -71,23 +68,14 @@ const selectedPromoCode = computed(() => {
   )
 })
 
-watch(
-  () => selectedPromoCodeId.value,
-  (val) => {
-    hasPromoCode.value = !!val
-  }
-)
-
-const selectPromoCode = (code: number) => {
-  selectedPromoCodeId.value = code
-  hasPromoCode.value = true
-  modalStore.promoModel = false
-  cartOrderStore.orderDetail.promo_code_id = code
+const selectPromoCode = (item) => {
+  cartOrderStore.orderDetail.promo_code_id = item.promo_code_id
+  cartOrderStore.orderDetail.promo_info = item.promo_info
 }
 
 const removePromoCode = (code: number) => {
-  hasPromoCode.value = false
   cartOrderStore.orderDetail.promo_code_id = code
+  cartOrderStore.orderDetail.promo_info = null
   cartOrderStore.getCartDetailConfirm()
 }
 

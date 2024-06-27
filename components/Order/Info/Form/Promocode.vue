@@ -11,7 +11,7 @@
         v-for="(promo, index) in promoCodes?.list"
         :key="index"
         class="border border-white-100 rounded-md p-1 cursor-pointer"
-        @click="values.promo_code_id = promo?.id"
+        @click="choosePromoCode(promo)"
       >
         <div class="flex-y-center gap-2 justify-between py-3 select-none px-2">
           <p class="text-sm font-bold leading-130 text-dark">
@@ -96,6 +96,11 @@ const { values, $v } = unref(props.form)
 const addNew = ref(false)
 
 const cartOrderStore = useCartOrderStore()
+
+function choosePromoCode(promo: any) {
+  values.promo_code_id = promo?.id
+  values.promo_info = promo
+}
 
 const promoCodes = computed(() => cartOrderStore.promoCodes)
 

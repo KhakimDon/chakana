@@ -52,6 +52,7 @@ export const orderFormComment = useForm(
 export const orderFormPromocode = useForm(
   {
     promo_code_id: '',
+    promo_info: null,
   },
   {}
 )
