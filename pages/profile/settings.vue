@@ -75,6 +75,8 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/store/auth.js'
 
+const { showToast } = useCustomToast()
+
 const { currentLanguage, languagesList, changeLocale } = useLanguageSwitcher()
 
 const listLinks = ref([
@@ -143,6 +145,9 @@ const deleteAccountFn = async () => {
       useAuthStore().logOut()
       deleteAccountModal.value = false
       window.location.reload()
+    })
+    .catch((error) => {
+      showToast(error._data?.detail?.code, 'error')
     })
     .finally(() => {
       deletingAccount.value = false

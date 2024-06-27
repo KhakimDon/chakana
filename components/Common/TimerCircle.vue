@@ -3,50 +3,60 @@
     id="countdown"
     class="relative h-7 w-7 text-center bg-transparent rounded-full flex items-center justify-center"
   >
-    <div
-      id="countdown-number"
-      class="text-2xl leading-6 icon-xmark text-gray-200"
-    />
+    <div id="countdown-number" class="text-xl p-1 leading-6 text-gray-200">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 26 26"
+      >
+        <path
+          fill="currentColor"
+          d="m8.054 16.673l-.727-.727L11.273 12L7.327 8.079l.727-.727L12 11.298l3.921-3.946l.727.727L12.702 12l3.946 3.946l-.727.727L12 12.727z"
+        />
+      </svg>
+    </div>
+
     <svg>
       <circle r="18" cx="20" cy="20" />
     </svg>
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from 'vue'
 
 interface Props {
-  isCancelled?: boolean;
+  isCancelled?: boolean
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 interface Emits {
-  (e: "finished"): void;
+  (e: 'finished'): void
 }
 
-const timer = ref();
+const timer = ref()
 
-const number = ref(5);
+const number = ref(5)
 
-const emit = defineEmits<Emits>();
+const emit = defineEmits<Emits>()
 setInterval(() => {
   if (number.value > 0) {
-    number.value--;
+    number.value--
   }
-}, 1000);
+}, 1000)
 
 onMounted(() => {
   timer.value = setTimeout(() => {
-    emit("finished");
-  }, 5000);
-});
+    emit('finished')
+  }, 5000)
+})
 
 watch(
   () => props.isCancelled,
   () => {
-    clearTimeout(timer.value);
+    clearTimeout(timer.value)
   }
-);
+)
 </script>
 
 <style scoped>
