@@ -23,6 +23,7 @@
           :loading="buttonLoading"
           @submit="confirmCode"
           @back="step = 'login'"
+          @resend="sendSms"
         />
         <LayoutAuthRegister
           v-else-if="step === 'register'"
