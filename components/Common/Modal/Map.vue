@@ -127,7 +127,7 @@
           :text="$t('delete')"
           variant="secondary"
           :loading="deleteLoading"
-          @click="deleteAddress"
+          @click="showDeleteConfirmModal = true"
         >
           <template #prefix>
             <SvgoCommonTrash class="text-2xl leading-6" />
@@ -141,6 +141,12 @@
           @click="sendAddress"
         />
       </div>
+      <DeleteConfirm
+        v-model="showDeleteConfirmModal"
+        :title="$t('delete')"
+        :loading="deleteLoading"
+        @do-action="deleteAddress"
+      />
     </div>
   </BaseModal>
 </template>
@@ -153,6 +159,7 @@ import {
 } from 'vue-yandex-maps'
 
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
@@ -350,7 +357,9 @@ function editAddress() {
     })
 }
 
+const showDeleteConfirmModal = ref(false)
 const deleteLoading = ref(false)
+
 function deleteAddress() {
   deleteLoading.value = true
   useApi()
@@ -358,6 +367,8 @@ function deleteAddress() {
     .then(() => {
       showToast(t('success_deleted'), 'success')
       emit('edited')
+      emit('update:model-value', false)
+      showDeleteConfirmModal.value = false
     })
     .catch((err: any) => {
       handleError(err)

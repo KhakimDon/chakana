@@ -2,6 +2,7 @@
   <BaseModal
     :model-value="modelValue"
     :title="$t('clear_cart')"
+    body-class="!w-[424px]"
     @update:model-value="$emit('update:modelValue', false)"
   >
     <div>
@@ -18,8 +19,9 @@
         />
         <BaseButton
           class="!py-3 !rounded-[10px]"
-          :text="$t('confirm')"
+          :text="title || $t('confirm')"
           size="md"
+          :loading="loading"
           @click="$emit('doAction')"
         />
       </div>
@@ -30,6 +32,8 @@
 <script setup lang="ts">
 interface Props {
   modelValue: boolean
+  title?: string
+  loading?: boolean
 }
 
 defineProps<Props>()
