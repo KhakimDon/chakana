@@ -9,7 +9,7 @@
       class="!py-3 w-full !mt-6"
       :text="$t('save')"
       size="md"
-      @click="handleAddress"
+      @click="handleName"
     />
   </BaseModal>
 </template>
@@ -27,20 +27,23 @@ const emit = defineEmits<{
   (e: 'save', value: any): void
 }>()
 
-const form = useForm(props.defaultInfo, {
-  name: { required, minLength: minLength(3) },
-})
+const form = useForm(
+  {},
+  {
+    name: { required, minLength: minLength(3) },
+  }
+)
 
 watch(
   () => props.modelValue,
   (val) => {
     if (val) {
-      form.values = props.defaultInfo
+      form.values = { ...props.defaultInfo }
     }
   }
 )
 
-function handleAddress() {
+function handleName() {
   emit('update:modelValue', false)
   emit('save', form.values)
 }

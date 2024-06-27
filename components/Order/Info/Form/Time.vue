@@ -17,7 +17,9 @@
         :key
         class="flex-y-center cursor-pointer hover:text-orange transition-300 justify-between"
         :class="{
-          'text-orange': selectedInterval === interval,
+          'text-orange':
+            selectedInterval === interval ||
+            selectedInterval === interval.substring(0, 5),
         }"
         @click="chooseTime(interval)"
       >
@@ -26,7 +28,10 @@
         </p>
         <p v-else>{{ $t(interval) }}</p>
         <SvgoCommonCheck
-          v-if="selectedInterval === interval"
+          v-if="
+            selectedInterval === interval ||
+            selectedInterval === interval.substring(0, 5)
+          "
           class="text-orange text-xl !mb-0"
         />
       </div>
@@ -45,33 +50,13 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-// const emit = defineEmits<{}>()
-
 const { values, $v } = unref(props.form)
 
 const selectedInterval = ref(values?.delivery_time || 'nearest_2_hours')
 
-function getCurrentDateTimeISO(date: any) {
-  return date.format().slice(0, -6)
-}
-
 function chooseTime(interval: string) {
   selectedInterval.value = interval
-  // if (selectedInterval.value === 'nearest_2_hours') {
-  //   const now = dayjs()
-  //   values.delivery_time = getCurrentDateTimeISO(now.add(2, 'hours'))
-  // } else
-  // if (props.isAuto) {
   values.delivery_time = selectedInterval.value
-  // } else {
-  //   const now = dayjs()
-  //   values.delivery_time = getCurrentDateTimeISO(
-  //     now
-  //       .set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
-  //       .set('minute', 0)
-  //       .set('second', 0)
-  //   )
-  // }
 }
 
 const intervals = ref()

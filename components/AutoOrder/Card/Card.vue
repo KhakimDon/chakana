@@ -14,6 +14,7 @@
           <!--          <PaymentSectionAddress />-->
           <PaymentSectionOrderName
             :default-info="orderCartStore.orderDetail"
+            text-wrapper-class="!border-gray-200"
             @save="saveOrderName"
           />
           <PaymentSectionClockLocation

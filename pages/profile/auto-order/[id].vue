@@ -42,55 +42,42 @@
       {{ $t('delivery_details') }}
     </h3>
 
-    <PaymentCardInfo
-      icon="SvgoCommonEdit"
-      icon-class="!text-[#9747FF] !text-2xl"
-      :title="$t('auto_order_title')"
-      :subtitle="data.name"
+    <PaymentSectionOrderName :default-info="data" @save="saveName" />
+
+    <PaymentSectionClockLocation
+      :default-info="{
+        weekdays: data.delivery_date_data.weekdays[0],
+        delivery_time: data.delivery_date_data.delivery_time,
+      }"
+      is-auto
+      @save="saveOrderClock"
     />
-    <PaymentCardInfo
-      icon="SvgoProfileClockLocation"
-      icon-class="!text-[#9747FF] !text-2xl"
-      :title="data.delivery_date"
+    <PaymentSectionUserData
+      :full_name="data.recipient_data.full_name"
+      :phone="data.recipient_data.phone"
+      @save="saveUser"
     />
-    <PaymentCardInfo
-      icon="SvgoProfileUserCircle"
-      icon-class="!text-[#088377] !text-2xl"
-      :title="data.recipient"
-    />
-    <PaymentCardInfo
-      icon="SvgoProfileClockLocation"
-      icon-class="!text-orange !text-2xl"
-      :title="$t('courier_address')"
-      :subtitle="data.shipping_address"
-      text-wrapper-class="border-none"
+    <PaymentSectionAddress
+      :default-address="{
+        address: data.shipping_address,
+        id: data.shipping_address_data.address_id,
+      }"
+      @save="saveAddress"
     />
     <h3 class="text-base text-dark font-extrabold leading-130 mb-3 mt-6">
       {{ $t('payment_method') }}
     </h3>
-    <!--      Todo: fix it-->
-    <PaymentCardInfo
-      class="mb-5"
-      icon="SvgoProfileMoney"
-      icon-class="text-green !text-2xl"
-      no-clickable
-      text-wrapper-class="border-none"
-      :title="
-        data.payment_type === 'cash'
-          ? $t('cash')
-          : data.payment_type === 'card_to_courier'
-          ? $t('courier_card')
-          : data.payment_type === 'card'
-          ? $t('payment_via_card')
-          : data.payment_type === 'provider'
-          ? data.provider?.name
-          : data.payment_type === 'balance'
-          ? $t('use_balance')
-          : $t('payment_method')
-      "
+    <PaymentSectionPaymentMethod
+      :default-data="{
+        card_to_courier: data.payment_type === 'card_to_courier',
+        cash: data.payment_type === 'cash',
+        card_id: data.payment_type === 'card' ? data.card_data?.id : 0,
+        balance: data.payment_type === 'balance',
+      }"
+      @save="savePayment"
     />
     <BaseButton
-      class="w-full sticky bottom-7 !py-2.5"
+      class="w-full !py-2.5 my-5"
       variant="secondary"
       :text="$t('delete_order')"
       :loading="deleteLoading"
@@ -100,20 +87,16 @@
         <SvgoCommonTrash class="text-2xl leading-6" />
       </template>
     </BaseButton>
-    <AutoOrderModalOrderName :model-value="true" />
+    <BaseButton
+      class="w-full sticky bottom-7 !py-2.5"
+      :text="$t('save_auto_order')"
+      :loading="saveLoading"
+      @click="saveAutoOrder"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs'
-
-import {
-  SvgoCommonChevron,
-  SvgoCommonFlag,
-  SvgoCommonMap,
-  SvgoCommonTick,
-  SvgoProfileSidebarCart,
-} from '#components'
 import { useOrderStore } from '~/store/profile/orders.js'
 import type { IOrderDetail } from '~/types/profile.js'
 
@@ -139,11 +122,12 @@ useApi()
   .finally(() => (productsLoading.value = false))
 
 const orderStore = useOrderStore()
+
 const deleteLoading = ref(false)
 function deleteAutoOrder() {
   deleteLoading.value = true
   orderStore
-    .deleteAutoOrder(data.value.id)
+    .deleteAutoOrder(route.params.id)
     .then(() => {
       showToast(t('auto_order_deleted_successfully'), 'success')
     })
@@ -153,5 +137,83 @@ function deleteAutoOrder() {
     .finally(() => {
       deleteLoading.value = false
     })
+}
+
+const saveLoading = ref(false)
+function saveAutoOrder() {
+  saveLoading.value = true
+  useApi()
+    .$put(`/auto-order/update/${route.params.id}`, {
+      body: {
+        name: data.value.name,
+        weekdays: data.value.delivery_date_data.weekdays,
+        delivery_time: data.value.delivery_date_data.delivery_time,
+        payment_type: {
+          card_to_courier:
+            typeof data.value.payment_type_data?.card_to_courier === 'boolean'
+              ? data.value.payment_type_data?.card_to_courier
+              : data.value.payment_type === 'card_to_courier',
+          cash:
+            typeof data.value.payment_type_data?.cash === 'boolean'
+              ? data.value.payment_type_data?.cash
+              : data.value.payment_type === 'cash',
+          card_id:
+            data.value.payment_type_data?.card_id > 0
+              ? data.value.payment_type_data?.card_id
+              : data.value.payment_type === 'card',
+          balance:
+            typeof data.value.payment_type_data?.balance === 'boolean'
+              ? data.value.payment_type_data?.balance
+              : data.value.payment_type === 'balance',
+        },
+        shipping_address: {
+          address_id: data.value.shipping_address_data?.address_id,
+          latitude: null,
+          longitude: null,
+        },
+        recipient: data.value.recipient_data,
+      },
+    })
+    .then(() => {
+      showToast(t('auto_order_saved_successfully'), 'success')
+    })
+    .catch((err) => {
+      handleError(err)
+    })
+    .finally(() => {
+      saveLoading.value = false
+    })
+}
+
+function saveName(item: any) {
+  data.value.name = item.name
+}
+
+function saveOrderClock(item: any) {
+  data.value.delivery_date_data.delivery_time = item.delivery_time
+  data.value.delivery_date_data.weekdays = [item.weekdays]
+}
+
+function saveUser(item: any) {
+  data.value.recipient_data.full_name = item.full_name
+  data.value.recipient_data.phone = item.phone
+}
+
+function saveAddress(item: any) {
+  data.value.shipping_address = item.address_info.address
+  data.value.shipping_address_data.address_id = item.id
+}
+
+function savePayment(item: any) {
+  data.value.payment_type_data = item
+  if (item.card_id > 0) {
+    data.value.payment_type = 'card'
+  } else if (item.balance) {
+    data.value.payment_type = 'balance'
+  } else if (item.cash) {
+    data.value.payment_type = 'cash'
+  } else {
+    data.value.payment_type = 'card_to_courier'
+  }
 }
 </script>
