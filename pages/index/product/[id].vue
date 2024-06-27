@@ -9,7 +9,7 @@
       />
       <div
         class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
-        @click="router.back()"
+        @click="back"
       >
         <IconChevron
           class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
@@ -290,9 +290,9 @@
             alt=""
             class="p-1.5 bg-orange/10 rounded-lg"
           />
-          <CommonTooltip with-trigger :show="copied">{{
-            $t('copied')
-          }}</CommonTooltip>
+          <CommonTooltip with-trigger :show="copied"
+            >{{ $t('copied') }}
+          </CommonTooltip>
         </div>
       </div>
     </BaseModal>
@@ -333,6 +333,7 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
 const router = useRouter()
 
 const copied = ref(false)
+
 async function copyUrl() {
   copied.value = true
   await navigator.clipboard.writeText(window.location.href)
@@ -497,6 +498,16 @@ onMounted(() => {
   // Trigger the computation once the component is mounted
   shouldShowArrow.value
 })
+
+const localePath = useLocalePath()
+
+const back = () => {
+  if (window.history.state.back) {
+    router.back()
+  } else {
+    router.push(localePath('/'))
+  }
+}
 </script>
 
 <style scoped>
@@ -516,6 +527,7 @@ onMounted(() => {
   z-index: 2;
   transition: all 0.3s;
 }
+
 .thumb-gradient.reverse {
   transform: rotateY(180deg);
 }
