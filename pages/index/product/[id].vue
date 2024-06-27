@@ -162,7 +162,7 @@
 
               <BaseButton
                 variant="outline"
-                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange !py-2"
                 @click="show = true"
               >
                 <IconExport class="text-xl" />
@@ -170,7 +170,7 @@
               <BaseButton
                 v-if="data.saved || saved"
                 variant="outline"
-                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange !py-2"
                 :loading="buttonLoading"
                 @click="savedProducts"
               >
@@ -180,7 +180,7 @@
               <BaseButton
                 v-else
                 variant="outline"
-                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange !py-2"
                 :loading="buttonLoading"
                 @click="savedProducts"
               >
