@@ -10,11 +10,16 @@
       </p>
       <IconEditPen class="text-xl text-dark" />
     </button>
-    <FormOTP
+    <FormTestOtp
       v-model="form.values.code"
       :error="form.$v.value.code.$error || error"
       class="my-5"
     />
+    <!--    <FormOTP-->
+    <!--      v-model="form.values.code"-->
+    <!--      :error="form.$v.value.code.$error || error"-->
+    <!--      class="my-5"-->
+    <!--    />-->
 
     <CommonTimer :seconds-val="120" @resend="$emit('resend')" />
 
