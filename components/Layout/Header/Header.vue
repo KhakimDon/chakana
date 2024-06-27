@@ -74,7 +74,7 @@ function openAuthModal() {
   authStore.showAuth = true
 }
 
-const menu = [
+const menu = computed(() => [
   {
     title: t('brands'),
     link: '/brands',
@@ -90,5 +90,5 @@ const menu = [
     link: '/search',
     isPremium: true,
   },
-]
+])
 </script>

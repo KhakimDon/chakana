@@ -26,7 +26,7 @@ import IconCrown from '~/assets/icons/Common/crown.svg'
 
 const { t } = useI18n()
 
-const menu = [
+const menu = computed(() => [
   {
     title: t('brands'),
     link: '/brands',
@@ -42,5 +42,5 @@ const menu = [
     link: '/search',
     isPremium: true,
   },
-]
+])
 </script>
