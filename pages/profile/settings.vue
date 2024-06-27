@@ -60,9 +60,23 @@
       </FormRadioGroup>
       <BaseButton class="w-full" :text="$t('confirm')" @click="changeLang" />
     </BaseModal>
+    <CommonModalDeleteAccount
+      v-model="deleteAccountModal"
+      :loading="deletingAccount"
+      @do-action="showReasonsFn()"
+    />
+    <CommonModalReasons
+      v-model="showReasons"
+      :loading="deletingAccount"
+      @do-action="deleteAccountFn"
+    />
   </div>
 </template>
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth.js'
+
+const { showToast } = useCustomToast()
+
 const { currentLanguage, languagesList, changeLocale } = useLanguageSwitcher()
 
 const listLinks = ref([
@@ -81,10 +95,18 @@ const listLinks = ref([
     iconClass: 'text-[#F7C954]',
     value: 'notification',
   },
+  {
+    name: 'delete_account',
+    icon: 'SvgoCommonTrash',
+    wrapperClass: 'hover:border-red hover:bg-red-500/10',
+    iconClass: 'text-red-500',
+    value: 'delete_account',
+  },
 ])
 
 const languageModal = ref(false)
 const notification = ref(false)
+const deleteAccountModal = ref(false)
 const language = ref(currentLanguage.value?.code)
 
 const actions = (value: string) => {
@@ -95,11 +117,40 @@ const actions = (value: string) => {
     case 'notification':
       notification.value = !notification.value
       break
+    case 'delete_account':
+      deleteAccountModal.value = true
+      break
   }
 }
 
 function changeLang() {
   changeLocale(language.value)
   languageModal.value = false
+}
+
+const showReasons = ref(false)
+
+const showReasonsFn = () => {
+  showReasons.value = true
+  deleteAccountModal.value = false
+}
+
+const deletingAccount = ref(false)
+
+const deleteAccountFn = async () => {
+  deletingAccount.value = true
+  await useAuthStore()
+    .deleteAccount()
+    .then(() => {
+      useAuthStore().logOut()
+      deleteAccountModal.value = false
+      window.location.reload()
+    })
+    .catch((error) => {
+      showToast(error._data?.detail?.code, 'error')
+    })
+    .finally(() => {
+      deletingAccount.value = false
+    })
 }
 </script>

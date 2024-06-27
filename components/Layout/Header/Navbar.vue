@@ -2,7 +2,7 @@
   <div
     class="fixed top-[68px] h-[calc(100vh-68px)] bg-white left-0 z-10 w-full py-5 px-4 flex flex-col justify-between"
   >
-    <div class="flex flex-col gap-4" @click="$emit('close')">
+    <div class="flex flex-col gap-5" @click="$emit('close')">
       <LayoutHeaderLanguageSwitcher class="mb-3" />
 
       <NuxtLinkLocale

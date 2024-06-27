@@ -133,6 +133,7 @@ const menu = [
   },
 ]
 const logoutModal = ref(false)
+
 async function logout() {
   await useAuthStore().logOut()
   logoutModal.value = false
