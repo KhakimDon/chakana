@@ -89,6 +89,8 @@ const openProfile = () => {
     authStore.showAuth = true
   }
 }
+
+cartStore.getCartProducts()
 </script>
 
 <style scoped>
