@@ -1,10 +1,10 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('payment_method')"
+    :title="$t('promo_code')"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <OrderInfoFormPayment :form />
+    <OrderInfoFormPromocode :form />
     <BaseButton
       class="!py-3 w-full !mt-6"
       :text="$t('save')"
@@ -27,10 +27,7 @@ const emit = defineEmits<{
 
 const form = useForm(
   {
-    card_to_courier: false,
-    cash: false,
-    card_id: 0,
-    balance: false,
+    promo_code_id: '',
   },
   {}
 )
@@ -39,10 +36,7 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val) {
-      form.values.card_to_courier = props.defaultInfo.card_to_courier
-      form.values.cash = props.defaultInfo.cash
-      form.values.card_id = props.defaultInfo.card_id
-      form.values.balance = props.defaultInfo.balance
+      form.values.promo_code_id = props.defaultInfo.promo_code_id
     }
   }
 )
