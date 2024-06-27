@@ -1,52 +1,42 @@
 <template>
   <div class="code-input" :class="error ? 'error' : ''">
     <label
-      v-if="label"
-      class="mb-2 block text-sm leading-130 font-medium text-dark"
+      v-if="title"
       :for="`verification-input-${randomNumber}`"
+      class="verification-input-label block font-semibold text-sm leading-4 text-sm mb-3"
     >
-      {{ label }}
+      {{ $t(title) }}
     </label>
-    <div class="flex-y-center gap-2.5">
+    <div class="flex-y-center gap-2">
       <template v-for="(v, index) in values" :key="index">
-        <div class="relative overflow-hidden !rounded-none">
-          <input
-            :id="`verification-input-${randomNumber + index}`"
-            :ref="
-              (el) => {
-                if (el) inputs[index + 1] = el
-              }
-            "
-            class="w-full text-center outline-none transition-300 bg-white-100 border border-transparent h-16 focus:border-orange focus:bg-white font-semibold text-xl text-dark leading-140 overflow-hidden rounded-lg"
-            :class="[
-              inputClass,
-              {
-                '!border-white-100 !bg-white': v,
-              },
-            ]"
-            inputmode="decimal"
-            pattern="[0-9]"
-            :autoFocus="autoFocus && index === autoFocusIndex"
-            :data-id="index"
-            :value="v"
-            :required="props.required"
-            :disabled="props.disabled"
-            maxlength="1"
-            @input="onValueChange"
-            @focus="onFocus($event, index)"
-            @keydown="onKeyDown"
-            @paste="pasteDigits"
-            @blur="activeIndex = null"
-          />
-        </div>
+        <input
+          :id="`verification-input-${randomNumber + index}`"
+          :ref="
+            (el) => {
+              if (el) inputs[index + 1] = el
+            }
+          "
+          class="w-full text-center outline-none transition-300 bg-white-100 border border-transparent h-16 focus:border-orange focus:bg-white font-semibold text-xl text-dark leading-140 overflow-hidden rounded-lg"
+          type="number"
+          inputmode="decimal"
+          :class="inputClass"
+          pattern="[0-9]"
+          :autoFocus="autoFocus && index === autoFocusIndex"
+          :data-id="index"
+          :value="v"
+          :required="props.required"
+          :disabled="props.disabled"
+          maxlength="1"
+          @input="onValueChange"
+          @focus="onFocus"
+          @keydown="onKeyDown"
+        />
       </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { nextTick, onBeforeUpdate, onMounted, ref, toRef, watch } from 'vue'
-
 const props = defineProps({
   className: String,
   inputClass: String,
@@ -57,11 +47,6 @@ const props = defineProps({
   },
   title: String,
   error: Boolean,
-  label: {
-    type: String,
-    required: false,
-    default: '',
-  },
 })
 const emit = defineEmits(['change', 'complete', 'update:modelValue'])
 const KEY_CODE = {
@@ -78,7 +63,6 @@ const inputs = ref([])
 const fields = toRef(props, 'fields')
 const autoFocusIndex = ref(0)
 const autoFocus = true
-const activeIndex = ref(0)
 const initVals = () => {
   let vals
   if (values.value && values.value.length) {
@@ -97,14 +81,10 @@ const initVals = () => {
   }
   values.value = vals
 }
-const onFocus = (e, index) => {
-  activeIndex.value = index
+const onFocus = (e) => {
   e.target.select(e)
 }
-
-const triggerChangeText = ref('')
 const onValueChange = (e) => {
-  triggerChangeText.value = e.target.value
   const index = parseInt(e.target.dataset.id)
   e.target.value = e.target.value.replace(/[^\d]/gi, '')
   // this.handleKeys[index] = false;
@@ -205,34 +185,16 @@ onMounted(() => {
   nextTick(() => {
     setTimeout(() => {
       if (inputs.value && inputs.value[1]) {
+        console.log(inputs.value[1])
         inputs.value[1]?.focus()
       }
     }, 500)
   })
 })
-
-const pasteDigitsText = ref('')
-
-const pasteDigits = (e) => {
-  e.preventDefault()
-  const pastedData = e.clipboardData.getData('text')
-  pasteDigitsText.value = pastedData
-
-  // Ensure the pasted data contains exactly 6 digits
-  if (/^\d{6}$/.test(pastedData)) {
-    // Update the values in your component
-    for (let i = 0; i < fields.value; i++) {
-      values.value[i] = pastedData[i]
-    }
-
-    // Trigger the change event
-    triggerChange(values.value)
-  }
-}
 </script>
 
 <style>
 .error input {
-  border-color: #ff334c !important;
+  border-color: #f75555 !important;
 }
 </style>

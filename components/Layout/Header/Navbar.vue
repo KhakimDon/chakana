@@ -29,7 +29,7 @@ import { useModalStore } from '~/store/modal.js'
 const { t } = useI18n()
 const modalStore = useModalStore()
 
-const menu = [
+const menu = computed(() => [
   {
     title: t('brands'),
     link: '/brands',
@@ -45,5 +45,5 @@ const menu = [
     link: '/search',
     isPremium: true,
   },
-]
+])
 </script>

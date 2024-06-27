@@ -52,6 +52,8 @@ const props = defineProps<Props>()
 const { show } = unref(props)
 defineEmits(['close'])
 const { handleError } = useErrorHandling()
+const { showToast } = useCustomToast()
+const { t } = useI18n()
 
 const authStore = useAuthStore()
 const step = ref('login')
@@ -105,6 +107,7 @@ function sendSms() {
     .catch((err) => {
       if (err._data.detail.code === 'sms_already_sent') {
         step.value = 'confirm'
+        showToast(t('sms_already_sent'), 'success')
       } else {
         handleError(err)
       }
