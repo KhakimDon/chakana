@@ -7,8 +7,8 @@
           :modules="[Thumbs, Navigation]"
           :thumbs="{ swiper: thumbsSwiper }"
         >
-          <div class="flex items-center gap-1">
-            <p class="text-gray-100 text-xs">Вид:</p>
+          <div class="flex items-start gap-1">
+            <p class="text-gray-100 text-xs">{{ $t('vid') }}:</p>
             <p class="text-dark text-xs">{{ variant }}</p>
           </div>
         </swiper>

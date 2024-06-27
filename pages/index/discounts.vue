@@ -15,7 +15,7 @@
       <Transition name="fade" mode="out-in">
         <div
           :key="discounts?.loading"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10"
         >
           <template v-if="discounts?.loading">
             <MainCardLoading v-for="key in 12" :key />
