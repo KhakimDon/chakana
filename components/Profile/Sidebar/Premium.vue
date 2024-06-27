@@ -47,11 +47,16 @@
         <BaseButton
           class="w-full max-md:!rounded-md max-md:!px-3"
           :text="$t('get_access')"
-          @click="premiumModal = true"
+          @click="modalStore.premiumModel = true"
         />
       </div>
     </div>
-    <BaseModal v-model="premiumModal" no-header has-close>
+    <BaseModal
+      :model-value="premiumModal"
+      no-header
+      has-close
+      @update:model-value="modalStore.premiumModel = $event"
+    >
       <div>
         <div class="relative mb-7">
           <img
@@ -115,16 +120,18 @@
     <ProfileModalGetPremium
       v-model="subscriptionModal"
       :subscription
-      @close="premiumModal = false"
+      @close="modalStore.premiumModel = false"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useModalStore } from '~/store/modal.js'
 import { useSubscriptionsStore } from '~/store/profile/subscription.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
-const premiumModal = ref(false)
+const modalStore = useModalStore()
+const premiumModal = computed(() => modalStore.premiumModel)
 const subscriptionModal = ref(false)
 
 const subscriptionsStore = useSubscriptionsStore()

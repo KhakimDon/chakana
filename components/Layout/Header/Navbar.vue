@@ -8,9 +8,10 @@
       <NuxtLinkLocale
         v-for="(item, index) in menu"
         :key="index"
-        :to="item?.link"
+        :to="item?.isPremium ? '#' : item?.link"
         exact-active-class="text-orange"
         class="text-[22px] leading-[18px] font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
+        @click="item?.isPremium ? (modalStore.premiumModel = true) : null"
       >
         {{ item?.title }}
         <IconCrown v-if="item?.isPremium" class="text-orange translate-y-0.5" />
@@ -23,8 +24,10 @@
 import { useI18n } from 'vue-i18n'
 
 import IconCrown from '~/assets/icons/Common/crown.svg'
+import { useModalStore } from '~/store/modal.js'
 
 const { t } = useI18n()
+const modalStore = useModalStore()
 
 const menu = [
   {
