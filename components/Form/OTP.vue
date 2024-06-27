@@ -24,6 +24,7 @@
                 '!border-white-100 !bg-white': v,
               },
             ]"
+            inputmode="decimal"
             pattern="[0-9]"
             :autoFocus="autoFocus && index === autoFocusIndex"
             :data-id="index"

@@ -22,12 +22,7 @@
             <MainCardLoading v-for="key in 16" :key />
           </template>
           <template v-else-if="list?.length">
-            <MainCard
-              v-for="(card, index) in list"
-              :key="index"
-              :card
-              @open="selectProduct(card)"
-            />
+            <MainCard v-for="(card, index) in list" :key="index" :card />
           </template>
           <template v-else-if="loading.list">
             <MainCardLoading v-for="key in 16" :key />
@@ -40,11 +35,6 @@
       <div
         v-if="!loading?.list && !loading?.button && paginationData?.next"
         ref="infiniteScrollTrigger"
-      />
-      <MainModalInfo
-        v-model="showProduct"
-        :product="selectedProduct"
-        @close="showProduct = false"
       />
     </CommonSectionWrapper>
   </section>
@@ -66,14 +56,6 @@ const { list, loading, loadMore, paginationData } = useListFetcher<IProduct>(
   5,
   true
 )
-
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
-
-function selectProduct(product: IProduct) {
-  selectedProduct.value = product
-  showProduct.value = true
-}
 
 const infiniteScrollTrigger = ref<HTMLElement | null>(null)
 
