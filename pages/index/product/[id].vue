@@ -81,7 +81,7 @@
               </div>
             </swiper-slide>
             <span
-              class="thumb-gradient left-0"
+              class="thumb-gradient –left-4 md:left-0"
               :class="{ 'pointer-events-none opacity-0': isBeginning }"
             />
             <span
@@ -521,14 +521,28 @@ const back = () => {
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 0;
   width: 86px;
   height: 100%;
   background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
   z-index: 2;
   transition: all 0.3s;
+  right: auto;
 }
 
 .thumb-gradient.reverse {
   transform: rotateY(180deg);
+  left: auto;
+  right: 0;
+}
+@media screen and (max-width: 640px) {
+  .thumb-gradient {
+    left: -16px;
+    right: auto;
+  }
+  .thumb-gradient.reverse {
+    left: auto;
+    right: -16px;
+  }
 }
 </style>

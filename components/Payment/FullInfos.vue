@@ -9,7 +9,11 @@
       </div>
       <div class="flex-y-center justify-between mt-3">
         <p class="text-[22px] font-extrabold leading-7">
-          {{ $t('placing_order') }}
+          {{
+            orderCartStore.orderDetail?.isAuto
+              ? $t('placing_auto_order')
+              : $t('placing_order')
+          }}
         </p>
       </div>
       <div class="w-full my-6 space-y-6">
