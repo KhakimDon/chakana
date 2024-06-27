@@ -137,10 +137,10 @@ const showReasonsFn = () => {
 
 const deletingAccount = ref(false)
 
-const deleteAccountFn = async () => {
+const deleteAccountFn = async (id: string) => {
   deletingAccount.value = true
   await useAuthStore()
-    .deleteAccount()
+    .deleteAccount(id)
     .then(() => {
       useAuthStore().logOut()
       deleteAccountModal.value = false

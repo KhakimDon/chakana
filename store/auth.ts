@@ -56,10 +56,10 @@ export const useAuthStore = defineStore('authStore', {
           })
       })
     },
-    deleteAccount() {
+    deleteAccount(id: string) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$delete<IUser>('delete/account')
+          .$delete<IUser>(`delete/account/?reason_id=${id}`)
           .then((res) => {
             resolve(res)
           })
