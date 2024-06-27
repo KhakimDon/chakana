@@ -8,52 +8,21 @@
   />
   <OrderInfoEditAddress
     v-model="showEdit"
-    :default-id="orderCartStore.orderDetail?.id"
-    @save="saveAddress"
+    :default-id="defaultAddress?.id"
+    @save="$emit('save', $event)"
   />
 </template>
 
 <script setup lang="ts">
-import { useCartOrderStore } from '~/store/cart_order.js'
-import { useModalStore } from '~/store/modal.js'
+interface Props {
+  defaultAddress: any
+}
+defineProps<Props>()
+
+interface Emits {
+  (e: 'save', data: any): void
+}
+defineEmits<Emits>()
 
 const showEdit = ref(false)
-
-const orderCartStore = useCartOrderStore()
-const defaultAddress = computed(() => {
-  return orderCartStore.orderDetail?.address_info
-})
-
-function saveAddress(data: any) {
-  orderCartStore.orderDetail.address_info = data.address_info
-  orderCartStore.orderDetail.id = data.address_info.id
-}
-
-const route = useRoute()
-const { locale } = useI18n()
-const modalStore = useModalStore()
-const selectedLocation = ref()
-
-const selectedAddress = (address: object) => {
-  if (address) {
-    selectedLocation.value = address
-  } else {
-    // selectedLocation.value = list.value[0]
-  }
-  orderCartStore.orderDetail.id = selectedLocation.value?.id
-  modalStore.addressModel = false
-  if (
-    route.path !== `/${locale.value}/cart/payment` ||
-    route.path !== `/${locale.value}/cart/payment/`
-  ) {
-    modalStore.addressMapModel = false
-    console.log(route.query?.order)
-    console.log(route.query?.order === 'auto')
-    if (route.query?.order === 'auto') {
-      modalStore.autoOrderModel.whenToDelivery = true
-    } else {
-      modalStore.clockModel = true
-    }
-  }
-}
 </script>

@@ -31,7 +31,7 @@
           </i18n-t>
           <SvgoCommonClose
             class="bg-white/20 cursor-pointer text-white rounded-full p-0.5 text-sm"
-            @click="removePromoCode(selectedPromoCode?.id ?? 0)"
+            @click="removePromoCode"
           />
         </div>
       </PaymentCardInfo>
@@ -40,7 +40,7 @@
   <OrderInfoEditPromocode
     v-model="editPromo"
     :default-info="cartOrderStore.orderDetail"
-    @save="selectPromoCode"
+    @save="$emit('save', $event)"
   />
 </template>
 
@@ -49,11 +49,19 @@ import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
+interface Props {
+  defaultData: any
+}
+const props = defineProps<Props>()
+
+interface Emits {
+  (e: 'save', data: any): void
+}
+const emit = defineEmits<Emits>()
+
 const editPromo = ref(false)
 
-const promoInfo = computed(() => cartOrderStore.orderDetail?.promo_info)
-
-const hasPromoCode = ref(false)
+const promoInfo = computed(() => props.defaultData?.promo_info)
 
 const cartOrderStore = useCartOrderStore()
 const promoCodes = computed(() => {
@@ -68,15 +76,11 @@ const selectedPromoCode = computed(() => {
   )
 })
 
-const selectPromoCode = (item) => {
-  cartOrderStore.orderDetail.promo_code_id = item.promo_code_id
-  cartOrderStore.orderDetail.promo_info = item.promo_info
-}
-
-const removePromoCode = (code: number) => {
-  cartOrderStore.orderDetail.promo_code_id = code
-  cartOrderStore.orderDetail.promo_info = null
-  cartOrderStore.getCartDetailConfirm()
+const removePromoCode = () => {
+  emit('save', {
+    promo_code_id: 0,
+    promo_info: null,
+  })
 }
 
 const openDetail = ref(false)

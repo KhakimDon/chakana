@@ -15,16 +15,32 @@
       <div class="w-full my-6 space-y-6">
         <PaymentCardInfoHeader :title="$t('delivery_details')">
           <section class="space-y-2">
-            <PaymentSectionAddress />
+            <PaymentSectionAddress
+              :default-address="orderCartStore.orderDetail?.address_info"
+              @save="saveAddress"
+            />
             <PaymentSectionClockLocation
               v-if="!orderCartStore.orderDetail?.isAuto"
             />
-            <PaymentSectionUserData />
-            <PaymentSectionCommentForCurier />
+            <PaymentSectionUserData
+              :full_name="orderCartStore.orderDetail?.full_name"
+              :phone="orderCartStore.orderDetail?.phone"
+              @save="saveUser"
+            />
+            <PaymentSectionCommentForCurier
+              :comment="orderCartStore.orderDetail?.comment_to_courier"
+              @save="saveComment"
+            />
           </section>
         </PaymentCardInfoHeader>
-        <PaymentSectionPaymentMethod />
-        <PaymentSectionPromoCode />
+        <PaymentSectionPaymentMethod
+          :default-data="orderCartStore.orderDetail"
+          @save="savePayment"
+        />
+        <PaymentSectionPromoCode
+          :default-data="orderCartStore.orderDetail"
+          @save="selectPromoCode"
+        />
         <div class="flex-y-center gap-3 select-none cursor-pointer relative">
           <div class="shrink-0 flex-center">
             <SvgoProfileWallet class="text-2xl text-green-600" />
@@ -62,6 +78,31 @@ const { t } = useI18n()
 const router = useRouter()
 
 const orderCartStore = useCartOrderStore()
+
+function saveAddress(data: any) {
+  orderCartStore.orderDetail.address_info = data.address_info
+  orderCartStore.orderDetail.id = data.address_info.id
+}
+
+function saveUser(data: any) {
+  orderCartStore.orderDetail.full_name = data.full_name
+  orderCartStore.orderDetail.phone = data.phone
+}
+
+function saveComment(data: any) {
+  orderCartStore.orderDetail.comment_to_courier = data.comment_to_courier
+}
+
+function savePayment(data: any) {
+  orderCartStore.orderDetail.card_to_courier = data.card_to_courier
+  orderCartStore.orderDetail.cash = data.cash
+  orderCartStore.orderDetail.card_id = data.card_id
+}
+
+const selectPromoCode = (item: any) => {
+  orderCartStore.orderDetail.promo_code_id = item.promo_code_id
+  orderCartStore.orderDetail.promo_info = item.promo_info
+}
 
 const useBalance = ref(false)
 

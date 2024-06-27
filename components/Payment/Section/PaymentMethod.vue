@@ -13,33 +13,31 @@
             ? $t('credit_card')
             : $t('payment_method')
         "
-        @open-details="modalStore.paymentModel = true"
+        @open-details="showEdit = true"
       />
     </section>
   </PaymentCardInfoHeader>
   <OrderInfoEditPayment
-    v-model="modalStore.paymentModel"
-    :default-info="orderCartStore.orderDetail"
-    @save="savePayment"
+    v-model="showEdit"
+    :default-info="defaultData"
+    @save="$emit('save', $event)"
   />
 </template>
 
 <script setup lang="ts">
-import { useCartOrderStore } from '~/store/cart_order.js'
-import { useModalStore } from '~/store/modal.js'
-
-const modalStore = useModalStore()
-
-const orderCartStore = useCartOrderStore()
-
-const payment = computed(() => orderCartStore.orderDetail)
-
-function savePayment(data: any) {
-  console.log(data)
-  orderCartStore.orderDetail.card_to_courier = data.card_to_courier
-  orderCartStore.orderDetail.cash = data.cash
-  orderCartStore.orderDetail.card_id = data.card_id
+interface Props {
+  defaultData: any
 }
+const props = defineProps<Props>()
+
+interface Emits {
+  (e: 'save', data: any): void
+}
+defineEmits<Emits>()
+
+const showEdit = ref(false)
+
+const payment = computed(() => props.defaultData)
 </script>
 
 <style scoped></style>

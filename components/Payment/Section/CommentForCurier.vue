@@ -3,25 +3,24 @@
     icon="SvgoProfileMessage"
     icon-class="!text-blue-100 !text-2xl"
     :title="comment ?? $t('courier_comment')"
-    @open-details="modalStore.commentModel = true"
+    @open-details="showEdit = true"
   />
   <OrderInfoEditComment
-    v-model="modalStore.commentModel"
+    v-model="showEdit"
     :default-info="{ comment_to_courier: comment }"
-    @save="saveComment"
+    @save="$emit('save', $event)"
   />
 </template>
 
 <script setup lang="ts">
-import { useCartOrderStore } from '~/store/cart_order.js'
-import { useModalStore } from '~/store/modal.js'
-
-const modalStore = useModalStore()
-const orderCartStore = useCartOrderStore()
-
-const comment = computed(() => orderCartStore.orderDetail?.comment_to_courier)
-
-function saveComment(data: any) {
-  orderCartStore.orderDetail.comment_to_courier = data.comment_to_courier
+interface Props {
+  comment: string
 }
+defineProps<Props>()
+
+interface Emits {
+  (e: 'save', data: any): void
+}
+defineEmits<Emits>()
+const showEdit = ref(false)
 </script>
