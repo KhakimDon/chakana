@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { list, resetList, loading } = useListFetcher('/saved/address')
+const { list, resetList, loading } = useListFetcher('/saved/address', 50)
 
 const addAddressModal = ref(false)
 

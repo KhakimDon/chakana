@@ -310,6 +310,7 @@ function saveAddress() {
     .then((res: any) => {
       if (res.saved) {
         showToast(t('success_send'), 'success')
+        emit('edited')
       }
     })
     .catch((err: any) => {
@@ -356,6 +357,7 @@ function deleteAddress() {
     .$delete(`/saved/address/${props.defaultAddress?.id}`)
     .then(() => {
       showToast(t('success_deleted'), 'success')
+      emit('edited')
     })
     .catch((err: any) => {
       handleError(err)
@@ -365,27 +367,3 @@ function deleteAddress() {
     })
 }
 </script>
-<style scoped>
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background: #f2f2f2;
-  height: 4px !important;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #dadada;
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #dadada;
-}
-</style>
