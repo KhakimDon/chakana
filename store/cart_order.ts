@@ -1,25 +1,5 @@
-import type { UnwrapRef } from 'vue'
-
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
-  const orderDetail = reactive({
-    address: {
-      id: 0,
-    },
-    when_to_deliver: '',
-    recipient: {
-      full_name: '',
-      phone: '',
-    },
-    comment_to_courier: '',
-    payment_method: {
-      card_to_the_courier: false,
-      cash: false,
-      card_id: 0,
-      provider_id: 0,
-    },
-    promo_code_id: 0,
-    use_from_balance: false,
-  })
+  const orderDetail = ref()
 
   const autoOrderDetail = reactive({
     name: '',
@@ -293,27 +273,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
 
   const autoOrderCreating = ref(false)
 
-  function createAutoOrder(body: {
-    payment_type: UnwrapRef<
-      UnwrapRef<
-        UnwrapRef<{
-          provider_id: number
-          card_to_the_courier: boolean
-          cash: boolean
-          card_id: number
-        }>
-      >
-    >
-    weekdays: number[]
-    name: string
-    recipient: UnwrapRef<
-      UnwrapRef<UnwrapRef<{ full_name: string; phone: string }>>
-    >
-    delivery_time: string
-    shipping_address: { latitude: null; address_id: number; longitude: null }
-    card_id: number
-    products: { product_id: any; count: any }[] | undefined
-  }) {
+  function createAutoOrder(body: any) {
     return new Promise((resolve, reject) => {
       autoOrderCreating.value = true
       useApi()

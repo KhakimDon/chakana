@@ -1,34 +1,39 @@
 <template>
-  <PaymentCardInfoHeader :title="$t('payment_method')">
-    <section class="space-y-2">
-      <PaymentCardInfo
-        icon="SvgoProfileMoney"
-        icon-class="text-green !text-2xl"
-        :title="
-          payment?.cash
-            ? $t('cash')
-            : payment.card_to_the_courier
-            ? $t('courier_card')
-            : payment.card_id
-            ? $t('credit_card')
-            : $t('payment_method')
-        "
-        @open-details="modalStore.paymentModel = true"
-      />
-    </section>
-  </PaymentCardInfoHeader>
-  <CommonModalPaymentMethod v-model="modalStore.paymentModel" />
+  <PaymentCardInfo
+    icon="SvgoProfileMoney"
+    icon-class="text-green !text-2xl"
+    :title="
+      payment?.cash
+        ? $t('cash')
+        : payment?.card_to_courier
+        ? $t('courier_card')
+        : payment?.card_id
+        ? $t('credit_card')
+        : $t('payment_method')
+    "
+    @open-details="showEdit = true"
+  />
+  <OrderInfoEditPayment
+    v-model="showEdit"
+    :default-info="defaultData"
+    @save="$emit('save', $event)"
+  />
 </template>
 
 <script setup lang="ts">
-import { useCartOrderStore } from '~/store/cart_order.js'
-import { useModalStore } from '~/store/modal.js'
+interface Props {
+  defaultData: any
+}
+const props = defineProps<Props>()
 
-const modalStore = useModalStore()
+interface Emits {
+  (e: 'save', data: any): void
+}
+defineEmits<Emits>()
 
-const orderCartStore = useCartOrderStore()
+const showEdit = ref(false)
 
-const payment = computed(() => orderCartStore.orderDetail.payment_method)
+const payment = computed(() => props.defaultData)
 </script>
 
 <style scoped></style>

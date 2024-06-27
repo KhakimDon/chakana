@@ -22,7 +22,7 @@
         v-model="checkbox"
         :list="single?.children"
         parent-text="All"
-        class="mt-3"
+        class="mt-3 max-h-[75vh] overflow-y-auto pb-32"
       />
     </div>
   </div>

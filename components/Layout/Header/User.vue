@@ -124,7 +124,7 @@ const list = [
     icon: SvgoProfileSidebarMenuList,
   },
   {
-    link: '/profile/discounts',
+    link: '/profile/promocodes',
     title: t('discounts_and_promocodes'),
     icon: SvgoProfileSidebarTag,
   },

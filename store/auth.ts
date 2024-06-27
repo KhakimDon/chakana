@@ -7,6 +7,7 @@ interface TAuthTokens {
 
 interface IState {
   user?: IUser
+  reasons: any[]
   userFetchTrigger: number
   showAuth: boolean
   accessToken?: string | null
@@ -17,6 +18,7 @@ interface IState {
 export const useAuthStore = defineStore('authStore', {
   state: (): IState => ({
     user: {} as IUser,
+    reasons: [],
     userFetchTrigger: 0,
     showAuth: false,
     accessToken: undefined,
@@ -48,6 +50,49 @@ export const useAuthStore = defineStore('authStore', {
           .then((res) => {
             resolve(res)
             this.fetchUser()
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    deleteAccount(id: string) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$delete<IUser>(`delete/account/?reason_id=${id}`)
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    getDeleteAccountReasons() {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$get('reasons/?reason_type=delete_account')
+          .then((res) => {
+            this.reasons = res
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    sendReason(body: any) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$post('send/reason/', {
+            body: {
+              order_id: null,
+              reason_ids: body.ids?.length ? body.ids : [],
+              reason_text: body.text ?? null,
+            },
+          })
+          .then((res) => {
+            resolve(res)
           })
           .catch((err) => {
             reject(err)

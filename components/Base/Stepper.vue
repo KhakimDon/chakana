@@ -3,13 +3,17 @@
     <template v-for="(item, index) in steps" :key="item.id">
       <div
         class="w-12 h-12 shrink-0 border rounded-xl flex-center transition-300"
-        :class="detectIconClass(index)"
+        :class="[detectIconClass(index), stepClass]"
       >
-        <component :is="item.icon" class="text-[32px] leading-[32px]" />
+        <component
+          :is="item.icon"
+          class="text-[32px] leading-[32px]"
+          :class="stepIconClass"
+        />
       </div>
       <div
         class="h-px w-12 last:hidden transition-300"
-        :class="[index < activeIndex ? 'bg-orange' : 'bg-gray-200', stepClass]"
+        :class="[index < activeIndex ? 'bg-orange' : 'bg-gray-200']"
       />
     </template>
   </div>
@@ -25,6 +29,7 @@ interface Props {
   }[]
   step: number | string
   stepClass?: string
+  stepIconClass?: string
 }
 const props = defineProps<Props>()
 

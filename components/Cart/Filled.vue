@@ -108,4 +108,21 @@ const goToCart = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+/* width */
+::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(136, 136, 136, 0);
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ff831b;
+  border-radius: 5px;
+}
+</style>

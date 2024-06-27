@@ -6,9 +6,10 @@
         <NuxtLinkLocale
           v-for="(item, index) in menu"
           :key="index"
-          :to="item?.link"
+          :to="item?.isPremium ? '#' : item?.link"
           exact-active-class="text-orange"
-          class="text-sm leading-[18px] font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
+          class="text-sm leading-[18px] cursor-pointer font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
+          @click="item?.isPremium ? (modalStore.premiumModel = true) : null"
         >
           {{ item?.title }}
           <IconCrown
@@ -52,6 +53,7 @@
           <LayoutHeaderUser :user="user" class="ml-2" />
         </div>
       </div>
+      <ProfileSidebarPremium class="hidden" />
     </div>
   </header>
 </template>
@@ -63,8 +65,10 @@ import IconCrown from '~/assets/icons/Common/crown.svg'
 import IconHeart from '~/assets/icons/Common/heart.svg'
 import IconLogin from '~/assets/icons/Common/login.svg'
 import { useAuthStore } from '~/store/auth'
+import { useModalStore } from '~/store/modal.js'
 
 const authStore = useAuthStore()
+const modalStore = useModalStore()
 const { t } = useI18n()
 
 const user = computed(() => authStore.user)

@@ -2,7 +2,7 @@
   <div>
     <div
       class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
-      @click="router.back()"
+      @click="back"
     >
       <IconChevron
         class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
@@ -15,7 +15,7 @@
       <Transition name="fade" mode="out-in">
         <div
           :key="discounts?.loading"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10"
         >
           <template v-if="discounts?.loading">
             <MainCardLoading v-for="key in 12" :key />
@@ -69,4 +69,14 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
     discountsStore.fetchDiscounts(false)
   }
 })
+
+const localePath = useLocalePath()
+
+const back = () => {
+  if (window.history.state.back) {
+    router.back()
+  } else {
+    router.push(localePath('/'))
+  }
+}
 </script>

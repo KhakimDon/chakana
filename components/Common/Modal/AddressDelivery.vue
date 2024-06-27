@@ -15,47 +15,6 @@
       step-class="!w-full"
       class="!mb-5"
     />
-    <div v-if="list.length">
-      <div class="grid grid-cols-2 gap-4 overflow-y-scroll max-h-[230px]">
-        <CartCardAdress v-bind="{ list }" @handle-address="handleAddress" />
-      </div>
-      <BaseButton
-        class="mt-6 w-full group"
-        :text="$t('other_address')"
-        variant="secondary"
-        @click="$emit('openMapModal')"
-      >
-        <template #suffix>
-          <IconChevron
-            class="text-2xl text-dark group-hover:text-orange transition-300 transform rotate-180 group-hover:translate-x-1"
-          />
-        </template>
-      </BaseButton>
-      <BaseButton
-        class="mt-4 w-full group"
-        :loading="false"
-        :text="$t('confirm')"
-        variant="primary"
-        @click="$emit('handle-address', addressItem)"
-      >
-      </BaseButton>
-    </div>
-    <div v-else>
-      <NoDataMap />
-      <BaseButton
-        class="mt-4 w-full group"
-        :loading="buttonLoading"
-        :text="$t('add_address')"
-        variant="primary"
-        @click="$emit('openMapModal')"
-      >
-        <template #prefix>
-          <IconPlus
-            class="text-2xl text-white group-hover:rotate-90 transition-300"
-          />
-        </template>
-      </BaseButton>
-    </div>
   </BaseModal>
 </template>
 

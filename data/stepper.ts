@@ -1,83 +1,76 @@
-import {
-  SvgoCommonEdit,
-  SvgoProfileChecks,
-  SvgoProfileClockLocation,
-  SvgoProfileMessage,
-  SvgoProfileMoney,
-  SvgoProfileTicket,
-  SvgoProfileTruck,
-  SvgoProfileUserCircle,
-} from '#components'
+import { orderFormName } from '~/components/Order/Info/Form/index.js'
 
 export const steps = [
   {
     id: 'name',
-    icon: SvgoCommonEdit,
+    icon: 'SvgoCommonEdit',
   },
   {
     id: 'when_to_deliver',
-    icon: SvgoProfileClockLocation,
+    icon: 'SvgoProfileClockLocation',
   },
   {
     id: 'payment',
-    icon: SvgoProfileMoney,
+    icon: 'SvgoProfileMoney',
   },
 ]
 
 export const orderSteps = [
   {
     id: 'address',
-    icon: SvgoProfileTruck,
+    icon: 'SvgoProfileTruck',
   },
   {
     id: 'when_to_deliver',
-    icon: SvgoProfileClockLocation,
+    icon: 'SvgoProfileClockLocation',
   },
   {
     id: 'user',
-    icon: SvgoProfileUserCircle,
+    icon: 'SvgoProfileUserCircle',
   },
   {
     id: 'comment',
-    icon: SvgoProfileMessage,
+    icon: 'SvgoProfileMessage',
   },
   {
     id: 'promo',
-    icon: SvgoProfileTicket,
+    icon: 'SvgoProfileTicket',
   },
   {
     id: 'payment',
-    icon: SvgoProfileMoney,
+    icon: 'SvgoProfileMoney',
   },
 ]
 
 export const autoOrderSteps = [
   {
     id: 'name',
-    icon: SvgoCommonEdit,
+    icon: 'SvgoCommonEdit',
+    component: 'OrderInfoFormName',
+    form: orderFormName,
   },
   {
     id: 'address',
-    icon: SvgoProfileTruck,
+    icon: 'SvgoProfileTruck',
   },
   {
     id: 'when_to_deliver',
-    icon: SvgoProfileClockLocation,
+    icon: 'SvgoProfileClockLocation',
   },
   {
     id: 'user',
-    icon: SvgoProfileUserCircle,
+    icon: 'SvgoProfileUserCircle',
   },
   {
     id: 'comment',
-    icon: SvgoProfileMessage,
+    icon: 'SvgoProfileMessage',
   },
   {
     id: 'promo',
-    icon: SvgoProfileTicket,
+    icon: 'SvgoProfileTicket',
   },
   {
     id: 'payment',
-    icon: SvgoProfileMoney,
+    icon: 'SvgoProfileMoney',
   },
 ]

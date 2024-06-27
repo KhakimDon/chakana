@@ -5,7 +5,7 @@
     body-class="!max-w-[868px] !w-full"
     :title="defaultAddress ? $t('edit') : $t('specify_your_delivery_address')"
     disable-outer-close
-    @back="emit('open-saved-adress')"
+    @back="emit('update:model-value', false)"
     @update:model-value="emit('update:model-value', $event)"
   >
     <div v-if="!showAddAddress">
@@ -127,7 +127,7 @@
           :text="$t('delete')"
           variant="secondary"
           :loading="deleteLoading"
-          @click="deleteAddress"
+          @click="showDeleteConfirmModal = true"
         >
           <template #prefix>
             <SvgoCommonTrash class="text-2xl leading-6" />
@@ -141,6 +141,12 @@
           @click="sendAddress"
         />
       </div>
+      <DeleteConfirm
+        v-model="showDeleteConfirmModal"
+        :title="$t('delete')"
+        :loading="deleteLoading"
+        @do-action="deleteAddress"
+      />
     </div>
   </BaseModal>
 </template>
@@ -153,6 +159,7 @@ import {
 } from 'vue-yandex-maps'
 
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCustomToast } from '~/composables/useCustomToast.js'
 import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
@@ -310,6 +317,7 @@ function saveAddress() {
     .then((res: any) => {
       if (res.saved) {
         showToast(t('success_send'), 'success')
+        emit('edited')
       }
     })
     .catch((err: any) => {
@@ -349,13 +357,18 @@ function editAddress() {
     })
 }
 
+const showDeleteConfirmModal = ref(false)
 const deleteLoading = ref(false)
+
 function deleteAddress() {
   deleteLoading.value = true
   useApi()
     .$delete(`/saved/address/${props.defaultAddress?.id}`)
     .then(() => {
       showToast(t('success_deleted'), 'success')
+      emit('edited')
+      emit('update:model-value', false)
+      showDeleteConfirmModal.value = false
     })
     .catch((err: any) => {
       handleError(err)
@@ -365,27 +378,3 @@ function deleteAddress() {
     })
 }
 </script>
-<style scoped>
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background: #f2f2f2;
-  height: 4px !important;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #dadada;
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #dadada;
-}
-</style>

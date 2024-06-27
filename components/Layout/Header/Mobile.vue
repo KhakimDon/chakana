@@ -29,6 +29,7 @@
     <Transition name="fade">
       <LayoutHeaderNavbar v-if="isOpen" @close="isOpen = false" />
     </Transition>
+    <ProfileSidebarPremium class="hidden" />
   </header>
 </template>
 <script setup lang="ts">

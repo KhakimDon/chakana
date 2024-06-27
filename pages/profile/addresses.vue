@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { list, resetList, loading } = useListFetcher('/saved/address')
+const { list, resetList, loading } = useListFetcher('/saved/address', 50)
 
 const addAddressModal = ref(false)
 
@@ -39,20 +39,7 @@ const showAddAddressModal = () => {
         class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
       >
         <template v-if="loading.list">
-          <div
-            v-for="index in 12"
-            :key="index"
-            class="border border-gray-300 p-3 rounded-xl w-full group"
-          >
-            <div class="flex-center-between">
-              <div class="shimmer w-6 h-6 rounded" />
-              <div class="shimmer w-6 h-6 rounded" />
-            </div>
-            <div class="mt-3 text-dark font-bold shimmer h-6"></div>
-            <div
-              class="line-clamp-1 text-xs text-gray-100 mt-1 shimmer h-4"
-            ></div>
-          </div>
+          <ProfileAddressCardLoading v-for="index in 12" :key="index" />
         </template>
         <template v-else-if="list.length">
           <div
