@@ -1,5 +1,16 @@
 <template>
-  <section class="mb-24 space-y-6">
+  <section class="mb-24">
+    <div
+      class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
+      @click="back"
+    >
+      <IconChevron
+        class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
+      />
+      <p class="text-gray-100 group-hover:text-orange transition-300">
+        {{ $t('back') }}
+      </p>
+    </div>
     <CommonSectionWrapper title="brands">
       <Transition name="fade" mode="out-in">
         <div
@@ -38,6 +49,7 @@
 </template>
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
+import IconChevron from 'assets/icons/Common/chevron.svg'
 
 import { useMainStore } from '~/store/main.js'
 
@@ -56,4 +68,16 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
     mainStore.fetchBrands(false)
   }
 })
+
+const router = useRouter()
+
+const localePath = useLocalePath()
+
+const back = () => {
+  if (window.history.state.back) {
+    router.back()
+  } else {
+    router.push(localePath('/'))
+  }
+}
 </script>

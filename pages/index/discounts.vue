@@ -2,7 +2,7 @@
   <div>
     <div
       class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
-      @click="router.back()"
+      @click="back"
     >
       <IconChevron
         class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
@@ -69,4 +69,14 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
     discountsStore.fetchDiscounts(false)
   }
 })
+
+const localePath = useLocalePath()
+
+const back = () => {
+  if (window.history.state.back) {
+    router.back()
+  } else {
+    router.push(localePath('/'))
+  }
+}
 </script>
