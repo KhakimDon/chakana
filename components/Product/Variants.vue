@@ -42,14 +42,14 @@
         </p>
       </swiper-slide>
       <button
-        v-if="!isEnd && variants?.length"
+        v-if="!isEnd && variants?.length > 5"
         class="bg-white btn-arrow absolute top-1/2 z-10 right-0 p-1"
         @click="slideNext"
       >
         <IconArrow class="icon-chevron text-xl" />
       </button>
       <button
-        v-if="!isBeginning && variants?.length"
+        v-if="!isBeginning && variants?.length > 5"
         class="bg-white btn-arrow absolute top-1/2 z-10 left-0 p-1"
         @click="slidePrev"
       >

@@ -70,7 +70,6 @@
               v-for="(card, index) in discounts?.list"
               :key="index"
               :card
-              @open="selectProduct(card)"
             />
           </template>
         </div>
@@ -96,7 +95,6 @@
               v-for="(card, index) in products?.list"
               :key="index"
               :card
-              @open="selectProduct(card)"
             />
           </template>
           <template v-if="products?.params?.loading">
@@ -113,11 +111,6 @@
         ref="target"
       />
     </CommonSectionWrapper>
-    <MainModalInfo
-      v-model="showProduct"
-      :product="selectedProduct"
-      @close="showProduct = false"
-    />
   </div>
 </template>
 
@@ -127,12 +120,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import IconList from '~/assets/icons/Common/list.svg'
 import { useMainStore } from '~/store/main'
-import type { IProduct } from '~/types/products'
 
 const mainStore = useMainStore()
-
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
 
 const products = computed(() => mainStore.products)
 const discounts = computed(() => mainStore.discounts)
@@ -153,10 +142,6 @@ if (!popularBrands.value?.list.length) {
 
 if (!banners.value?.list.length) {
   mainStore.fetchBanners()
-}
-function selectProduct(product: IProduct) {
-  selectedProduct.value = product
-  showProduct.value = true
 }
 
 const target = ref<HTMLElement | null>(null)

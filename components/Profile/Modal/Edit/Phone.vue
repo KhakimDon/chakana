@@ -17,9 +17,7 @@
         >
           <template #prefix>
             <div class="flex-center h-11">
-              <p
-                class="text-base sm:text-sm leading-5 text-dark pl-3 font-medium"
-              >
+              <p class="text-base sm:text-sm text-dark pl-3 py-3 font-medium">
                 +998
               </p>
             </div>

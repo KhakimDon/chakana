@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!isPremium">
     <div
       v-if="delivery?.loading"
       class="shimmer bg-white-100 rounded-10 p-4 h-[72px] space-y-3"
@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
@@ -38,6 +39,9 @@ interface Props {
 const props = defineProps<Props>()
 
 const cartOrderStore = useCartOrderStore()
+const authStore = useAuthStore()
+
+const isPremium = computed(() => authStore.user?.is_premium)
 
 cartOrderStore.getCartDetail()
 cartOrderStore.getDeliveryDetail()

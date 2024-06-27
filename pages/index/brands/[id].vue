@@ -17,12 +17,7 @@
             <MainCardLoading v-for="key in 16" :key />
           </template>
           <template v-else-if="list?.length">
-            <MainCard
-              v-for="(card, index) in list"
-              :key="index"
-              :card
-              @open="selectProduct(card)"
-            />
+            <MainCard v-for="(card, index) in list" :key="index" :card />
           </template>
           <template v-else>
             <CommonNoData class="col-span-4" />
