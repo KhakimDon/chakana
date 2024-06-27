@@ -3,21 +3,31 @@
     icon="SvgoCommonEdit"
     icon-class="text-purple-500 !text-2xl"
     :title="$t('auto_order_title')"
-    :subtitle="name"
+    :subtitle="defaultInfo?.name"
     text-wrapper-class="!border-gray-200"
-    @open-details="modalStore.autoOrderModel.name = true"
+    @open-details="showEdit = true"
   />
-  <AutoOrderModalOrderName v-model="modalStore.autoOrderModel.name" />
+  <OrderInfoEditName
+    v-model="showEdit"
+    :default-info="defaultInfo"
+    @save="$emit('save', $event)"
+  />
 </template>
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
-const modalStore = useModalStore()
+interface Props {
+  defaultInfo?: any
+}
+defineProps<Props>()
+
+defineEmits<{
+  (e: 'save', value: any): void
+}>()
+
+const showEdit = ref(false)
+
 const orderCartStore = useCartOrderStore()
-
-const name = computed(() => orderCartStore.autoOrderDetail.name)
 </script>
-
-<style scoped></style>

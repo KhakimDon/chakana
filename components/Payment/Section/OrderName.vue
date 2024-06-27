@@ -1,14 +1,15 @@
 <template>
   <PaymentCardInfo
-    icon="SvgoProfileClockLocation"
+    icon="SvgoCommonEdit"
     icon-class="text-purple-500 !text-2xl"
-    :title="whenDelivery"
+    :title="$t('auto_order_title')"
+    :subtitle="defaultInfo?.name"
+    text-wrapper-class="!border-gray-200"
     @open-details="showEdit = true"
   />
-  <OrderInfoEditTime
+  <OrderInfoEditName
     v-model="showEdit"
     :default-info="defaultInfo"
-    :is-auto="isAuto"
     @save="$emit('save', $event)"
   />
 </template>
@@ -16,17 +17,12 @@
 <script setup lang="ts">
 interface Props {
   defaultInfo?: any
-  isAuto?: boolean
 }
-const props = defineProps<Props>()
+defineProps<Props>()
 
 defineEmits<{
   (e: 'save', value: any): void
 }>()
 
 const showEdit = ref(false)
-
-const whenDelivery = computed(() => {
-  return props.defaultInfo?.delivery_time
-})
 </script>

@@ -49,7 +49,7 @@ const props = defineProps<Props>()
 
 const { values, $v } = unref(props.form)
 
-const selectedInterval = ref('nearest_2_hours')
+const selectedInterval = ref(values?.delivery_time || 'nearest_2_hours')
 
 function getCurrentDateTimeISO(date: any) {
   return date.format().slice(0, -6)
@@ -57,20 +57,21 @@ function getCurrentDateTimeISO(date: any) {
 
 function chooseTime(interval: string) {
   selectedInterval.value = interval
-  if (selectedInterval.value === 'nearest_2_hours') {
-    const now = dayjs()
-    values.delivery_time = getCurrentDateTimeISO(now.add(2, 'hours'))
-  } else if (props.isAuto) {
-    values.delivery_time = selectedInterval.value.substring(0, 5)
-  } else {
-    const now = dayjs()
-    values.delivery_time = getCurrentDateTimeISO(
-      now
-        .set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
-        .set('minute', 0)
-        .set('second', 0)
-    )
-  }
+  // if (selectedInterval.value === 'nearest_2_hours') {
+  //   const now = dayjs()
+  //   values.delivery_time = getCurrentDateTimeISO(now.add(2, 'hours'))
+  // } else
+  // if (props.isAuto) {
+  values.delivery_time = selectedInterval.value
+  // } else {
+  //   const now = dayjs()
+  //   values.delivery_time = getCurrentDateTimeISO(
+  //     now
+  //       .set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
+  //       .set('minute', 0)
+  //       .set('second', 0)
+  //   )
+  // }
 }
 
 const intervals = ref()
@@ -80,7 +81,7 @@ onMounted(() => {
   if (!props.isAuto) {
     intervals.value.unshift('nearest_2_hours')
   }
-  if (!values.delivery_time.length) {
+  if (!values?.delivery_time) {
     chooseTime(intervals.value[0])
   }
 })

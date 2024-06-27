@@ -21,6 +21,9 @@
             />
             <PaymentSectionClockLocation
               v-if="!orderCartStore.orderDetail?.isAuto"
+              :default-info="orderCartStore.orderDetail"
+              :is-auto="orderCartStore.orderDetail?.isAuto"
+              @save="saveOrderClock"
             />
             <PaymentSectionUserData
               :full_name="orderCartStore.orderDetail?.full_name"
@@ -33,10 +36,13 @@
             />
           </section>
         </PaymentCardInfoHeader>
-        <PaymentSectionPaymentMethod
-          :default-data="orderCartStore.orderDetail"
-          @save="savePayment"
-        />
+
+        <PaymentCardInfoHeader :title="$t('payment_method')">
+          <PaymentSectionPaymentMethod
+            :default-data="orderCartStore.orderDetail"
+            @save="savePayment"
+          />
+        </PaymentCardInfoHeader>
         <PaymentSectionPromoCode
           :default-data="orderCartStore.orderDetail"
           @save="selectPromoCode"
@@ -102,6 +108,11 @@ function savePayment(data: any) {
 const selectPromoCode = (item: any) => {
   orderCartStore.orderDetail.promo_code_id = item.promo_code_id
   orderCartStore.orderDetail.promo_info = item.promo_info
+}
+
+function saveOrderClock(data: any) {
+  orderCartStore.orderDetail.delivery_time = data.delivery_time
+  orderCartStore.orderDetail.weekdays = data.weekdays
 }
 
 const useBalance = ref(false)
