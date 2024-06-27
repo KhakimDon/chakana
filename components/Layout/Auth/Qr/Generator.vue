@@ -1,8 +1,10 @@
 <template>
   <div class="relative">
     <transition name="fade" mode="out-in">
-      <div v-if="loading" class="">
-        <i class="k-transition absolute-center-h absolute-center-v">
+      <div v-if="loading" class="size-[163px]">
+        <i
+          class="k-transition absolute-center-h absolute-center-v flex-center size-full"
+        >
           <svg class="w-[50px] h-[50px]" viewBox="25 25 50 50">
             <circle
               class="qr-loader__path"
@@ -57,7 +59,7 @@ const options = computed(() => {
 .qr-loader__path {
   fill: none;
   stroke-width: 5px;
-  stroke: #fff;
+  stroke: #ff6d13;
   stroke-linecap: round;
   animation: animate-stroke 1s ease-in-out infinite;
 }

@@ -45,13 +45,21 @@ const single = computed(() => categoriesStore.single)
 watch(
   () => checkbox.value?.length,
   () => {
-    updateQuery('categories', checkbox.value.join(','))
+    if (checkbox.value?.length === single.value?.children?.length) {
+      updateQuery('categories', undefined)
+    } else {
+      updateQuery('categories', checkbox.value.join(','))
+    }
   }
 )
 
-if (route.name.includes('index-category-slug') && route.query.categories) {
+if (route.name.includes('index-category-slug')) {
   const categories = route.query.categories as string
-  checkbox.value = categories.split(',').map((category) => Number(category))
+  if (!categories) {
+    checkbox.value = single.value?.children?.map((category) => category.id)
+  } else {
+    checkbox.value = categories.split(',').map((category) => Number(category))
+  }
 }
 </script>
 
