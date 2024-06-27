@@ -17,7 +17,11 @@
       />
     </section>
   </PaymentCardInfoHeader>
-  <CommonModalPaymentMethod v-model="modalStore.paymentModel" />
+  <OrderInfoEditPayment
+    v-model="modalStore.paymentModel"
+    :default-info="orderCartStore.orderDetail"
+    @save="savePayment"
+  />
 </template>
 
 <script setup lang="ts">
@@ -29,6 +33,13 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 const payment = computed(() => orderCartStore.orderDetail)
+
+function savePayment(data: any) {
+  console.log(data)
+  orderCartStore.orderDetail.card_to_courier = data.card_to_courier
+  orderCartStore.orderDetail.cash = data.cash
+  orderCartStore.orderDetail.card_id = data.card_id
+}
 </script>
 
 <style scoped></style>
