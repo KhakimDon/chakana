@@ -42,26 +42,30 @@
         </p>
       </swiper-slide>
       <button
-        v-if="!isEnd && variants?.length > 5"
-        class="bg-white btn-arrow absolute top-1/2 z-10 right-0 p-1"
+        v-if="!isEnd && variants?.length > 8"
+        class="bg-white btn-arrow btn-arrow-prev absolute top-1/2 z-10 right-0 p-1"
         @click="slideNext"
       >
         <IconArrow class="icon-chevron text-xl" />
       </button>
       <button
-        v-if="!isBeginning && variants?.length > 5"
-        class="bg-white btn-arrow absolute top-1/2 z-10 left-0 p-1"
+        v-if="!isBeginning && variants?.length > 8"
+        class="bg-white btn-arrow btn-arrow-next absolute top-1/2 z-10 left-0 p-1"
         @click="slidePrev"
       >
         <IconArrow class="icon-chevron text-xl rotate-180" />
       </button>
       <span
-        class="thumb-gradient left-0"
-        :class="{ 'pointer-events-none opacity-0': isBeginning }"
+        class="thumb-gradient left-0 pointer-events-none"
+        :class="{
+          'pointer-events-none opacity-0': isBeginning || variants?.length < 8,
+        }"
       />
       <span
-        class="thumb-gradient reverse right-0"
-        :class="{ 'pointer-events-none opacity-0': isEnd }"
+        class="thumb-gradient reverse right-0 pointer-events-none"
+        :class="{
+          'pointer-events-none opacity-0': isEnd || variants?.length < 8,
+        }"
       />
     </swiper>
   </div>
@@ -99,6 +103,10 @@ const thumbSettings = {
       slidesPerView: 6,
       spaceBetween: 4,
     },
+  },
+  navigation: {
+    nextEl: '.btn-arrow-next',
+    prevEl: '.btn-arrow-prev',
   },
   watchSlidesProgress: true,
   modules: [Thumbs, Navigation],
