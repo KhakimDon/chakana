@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { CONFIG } from '~/config/index.js'
 import { useAuthStore } from '~/store/auth.js'
+import { useCartStore } from '~/store/cart.js'
 
 const authStore = useAuthStore()
 const { t } = useI18n()
@@ -33,6 +34,9 @@ const connection = ref()
 const loading = ref(true)
 const qrCode = ref('')
 const channel = ref('')
+
+const cartStore = useCartStore()
+
 const useReviewSocket = () => {
   try {
     connection.value = new WebSocket(`${CONFIG.WS_URL}`)
@@ -58,6 +62,7 @@ const useReviewSocket = () => {
           .fetchUser()
           .then(() => {
             showToast(t('login_success'), 'success')
+            cartStore.getCartProducts()
           })
           .finally(() => {
             loading.value = false
