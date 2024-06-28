@@ -1,6 +1,10 @@
 <template>
   <section>
-    <CommonSectionWrapper title="maybe_something_else" class="my-10">
+    <CommonSectionWrapper
+      title="maybe_something_else"
+      class="my-10"
+      :class="wrapperClass"
+    >
       <Transition name="fade" mode="out-in">
         <div
           :key="products?.loading"
@@ -37,6 +41,11 @@
 import { useIntersectionObserver } from '@vueuse/core'
 
 import { useMainStore } from '~/store/main.js'
+
+interface Props {
+  wrapperClass?: string
+}
+defineProps<Props>()
 
 const mainStore = useMainStore()
 

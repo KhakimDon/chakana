@@ -10,14 +10,15 @@
         />
         {{ data.name }}
       </NuxtLinkLocale>
-      <button
+      <NuxtLink
+        :to="localePath(`/profile/auto-order/${$route.params?.id}/search`)"
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
       >
         <SvgoCommonPlus
           class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
         />
         {{ $t('add_product') }}
-      </button>
+      </NuxtLink>
     </div>
     <Transition name="fade" mode="out-in">
       <div :key="productsLoading" class="mt-4 md:mt-8 flex flex-col">
@@ -105,6 +106,8 @@ const route = useRoute()
 const { showToast } = useCustomToast()
 const { handleError } = useErrorHandling()
 const { t } = useI18n()
+
+const localePath = useLocalePath()
 
 const { data, error } = await useAsyncData('orderSingle', () =>
   useApi().$get<IOrderDetail>(`/auto-order/${route.params.id}`)
