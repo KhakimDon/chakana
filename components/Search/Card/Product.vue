@@ -2,7 +2,7 @@
   <div class="flex-y-center gap-2 justify-between rounded-xl px-4 py-3">
     <div class="flex-y-center gap-2">
       <div
-        class="border bg-white shrink-0 border-white-100 w-16 relative h-[52px] rounded-10 px-0.5"
+        class="border bg-white shrink-0 border-white-100 w-16 relative h-[52px] rounded-10 px-0.5 overflow-hidden"
       >
         <NuxtImg
           :src="product?.main_image"
@@ -41,15 +41,28 @@
         </i18n-t>
       </template>
       <template v-else>
-        <BaseButton
-          v-if="count < 1 || addingToCart"
-          class="w-24"
-          :text="$t('to_basket')"
-          variant="outline"
-          :disabled="addingToCart"
-          :loading="addingToCart"
-          @click="addToCartFirstTime(product)"
-        />
+        <div v-if="count < 1 || addingToCart">
+          <BaseButton
+            class="w-24"
+            :text="$t('to_basket')"
+            variant="outline"
+            :disabled="addingToCart"
+            :loading="addingToCart"
+            @click="addToCartFirstTime(product)"
+          />
+          <p class="mt-1 text-xs font-medium text-dark leading-none">
+            {{
+              product?.discount_price
+                ? formatMoneyDecimal(product?.discount_price)
+                : formatMoneyDecimal(product?.price)
+            }}
+            <span
+              class="text-[10px] font-medium leading-130 text-dark"
+              :class="{ '!text-red ': returned }"
+              >UZS</span
+            >
+          </p>
+        </div>
         <MainCardCounter
           v-else
           v-model="count"
@@ -66,10 +79,15 @@
         :class="{ '!text-red line-through': returned }"
       >
         {{
-          formatMoneyDecimal(
-            (showCount ? 1 : count) * product?.discount_price ?? 0,
-            0
-          )
+          product?.discount_price
+            ? formatMoneyDecimal(
+                (showCount ? 1 : count) * product?.discount_price ?? 0,
+                0
+              )
+            : formatMoneyDecimal(
+                (showCount ? 1 : count) * product?.price ?? 0,
+                0
+              )
         }}
         <span
           class="text-[10px] font-medium leading-130 text-dark"

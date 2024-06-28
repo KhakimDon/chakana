@@ -33,7 +33,7 @@
           <template #prefix>
             <div class="flex-center h-11">
               <p
-                class="text-base sm:text-sm leading-5 text-dark pl-3 font-medium"
+                class="text-base sm:text-sm leading-5 text-dark pl-3 font-medium max-sm:-mb-0.5"
               >
                 +998
               </p>
