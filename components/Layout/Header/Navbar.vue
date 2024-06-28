@@ -42,7 +42,7 @@ const menu = computed(() => [
   },
   {
     title: 'Premium',
-    link: '/search',
+    link: '#',
     isPremium: true,
   },
 ])

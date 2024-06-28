@@ -11,6 +11,7 @@
         {{ data.name }}
       </NuxtLinkLocale>
       <NuxtLink
+        v-if="false"
         :to="localePath(`/profile/auto-order/${$route.params?.id}/search`)"
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
       >
@@ -30,11 +31,12 @@
           />
         </template>
         <template v-else>
-          <SearchCardProduct
+          <AutoOrderCardProduct
             v-for="(item, index) in products"
             :key="index"
             :product="item"
             class="even:bg-gray-300/50"
+            @refetch="getProducts"
           />
         </template>
       </div>
@@ -77,8 +79,21 @@
       }"
       @save="savePayment"
     />
+    <div
+      class="mt-5 border-t border-gray-200 mb-6 pt-5 flex-y-center justify-between"
+    >
+      <p class="text-base font-semibold leading-normal text-gray-100">
+        {{ $t('total_price') }}
+      </p>
+      <p
+        class="text-dark whitespace-nowrap line-clamp-1 text-xl font-bold leading-normal"
+      >
+        {{ formatMoneyDecimal(data?.price, 0) }}
+        <span class="text-xs font-bold text-gray-100 leading-snug"> UZS </span>
+      </p>
+    </div>
     <BaseButton
-      class="w-full !py-2.5 my-5"
+      class="w-full !py-2.5 mb-5"
       variant="secondary"
       :text="$t('delete_order')"
       :loading="deleteLoading"
@@ -98,8 +113,10 @@
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '~/store/cart.js'
 import { useOrderStore } from '~/store/profile/orders.js'
 import type { IOrderDetail } from '~/types/profile.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const route = useRoute()
 
@@ -109,7 +126,7 @@ const { t } = useI18n()
 
 const localePath = useLocalePath()
 
-const { data, error } = await useAsyncData('orderSingle', () =>
+const { data, error, refresh } = await useAsyncData('orderSingle', () =>
   useApi().$get<IOrderDetail>(`/auto-order/${route.params.id}`)
 )
 if (error.value) showError({ statusCode: 404 })
@@ -117,12 +134,16 @@ if (error.value) showError({ statusCode: 404 })
 const products = ref()
 const productsLoading = ref(true)
 
-useApi()
-  .$get(`auto-order/products/${route.params.id}`)
-  .then((res) => {
-    products.value = res
-  })
-  .finally(() => (productsLoading.value = false))
+const getProducts = async () =>
+  await useApi()
+    .$get(`auto-order/products/${route.params.id}`)
+    .then((res) => {
+      products.value = res
+      refresh()
+    })
+    .finally(() => (productsLoading.value = false))
+
+getProducts()
 
 const orderStore = useOrderStore()
 
@@ -219,4 +240,14 @@ function savePayment(item: any) {
     data.value.payment_type = 'card_to_courier'
   }
 }
+
+const cartStore = useCartStore()
+
+watch(
+  products,
+  (newValue) => {
+    cartStore.autoOrderProducts = newValue
+  },
+  { deep: true, immediate: true }
+)
 </script>

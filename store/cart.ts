@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cartStore', () => {
   const products = ref<any[]>([])
+  const autoOrderProducts = ref<any[]>([])
   const cartProductsLoading = ref(false)
 
   function getCartProducts() {
@@ -37,6 +38,7 @@ export const useCartStore = defineStore('cartStore', () => {
 
   return {
     products,
+    autoOrderProducts,
     cartProductsLoading,
     getCartProducts,
     addToCart,
