@@ -35,7 +35,7 @@
           v-if="user?.image"
           :src="user?.image"
           alt="user"
-          class="w-full h-full object-contain object-center rounded-full"
+          class="w-full h-full object-cover object-center rounded-full"
         />
         <img
           v-else
