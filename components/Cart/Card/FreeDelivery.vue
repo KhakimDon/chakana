@@ -43,7 +43,6 @@ const authStore = useAuthStore()
 
 const isPremium = computed(() => authStore.user?.is_premium)
 
-cartOrderStore.getCartDetail()
 cartOrderStore.getDeliveryDetail()
 
 const delivery = computed(() => cartOrderStore.delivery)

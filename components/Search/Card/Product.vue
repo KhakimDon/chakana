@@ -2,7 +2,7 @@
   <div class="flex-y-center gap-2 justify-between rounded-xl px-4 py-3">
     <div class="flex-y-center gap-2">
       <div
-        class="border bg-white shrink-0 border-white-100 w-16 relative h-[52px] rounded-10 px-0.5 overflow-hidden"
+        class="border bg-white shrink-0 border-white-100 w-16 relative h-[52px] rounded-10 px-0.5"
       >
         <NuxtImg
           :src="product?.main_image"
