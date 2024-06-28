@@ -52,6 +52,7 @@ const { t } = useI18n()
 const addressStore = useAddressStore()
 
 const savedCoords = computed(() => addressStore.coordinates)
+const savedAddress = computed(() => addressStore.savedAddress)
 
 const coordinates = ref([41.310329, 69.279935])
 const title = ref(t('amir_temur'))
@@ -74,6 +75,7 @@ function getLocation() {
       },
     })
     .then((res: any) => {
+      console.log('res', res)
       title.value = res.full
     })
 }
@@ -119,6 +121,22 @@ function submit() {
 function clearCoords() {
   addressStore.coordinates = []
 }
+
+watch(
+  () => savedAddress.value,
+  (val) => {
+    if (val) {
+      if (val.id) {
+        coordinates.value = [val.latitude, val.longitude]
+        title.value = val.street
+      }
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+)
 </script>
 
 <style>
