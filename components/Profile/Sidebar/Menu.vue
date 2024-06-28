@@ -12,7 +12,7 @@
         <!--        active-class="active"-->
         <div class="flex-y-center gap-1.5">
           <span
-            class="w-6 h-6 rounded-md flex-center transition-300"
+            class="w-6 h-6 rounded-md flex-center transition-300 shrink-0"
             :class="i.iconWrapperClass"
           >
             <component
@@ -26,7 +26,7 @@
           </p>
         </div>
         <div
-          v-if="i.isPremium"
+          v-if="i.isPremium && !isPremiumUser"
           class="mr-2 bg-[linear-gradient(180deg,_#FF831B_0%,_#F30_100%)] rounded-full py-[3px] px-1.5 text-xs font-semibold text-white leading-130 flex-y-center gap-1 relative"
         >
           <SvgoProfileSidebarCrownFill class="text-base leading-4" />

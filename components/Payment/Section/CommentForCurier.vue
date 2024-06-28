@@ -3,6 +3,7 @@
     icon="SvgoProfileMessage"
     icon-class="!text-blue-100 !text-2xl"
     :title="comment || $t('courier_comment')"
+    :subtitle
     @open-details="showEdit = true"
   />
   <OrderInfoEditComment
@@ -15,6 +16,7 @@
 <script setup lang="ts">
 interface Props {
   comment: string
+  subtitle?: string
 }
 defineProps<Props>()
 

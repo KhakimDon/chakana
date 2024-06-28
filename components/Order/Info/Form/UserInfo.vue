@@ -30,10 +30,22 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth.js'
+
 interface Props {
   form: any
 }
 const props = defineProps<Props>()
 
 const { values, $v } = unref(props.form)
+
+const authStore = useAuthStore()
+onMounted(() => {
+  if (!values.full_name) {
+    values.full_name = authStore.user?.name
+  }
+  if (!values.phone) {
+    values.phone = authStore.user?.phone.slice(4)
+  }
+})
 </script>

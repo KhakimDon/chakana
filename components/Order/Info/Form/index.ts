@@ -50,6 +50,13 @@ export const orderFormComment = useForm(
   {}
 )
 
+export const orderFormPickerComment = useForm(
+  {
+    picker_comment: '',
+  },
+  {}
+)
+
 export const orderFormPromocode = useForm(
   {
     promo_code_id: '',

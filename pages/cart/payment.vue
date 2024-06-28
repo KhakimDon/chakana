@@ -87,6 +87,8 @@ const goToPayment = () => {
           full_name: orderDetail.value.full_name,
           phone: orderDetail.value.phone,
         },
+        comment_to_picker: orderDetail.value.comment_to_courier,
+        comment_to_courier: orderDetail.value.picker_comment,
       })
       .then((res) => {
         if (res.redirect) window.location.href = res.payment_url
@@ -119,6 +121,7 @@ const goToPayment = () => {
           phone: orderDetail.value.phone,
         },
         comment_to_courier: orderDetail.value.comment_to_courier,
+        comment_to_picker: orderDetail.value.picker_comment,
         payment_method: {
           balance: orderDetail.value.balance,
           card_to_the_courier: orderDetail.value.card_to_courier,

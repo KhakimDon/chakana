@@ -30,6 +30,25 @@
     <p class="whitespace-pre-line text-sm leading-140 font-normal">
       {{ data.description }}
     </p>
+    <!--
+   Todo: Backend bo'lganida ulab qo'ymoqchidim lekin
+    © Olimjonov Ibrohim, 01:48
+    -->
+    ️<NuxtLinkLocale
+      v-if="false"
+      class="font-medium text-sm leading-140 text-blue-100 hover:underline"
+      :to="`/profile/auto-order/id`"
+    >
+      {{ $t('more_about_auto_order') }}
+    </NuxtLinkLocale>
+    <div v-if="false" class="flex gap-y-2 gap-x-4 max-sm:flex-col mt-4 md:mt-8">
+      <BaseButton :text="$t('accept')" class="!py-2 md:!py-3 w-full" />
+      <BaseButton
+        :text="$t('cancel')"
+        variant="secondary"
+        class="!py-2 md:!py-3 w-full"
+      />
+    </div>
   </div>
 </template>
 <script setup lang="ts">

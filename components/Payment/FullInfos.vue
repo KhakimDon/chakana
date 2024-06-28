@@ -36,7 +36,13 @@
             />
             <PaymentSectionCommentForCurier
               :comment="orderCartStore.orderDetail?.comment_to_courier"
+              :subtitle="$t('courier_comment')"
               @save="saveComment"
+            />
+            <PaymentSectionCommentForCurier
+              :comment="orderCartStore.orderDetail?.picker_comment"
+              :subtitle="$t('picker_comment')"
+              @save="savePickerComment"
             />
           </section>
         </PaymentCardInfoHeader>
@@ -105,6 +111,10 @@ function saveUser(data: any) {
 
 function saveComment(data: any) {
   orderCartStore.orderDetail.comment_to_courier = data.comment_to_courier
+}
+
+function savePickerComment(data: any) {
+  orderCartStore.orderDetail.picker_comment = data.comment_to_courier
 }
 
 function savePayment(data: any) {
