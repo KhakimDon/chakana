@@ -52,24 +52,25 @@
 import IconHeart from '~/assets/icons/Common/heart-stroke.svg'
 import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const cartOrderStore = useCartOrderStore()
+
 const { t, locale } = useI18n()
 
 const router = useRouter()
 const cartProducts = computed(() => cartStore.products)
 
+cartOrderStore.getCartDetail()
+
 const total = computed(() =>
   cartProducts.value.reduce((acc, product) => acc + product?.quantity, 0)
 )
 
-const totalPrice = computed(() =>
-  cartProducts.value.reduce((acc, product) => {
-    return acc + product?.price * product?.quantity
-  }, 0)
-)
+const totalPrice = computed(() => cartOrderStore.cart?.detail?.total_price)
 
 const token = computed(() => authStore.accessToken)
 const user = computed(() => authStore.user)
