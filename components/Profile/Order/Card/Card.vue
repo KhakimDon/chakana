@@ -17,7 +17,11 @@
             'col-span-2': i == 2 && images?.length == 3,
           }"
         >
-          <img :src="image" alt="product-image" class="max-h-full mx-auto" />
+          <img
+            :src="image"
+            alt="product-image"
+            class="max-h-full mx-auto object-cover"
+          />
 
           <!-- 4-image overlaps shade for over 4 img case -->
           <div

@@ -173,6 +173,13 @@ export const share = (network: string, title: string) => {
           `https://www.facebook.com/sharer/sharer.php?t=${title}\n${window.location.href}`,
           '_blank'
         )
+        //   write for whatsapp
+        break
+      case 'whatsapp':
+        window.open(
+          `https://api.whatsapp.com/send?text=${title}\n${window.location.href}`,
+          '_blank'
+        )
         break
     }
   }
