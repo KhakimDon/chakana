@@ -2,7 +2,7 @@
   <PaymentCardInfo
     icon="SvgoProfileMessage"
     icon-class="!text-blue-100 !text-2xl"
-    :title="comment ?? $t('courier_comment')"
+    :title="comment || $t('courier_comment')"
     @open-details="showEdit = true"
   />
   <OrderInfoEditComment

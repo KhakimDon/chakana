@@ -9,7 +9,7 @@
       @add="showAddModal = true"
     />
     <BaseButton
-      class="mt-6 w-full group !py-2.5"
+      class="mt-3 md:mt-6 w-full group !py-2.5"
       :text="$t('other_address')"
       variant="secondary"
       @click="showAddModal = true"

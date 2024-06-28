@@ -4,6 +4,7 @@
     :title="steps[stepIndex].title"
     body-class="w-full"
     :has-back="stepIndex > 0"
+    disable-outer-close2
     @update:model-value="emit('update:modelValue', $event)"
     @back="stepIndex--"
   >
