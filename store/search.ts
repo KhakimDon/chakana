@@ -10,6 +10,7 @@ export const useSearchStore = defineStore('searchStore', () => {
       total: 0,
       loading: false,
     },
+    next: null,
   })
 
   function searchProducts(query: string, force = true) {
@@ -35,6 +36,7 @@ export const useSearchStore = defineStore('searchStore', () => {
             products.list = products.list.concat(res?.items)
           }
           products.params.total = res?.count
+          products.next = res?.next
           resolve(res)
         })
         .catch((error) => {

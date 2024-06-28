@@ -26,14 +26,19 @@
       </div>
     </section>
 
-    <section v-if="!search" class="mb-[85px] md:mb-0">
+    <section
+      v-if="!search"
+      class="mb-[85px] md:mb-0"
+      @click="outsideClicked = true"
+    >
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
     <SearchCardLoading v-if="products.loading && search" :count="10" />
     <section
       v-else-if="products.list?.length && search && !products.loading"
-      class="my-5 mb-0 md:mb-[85px]"
+      class="my-5"
+      :class="{ 'mb-0 md:mb-[85px]': !products?.params?.loading }"
     >
       <SearchCardProduct
         v-for="(product, key) in products.list"
@@ -143,7 +148,9 @@ const target = ref<HTMLElement | null>(null)
 
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
   if (isIntersecting) {
-    searchStore.searchProducts(String(search.value), false)
+    if (products.value.next) {
+      searchStore.searchProducts(String(search.value), false)
+    }
   }
 })
 </script>
