@@ -30,10 +30,10 @@
           </p>
         </div>
       </template>
-      <template v-else>
+      <div v-else class="col-span-2">
         <CommonNoDataMap />
         <BaseButton
-          class="mt-4 w-full group"
+          class="md:mt-4 w-full group max-md:!py-2"
           :text="$t('add_address')"
           variant="primary"
           @click="emit('add')"
@@ -44,7 +44,7 @@
             />
           </template>
         </BaseButton>
-      </template>
+      </div>
     </div>
   </Transition>
 </template>
