@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-col justify-between gap-5 cursor-pointer">
-    <div>
+    <NuxtLinkLocale :to="'/product/' + card?.id">
       <div
         class="w-full h-[113px] rounded-10 bg-white-100 flex-center relative"
         @click="$emit('open')"
       >
         <MainCardBadge
           v-if="card?.discount_type === 'percentage'"
-          class="absolute -top-2 left-2"
+          class="absolute bottom-1.5 left-2"
           :percent="card?.discount_percentage"
           :type="card?.discount_type"
         />
         <nuxt-img
           :src="getImageSize(card?.main_image, 'small')"
           alt="card-image"
-          class="w-[95px] h-full object-contain"
+          class="w-[135px] h-full object-contain -translate-y-6"
           loading="lazy"
         />
       </div>
@@ -39,23 +39,22 @@
         {{ formatMoneyDecimal(card?.discount_price ?? card?.price) }}
         <span class="text-[11px] font-[150%]">UZS</span>
       </p>
-      <NuxtLinkLocale
+      <p
         class="mt-2 text-xs leading-122 text-dark font-semibold line-clamp-2 hover:text-orange transition-300"
-        :to="'/product/' + card?.id"
       >
         {{ card?.name }}
-      </NuxtLinkLocale>
+      </p>
       <p
         v-if="card?.product_uom_amount && card?.product_uom"
         class="mt-1.5 text-gray-100 font-medium text-xs leading-122"
       >
         {{ card?.product_uom_amount }} {{ $t(card?.product_uom) }}
       </p>
-    </div>
+    </NuxtLinkLocale>
     <ClientOnly>
       <BaseButton
         v-if="count < 1 || addingToCart"
-        class="w-full"
+        class="w-full !py-2"
         :text="$t('to_basket')"
         variant="outline"
         :disabled="addingToCart"

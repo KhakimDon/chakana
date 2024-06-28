@@ -11,7 +11,7 @@
         <div
           class="flex-center gap-2 group cursor-pointer select-none"
           :class="{ 'pointer-events-none': loading }"
-          @click="clearCart"
+          @click="showDeleteConfirm = true"
         >
           <svg
             v-if="loading"
@@ -38,7 +38,7 @@
           </p>
         </div>
       </div>
-      <div class="h-72 overflow-y-auto space-y-5">
+      <div class="max-h-72 h-fit overflow-y-auto space-y-5">
         <SearchCardProduct
           v-for="(product, key) in cartProducts"
           :key
@@ -49,27 +49,49 @@
         />
       </div>
     </div>
-    <BaseButton
-      class="w-full !rounded-10"
-      :text="$t('go_to_cart')"
-      variant="primary"
-      @click="goToCart"
-    />
+    <div
+      class="mt-5 border-t border-gray-200 mb-6 pt-5 flex-y-center justify-between"
+    >
+      <p class="text-base font-semibold leading-normal text-gray-100">
+        {{ $t('total_price') }}
+      </p>
+      <p
+        class="text-dark whitespace-nowrap line-clamp-1 text-xl font-bold leading-normal"
+      >
+        {{ formatMoneyDecimal(totalCartPrice, 0) }}
+        <span class="text-xs font-bold text-gray-100 leading-snug"> UZS </span>
+      </p>
+    </div>
+    <BaseButton class="w-full !rounded-10" variant="primary" @click="goToCart">
+      <p class="space-x-1">
+        <span>{{ $t('go_to_cart') }}</span>
+        <span
+          class="p-0.5 bg-white/25 rounded-md px-1 text-white text-xs font-medium leading-tight"
+          >{{ formatMoneyDecimal(totalCartPrice, 0) }} UZS</span
+        >
+      </p>
+    </BaseButton>
+    <DeleteConfirm v-model="showDeleteConfirm" @do-action="clearCart" />
   </section>
 </template>
 
 <script setup lang="ts">
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const router = useRouter()
 const { t, locale } = useI18n()
 const cartStore = useCartStore()
 const cartProducts = computed(() => cartStore.products)
 
+const showDeleteConfirm = ref(false)
+
 const orderCartStore = useCartOrderStore()
 
 const clearCart = () => {
+  showDeleteConfirm.value = false
   orderCartStore.cartClear().then(() => {
     cartStore.products = []
   })
@@ -86,4 +108,21 @@ const goToCart = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+/* width */
+::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(136, 136, 136, 0);
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ff831b;
+  border-radius: 5px;
+}
+</style>

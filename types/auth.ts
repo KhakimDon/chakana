@@ -1,13 +1,14 @@
-
 export interface IUser {
-  achievement_count: number
-  id: string
-  last_name: string
-  username: string
-  first_name: string
-  sync_with_sso?: boolean
+  id: number
+  name: string
+  phone: string
+  email: string
+  image: string
+  telegram: string
+  instagram: string
+  is_premium: boolean
+  has_image: boolean
 }
-
 
 export interface IUserForm {
   first_name: string

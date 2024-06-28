@@ -1,100 +1,66 @@
 <template>
   <BaseModal
-    v-bind="{ show }"
-    body-class="!max-w-[424px]"
+    :model-value="show"
+    body-class="!max-w-[484px]"
     :title="$t('address_delivery')"
     disable-outer-close
+    :has-back="$route?.query?.order === 'auto'"
     @close="$emit('close')"
+    @back="goToName"
   >
-    <div v-if="list.length">
-      <div class="flex items-center flex-wrap gap-4 h-96 overflow-y-auto">
-        <div
-          v-for="(item, index) in list"
-          :key="index"
-          :class="addressIdx === index ? '!border-orange' : ''"
-          class="bg-gray-300 p-3 rounded-xl w-full cursor-pointer group border border-transparent hover:border-orange transition-300"
-          @click="handleAddress(index)"
-        >
-          <div class="flex-center-between">
-            <img :src="item.icon" alt="" width="24px" height="24px" />
-            <div
-              class="bg-white rounded-full w-5 h-5 border-2 border-gray-200 transition-300"
-              :class="addressIdx === index ? 'border-orange border-[5px]' : ''"
-            ></div>
-          </div>
-          <h3 class="mt-3 text-dark font-bold">{{ item?.address }}</h3>
-          <p class="line-clamp-1 text-xs text-gray-100 mt-1">
-            {{ item?.street }}
-          </p>
-        </div>
-      </div>
-      <BaseButton
-        class="mt-6 w-full group"
-        :loading="false"
-        :text="$t('other_address')"
-        variant="secondary"
-        @click="$emit('openMapModal')"
-      >
-        <template #suffix>
-          <IconChevron
-            class="text-2xl text-dark group-hover:text-orange transition-300 transform rotate-180 group-hover:translate-x-1"
-          />
-        </template>
-      </BaseButton>
-      <!--    ToDo: Primary button ishlamaydi keyinroq ishlatib qo'yaman-->
-      <BaseButton
-        class="mt-4 w-full group"
-        :loading="false"
-        :text="$t('confirm')"
-        variant="primary"
-        @click="confirmFunction"
-      >
-      </BaseButton>
-    </div>
-    <div v-else>
-      <div class="mx-auto flex-center mt-[45px]">
-        <img src="/images/svg/nodatamap.svg" alt="NodataMap" />
-      </div>
-      <p class="text-center text-dark font-semibold leading-130 mt-3 mb-[45px]">
-        {{ $t('no_address') }}
-      </p>
-      <BaseButton
-        class="mt-4 w-full group"
-        :loading="false"
-        :text="$t('add_address')"
-        variant="primary"
-        @click="$emit('openMapModal')"
-      >
-        <template #prefix>
-          <IconPlus
-            class="text-2xl text-white group-hover:rotate-90 transition-300"
-          />
-        </template>
-      </BaseButton>
-    </div>
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
   </BaseModal>
 </template>
 
 <script setup lang="ts">
 import IconChevron from '~/assets/icons/Common/chevron.svg'
 import IconPlus from '~/assets/icons/Common/plus.svg'
+import NoDataMap from '~/components/Common/NoData/NoDataMap.vue'
+import { autoOrderSteps, orderSteps, steps } from '~/data/stepper.js'
+import { useModalStore } from '~/store/modal.js'
 
 interface Props {
-  show?: boolean
+  show: boolean
   list?: any
-}
-const props = defineProps<Props>()
-
-const addressIdx = ref(0)
-
-const emit = defineEmits(['close', 'openMapModal', 'selectAddress'])
-
-const handleAddress = (index: number) => {
-  addressIdx.value = index
+  buttonLoading?: boolean
 }
 
-const confirmFunction = () => {
-  emit('selectAddress', props?.list?.[addressIdx.value])
-  emit('close')
+interface Emits {
+  (e: 'close', v: boolean): void
+  (e: 'open-map-modal', v: boolean): void
+  (e: 'handle-address', v: object): void
 }
+
+const $emit = defineEmits<Emits>()
+const addressItem = ref(null)
+
+const route = useRoute()
+const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
+
+const modalStore = useModalStore()
+const step = ref('address')
+
+const goToName = () => {
+  modalStore.addressModel = false
+  modalStore.autoOrderModel.name = true
+}
+
+const handleAddress = (item: object) => {
+  addressItem.value = item
+}
+
+defineProps<Props>()
 </script>

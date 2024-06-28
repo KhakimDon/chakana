@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="sticky bg-white py-5 w-full z-10 top-0 md:top-[69px]">
+    <section class="sticky bg-white py-5 w-full z-10 top-0 xl:top-[69px]">
       <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
         <NuxtLinkLocale to="/" class="group">
           <IconChevron
@@ -14,6 +14,7 @@
           class="w-full !h-10"
           @focus="focusInput"
           @clear="search = ''"
+          @keydown.enter="outsideClicked = true"
         />
         <NuxtLinkLocale
           to="/search/list"

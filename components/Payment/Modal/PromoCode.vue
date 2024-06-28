@@ -1,9 +1,18 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('promo_code')"
+    :has-back="isCartRoute"
+    :title="addNew ? $t('new_promo') : $t('promo_code')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="backToList"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div class="space-y-4">
       <FormGroup v-if="addNew" :label="$t('enter_code')">
         <FormInput
@@ -80,7 +89,6 @@
         :loading
         :text="addNew ? $t('save') : $t('confirm')"
         size="md"
-        :disabled="!addNew && !selected"
         @click="addNew ? apply() : confirmPromoCode()"
       />
     </div>
@@ -91,7 +99,9 @@
 import { minLength, required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
 
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
@@ -104,6 +114,16 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
   (e: 'confirmPromoCode', value: string): void
 }>()
+
+const route = useRoute()
+const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
 
 const addNew = ref(false)
 
@@ -121,6 +141,18 @@ const form = useForm(
   }
 )
 
+const modalStore = useModalStore()
+
+const backToList = () => {
+  if (addNew.value) {
+    modalStore.promoModel = true
+    addNew.value = false
+  } else {
+    modalStore.promoModel = false
+    modalStore.commentModel = true
+  }
+}
+
 const loading = computed(() => cartOrderStore.applyingPromoCode)
 function apply() {
   form.$v.value.$touch()
@@ -128,6 +160,7 @@ function apply() {
     cartOrderStore.applyPromoCode(form.values.code).then(() => {
       addNew.value = false
       selected.value = ''
+      cartOrderStore.getPromoCodeList()
     })
   }
 }
@@ -157,9 +190,16 @@ const choosePromo = (promoId: string) => {
 }
 
 const confirmPromoCode = () => {
-  if (selected.value) {
-    emit('confirmPromoCode', selected.value)
-    selected.value = ''
+  if (isCartRoute.value) {
+    if (route.query?.order === 'auto') {
+      modalStore.autoOrderModel.payment = true
+    } else {
+      modalStore.paymentModel = true
+    }
   }
+  emit('confirmPromoCode', selected.value)
+  selected.value = ''
 }
+
+const step = ref('promo')
 </script>

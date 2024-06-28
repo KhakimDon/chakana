@@ -67,7 +67,6 @@
         />
         <BaseButton
           class="!py-3 w-full"
-          :loading
           :text="$t('search')"
           size="md"
           :disabled="btnLoading || form.$v.value.$invalid"
@@ -145,10 +144,10 @@ function createCard(mode?: string) {
           path: `/${locale.value}/search/list-results`,
           query: { listId: res?.main_note_id },
         })
-        emit('update:modelValue', false)
       } else {
         listStore.getUserProductsList()
       }
+      emit('update:modelValue', false)
     })
     .catch((err: Error) => {
       const { handleError } = useErrorHandling()

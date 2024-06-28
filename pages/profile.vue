@@ -2,8 +2,8 @@
   <LayoutWrapper v-if="useMobile('desktop')">
     <template #left>
       <div class="sticky top-[86px]">
-        <ProfileSidebarPremium />
-        <ProfileSidebarMenu class="my-4" :menu />
+        <ProfileSidebarPremium v-if="!hasPremium" class="mb-4" />
+        <ProfileSidebarMenu class="mb-4" :menu />
         <button
           class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
           @click="logoutModal = true"
@@ -51,60 +51,11 @@
     </template>
   </LayoutWrapper>
   <LayoutMobile v-else>
-    <section class="mt-[85px] mb-24 space-y-6">
-      <NuxtPage />
-      <ProfileSidebarPremium />
-      <ProfileSidebarMenu class="my-4" :menu />
-      <button
-        class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
-        @click="logoutModal = true"
-      >
-        <span
-          class="w-6 h-6 rounded-md flex-center transition-300 group-hover:bg-red/20"
-        >
-          <SvgoCommonLogOut class="text-xl leading-5 transition-300 text-red" />
-        </span>
-        <span class="text-xs leading-130 font-semibold text-dark">
-          {{ $t('logout_from_account') }}
-        </span>
-      </button>
-      <BaseModal v-model="logoutModal" :title="$t('logout_from_account')">
-        <div>
-          <p class="text-sm leading-140 text-dark whitespace-pre-line">
-            {{ $t('are_you_sure_to_logout') }}
-          </p>
-          <div class="grid grid-cols-2 gap-4 mt-6">
-            <BaseButton
-              class="!py-3 !rounded-[10px]"
-              :text="$t('cancel')"
-              size="md"
-              variant="secondary"
-              @click="logoutModal = false"
-            />
-            <BaseButton
-              class="!py-3 !rounded-[10px]"
-              :text="$t('logout')"
-              size="md"
-              @click="logout"
-            />
-          </div>
-        </div>
-      </BaseModal>
-    </section>
+    <NuxtPage :transition="{ name: 'fade', mode: 'out-in' }" />
   </LayoutMobile>
 </template>
 
 <script setup lang="ts">
-import {
-  SvgoCommonBell,
-  SvgoProfileCard,
-  SvgoProfileSidebarCart,
-  SvgoProfileSidebarLocation,
-  SvgoProfileSidebarMenuList,
-  SvgoProfileSidebarSettings,
-  SvgoProfileSidebarTag,
-  SvgoProfileUserCircle,
-} from '#components'
 import { useAuthStore } from '~/store/auth.js'
 
 definePageMeta({
@@ -116,25 +67,35 @@ const router = useRouter()
 const localePath = useLocalePath()
 const { t } = useI18n()
 
+const hasPremium = computed(() => useAuthStore().user?.is_premium)
+
 const menu = [
   {
-    link: '/profile',
+    link: '/profile/auto-order',
+    title: t('auto_order'),
+    icon: 'SvgoCommonCalendar',
+    iconClass: 'text-orange group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
+    isPremium: true,
+  },
+  {
+    link: '/profile/edit',
     title: t('my_infos'),
-    icon: SvgoProfileUserCircle,
+    icon: 'SvgoProfileUserCircle',
     iconClass: 'text-orange group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
   },
   {
     link: '/profile/orders',
     title: t('orders'),
-    icon: SvgoProfileSidebarCart,
+    icon: 'SvgoProfileSidebarCart',
     iconClass: 'text-blue-100 group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-blue-100 group-hover:bg-blue-100/20',
   },
   {
     link: '/profile/addresses',
     title: t('addresses'),
-    icon: SvgoProfileSidebarLocation,
+    icon: 'SvgoProfileSidebarLocation',
     iconClass: 'text-[#088339] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#088339] group-hover:bg-[#088339]/20',
@@ -142,14 +103,14 @@ const menu = [
   {
     link: '/profile/my-cards',
     title: t('my_cards'),
-    icon: SvgoProfileCard,
+    icon: 'SvgoProfileCard',
     iconClass: 'text-blue-100 group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-blue-100 group-hover:bg-blue-100/20',
   },
   {
     link: '/profile/notifications',
     title: t('notifications'),
-    icon: SvgoCommonBell,
+    icon: 'SvgoCommonBell',
     iconClass: 'text-[#F7C954] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#F7C954] group-hover:bg-[#F7C954]/20',
@@ -157,7 +118,7 @@ const menu = [
   {
     link: '/profile/saved',
     title: t('saved_list'),
-    icon: SvgoProfileSidebarMenuList,
+    icon: 'SvgoProfileSidebarMenuList',
     iconClass: 'text-[#9747FF] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#9747FF] group-hover:bg-[#9747FF]/20',
@@ -165,7 +126,7 @@ const menu = [
   {
     link: '/profile/promocodes',
     title: t('discounts_and_promocodes'),
-    icon: SvgoProfileSidebarTag,
+    icon: 'SvgoProfileSidebarTag',
     iconClass: 'text-[#F5C005] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#F5C005]  group-hover:bg-[#F5C005]/20',
@@ -173,7 +134,7 @@ const menu = [
   {
     link: '/profile/settings',
     title: t('settings'),
-    icon: SvgoProfileSidebarSettings,
+    icon: 'SvgoProfileSidebarSettings',
     iconClass: 'text-[#FF831B] group-[.active]:text-white',
     iconWrapperClass:
       'group-[.active]:bg-[#FF831B]  group-hover:bg-[#FF831B]/20',

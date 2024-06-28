@@ -1,4 +1,4 @@
-import type { IProfileUser, IUser, IUserForm } from '~/types/auth'
+import type { IUser } from '~/types/auth'
 
 interface TAuthTokens {
   refresh_token?: string
@@ -6,16 +6,19 @@ interface TAuthTokens {
 }
 
 interface IState {
-  user?: IProfileUser
+  user?: IUser
+  reasons: any[]
   userFetchTrigger: number
   showAuth: boolean
   accessToken?: string | null
   refreshToken?: string | null
   userFetched: boolean
 }
+
 export const useAuthStore = defineStore('authStore', {
   state: (): IState => ({
-    user: {} as IProfileUser,
+    user: {} as IUser,
+    reasons: [],
     userFetchTrigger: 0,
     showAuth: false,
     accessToken: undefined,
@@ -26,7 +29,7 @@ export const useAuthStore = defineStore('authStore', {
     fetchUser() {
       return new Promise((resolve, reject) => {
         useApi()
-          .$get<IProfileUser>('get/detail')
+          .$get<IUser>('get/detail')
           .then((res) => {
             this.user = res
             this.userFetched = true
@@ -38,15 +41,58 @@ export const useAuthStore = defineStore('authStore', {
           })
       })
     },
-    updateUser(user: IProfileUser) {
+    updateUser(user: IUser) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$put<IProfileUser>('update/detail', {
+          .$put<IUser>('update/detail', {
             body: user,
           })
           .then((res) => {
             resolve(res)
             this.fetchUser()
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    deleteAccount(id: string) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$delete<IUser>(`delete/account/?reason_id=${id}`)
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    getDeleteAccountReasons() {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$get('reasons/?reason_type=delete_account')
+          .then((res) => {
+            this.reasons = res
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    sendReason(body: any) {
+      return new Promise((resolve, reject) => {
+        useApi()
+          .$post('send/reason/', {
+            body: {
+              order_id: null,
+              reason_ids: body.ids?.length ? body.ids : [],
+              reason_text: body.text ?? null,
+            },
+          })
+          .then((res) => {
+            resolve(res)
           })
           .catch((err) => {
             reject(err)

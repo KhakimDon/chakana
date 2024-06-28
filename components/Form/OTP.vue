@@ -24,6 +24,7 @@
                 '!border-white-100 !bg-white': v,
               },
             ]"
+            inputmode="decimal"
             pattern="[0-9]"
             :autoFocus="autoFocus && index === autoFocusIndex"
             :data-id="index"
@@ -100,7 +101,10 @@ const onFocus = (e, index) => {
   activeIndex.value = index
   e.target.select(e)
 }
+
+const triggerChangeText = ref('')
 const onValueChange = (e) => {
+  triggerChangeText.value = e.target.value
   const index = parseInt(e.target.dataset.id)
   e.target.value = e.target.value.replace(/[^\d]/gi, '')
   // this.handleKeys[index] = false;
@@ -207,9 +211,12 @@ onMounted(() => {
   })
 })
 
+const pasteDigitsText = ref('')
+
 const pasteDigits = (e) => {
   e.preventDefault()
   const pastedData = e.clipboardData.getData('text')
+  pasteDigitsText.value = pastedData
 
   // Ensure the pasted data contains exactly 6 digits
   if (/^\d{6}$/.test(pastedData)) {

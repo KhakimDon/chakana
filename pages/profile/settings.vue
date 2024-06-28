@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <h1 class="text-xl font-extrabold leading-7 text-dark mb-4">
       {{ $t('settings') }}
     </h1>
@@ -38,7 +39,7 @@
     <BaseModal v-model="languageModal" :title="$t('choose_language')">
       <FormRadioGroup
         v-model="language"
-        class="-mx-5 -mt-5 mb-5"
+        class="-mx-5 -mt-5 mb-3 md:mb-5"
         value-key="code"
         item-class="flex-row-reverse justify-between"
         :items="languagesList"
@@ -59,10 +60,22 @@
       </FormRadioGroup>
       <BaseButton class="w-full" :text="$t('confirm')" @click="changeLang" />
     </BaseModal>
+    <CommonModalDeleteAccount
+      v-model="deleteAccountModal"
+      :loading="deletingAccount"
+      @do-action="showReasonsFn()"
+    />
+    <CommonModalReasons
+      v-model="showReasons"
+      :loading="deletingAccount"
+      @do-action="deleteAccountFn"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { SvgoCommonBell, SvgoCommonGlobe } from '#components'
+import { useAuthStore } from '~/store/auth.js'
+
+const { showToast } = useCustomToast()
 
 const { currentLanguage, languagesList, changeLocale } = useLanguageSwitcher()
 
@@ -71,21 +84,29 @@ const listLinks = ref([
     name: 'language',
     subtitle: currentLanguage.value?.nameFull,
     wrapperClass: 'hover:border-orange hover:bg-orange/10',
-    icon: SvgoCommonGlobe,
+    icon: 'SvgoCommonGlobe',
     iconClass: 'text-orange',
     value: 'language',
   },
   {
     name: 'send_notification',
-    icon: SvgoCommonBell,
+    icon: 'SvgoCommonBell',
     wrapperClass: 'hover:border-[#F7C954] hover:bg-[#F7C954]/10',
     iconClass: 'text-[#F7C954]',
     value: 'notification',
+  },
+  {
+    name: 'delete_account',
+    icon: 'SvgoCommonTrash',
+    wrapperClass: 'hover:border-red hover:bg-red-500/10',
+    iconClass: 'text-red-500',
+    value: 'delete_account',
   },
 ])
 
 const languageModal = ref(false)
 const notification = ref(false)
+const deleteAccountModal = ref(false)
 const language = ref(currentLanguage.value?.code)
 
 const actions = (value: string) => {
@@ -96,11 +117,40 @@ const actions = (value: string) => {
     case 'notification':
       notification.value = !notification.value
       break
+    case 'delete_account':
+      deleteAccountModal.value = true
+      break
   }
 }
 
 function changeLang() {
   changeLocale(language.value)
   languageModal.value = false
+}
+
+const showReasons = ref(false)
+
+const showReasonsFn = () => {
+  showReasons.value = true
+  deleteAccountModal.value = false
+}
+
+const deletingAccount = ref(false)
+
+const deleteAccountFn = async (id: string) => {
+  deletingAccount.value = true
+  await useAuthStore()
+    .deleteAccount(id)
+    .then(() => {
+      useAuthStore().logOut()
+      deleteAccountModal.value = false
+      window.location.reload()
+    })
+    .catch((error) => {
+      showToast(error._data?.detail?.code, 'error')
+    })
+    .finally(() => {
+      deletingAccount.value = false
+    })
 }
 </script>

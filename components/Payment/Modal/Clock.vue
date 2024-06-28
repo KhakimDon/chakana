@@ -1,9 +1,18 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="isCartRoute"
     :title="$t('when_delivery')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="$emit('openSavedAddress')"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div class="space-y-4">
       <p
         v-if="showFreeDelivery"
@@ -21,7 +30,7 @@
         @click="selectedInterval = interval"
       >
         <p v-if="key !== 0">{{ t('interval', { range: interval }) }}</p>
-        <p v-else>{{ $t(interval) }}</p>
+        <p v-else>{{ interval }}</p>
         <SvgoCommonCheck
           v-if="selectedInterval === interval"
           class="text-orange text-xl !mb-0"
@@ -41,7 +50,9 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+import { orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 interface Props {
   modelValue: boolean
@@ -52,9 +63,18 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
+  (e: 'openSavedAddress'): void
 }>()
 
-const { t } = useI18n()
+const route = useRoute()
+const { t, locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
 
 const selectedInterval = ref('nearest_2_hours')
 
@@ -108,7 +128,9 @@ function getCurrentDateTimeISO(date: any) {
   return date.format().slice(0, -6)
 }
 
+const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
+
 function add() {
   if (selectedInterval.value === 'nearest_2_hours') {
     const now = dayjs()
@@ -123,6 +145,9 @@ function add() {
       now.set('hours', Number(selectedInterval.value.split(':')[0]) + 24)
     )
   }
+  if (isCartRoute.value) {
+    modalStore.userModel = true
+  }
   emit('update:modelValue', false)
 }
 
@@ -131,4 +156,6 @@ const intervals = ref()
 onMounted(() => {
   intervals.value = ['nearest_2_hours', ...generateIntervals()]
 })
+
+const step = ref('when_to_deliver')
 </script>

@@ -2,10 +2,10 @@
   <div>
     <NuxtLinkLocale
       to="/profile/orders"
-      class="inline-flex items-center gap-2 text-[22px] font-extrabold leading-7 text-dark group"
+      class="inline-flex items-center gap-1 md:gap-2 text-lg md:text-[22px] font-extrabold leading-7 text-dark group"
     >
       <SvgoCommonChevron
-        class="text-[28px] leading-[28px] text-dark group-hover:-translate-x-0.5 transition-300"
+        class="text-xl md:text-[28px] leading-5 md:leading-[28px] text-dark group-hover:-translate-x-0.5 transition-300"
       />
       #{{ $route.params.id }}
     </NuxtLinkLocale>
@@ -16,20 +16,20 @@
     />
     <template v-else>
       <template v-if="status !== 'delivered' && status !== 'cancelled'">
-        <BaseStepper class="my-8" :step="status" :steps />
+        <BaseStepper class="my-6 md:my-8" :step="status" :steps />
         <h1
-          class="text-center text-2xl font-extrabold leading-130 text-dark mb-1"
+          class="text-center text-xl md:text-2xl font-extrabold leading-130 text-dark mb-1"
         >
           {{ $t(`order_statuses.${status}`) }}
         </h1>
         <p
-          class="text-sm leading-140 text-dark font-normal text-center mb-8 max-w-[343px] mx-auto"
+          class="text-sm leading-140 text-dark font-normal text-center mb-4 md:mb-8 max-w-[343px] mx-auto"
         >
           {{ $t(`order_statuses.${status}_description`) }}
         </p>
       </template>
       <Transition name="fade" mode="out-in">
-        <div :key="productsLoading" class="mt-8 flex flex-col">
+        <div :key="productsLoading" class="mt-4 md:mt-8 flex flex-col">
           <template v-if="productsLoading">
             <div
               v-for="key in 10"
@@ -191,9 +191,10 @@ const steps = [
 ]
 const step = ref(1)
 
-const { data } = await useAsyncData('orderSingle', () =>
+const { data, error } = await useAsyncData('orderSingle', () =>
   useApi().$get<IOrderDetail>(`/order/detail/${route.params.id}`)
 )
+if (error.value) showError({ statusCode: 404 })
 
 const { data: orderStatus } = await useAsyncData('orderStatus', () =>
   useApi().$get(`/order/status/${route.params.id}`)
@@ -203,7 +204,7 @@ const status = computed(() => orderStatus.value?.status)
 const products = ref()
 const productsLoading = ref(true)
 
-const ranked = ref(!orderStatus.value?.rank)
+const ranked = ref(orderStatus.value?.rank)
 useApi()
   .$get(`order/products/${route.params.id}`)
   .then((res) => {

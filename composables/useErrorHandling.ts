@@ -1,25 +1,31 @@
-import { useI18n } from 'vue-i18n'
-
 import { useCustomToast } from '@/composables/useCustomToast'
+
+export interface IErrorResponse {
+  _data: {
+    detail: {
+      detail: string
+      code: string
+    }
+  }
+  status: number
+}
 
 export function useErrorHandling() {
   const { showToast } = useCustomToast()
-  const { t } = useI18n()
 
-  function handleError(res: any) {
-    if (res?.status === 404) {
-      showError({ statusCode: 404 })
-    }
-    if (res?.status === 403) {
-      showToast('error', res?._data?.detail)
-    }
+  function handleError(res: IErrorResponse) {
+    // if (res?.status === 404) {
+    //   showError({ statusCode: 404 })
+    // } else
     if (res?.status === 500) {
-      showToast('error', 'Server error')
+      showToast('Server error', 'error')
+    } else {
+      showToast(res._data?.detail?.code, 'error')
     }
-    showToast('error', t(res?._data?.errors?.[0]?.message))
 
-    return { error: res?._data?.errors?.[0]?.message }
+    return { error: res._data?.detail?.code }
   }
 
   return { handleError }
 }
+1

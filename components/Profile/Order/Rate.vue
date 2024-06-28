@@ -1,6 +1,6 @@
 <template>
-  <div class="text-center pt-8">
-    <h1 class="text-2xl font-extrabold leading-130 text-dark mb-1">
+  <div class="text-center pt-4 md:pt-8">
+    <h1 class="text-xl md:text-2xl font-extrabold leading-130 text-dark mb-1">
       {{ $t('get_your_order') }}
     </h1>
     <p class="text-sm leading-140 text-dark">{{ $t('how_the_order') }}</p>
@@ -16,8 +16,8 @@
         <FormCheckboxNested
           v-else-if="list.length"
           v-model="reason"
-          item-class="!py-[14px] !border-none"
-          class="px-3 mt-6"
+          item-class="!py-3 md:!py-[14px] !border-none"
+          class="md:px-3 mt-3 md:mt-6"
           not-all
           :list="nestedList"
         />
@@ -34,7 +34,7 @@
     </div>
     <BaseButton
       :loading="submitLoading"
-      class="mt-5 w-full max-w-[535px]"
+      class="mt-3 md:mt-5 w-full max-w-[535px]"
       :text="$t('send')"
       @click="submit"
     />
@@ -50,7 +50,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
-defineEmits(['ranked'])
+const emit = defineEmits(['ranked'])
+
+const { t } = useI18n()
 
 const star = ref(0)
 const reason = ref<number[]>()
@@ -75,7 +77,6 @@ function fetchReasons() {
     )
     .then((res) => {
       list.value = res
-      emit('ranked')
     })
     .finally(() => {
       loading.value = false
@@ -104,6 +105,13 @@ function submit() {
         reason_ids: reason.value,
         reason_text: text.value,
       },
+    })
+    .then(() => {
+      emit('ranked')
+      useCustomToast().showToast(t('your_feedback_has_been_sent'), 'success')
+    })
+    .catch((e) => {
+      useErrorHandling().handleError(e)
     })
     .finally(() => (submitLoading.value = false))
 }

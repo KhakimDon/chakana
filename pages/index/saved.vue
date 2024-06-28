@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-[85px] mb-24 space-y-6">
+  <section class="mb-24 space-y-6">
     <CommonSectionWrapper title="saved">
       <template #header>
         <div class="flex items-center group" @click="router.back()">
@@ -22,12 +22,7 @@
             <MainCardLoading v-for="key in 16" :key />
           </template>
           <template v-else-if="list?.length">
-            <MainCard
-              v-for="(card, index) in list"
-              :key="index"
-              :card
-              @open="selectProduct(card)"
-            />
+            <MainCard v-for="(card, index) in list" :key="index" :card />
           </template>
           <template v-else-if="loading.list">
             <MainCardLoading v-for="key in 16" :key />
@@ -41,11 +36,6 @@
         v-if="!loading?.list && !loading?.button && paginationData?.next"
         ref="infiniteScrollTrigger"
       />
-      <MainModalInfo
-        v-model="showProduct"
-        :product="selectedProduct"
-        @close="showProduct = false"
-      />
     </CommonSectionWrapper>
   </section>
 </template>
@@ -57,19 +47,15 @@ import type { IProduct } from '~/types/products.js'
 
 const router = useRouter()
 
+definePageMeta({
+  middleware: ['auth'],
+})
+
 const { list, loading, loadMore, paginationData } = useListFetcher<IProduct>(
   `/saved/products`,
   5,
   true
 )
-
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
-
-function selectProduct(product: IProduct) {
-  selectedProduct.value = product
-  showProduct.value = true
-}
 
 const infiniteScrollTrigger = ref<HTMLElement | null>(null)
 

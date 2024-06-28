@@ -54,7 +54,7 @@
 }
 
 
-root {
+* {
     font-family: 'VelaSans', sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

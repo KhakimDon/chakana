@@ -64,7 +64,6 @@ export default defineNuxtConfig({
       { code: 'ru', iso: 'ru-RU', file: 'ru' },
       { code: 'uz', iso: 'uz', file: 'uz' },
       { code: 'en', iso: 'en', file: 'en' },
-      { code: 'uzc', iso: 'uzc', file: 'uzc' },
     ],
     lazy: true,
     useCookie: true,
@@ -73,9 +72,9 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       onlyOnRoot: true, // recommended
-      fallbackLocale: 'uz',
+      fallbackLocale: 'ru',
     },
-    defaultLocale: 'uz',
+    defaultLocale: 'ru',
     strategy: 'prefix_and_default',
   },
   nitro: {

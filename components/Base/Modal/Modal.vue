@@ -15,7 +15,7 @@
           <div
             id="Modal"
             :class="[bodyClass, { animated: animationIn }]"
-            class="relative bg-white rounded-xl w-[484px] transition-300"
+            class="relative bg-white rounded-xl w-full max-w-[484px] transition-300"
           >
             <slot v-if="!noHeader" name="header">
               <div
@@ -46,7 +46,10 @@
                 </button>
               </div>
             </slot>
-            <div :class="wrapperClass" class="p-5">
+            <div
+              :class="wrapperClass"
+              class="p-5 max-md:max-h-[85vh] max-md:overflow-y-scroll"
+            >
               <slot></slot>
             </div>
             <button

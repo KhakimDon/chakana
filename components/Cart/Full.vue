@@ -16,9 +16,9 @@
         </p>
         <div
           v-if="cartProducts.length > 0"
-          class="hidden md:flex flex-center gap-2 group cursor-pointer select-none"
+          class="flex flex-center gap-2 group cursor-pointer select-none"
           :class="{ 'pointer-events-none': loading }"
-          @click="clearCart"
+          @click="showDeleteConfirm = true"
         >
           <svg
             v-if="loading"
@@ -50,7 +50,7 @@
       </template>
       <div
         v-else-if="cartProducts.length && !loading"
-        class="mt-6 h-56 md:h-96 overflow-y-auto"
+        class="mt-6 max-h-56 md:max-h-96 overflow-y-auto pt-5"
       >
         <SearchCardProduct
           v-for="(product, key) in cartProducts"
@@ -65,14 +65,15 @@
           :subtitle="$t('search_nodata_subtitle')"
           image="/images/no-data/no-searches.png"
         />
-        <SearchSectionNewProducts />
       </section>
       <slot />
+      <DeleteConfirm v-model="showDeleteConfirm" @do-action="clearCart" />
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 
@@ -90,7 +91,10 @@ const goBack = () => {
 
 const loading = computed(() => cartStore.cartProductsLoading)
 
+const showDeleteConfirm = ref(false)
+
 const clearCart = () => {
+  showDeleteConfirm.value = false
   orderCartStore.cartClear().then(() => {
     cartStore.getCartProducts()
   })

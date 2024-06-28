@@ -38,3 +38,21 @@
 .nuxt-icon {
     @apply !mb-0;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(136, 136, 136, 0);
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #FF831B;
+    border-radius: 5px;
+}
+

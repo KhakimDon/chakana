@@ -7,8 +7,8 @@
           :modules="[Thumbs, Navigation]"
           :thumbs="{ swiper: thumbsSwiper }"
         >
-          <div class="flex items-center gap-1">
-            <p class="text-gray-100 text-xs">Вид:</p>
+          <div class="flex items-start gap-1">
+            <p class="text-gray-100 text-xs">{{ $t('vid') }}:</p>
             <p class="text-dark text-xs">{{ variant }}</p>
           </div>
         </swiper>
@@ -42,14 +42,14 @@
         </p>
       </swiper-slide>
       <button
-        v-if="!isEnd && variants?.length"
+        v-if="!isEnd && variants?.length > 5"
         class="bg-white btn-arrow absolute top-1/2 z-10 right-0 p-1"
         @click="slideNext"
       >
         <IconArrow class="icon-chevron text-xl" />
       </button>
       <button
-        v-if="!isBeginning && variants?.length"
+        v-if="!isBeginning && variants?.length > 5"
         class="bg-white btn-arrow absolute top-1/2 z-10 left-0 p-1"
         @click="slidePrev"
       >
@@ -70,7 +70,6 @@
 <script setup lang="ts">
 import { Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { defineProps, ref } from 'vue'
 
 import IconArrow from '~/assets/icons/Common/arrow.svg'
 

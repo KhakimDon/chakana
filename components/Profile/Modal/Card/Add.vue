@@ -69,6 +69,7 @@ const emit = defineEmits<{
 }>()
 
 const { showToast } = useCustomToast()
+const { handleError } = useErrorHandling()
 
 const { t } = useI18n()
 
@@ -108,7 +109,7 @@ function createCard() {
       step.value = 2
     })
     .catch((err: Error) => {
-      const { handleError } = useErrorHandling()
+      console.log(err)
       handleError(err)
     })
     .finally(() => {
@@ -154,6 +155,13 @@ watch(
   (value: boolean) => {
     if (value) {
       step.value = 1
+    } else {
+      form.$v.value.$reset()
+      form.values = {
+        card_number: '',
+        expiry_date: '',
+        otp_code: '',
+      }
     }
   }
 )

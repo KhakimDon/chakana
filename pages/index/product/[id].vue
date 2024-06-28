@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section class="mb-24 space-y-6">
     <div>
       <MainCardBadge
         v-if="data?.discount_percentage"
@@ -8,12 +8,11 @@
         :type="data?.discount_type"
       />
       <div
-        class="flex items-center gap-1 text-gray-100 cursor-pointer group"
-        @click="router.back()"
+        class="flex items-center gap-1 text-gray-100 cursor-pointer group md:hidden"
+        @click="back"
       >
         <IconChevron
           class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
-          @click="openDesc"
         />
         <p class="text-gray-100 group-hover:text-orange transition-300">
           {{ $t('back') }}
@@ -82,7 +81,7 @@
               </div>
             </swiper-slide>
             <span
-              class="thumb-gradient left-0"
+              class="thumb-gradient –left-4 md:left-0"
               :class="{ 'pointer-events-none opacity-0': isBeginning }"
             />
             <span
@@ -163,7 +162,7 @@
 
               <BaseButton
                 variant="outline"
-                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange !py-2"
                 @click="show = true"
               >
                 <IconExport class="text-xl" />
@@ -171,7 +170,7 @@
               <BaseButton
                 v-if="data.saved || saved"
                 variant="outline"
-                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange !py-2"
                 :loading="buttonLoading"
                 @click="savedProducts"
               >
@@ -181,7 +180,7 @@
               <BaseButton
                 v-else
                 variant="outline"
-                class="hover:!bg-transparent hover:!text-dark hover:!border-orange"
+                class="hover:!bg-transparent hover:!text-dark hover:!border-orange !py-2"
                 :loading="buttonLoading"
                 @click="savedProducts"
               >
@@ -246,7 +245,7 @@
         </div>
         <div
           v-else-if="list?.length"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8"
         >
           <MainCard v-for="(card, index) in list" :key="index" :card="card" />
           <!--            @open="selectProduct(card)"-->
@@ -291,13 +290,13 @@
             alt=""
             class="p-1.5 bg-orange/10 rounded-lg"
           />
-          <CommonTooltip with-trigger :show="copied">{{
-            $t('copied')
-          }}</CommonTooltip>
+          <CommonTooltip with-trigger :show="copied"
+            >{{ $t('copied') }}
+          </CommonTooltip>
         </div>
       </div>
     </BaseModal>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -334,6 +333,7 @@ const { list, loading, paginationData, loadMore } = useListFetcher(
 const router = useRouter()
 
 const copied = ref(false)
+
 async function copyUrl() {
   copied.value = true
   await navigator.clipboard.writeText(window.location.href)
@@ -498,6 +498,16 @@ onMounted(() => {
   // Trigger the computation once the component is mounted
   shouldShowArrow.value
 })
+
+const localePath = useLocalePath()
+
+const back = () => {
+  if (window.history.state.back) {
+    router.back()
+  } else {
+    router.push(localePath('/'))
+  }
+}
 </script>
 
 <style scoped>
@@ -511,13 +521,28 @@ onMounted(() => {
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 0;
   width: 86px;
   height: 100%;
   background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
   z-index: 2;
   transition: all 0.3s;
+  right: auto;
 }
+
 .thumb-gradient.reverse {
   transform: rotateY(180deg);
+  left: auto;
+  right: 0;
+}
+@media screen and (max-width: 640px) {
+  .thumb-gradient {
+    left: -16px;
+    right: auto;
+  }
+  .thumb-gradient.reverse {
+    left: auto;
+    right: -16px;
+  }
 }
 </style>

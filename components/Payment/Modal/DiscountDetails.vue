@@ -26,9 +26,10 @@
               -{{ product?.discount_percent }}%
             </p>
             <p class="text-xs text-green font-medium leading-none">
-              <span class="text-base font-semibold leading-tight"
-                >-{{ formatMoneyDecimal(product?.discount ?? 0, 0) }}</span
-              >
+              <span class="text-base font-semibold leading-tight">
+                {{ product?.discount?.detail?.total > 0 ? '-' : '' }}
+                {{ formatMoneyDecimal(product?.discount ?? 0, 0) }}
+              </span>
               UZS
             </p>
           </div>
@@ -45,8 +46,9 @@
             </p>
           </div>
           <p class="text-xs text-green font-medium leading-none">
-            <span class="text-base font-semibold leading-tight"
-              >-{{
+            <span class="text-base font-semibold leading-tight">
+              {{ discount?.detail?.promo_code?.reward > 0 ? '-' : '' }}
+              {{
                 formatMoneyDecimal(discount?.detail?.promo_code?.reward ?? 0, 0)
               }}</span
             >
@@ -63,7 +65,8 @@
           <p
             class="text-xl z-10 font-extrabold leading-relaxed p-2 bg-white pr-0 text-red"
           >
-            -{{ formatMoneyDecimal(discount?.detail?.total ?? 0, 0) }}
+            {{ discount?.detail?.total > 0 ? '-' : '' }}
+            {{ formatMoneyDecimal(discount?.detail?.total ?? 0, 0) }}
             <span class="text-[15px] font-extrabold leading-[21px]">UZS</span>
           </p>
         </div>

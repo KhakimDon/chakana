@@ -72,7 +72,7 @@ interface Props {
   single: ICategory
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const { updateQuery } = useQuery()
 
@@ -87,19 +87,46 @@ watch(
   () => isSingle.value,
   () => {
     checkbox.value = []
+    setTimeout(() => {
+      if (route.name.includes('index-category-slug')) {
+        const categories = route.query.categories as string
+        if (!categories) {
+          console.log('if watch', props.single?.children)
+          checkbox.value = props.single?.children?.map(
+            (category) => category.id
+          )
+        } else {
+          checkbox.value = categories
+            .split(',')
+            .map((category) => Number(category))
+        }
+      }
+    }, 600)
+  },
+  {
+    immediate: true,
   }
 )
 
 watch(
   () => checkbox.value?.length,
   () => {
-    updateQuery('categories', checkbox.value.join(','))
+    if (checkbox.value?.length === props.single?.children?.length) {
+      updateQuery('categories', undefined)
+    } else {
+      updateQuery('categories', checkbox.value.join(','))
+    }
   }
 )
 
-if (route.name.includes('index-category-slug') && route.query.categories) {
+if (route.name.includes('index-category-slug')) {
   const categories = route.query.categories as string
-  checkbox.value = categories.split(',').map((category) => Number(category))
+  if (!categories) {
+    console.log('if', props.single?.children)
+    checkbox.value = props.single?.children?.map((category) => category.id)
+  } else {
+    checkbox.value = categories.split(',').map((category) => Number(category))
+  }
 }
 </script>
 

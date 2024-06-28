@@ -33,5 +33,22 @@ export const useNotificationsStore = defineStore('notificationsStore', {
           this.notifications.moreLoading = false
         })
     },
+    markAllAsRead() {
+      useApi()
+        .$get('/notifications/read/all')
+        .then(() => {
+          this.notifications.list = this.notifications.list.map((item) => ({
+            ...item,
+            viewed: true,
+          }))
+        })
+    },
+  },
+  getters: {
+    isAllRead: (state) => {
+      return state.notifications.list.every(
+        (item: INotification) => item.viewed
+      )
+    },
   },
 })

@@ -2,36 +2,31 @@
   <PaymentCardInfo
     icon="SvgoProfileClockLocation"
     icon-class="text-purple-500 !text-2xl"
-    :title="
-      whenDelivery
-        ? dayjs(whenDelivery).format('DD.MM.YYYY HH:mm')
-        : $t('when_delivery')
-    "
-    @open-details="openModal = true"
+    :title="whenDelivery"
+    @open-details="showEdit = true"
   />
-  <PaymentModalClock
-    v-model="openModal"
-    :show-free-delivery="showFreeDelivery"
+  <OrderInfoEditTime
+    v-model="showEdit"
+    :default-info="defaultInfo"
+    :is-auto="isAuto"
+    @save="$emit('save', $event)"
   />
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs'
-
-import { useCartOrderStore } from '~/store/cart_order.js'
-
 interface Props {
-  showFreeDelivery?: boolean
+  defaultInfo?: any
+  isAuto?: boolean
 }
+const props = defineProps<Props>()
 
-defineProps<Props>()
-const openModal = ref(false)
+defineEmits<{
+  (e: 'save', value: any): void
+}>()
 
-const orderCartStore = useCartOrderStore()
+const showEdit = ref(false)
 
 const whenDelivery = computed(() => {
-  return orderCartStore.orderDetail.when_to_deliver
+  return props.defaultInfo?.delivery_time
 })
 </script>
-
-<style scoped></style>

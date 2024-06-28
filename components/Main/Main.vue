@@ -1,15 +1,13 @@
 <template>
   <div class="w-full">
-    <Transition name="fade" mode="out-in">
-      <div :key="banners?.loading" class="h-[150px] mt-[85px] md:mt-0">
+    <Transition v-if="useMobile('desktop')" name="fade" mode="out-in">
+      <div :key="banners?.loading" class="h-[150px] md:mt-0">
         <div
           v-if="!banners?.loading"
           class="grid grid-cols-1 md:grid-cols-2 gap-3"
         >
           <a
-            v-for="(banner, index) in useMobile('desktop')
-              ? banners?.list
-              : banners?.list.slice(0, 1)"
+            v-for="(banner, index) in banners?.list"
             :key="index"
             :href="banner?.redirect_url"
             target="_blank"
@@ -27,6 +25,25 @@
         </div>
       </div>
     </Transition>
+    <Transition v-else name="fade" mode="out-in">
+      <div :key="banners?.loading" class="h-[150px] md:mt-0">
+        <Swiper v-if="!banners?.loading" :space-between="12">
+          <SwiperSlide v-for="(banner, index) in banners?.list" :key="index">
+            <a :href="banner?.redirect_url" target="_blank">
+              <img
+                :src="banner?.image"
+                alt="banner"
+                class="w-full max-h-[150px] h-full object-cover rounded-10"
+              />
+            </a>
+          </SwiperSlide>
+        </Swiper>
+        <div v-else class="gap-3 shimmer-wrapper">
+          <div class="shimmer w-full h-[150px] rounded-10" />
+        </div>
+      </div>
+    </Transition>
+    <MainCategories v-if="!useMobile('desktop')" />
     <div v-if="useMobile('desktop')" class="w-full flex-y-center gap-2 mt-4">
       <NuxtLinkLocale to="/search" class="w-full" @click.stop>
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
@@ -53,7 +70,6 @@
               v-for="(card, index) in discounts?.list"
               :key="index"
               :card
-              @open="selectProduct(card)"
             />
           </template>
         </div>
@@ -79,7 +95,6 @@
               v-for="(card, index) in products?.list"
               :key="index"
               :card
-              @open="selectProduct(card)"
             />
           </template>
           <template v-if="products?.params?.loading">
@@ -96,25 +111,17 @@
         ref="target"
       />
     </CommonSectionWrapper>
-    <MainModalInfo
-      v-model="showProduct"
-      :product="selectedProduct"
-      @close="showProduct = false"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
+import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import IconList from '~/assets/icons/Common/list.svg'
 import { useMainStore } from '~/store/main'
-import type { IProduct } from '~/types/products'
 
 const mainStore = useMainStore()
-
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
 
 const products = computed(() => mainStore.products)
 const discounts = computed(() => mainStore.discounts)
@@ -135,10 +142,6 @@ if (!popularBrands.value?.list.length) {
 
 if (!banners.value?.list.length) {
   mainStore.fetchBanners()
-}
-function selectProduct(product: IProduct) {
-  selectedProduct.value = product
-  showProduct.value = true
 }
 
 const target = ref<HTMLElement | null>(null)

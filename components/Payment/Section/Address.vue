@@ -3,47 +3,26 @@
     icon="SvgoProfileTruck"
     icon-class="text-orange !text-2xl"
     :title="$t('courier_address')"
-    :subtitle="selectedLocation?.address"
-    @open-details="openModal = true"
+    :subtitle="defaultAddress?.address"
+    @open-details="showEdit = true"
   />
-  <CommonModalAddressDelivery
-    v-model="openModal"
-    :list="list"
-    @select-address="selectedAddress"
-    @close="openModal = false"
-    @open-map-modal="openMapModal"
-  />
-  <CommonModalMap
-    v-model="openMapModalRef"
-    @close="openSavedAddress"
-    @open-saved-adress="openSavedAddress"
+  <OrderInfoEditAddress
+    v-model="showEdit"
+    :default-id="defaultAddress?.id"
+    @save="$emit('save', $event)"
   />
 </template>
 
 <script setup lang="ts">
-import { useCartOrderStore } from '~/store/cart_order.js'
-
-const openModal = ref(false)
-const openMapModalRef = ref(false)
-const selectedLocation = ref()
-
-const orderCartStore = useCartOrderStore()
-const selectedAddress = (address: object) => {
-  selectedLocation.value = address
-  orderCartStore.orderDetail.address.id = address?.id
+interface Props {
+  defaultAddress: any
 }
-const { list, resetList } = useListFetcher(`/saved/address`, 25, false, '')
+defineProps<Props>()
 
-const openMapModal = () => {
-  openModal.value = false
-  openMapModalRef.value = true
+interface Emits {
+  (e: 'save', data: any): void
 }
+defineEmits<Emits>()
 
-const openSavedAddress = () => {
-  openMapModalRef.value = false
-  openModal.value = true
-  resetList()
-}
+const showEdit = ref(false)
 </script>
-
-<style scoped></style>

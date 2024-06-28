@@ -1,23 +1,13 @@
 <template>
   <div>
-    <
+    <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <div class="flex-center-between mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
         {{ $t('my_cards') }}
       </h1>
-      <button
-        class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
-        @click="addCardModal = true"
-      >
-        <SvgoCommonPlus
-          class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
-        />
-        {{ $t('add_card') }}
-      </button>
     </div>
-    >
     <Transition name="fade" mode="out-in">
-      <div :key="cards.loading" class="grid grid-cols-2 gap-5">
+      <div :key="cards.loading" class="grid md:grid-cols-2 gap-5">
         <template v-if="cards.loading">
           <ProfileMyCardLoading v-for="i in 4" :key="i" />
         </template>

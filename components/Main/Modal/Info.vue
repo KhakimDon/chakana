@@ -2,7 +2,7 @@
   <BaseModal
     v-bind="{ show }"
     no-header
-    body-class="!max-w-[424px]"
+    body-class="!max-w-[484px]"
     @close="$emit('close')"
   >
     <div class="flex justify-end w-full mb-5">
@@ -57,36 +57,109 @@
       </p>
     </div>
 
-    <BaseButton
-      v-if="count < 1"
-      class="w-full !h-11"
-      :text="$t('to_basket')"
-      variant="secondary"
-      @click="count++"
-    />
-    <MainCardCounter
-      v-else
-      v-model="count"
-      :default-count="count"
-      readonly
-      class="bg-white-100 !h-11"
-    />
+    <ClientOnly>
+      <BaseButton
+        v-if="count < 1 || addingToCart"
+        class="w-full"
+        :text="$t('to_basket')"
+        variant="outline"
+        :disabled="addingToCart"
+        :loading="addingToCart"
+        @click="addToCartFirstTime(product)"
+      />
+      <MainCardCounter
+        v-else
+        v-model="count"
+        :default-count="count"
+        :max="product?.max_quantity ?? 100000"
+        readonly
+        @click="addToCart(product)"
+      />
+    </ClientOnly>
   </BaseModal>
 </template>
 
 <script setup lang="ts">
 import IconClose from '~/assets/icons/Common/close.svg'
 import IconInfo from '~/assets/icons/Common/info.svg'
+import { useCartStore } from '~/store/cart.js'
+import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products'
-import { formatMoneyDecimal } from '~/utils/functions/common'
+import { debounce, formatMoneyDecimal } from '~/utils/functions/common'
 
 interface Props {
   show?: boolean
   product?: IProduct
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits(['close'])
 
+const orderCartStore = useCartOrderStore()
+const cartStore = useCartStore()
 const count = ref(0)
+
+const addingToCart = ref(false)
+
+const cartProducts = computed(() => cartStore.products)
+const addToCart = (product: any) => {
+  if (count.value <= product?.max_quantity) {
+    debounce(
+      'addToCart',
+      () => {
+        addingToCart.value = true
+        orderCartStore
+          .addToCart(product?.id, count.value)
+          .then(() => {
+            cartStore.addToCart(product, count.value)
+          })
+          .catch(() => {
+            if (count.value === 0) {
+              count.value = 1
+            }
+            count.value--
+          })
+          .finally(() => {
+            addingToCart.value = false
+          })
+      },
+      300
+    )
+  }
+}
+
+const addToCartFirstTime = (product: any) => {
+  count.value++
+  addToCart(product)
+}
+
+const cartProduct = computed(() =>
+  cartProducts.value.find((product) => product?.id === props.product?.id)
+)
+
+watch(
+  cartProduct,
+  (newValue) => {
+    if (newValue) {
+      count.value = newValue?.quantity
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  cartProducts,
+  (newValue) => {
+    if (newValue.length === 0) {
+      count.value = 0
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+onMounted(() => {
+  if (cartProduct.value) {
+    count.value = cartProduct.value?.quantity ?? 0
+  }
+})
 </script>

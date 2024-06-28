@@ -1,9 +1,18 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="isCartRoute"
     :title="$t('payment_method')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="backToPromoCode"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div>
       <div
         class="flex-y-center gap-1 select-none cursor-pointer"
@@ -118,7 +127,9 @@
 </template>
 
 <script setup lang="ts">
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 import { usePaymentStore } from '~/store/payment.js'
 import { useCardsStore } from '~/store/profile/cards.js'
 
@@ -131,6 +142,17 @@ defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
+
+const router = useRouter()
+const route = useRoute()
+const { locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
 
 const loading = ref(false)
 const courierCard = ref(false)
@@ -182,6 +204,13 @@ watch(
   }
 )
 
+const modalStore = useModalStore()
+
+const backToPromoCode = () => {
+  modalStore.paymentModel = false
+  modalStore.promoModel = true
+}
+
 const orderCartStore = useCartOrderStore()
 function add() {
   orderCartStore.orderDetail.payment_method.provider_id = paymentType.value
@@ -190,6 +219,9 @@ function add() {
     courierCard.value
   orderCartStore.orderDetail.payment_method.card_id = cardId.value
 
+  if (isCartRoute.value) {
+    router.push(`/${locale.value}/cart/payment`)
+  }
   emit('update:modelValue', false)
 }
 
@@ -210,4 +242,6 @@ function addedCard() {
 }
 
 cardsStore.fetchCards()
+
+const step = ref('payment')
 </script>

@@ -1,9 +1,18 @@
 <template>
   <BaseModal
     :model-value="modelValue"
+    :has-back="isCartRoute"
     :title="$t('courier_comment')"
     @update:model-value="$emit('update:modelValue', $event)"
+    @back="backToUserData"
   >
+    <BaseStepper
+      v-if="isCartRoute"
+      :steps="$route?.query?.order === 'auto' ? autoOrderSteps : orderSteps"
+      :step
+      step-class="!w-full"
+      class="!mb-5"
+    />
     <div>
       <p class="text-sm font-medium leading-tight mb-4">
         {{ $t('courier_comment_info') }}
@@ -13,7 +22,7 @@
           v-model="form.values.comment"
           :error="form.$v.value.comment.$error"
           class="px-3"
-          input-class="!pl-2 text-sm font-medium leading-tight h-32"
+          input-class="!pl-2 text-base md:text-sm font-medium leading-tight h-32"
           :placeholder="$t('enter_comment')"
         />
       </FormGroup>
@@ -31,7 +40,9 @@
 <script setup lang="ts">
 import { minLength, required } from '@vuelidate/validators'
 
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 interface Props {
   modelValue: boolean
@@ -43,7 +54,16 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const { t } = useI18n()
+const route = useRoute()
+const { t, locale } = useI18n()
+
+const isCartRoute = computed(() => {
+  return (
+    route.path === `/${locale.value}/cart` ||
+    route.path === `/${locale.value}/cart/`
+  )
+})
+
 const { showToast } = useCustomToast()
 const loading = ref(false)
 
@@ -56,6 +76,13 @@ const form = useForm(
   }
 )
 
+const modalStore = useModalStore()
+
+const backToUserData = () => {
+  modalStore.commentModel = false
+  modalStore.userModel = true
+}
+
 const orderCartStore = useCartOrderStore()
 
 function add() {
@@ -64,6 +91,9 @@ function add() {
     loading.value = true
     orderCartStore.orderDetail.comment_to_courier = form.values.comment
     loading.value = false
+    if (isCartRoute.value) {
+      modalStore.promoModel = true
+    }
     emit('update:modelValue', false)
   } else {
     showToast(t('comment_limit_alert'), 'error')
@@ -76,4 +106,6 @@ watch(
     form.$v.value.$reset()
   }
 )
+
+const step = ref('comment')
 </script>

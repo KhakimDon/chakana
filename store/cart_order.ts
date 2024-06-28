@@ -1,22 +1,16 @@
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
-  const orderDetail = reactive({
-    address: {
-      id: 0,
-    },
+  const orderDetail = ref()
+
+  const autoOrderDetail = reactive({
+    name: '',
     when_to_deliver: '',
-    recipient: {
-      full_name: '',
-      phone: '',
-    },
-    comment_to_courier: '',
     payment_method: {
       card_to_the_courier: false,
       cash: false,
       card_id: 0,
       provider_id: 0,
     },
-    promo_code_id: 0,
-    use_from_balance: false,
+    weekday: 1,
   })
 
   const promoCodes = reactive({
@@ -42,6 +36,29 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
         })
         .finally(() => {
           promoCodes.loading = false
+        })
+    })
+  }
+
+  const weekdays = reactive({
+    list: [],
+    loading: true,
+  })
+
+  function getWeekdaysList() {
+    return new Promise((resolve, reject) => {
+      weekdays.loading = true
+      useApi()
+        .$get(`/weekdays`, {})
+        .then((res: any) => {
+          weekdays.list = res
+          resolve(res)
+        })
+        .catch((error: any) => {
+          reject(error)
+        })
+        .finally(() => {
+          weekdays.loading = false
         })
     })
   }
@@ -254,6 +271,27 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  const autoOrderCreating = ref(false)
+
+  function createAutoOrder(body: any) {
+    return new Promise((resolve, reject) => {
+      autoOrderCreating.value = true
+      useApi()
+        .$post(`/auto-order/create`, {
+          body,
+        })
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error: any) => {
+          reject(error)
+        })
+        .finally(() => {
+          autoOrderCreating.value = false
+        })
+    })
+  }
+
   return {
     promoCodes,
     getPromoCodeList,
@@ -270,10 +308,15 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     cartClear,
     addToCart,
     orderDetail,
+    autoOrderDetail,
     orderCreating,
     createOrder,
     getCartDetailConfirm,
     delivery,
     getDeliveryDetail,
+    weekdays,
+    getWeekdaysList,
+    autoOrderCreating,
+    createAutoOrder,
   }
 })
