@@ -3,20 +3,21 @@
     <div class="container grid grid-cols-3 gap-4">
       <CommonLogo />
       <div class="flex-center gap-6">
-        <NuxtLinkLocale
-          v-for="(item, index) in menu"
-          :key="index"
-          :to="item?.isPremium ? '#' : item?.link"
-          exact-active-class="text-orange"
-          class="text-sm leading-[18px] cursor-pointer font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
-          @click="item?.isPremium ? (modalStore.premiumModel = true) : null"
-        >
-          {{ item?.title }}
-          <IconCrown
-            v-if="item?.isPremium"
-            class="text-orange translate-y-0.5"
-          />
-        </NuxtLinkLocale>
+        <template v-for="(item, index) in menu" :key="index">
+          <NuxtLinkLocale
+            v-if="!item.isPremium || (item.isPremium && !hasPremium)"
+            :to="item?.isPremium ? '#' : item?.link"
+            exact-active-class="text-orange"
+            class="text-sm leading-[18px] cursor-pointer font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
+            @click="item?.isPremium ? (modalStore.premiumModel = true) : null"
+          >
+            {{ item?.title }}
+            <IconCrown
+              v-if="item?.isPremium"
+              class="text-orange translate-y-0.5"
+            />
+          </NuxtLinkLocale>
+        </template>
       </div>
       <div class="flex justify-end gap-3">
         <LayoutHeaderLanguageSwitcher />
@@ -72,6 +73,8 @@ const modalStore = useModalStore()
 const { t } = useI18n()
 
 const user = computed(() => authStore.user)
+const hasPremium = computed(() => user.value?.is_premium)
+
 const { locale } = useI18n()
 
 function openAuthModal() {
