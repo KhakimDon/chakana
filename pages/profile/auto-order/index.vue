@@ -5,14 +5,15 @@
       <h1 class="text-xl font-extrabold leading-7 text-dark">
         {{ $t('auto_order') }}
       </h1>
-      <button
+      <NuxtLinkLocale
+        to="/search"
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
       >
         <SvgoCommonPlus
           class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
         />
         {{ $t('new_auto_order') }}
-      </button>
+      </NuxtLinkLocale>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <template v-if="orders.loading">

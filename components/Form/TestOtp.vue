@@ -185,7 +185,6 @@ onMounted(() => {
   nextTick(() => {
     setTimeout(() => {
       if (inputs.value && inputs.value[1]) {
-        console.log(inputs.value[1])
         inputs.value[1]?.focus()
       }
     }, 500)
@@ -196,5 +195,17 @@ onMounted(() => {
 <style>
 .error input {
   border-color: #f75555 !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 </style>
