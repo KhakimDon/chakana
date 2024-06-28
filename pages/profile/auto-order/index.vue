@@ -6,7 +6,7 @@
         {{ $t('auto_order') }}
       </h1>
       <NuxtLinkLocale
-        to="/search"
+        :to="localePath(`/profile/auto-order/${$route.params.id}/search`)"
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
       >
         <SvgoCommonPlus
@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import { useOrderStore } from '~/store/profile/orders.js'
 
+const localePath = useLocalePath()
 const orderStore = useOrderStore()
 
 const orders = computed(() => orderStore.autoOrder)

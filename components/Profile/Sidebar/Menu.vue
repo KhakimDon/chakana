@@ -4,8 +4,8 @@
   >
     <template v-for="(i, idx) in menu" :key="idx">
       <NuxtLinkLocale
-        :to="i.link"
-        class="py-2 flex-center-between gap-1.5 w-full group"
+        :to="i?.isPremium && !isPremiumUser ? '#' : i.link"
+        class="py-2 flex-center-between cursor-pointer gap-1.5 w-full group"
         exact-active-class="active"
         @click="$emit('menu-click', i)"
       >
@@ -44,9 +44,12 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 
+import { useAuthStore } from '~/store/auth.js'
+
 type MenuItem = {
   title: string
   link: string
+  isPremium?: boolean
   icon: Component
   iconClass: string
   iconWrapperClass: string
@@ -60,4 +63,8 @@ defineProps<Props>()
 defineEmits<{
   (e: 'menu-click', item: MenuItem): void
 }>()
+
+const authStore = useAuthStore()
+
+const isPremiumUser = computed(() => authStore.user?.is_premium)
 </script>

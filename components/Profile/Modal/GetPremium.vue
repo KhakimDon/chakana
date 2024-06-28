@@ -203,6 +203,9 @@ function add() {
     is_use_balance: balance.value,
     provider_id: paymentType.value || null,
   }
+
+  loading.value = true
+
   subscriptionStore
     .getSubscription(data)
     .then((res) => {
@@ -217,6 +220,9 @@ function add() {
     })
     .catch((err) => {
       handleError(err)
+    })
+    .finally(() => {
+      loading.value = false
     })
   // emit('update:modelValue', false)
 }

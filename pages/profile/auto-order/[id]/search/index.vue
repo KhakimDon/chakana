@@ -2,7 +2,10 @@
   <div>
     <section class="sticky bg-white py-5 w-full z-10 top-0 xl:top-[69px]">
       <div ref="suggestionsRef" class="w-full relative flex-y-center gap-2">
-        <NuxtLinkLocale to="/" class="group">
+        <NuxtLinkLocale
+          :to="localePath(`/profile/auto-order/${$route.params.id}`)"
+          class="group"
+        >
           <IconChevron
             class="text-2xl text-dark group-hover:text-orange transition-300"
           />
@@ -16,24 +19,10 @@
           @clear="search = ''"
           @keydown.enter="outsideClicked = true"
         />
-        <NuxtLinkLocale
-          to="/search/list"
-          class="w-10 h-10 rounded-lg bg-white-100 flex-center shrink-0 hover:bg-[#4DAAF81F] transition-300"
-        >
-          <IconList class="text-2xl text-blue-100" />
-        </NuxtLinkLocale>
         <SearchCardSuggestions v-if="!outsideClicked" :search="search" />
       </div>
     </section>
 
-    <section
-      v-if="!search"
-      class="mb-[85px] md:mb-0"
-      @click="outsideClicked = true"
-    >
-      <SearchSectionPopularSearch />
-      <SearchSectionSearchHistory />
-    </section>
     <SearchCardLoading v-if="products.loading && search" :count="10" />
     <section
       v-else-if="products.list?.length && search && !products.loading"
@@ -69,20 +58,22 @@
     <template v-if="products?.params?.loading">
       <SearchCardLoading :count="5" />
     </template>
+    <CartSectionProducts v-if="!search" wrapper-class="!mt-0" />
   </div>
 </template>
 <script setup lang="ts">
 import { onClickOutside, useIntersectionObserver } from '@vueuse/core'
+import IconChevron from 'assets/icons/Common/chevron.svg'
 
-import IconChevron from '~/assets/icons/Common/chevron.svg'
-import IconList from '~/assets/icons/Common/list.svg'
-import { useSearchStore } from '~/store/search'
+import { useSearchStore } from '~/store/search.js'
 import { debounce } from '~/utils/functions/common.js'
 
 const router = useRouter()
 const route = useRoute()
 const search = ref('')
 const searchStore = useSearchStore()
+
+const localePath = useLocalePath()
 
 function focusInput() {
   const input = document.getElementById('main-search') as HTMLInputElement

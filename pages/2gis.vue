@@ -78,7 +78,7 @@ function clickedMapRoute() {
   })
 
   polygon.value.on('click', (event) => {
-    console.log('event >>>', event)
+    console.log('event >>>', event?.lngLat)
 
     const coords = event.lngLat
 

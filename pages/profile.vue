@@ -3,7 +3,7 @@
     <template #left>
       <div class="sticky top-[86px]">
         <ProfileSidebarPremium v-if="!hasPremium" class="mb-4" />
-        <ProfileSidebarMenu class="mb-4" :menu />
+        <ProfileSidebarMenu class="mb-4" :menu @menu-click="menuClick" />
         <button
           class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
           @click="logoutModal = true"
@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/store/auth.js'
+import { useModalStore } from '~/store/modal.js'
 
 definePageMeta({
   middleware: ['auth'],
@@ -145,5 +146,14 @@ async function logout() {
   await useAuthStore().logOut()
   logoutModal.value = false
   router.push(localePath('/'))
+}
+
+const modalStore = useModalStore()
+const authStore = useAuthStore()
+
+const menuClick = (item: any) => {
+  if (item?.isPremium && !authStore.user?.is_premium) {
+    modalStore.premiumModel = true
+  }
 }
 </script>

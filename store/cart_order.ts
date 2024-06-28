@@ -1,3 +1,5 @@
+import type { RouteParamValue } from 'vue-router'
+
 export const useCartOrderStore = defineStore('cartOrderStore', () => {
   const orderDetail = ref()
 
@@ -121,9 +123,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
       discount.loading = true
       useApi()
         .$get(`/cart/discounts`, {
-          query: {
-            promo_code_id: id,
-          },
+          query: id ? { promo_code_id: id } : {},
         })
         .then((res: any) => {
           discount.detail = res
@@ -248,6 +248,28 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     })
   }
 
+  function addToAutoOrderCart(
+    pId: number,
+    count: number,
+    id: string | RouteParamValue[]
+  ) {
+    return new Promise((resolve, reject) => {
+      useApi()
+        .$post(`/auto-order/product/add/${id}`, {
+          body: {
+            product_id: pId,
+            count,
+          },
+        })
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   const orderCreating = ref(false)
 
   function createOrder(orderDetail: any) {
@@ -318,5 +340,6 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     getWeekdaysList,
     autoOrderCreating,
     createAutoOrder,
+    addToAutoOrderCart,
   }
 })

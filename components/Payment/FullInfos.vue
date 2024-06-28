@@ -82,6 +82,7 @@
 
 <script setup lang="ts">
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useBalanceStore } from '~/store/profile/balance.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 const { t } = useI18n()
@@ -127,7 +128,9 @@ const toggleUseBalance = () => {
   orderCartStore.orderDetail.use_from_balance = useBalance.value
 }
 
-const balancePrice = computed(() => orderCartStore.cart?.detail?.balance ?? 0)
+const balanceStore = useBalanceStore()
+const balancePrice = computed(() => balanceStore.balance)
+await useAsyncData('balance', () => balanceStore.fetchBalance())
 
 const goBack = () => {
   router.back()
