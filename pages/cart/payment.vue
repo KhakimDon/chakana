@@ -7,7 +7,7 @@
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           class="w-full !rounded-10 !py-2"
-          :text="$t('payment')"
+          :text="isAutoOrder ? $t('save_auto_order') : $t('order')"
           variant="green"
           :loading="loading"
           @click="goToPayment"
@@ -25,7 +25,7 @@
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           class="w-full !rounded-10"
-          :text="isAutoOrder ? $t('save_auto_order') : $t('payment')"
+          :text="isAutoOrder ? $t('save_auto_order') : $t('order')"
           variant="green"
           :loading="loading"
           @click="goToPayment"
