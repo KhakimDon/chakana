@@ -15,7 +15,7 @@
               class="text-xl leading-5 transition-300 text-red"
             />
           </span>
-          <span class="text-xs leading-130 font-semibold text-dark">
+          <span class="text-xs leading-130 font-semibold text-dark text-left">
             {{ $t('logout_from_account') }}
           </span>
         </button>

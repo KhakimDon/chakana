@@ -21,7 +21,7 @@
               class="text-xl leading-5 transition-300"
             />
           </span>
-          <p class="text-xs leading-130 font-semibold text-dark">
+          <p class="text-xs leading-130 font-semibold text-dark pr-3">
             {{ i.title }}
           </p>
         </div>
