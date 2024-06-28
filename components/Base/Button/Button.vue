@@ -20,7 +20,7 @@
         },
         mainClass,
       ]"
-      class="opacity-100 text-center whitespace-nowrap"
+      class="opacity-100 text-center"
     >
       <slot>
         <slot name="prefix">
