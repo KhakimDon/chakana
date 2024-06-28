@@ -2,9 +2,11 @@
   <PaymentCardInfo
     icon="SvgoProfileClockLocation"
     icon-class="text-purple-500 !text-2xl"
-    :title="whenDelivery"
+    :title="text"
+    :text-wrapper-class="textWrapperClass"
     @open-details="showEdit = true"
   />
+
   <OrderInfoEditTime
     v-model="showEdit"
     :default-info="defaultInfo"
@@ -17,6 +19,7 @@
 interface Props {
   defaultInfo?: any
   isAuto?: boolean
+  textWrapperClass?: string
 }
 const props = defineProps<Props>()
 
@@ -24,9 +27,16 @@ defineEmits<{
   (e: 'save', value: any): void
 }>()
 
+const { t } = useI18n()
+
 const showEdit = ref(false)
 
-const whenDelivery = computed(() => {
-  return props.defaultInfo?.delivery_time
+const text = computed(() => {
+  return props.isAuto
+    ? t('auto_order_time', {
+        week: t(`weekday[${props.defaultInfo?.weekdays}]`),
+        time: props.defaultInfo?.delivery_time,
+      })
+    : props.defaultInfo?.delivery_time
 })
 </script>

@@ -1,12 +1,12 @@
 <template>
-  <section class="pt-4 space-y-4">
+  <section class="space-y-4">
     <h1
       v-if="useMobile('mobile')"
       class="text-xl md:text-[22px] font-extrabold leading-7 text-dark"
     >
       {{ $t('profile') }}
     </h1>
-    <ProfileSidebarPremium />
+    <ProfileSidebarPremium v-if="!hasPremium" />
     <ProfileSidebarBalance />
     <ProfileSidebarMenu class="my-4" :menu />
     <button
@@ -64,6 +64,7 @@ definePageMeta({
   middleware: ['auth'],
   page: 'MyProfileIndex',
 })
+const hasPremium = computed(() => useAuthStore().user?.is_premium)
 
 const router = useRouter()
 const localePath = useLocalePath()

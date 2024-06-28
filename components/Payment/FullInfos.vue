@@ -18,7 +18,7 @@
       </div>
       <div class="w-full my-6 space-y-6">
         <PaymentCardInfoHeader :title="$t('delivery_details')">
-          <section class="space-y-2">
+          <section>
             <PaymentSectionAddress
               :default-address="orderCartStore.orderDetail?.address_info"
               @save="saveAddress"

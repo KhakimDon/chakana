@@ -56,7 +56,7 @@ const orderDetail = computed(() => orderCartStore.orderDetail)
 const loading = computed(
   () => orderCartStore.orderCreating || orderCartStore.autoOrderCreating
 )
-const isAutoOrder = computed(() => orderCartStore.orderDetail.isAuto)
+const isAutoOrder = computed(() => orderCartStore.orderDetail?.isAuto)
 
 const { showToast } = useCustomToast()
 

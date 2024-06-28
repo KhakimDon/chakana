@@ -20,6 +20,7 @@
           <PaymentSectionClockLocation
             :default-info="orderCartStore.orderDetail"
             is-auto
+            text-wrapper-class="!border-gray-200"
             @save="saveOrderClock"
           />
           <PaymentSectionPaymentMethod

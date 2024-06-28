@@ -24,7 +24,16 @@
         @click="chooseTime(interval)"
       >
         <p v-if="key !== 0 || isAuto">
-          {{ isAuto ? interval : $t('interval', { range: interval }) }}
+          {{
+            isAuto
+              ? interval
+              : $t(
+                  new Date(interval).getDate() === new Date().getDate()
+                    ? 'today_interval'
+                    : 'tomorrow_interval',
+                  { time: dayjs(interval).format('HH:mm') }
+                )
+          }}
         </p>
         <p v-else>{{ $t(interval) }}</p>
         <SvgoCommonCheck
@@ -41,7 +50,10 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import { generateOrderIntervals } from '~/components/Order/Info/Form/index.js'
+import {
+  generateOrderIntervals,
+  generateOrderTomorrowIntervals,
+} from '~/components/Order/Info/Form/index.js'
 
 interface Props {
   form: any
@@ -62,7 +74,15 @@ function chooseTime(interval: string) {
 const intervals = ref()
 
 onMounted(() => {
-  intervals.value = generateOrderIntervals(props.isAuto)
+  if (props.isAuto) {
+    intervals.value = generateOrderIntervals(props.isAuto)
+  } else {
+    intervals.value = [
+      ...generateOrderIntervals(props.isAuto),
+      ...generateOrderTomorrowIntervals(),
+    ]
+    console.log(intervals.value)
+  }
   if (!props.isAuto) {
     intervals.value.unshift('nearest_2_hours')
   }
