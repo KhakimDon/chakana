@@ -3,12 +3,12 @@
     <div
       v-for="(word, index) in words"
       :key="index"
-      class="flex-y-center gap-1"
+      class="flex-y-center gap-1 w-full"
     >
       <div class="w-1.5 h-1.5 rounded-full bg-gray-200" />
       <FormInput
         v-model="words[index]"
-        class="!p-0 !border-none !bg-transparent"
+        class="!p-0 !border-none !bg-transparent w-full"
         input-class="!p-1"
         :input-id="'word-' + index"
         @keydown.enter="addWord(index)"
