@@ -62,14 +62,22 @@
           variant="secondary"
           :text="$t('save')"
           size="md"
-          :disabled="loading || form.$v.value.$invalid"
+          :disabled="
+            loading ||
+            form.$v.value.$invalid ||
+            form.values.notes?.filter((note) => note)?.length === 0
+          "
           @click="add"
         />
         <BaseButton
           class="!py-3 w-full"
           :text="$t('search')"
           size="md"
-          :disabled="btnLoading || form.$v.value.$invalid"
+          :disabled="
+            btnLoading ||
+            form.$v.value.$invalid ||
+            form.values.notes?.filter((note) => note)?.length === 0
+          "
           @click="add('search')"
         />
       </div>
@@ -131,7 +139,7 @@ function createCard(mode?: string) {
     .$post('/create-user-products-list', {
       body: {
         main_name: form.values.main_name,
-        notes: form.values.notes,
+        notes: form.values.notes?.filter((note) => note),
       },
     })
     .then((res: any) => {
