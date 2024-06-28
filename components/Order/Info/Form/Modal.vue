@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="steps[stepIndex].title"
+    :title="$t(steps[stepIndex].title)"
     body-class="w-full"
     :has-back="stepIndex > 0"
     disable-outer-close
