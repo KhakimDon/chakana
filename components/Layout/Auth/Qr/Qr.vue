@@ -22,6 +22,12 @@
 
 <script setup lang="ts">
 import { CONFIG } from '~/config/index.js'
+import { useAuthStore } from '~/store/auth.js'
+
+const authStore = useAuthStore()
+const { t } = useI18n()
+const { showToast } = useCustomToast()
+const { handleError } = useErrorHandling()
 
 const connection = ref()
 const loading = ref(true)
@@ -42,11 +48,26 @@ const useReviewSocket = () => {
       connection.value.send(JSON.stringify(msg))
     }
 
-    connection.value.onmessage = (event) => {
-      console.log('event', event)
+    connection.value.onmessage = (event: any) => {
+      const data = JSON.parse(event.data)
+      const payload = JSON.parse(data?.[0]?.message?.payload)
+      loading.value = true
+      authStore.setTokens(payload)
+      setTimeout(() => {
+        authStore
+          .fetchUser()
+          .then(() => {
+            showToast(t('login_success'), 'success')
+          })
+          .finally(() => {
+            loading.value = false
+          })
+        authStore.showAuth = false
+        useCookie('auth-session').value = null
+      }, 300)
     }
   } catch (error) {
-    console.log('error', error)
+    handleError(error)
   }
 }
 
