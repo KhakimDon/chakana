@@ -27,7 +27,7 @@
         </div>
         <div
           v-if="i.isPremium"
-          class="mr-2 bg-[linear-gradient(180deg,_#FF831B_0%,_#F30_100%)] rounded-full py-[3px] px-1.5 text-xs font-semibold text-white leading-130 flex-y-center gap-1 relative"
+          class="mr-2 -ml-3 bg-[linear-gradient(180deg,_#FF831B_0%,_#F30_100%)] rounded-full py-[3px] px-1.5 text-xs font-semibold text-white leading-130 flex-y-center gap-1 relative"
         >
           <SvgoProfileSidebarCrownFill class="text-base leading-4" />
           Pro

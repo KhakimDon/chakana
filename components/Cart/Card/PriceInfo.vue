@@ -21,7 +21,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div class="flex-y-center justify-between">
+      <div v-if="false" class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('delivery_price') }}
         </p>
