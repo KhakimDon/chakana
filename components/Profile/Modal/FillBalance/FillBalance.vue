@@ -224,20 +224,22 @@ const invalidForm = computed(
 function add() {
   // subscriptionStore.getSubscription()
   const data = {
-    card_id: cardId.value || undefined,
-    provider: paymentType.value || undefined,
-    amount: amount.value?.replaceAll(/\s/g, ''),
+    card_id: cardId.value || null,
+    provider_id: paymentType.value || null,
+    amount: Number(amount.value?.replaceAll(/\s/g, '')),
   }
-  status.value = 'error'
   if (!invalidForm.value) {
     loading.value = true
     balanceStore
       .fillBalance(data)
       .then((res) => {
-        status.value = 'success'
-        balanceStore.fetchBalance()
-        if (res.payment_type === 'card') {
-          paymentInfo.value = res
+        if (res.redirect) window.location.href = res.payment_url
+        else {
+          status.value = 'success'
+          balanceStore.fetchBalance()
+          if (res.payment_type === 'card') {
+            paymentInfo.value = res
+          }
         }
       })
       .catch(() => {
