@@ -39,11 +39,8 @@
   </main>
 </template>
 <script setup lang="ts">
-import { required } from '@vuelidate/validators'
-
 import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
-import type { IProduct } from '~/types/products.js'
 
 const route = useRoute()
 

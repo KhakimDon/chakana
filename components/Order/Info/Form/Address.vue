@@ -37,14 +37,16 @@ const props = defineProps<Props>()
 interface Emits {
   (e: 'open-map-modal', v: boolean): void
   (e: 'handle-address', v: object): void
+  (e: 'change-address', v: object): void
 }
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
 
 const { values } = unref(props.form)
 
 const handleAddress = (item: any) => {
   values.id = item.id
   values.address_info = item
+  emit('change-address', item)
 }
 
 const { list, resetList, loading } = useListFetcher('/saved/address')
