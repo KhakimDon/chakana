@@ -199,15 +199,19 @@ const authStore = useAuthStore()
 function add() {
   // subscriptionStore.getSubscription()
   const data = {
-    card_id: cardId.value || undefined,
+    card_id: cardId.value || null,
     is_use_balance: balance.value,
-    provider: paymentType.value || undefined,
+    provider_id: paymentType.value || null,
   }
   subscriptionStore
     .getSubscription(data)
-    .then(() => {
-      showToast(t('you_bought_premium'), 'success')
-      authStore.fetchUser()
+    .then((res) => {
+      if (res.redirect) {
+        window.location.href = res.payment_url
+      } else {
+        showToast(t('you_bought_premium'), 'success')
+        authStore.fetchUser()
+      }
       emit('update:modelValue', false)
       emit('close')
     })
