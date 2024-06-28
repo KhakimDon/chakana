@@ -7,16 +7,12 @@
       {{ title }}
     </p>
     <div class="relative overflow-hidden rounded-xl">
-      <YandexMap
-        id="myMap"
-        ref="yMap"
-        :settings="settings"
-        class="ymap w-full h-[124px]"
-        :coords="coordinates"
-      >
-        <!--      @click="changeCoords"-->
-        <YmapMarker :coords="coordinates" />
-      </YandexMap>
+      <MainMap
+        :key="coordinates"
+        :center="coordinates"
+        no-actions
+        class="w-full h-[150px]"
+      />
     </div>
 
     <div v-if="!savedCoords?.length" class="flex-y-center gap-3 mt-4">
@@ -38,12 +34,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  loadYmap,
-  yandexMap as YandexMap,
-  ymapMarker as YmapMarker,
-} from 'vue-yandex-maps'
-
 import { CONFIG } from '~/config'
 import { useAddressStore } from '~/store/address'
 
@@ -54,17 +44,8 @@ const addressStore = useAddressStore()
 const savedCoords = computed(() => addressStore.coordinates)
 const savedAddress = computed(() => addressStore.savedAddress)
 
-const coordinates = ref([41.310329, 69.279935])
+const coordinates = ref([69.240562, 41.311081])
 const title = ref(t('amir_temur'))
-
-const settings = {
-  apiKey: CONFIG.YANDEX_KEY,
-  lang: 'ru_RU',
-  coordorder: 'latlong',
-  enterprise: false,
-  version: '2.1',
-}
-loadYmap({ ...settings })
 
 function getLocation() {
   useApi()
@@ -75,7 +56,6 @@ function getLocation() {
       },
     })
     .then((res: any) => {
-      console.log('res', res)
       title.value = res.full
     })
 }
@@ -89,8 +69,8 @@ onMounted(() => {
           setTimeout(() => {
             navigator.geolocation.getCurrentPosition(function (position) {
               coordinates.value = [
-                position.coords.latitude,
                 position.coords.longitude,
+                position.coords.latitude,
               ]
 
               getLocation()
@@ -99,17 +79,17 @@ onMounted(() => {
         } else if (res?.state === 'granted') {
           navigator.geolocation.getCurrentPosition(function (position) {
             coordinates.value = [
-              position.coords.latitude,
               position.coords.longitude,
+              position.coords.latitude,
             ]
             getLocation()
           })
         } else {
-          coordinates.value = [41.310329, 69.279935]
+          coordinates.value = [69.240562, 41.311081]
         }
       })
       .catch(() => {
-        coordinates.value = [41.310329, 69.279935]
+        coordinates.value = [69.240562, 41.311081]
       })
   }
 })
@@ -138,12 +118,3 @@ watch(
   }
 )
 </script>
-
-<style>
-.ymaps-2-1-79-controls__toolbar,
-.ymaps-2-1-79-map-copyrights-promo,
-.ymaps-2-1-79-controls__control,
-.ymaps-2-1-79-copyright__wrap {
-  display: none !important;
-}
-</style>

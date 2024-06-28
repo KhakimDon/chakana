@@ -141,7 +141,7 @@ const useBalance = ref(false)
 
 const toggleUseBalance = () => {
   useBalance.value = !useBalance.value
-  orderCartStore.orderDetail.use_from_balance = useBalance.value
+  orderCartStore.orderDetail.balance = useBalance.value
 }
 
 const balanceStore = useBalanceStore()
