@@ -53,39 +53,26 @@
           @click="addAddress"
         />
       </div>
-      <ClientOnly>
-        <YandexMap
-          id="myMap"
-          ref="yMap"
-          :settings="settings"
-          class="ymap h-[300px] md:h-[440px] w-full mt-4 rounded-lg"
-          :coords="coordinates"
-          @click="setLocation"
-        >
-          <!--      @click="changeCoords"-->
-          <YmapMarker :coords="coordinates" :icon="'/images/svg/map-pin.svg'" />
-        </YandexMap>
-      </ClientOnly>
+      <div class="rounded-10 overflow-x-auto">
+        <Map
+          :zoom="15"
+          class="h-[300px] md:h-[440px]"
+          @update:center="selectedCoords = $event"
+        />
+      </div>
     </div>
     <div v-else>
       <div class="relative">
-        <ClientOnly>
-          <YandexMap
-            id="myMap"
-            ref="yMap"
-            :settings="settings"
-            class="h-[180px] w-full mt-4 rounded-lg"
-            :coords="coordinates"
-          >
-            <!--      @click="changeCoords"-->
-            <YmapMarker
-              :coords="coordinates"
-              :icon="'/images/svg/map-pin.svg'"
-            />
-          </YandexMap>
-        </ClientOnly>
+        <AddAddressMap
+          :zoom="15"
+          no-controls
+          no-actions
+          :center="selectedCoords"
+          class="h-[180px] w-full mt-4 rounded-lg"
+          @update:center="selectedCoords = $event"
+        />
         <p
-          class="bg-white flex items-center justify-between shadow-card absolute left-1.5 md:left-2.5 right-1.5 md:right-2.5 bottom-1.5 md:bottom-2.5 text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
+          class="bg-white mr-12 flex items-center justify-between shadow-card absolute left-1.5 md:left-2.5 right-1.5 md:right-2.5 bottom-1.5 md:bottom-2.5 text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
         >
           <span class="max-w-[250px] md:max-w-[400px] truncate">{{
             search
@@ -152,16 +139,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  loadYmap,
-  yandexMap as YandexMap,
-  ymapMarker as YmapMarker,
-} from 'vue-yandex-maps'
-
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCustomToast } from '~/composables/useCustomToast.js'
-import { CONFIG } from '~/config/index.js'
 import { useAddressStore } from '~/store/address.js'
 
 interface Props {
@@ -187,7 +167,7 @@ const searchAddressList = computed(() => addressStore.searchAddressList.list)
 const addressClick = computed(() => addressStore.addressMap.list)
 
 const buttonLoading = ref<boolean>(false)
-const coordinates = ref([41.377541, 69.237922])
+const selectedCoords = ref([])
 const showAddAddress = ref(false)
 const selectIcons = ref<number | string | { [key: string]: string | number }>()
 const search = ref<string>(props.defaultAddress?.street)
@@ -196,29 +176,21 @@ const openSearchList = ref<boolean>(false)
 const nameAddress = ref<string>('')
 const error = ref<boolean>(false)
 
-const settings = {
-  apiKey: CONFIG.YANDEX_KEY,
-  lang: 'ru_RU',
-  coordorder: 'latlong',
-  enterprise: false,
-  version: '2.1',
-}
-loadYmap({ ...settings })
-
 const { list: icons } = useListFetcher('get/icons', 10, false)
 
-const getAddress = async (coords?: any) => {
-  await addressStore.fetchAddress(coords[0], coords[1]).then(() => {
-    search.value = addressClick.value?.street
+const getAddress = (coords?: any) => {
+  addressStore.fetchAddress(coords[1], coords[0]).then((res) => {
+    search.value = res?.street
   })
 }
 
-const setLocation = async (event: any) => {
-  const coords = !event?.target ? event?.get('coords') : coordinates.value
-  coordinates.value = coords
-  coordinates.value = coords
-  await getAddress(coords)
-}
+watch(
+  () => selectedCoords.value,
+  () => {
+    getAddress(selectedCoords.value)
+  },
+  { deep: true }
+)
 
 const addAddress = () => {
   if (search.value) {
@@ -236,7 +208,7 @@ const searchQuery = (e: string) => {
 
 const changeCoords = (item: any) => {
   search.value = item.address
-  coordinates.value = [item.latitude, item.longitude]
+  selectedCoords.value = [item.longitude, item.latitude]
   openSearchList.value = false
 }
 
@@ -263,12 +235,12 @@ watch(
 function getCurrentLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((currentPosition) => {
-      coordinates.value = [
-        currentPosition.coords.latitude,
+      selectedCoords.value = [
         currentPosition.coords.longitude,
+        currentPosition.coords.latitude,
       ]
 
-      getAddress(coordinates.value)
+      getAddress(selectedCoords.value)
     })
   } else {
     console.log('Geolocation is not supported in this browser')
@@ -286,9 +258,9 @@ watch(
       search.value = props.defaultAddress?.street
       selectIcons.value = props.defaultAddress?.icon_id
       nameAddress.value = props.defaultAddress?.title
-      coordinates.value = [
-        props.defaultAddress?.latitude,
+      selectedCoords.value = [
         props.defaultAddress?.longitude,
+        props.defaultAddress?.latitude,
       ]
       showAddAddress.value = true
     } else {
@@ -310,8 +282,8 @@ function saveAddress() {
         title: nameAddress.value,
         street: addressClick.value.street,
         zip: addressClick.value.zip,
-        latitude: coordinates.value[0],
-        longitude: coordinates.value[1],
+        latitude: selectedCoords.value[1],
+        longitude: selectedCoords.value[0],
       },
     })
     .then((res: any) => {
@@ -339,8 +311,8 @@ function editAddress() {
         title: nameAddress.value,
         street: addressClick.value.street,
         zip: addressClick.value.zip.toString(),
-        latitude: coordinates.value[0],
-        longitude: coordinates.value[1],
+        latitude: selectedCoords.value[1],
+        longitude: selectedCoords.value[0],
       },
     })
     .then(() => {
