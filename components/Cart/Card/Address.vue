@@ -23,7 +23,7 @@
             ></div>
           </div>
           <h3 class="mt-3 text-dark font-bold line-clamp-1">
-            {{ item.icon_title }}
+            {{ item?.title }}
           </h3>
           <p class="line-clamp-1 text-xs text-gray-100 mt-1">
             {{ item.street }}
