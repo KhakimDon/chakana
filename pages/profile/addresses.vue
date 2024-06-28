@@ -66,7 +66,7 @@ const showAddAddressModal = () => {
           </div>
         </template>
         <template v-else>
-          <CommonNoData class="col-span-3" />
+          <CommonNoData class="sm:col-span-2 md:col-span-3 lg:col-span-4" />
         </template>
       </div>
     </Transition>
