@@ -15,7 +15,7 @@
           <div
             id="Modal"
             :class="[bodyClass, { animated: animationIn }]"
-            class="relative bg-white rounded-xl max-w-[484px] transition-300"
+            class="relative bg-white rounded-xl w-full max-w-[484px] transition-300"
           >
             <slot v-if="!noHeader" name="header">
               <div

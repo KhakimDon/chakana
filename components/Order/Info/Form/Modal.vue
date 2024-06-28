@@ -2,6 +2,7 @@
   <BaseModal
     :model-value="modelValue"
     :title="steps[stepIndex].title"
+    body-class="w-full"
     :has-back="stepIndex > 0"
     @update:model-value="emit('update:modelValue', $event)"
     @back="stepIndex--"
@@ -10,7 +11,7 @@
       <BaseStepper
         :steps
         :step
-        class="!mb-5"
+        class="!mb-5 w-full max-sm:overflow-x-auto"
         step-class="!w-9 !h-9"
         step-icon-class="!text-xl !leading-5"
       />

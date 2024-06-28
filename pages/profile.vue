@@ -56,16 +56,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-  SvgoCommonBell,
-  SvgoProfileCard,
-  SvgoProfileSidebarCart,
-  SvgoProfileSidebarLocation,
-  SvgoProfileSidebarMenuList,
-  SvgoProfileSidebarSettings,
-  SvgoProfileSidebarTag,
-  SvgoProfileUserCircle,
-} from '#components'
 import { useAuthStore } from '~/store/auth.js'
 
 definePageMeta({
@@ -86,6 +76,7 @@ const menu = [
     icon: 'SvgoCommonCalendar',
     iconClass: 'text-orange group-[.active]:text-white',
     iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
+    isPremium: true,
   },
   {
     link: '/profile/edit',
