@@ -39,7 +39,7 @@ const cartStore = useCartStore()
 
 const useReviewSocket = () => {
   try {
-    connection.value = new WebSocket(`${CONFIG.WS_URL}`)
+    connection.value = new WebSocket(`${CONFIG.WS_URL}/websocket`)
 
     connection.value.onopen = () => {
       const msg = {
