@@ -27,17 +27,7 @@
           </Transition>
         </div>
       </template>
-      <CommonModalAddressDelivery
-        v-model="show"
-        :list="list"
-        @close="show = false"
-        @open-map-modal="openMapModal"
-      />
-      <CommonModalMap
-        v-model="openModal"
-        @close="openModal = false"
-        @open-saved-adress="openSavedAddress"
-      />
+      <OrderInfoEditAddress v-model="show" @save="saveAddress" />
     </LayoutWrapper>
     <LayoutMobile v-else>
       <Transition name="fade" mode="out-in">
@@ -49,6 +39,8 @@
   </main>
 </template>
 <script setup lang="ts">
+import { required } from '@vuelidate/validators'
+
 import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
 import type { IProduct } from '~/types/products.js'
@@ -57,7 +49,6 @@ const route = useRoute()
 
 const categoriesStore = useCategoriesStore()
 const show = ref(false)
-const openModal = ref(false)
 
 const categoriesLoading = computed(() => categoriesStore.categories.loading)
 const categories = computed(() => categoriesStore.categories.list)
@@ -71,8 +62,6 @@ const cartProducts = computed(() => cartStore.products)
 
 cartStore.getCartProducts()
 
-const { list } = useListFetcher<IProduct>(`/saved/address`, 25, false)
-
 watch(
   () => route.name,
   () => {
@@ -84,13 +73,7 @@ const changeCoords = () => {
   show.value = true
 }
 
-const openMapModal = () => {
-  show.value = false
-  openModal.value = true
-}
-
-const openSavedAddress = () => {
-  show.value = true
-  openModal.value = false
+function saveAddress(data: any) {
+  console.log(data)
 }
 </script>
