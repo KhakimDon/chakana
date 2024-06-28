@@ -212,6 +212,8 @@ function savePayment(item: any) {
     data.value.payment_type = 'balance'
   } else if (item.cash) {
     data.value.payment_type = 'cash'
+  } else if (item.provider_id > 0) {
+    data.value.payment_type = 'provider'
   } else {
     data.value.payment_type = 'card_to_courier'
   }

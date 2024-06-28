@@ -31,6 +31,7 @@ const form = useForm(
     cash: false,
     card_id: 0,
     balance: false,
+    provider_id: 0,
   },
   {}
 )
@@ -43,6 +44,7 @@ watch(
       form.values.cash = props.defaultInfo.cash
       form.values.card_id = props.defaultInfo.card_id
       form.values.balance = props.defaultInfo.balance
+      form.values.provider_id = props.defaultInfo.provider_id
     }
   }
 )

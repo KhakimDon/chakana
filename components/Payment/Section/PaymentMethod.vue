@@ -9,6 +9,10 @@
         ? $t('courier_card')
         : payment?.card_id
         ? $t('credit_card')
+        : payment?.provider_id
+        ? payment?.provider_id === 17
+          ? 'Click'
+          : 'Payme'
         : $t('payment_method')
     "
     @open-details="showEdit = true"

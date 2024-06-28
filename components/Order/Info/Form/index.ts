@@ -64,6 +64,7 @@ export const orderFormPayment = useForm(
     cash: false,
     card_id: 0,
     balance: false,
+    provider_id: 0,
   },
   {}
 )

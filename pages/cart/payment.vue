@@ -72,6 +72,7 @@ const goToPayment = () => {
           card_to_courier: orderDetail.value.card_to_courier,
           cash: orderDetail.value.cash,
           card_id: orderDetail.value.card_id,
+          provider_id: orderDetail.value.provider_id,
         },
         products: cartStore.products?.map((product) => ({
           product_id: product?.id,
@@ -87,12 +88,15 @@ const goToPayment = () => {
           phone: orderDetail.value.phone,
         },
       })
-      .then(() => {
-        showToast(t('auto_order_created'), 'success')
-        orderCartStore.cartClear()
-        router.push(`/${locale.value}/profile/auto-order`)
-        orderCartStore.orderDetail = {}
-        orderCartStore.autoOrderDetail = {}
+      .then((res) => {
+        if (res.redirect) window.location.href = res.payment_url
+        else {
+          showToast(t('auto_order_created'), 'success')
+          orderCartStore.cartClear()
+          router.push(`/${locale.value}/profile/auto-order`)
+          orderCartStore.orderDetail = {}
+          orderCartStore.autoOrderDetail = {}
+        }
       })
       .catch(() => {
         showToast(t('order_not_created'), 'error')
@@ -109,15 +113,7 @@ const goToPayment = () => {
         when_to_deliver:
           orderDetail.value.delivery_time === 'nearest_2_hours'
             ? getCurrentDateTimeISO(now.add(2, 'hours'))
-            : getCurrentDateTimeISO(
-                now
-                  .set(
-                    'hours',
-                    Number(orderDetail.value.delivery_time.split(':')[0]) + 24
-                  )
-                  .set('minute', 0)
-                  .set('second', 0)
-              ),
+            : orderDetail.value.delivery_time?.slice(0, -5),
         recipient: {
           full_name: orderDetail.value.full_name,
           phone: orderDetail.value.phone,
@@ -128,15 +124,19 @@ const goToPayment = () => {
           card_to_the_courier: orderDetail.value.card_to_courier,
           cash: orderDetail.value.cash,
           card_id: orderDetail.value.card_id,
+          provider_id: orderDetail.value.provider_id,
         },
         promo_code_id: orderDetail.value.promo_code_id || 0,
         use_from_balance: orderDetail.value.balance,
       })
       .then((res: any) => {
-        showToast(t('order_created'), 'success')
-        cartStore.getCartProducts()
-        router.push(`/${locale.value}/profile/order/${res.order_id}`)
-        orderCartStore.orderDetail = {}
+        if (res.redirect) window.location.href = res.payment_url
+        else {
+          showToast(t('order_created'), 'success')
+          cartStore.getCartProducts()
+          router.push(`/${locale.value}/profile/order/${res.order_id}`)
+          orderCartStore.orderDetail = {}
+        }
       })
       .catch((error: any) => {
         showToast(error?.detail?.detail ?? t('order_not_created'), 'error')

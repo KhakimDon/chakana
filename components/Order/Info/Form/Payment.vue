@@ -103,7 +103,10 @@
         {{ $t('payment_system') }}
       </p>
     </div>
-    <CommonPaymentTypes v-model="paymentType" :providers="paymentProviders" />
+    <CommonPaymentTypes
+      v-model="values.provider_id"
+      :providers="paymentProviders"
+    />
     <ProfileModalCardAdd v-model="addCardModal" @finish="addedCard" />
   </div>
 </template>
@@ -119,14 +122,12 @@ const props = defineProps<Props>()
 
 const { values } = unref(props.form)
 
-const paymentType = ref(0)
-
 watch(
   () => values.cash,
   (val) => {
     if (val) {
       values.card_to_courier = false
-      paymentType.value = 0
+      values.provider_id = 0
       values.card_id = 0
     }
   }
@@ -137,19 +138,20 @@ watch(
   (val) => {
     if (val) {
       values.cash = false
-      paymentType.value = 0
+      values.provider_id = 0
       values.card_id = 0
     }
   }
 )
 
 watch(
-  () => paymentType.value,
+  () => values.provider_id,
   (val) => {
     if (val) {
       values.cash = false
       values.card_to_courier = false
       values.card_id = 0
+      values.provider_info = paymentProviders.value.find((e) => e.id === val)
     }
   }
 )
@@ -160,7 +162,7 @@ watch(
     if (val) {
       values.cash = false
       values.card_to_courier = false
-      paymentType.value = 0
+      values.provider_id = 0
     }
   }
 )
