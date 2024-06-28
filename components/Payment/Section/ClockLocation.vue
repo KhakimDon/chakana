@@ -16,6 +16,8 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
 interface Props {
   defaultInfo?: any
   isAuto?: boolean
@@ -37,6 +39,14 @@ const text = computed(() => {
         week: t(`weekday[${props.defaultInfo?.weekdays}]`),
         time: props.defaultInfo?.delivery_time,
       })
-    : props.defaultInfo?.delivery_time
+    : props.defaultInfo?.delivery_time === 'nearest_2_hours'
+    ? t(props.defaultInfo?.delivery_time)
+    : t(
+        new Date(props.defaultInfo?.delivery_time).getDate() ===
+          new Date().getDate()
+          ? 'today_interval'
+          : 'tomorrow_interval',
+        { time: dayjs(props.defaultInfo?.delivery_time).format('HH:mm') }
+      )
 })
 </script>

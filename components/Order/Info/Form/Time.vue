@@ -74,15 +74,15 @@ function chooseTime(interval: string) {
 const intervals = ref()
 
 onMounted(() => {
-  if (props.isAuto) {
-    intervals.value = generateOrderIntervals(props.isAuto)
-  } else {
-    intervals.value = [
-      ...generateOrderIntervals(props.isAuto),
-      ...generateOrderTomorrowIntervals(),
-    ]
-    console.log(intervals.value)
-  }
+  // if (props.isAuto) {
+  intervals.value = generateOrderIntervals(props.isAuto)
+  // } else {
+  //   intervals.value = [
+  //     ...generateOrderIntervals(props.isAuto),
+  //     ...generateOrderTomorrowIntervals(),
+  //   ]
+  //   console.log(intervals.value)
+  // }
   if (!props.isAuto) {
     intervals.value.unshift('nearest_2_hours')
   }

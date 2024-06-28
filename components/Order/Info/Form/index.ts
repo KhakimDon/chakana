@@ -1,4 +1,5 @@
 import { minLength, required } from '@vuelidate/validators'
+import dayjs from 'dayjs'
 
 import { isValidPhone } from '~/utils/functions/common.js'
 
@@ -74,29 +75,30 @@ export function generateOrderIntervals(isAuto: boolean) {
   let currentHour = now.getHours()
   let currentMinute = now.getMinutes()
 
-  // Adjust to the next 2-hour interval
-  if (currentMinute > 0) {
-    currentHour += 2
-  }
-  currentHour -= currentHour % 2
+  // // Adjust to the next 2-hour interval
+  // if (currentMinute > 0) {
+  //   currentHour += 2
+  // }
+  // currentHour -= currentHour % 2
   currentMinute = 0
+  let trigger = 0
 
-  while (currentHour < 23) {
-    const startInterval = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      currentHour,
-      currentMinute
-    )
-    const endInterval = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      currentHour + 1,
-      currentMinute
-    )
-    if (isAuto) {
+  if (isAuto) {
+    while (currentHour < 23) {
+      const startInterval = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        currentHour,
+        currentMinute
+      )
+      const endInterval = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        currentHour + 1,
+        currentMinute
+      )
       intervals.push(
         `${startInterval.toLocaleTimeString([], {
           hour: '2-digit',
@@ -108,10 +110,21 @@ export function generateOrderIntervals(isAuto: boolean) {
           hour12: false,
         })}`
       )
-    } else {
-      intervals.push(startInterval.toISOString().slice(0, -8))
+      currentHour += 1
     }
-    currentHour += 1
+  } else {
+    while (trigger < 24) {
+      const startInterval = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        currentHour + 2,
+        0
+      )
+      intervals.push(startInterval.toISOString())
+      trigger += 1
+      currentHour += 1
+    }
   }
 
   return intervals

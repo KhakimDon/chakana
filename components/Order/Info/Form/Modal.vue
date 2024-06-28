@@ -160,6 +160,8 @@ const step = computed(() => steps.value[stepIndex.value].id)
 
 const beforeRefresh = (event) => {
   event.preventDefault()
+
+  return true
 }
 
 watch(
