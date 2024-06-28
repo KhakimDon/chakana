@@ -12,8 +12,8 @@
         />
       </div>
       <div
-        class="h-px shrink-0 w-6 md:w-12 last:hidden transition-300"
-        :class="[index < activeIndex ? 'bg-orange' : 'bg-gray-200']"
+        class="h-px w-6 md:w-12 last:hidden transition-300"
+        :class="[index < activeIndex ? 'bg-orange' : 'bg-gray-200', lineClass]"
       />
     </template>
   </div>
@@ -30,6 +30,7 @@ interface Props {
   step: number | string
   stepClass?: string
   stepIconClass?: string
+  lineClass?: string
 }
 const props = defineProps<Props>()
 

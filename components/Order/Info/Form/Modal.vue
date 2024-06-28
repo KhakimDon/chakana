@@ -4,7 +4,7 @@
     :title="steps[stepIndex].title"
     body-class="w-full"
     :has-back="stepIndex > 0"
-    disable-outer-close2
+    disable-outer-close
     @update:model-value="emit('update:modelValue', $event)"
     @back="stepIndex--"
   >
@@ -15,6 +15,7 @@
         class="!mb-5 w-full max-sm:overflow-x-auto"
         step-class="!w-9 !h-9"
         step-icon-class="!text-xl !leading-5"
+        line-class="!w-full !min-w-4"
       />
       <component
         :is="steps[stepIndex].component"
@@ -159,6 +160,8 @@ const step = computed(() => steps.value[stepIndex.value].id)
 
 const beforeRefresh = (event) => {
   event.preventDefault()
+
+  return true
 }
 
 watch(
