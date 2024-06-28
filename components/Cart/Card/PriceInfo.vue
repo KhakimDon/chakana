@@ -44,12 +44,15 @@
           {{ $t('discount') }}
         </p>
         <p class="text-xs font-semibold leading-none text-red">
-          {{ cartDetail?.discount?.detail?.total > 0 ? '-' : '' }}
+          {{ cartDetail?.discount_price > 0 ? '-' : '' }}
           {{ formatMoneyDecimal(cartDetail?.discount_price, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <p v-if="false" class="text-xs font-medium leading-none text-green">
+      <p
+        class="text-xs cursor-pointer font-medium leading-none text-green"
+        @click="showDiscountDetails = true"
+      >
         {{ $t('show_more') }}
       </p>
     </div>
@@ -67,6 +70,10 @@
         <span class="text-xs font-bold leading-snug text-gray-100"> UZS </span>
       </p>
     </div>
+    <PaymentModalDiscountDetails
+      v-model="showDiscountDetails"
+      :promo-code="selectedPromoCode"
+    />
   </div>
 </template>
 
@@ -79,6 +86,12 @@ const { t } = useI18n()
 const cartStore = useCartStore()
 const orderCartStore = useCartOrderStore()
 const route = useRoute()
+
+const showDiscountDetails = ref(false)
+
+const selectedPromoCode = computed(
+  () => orderCartStore.orderDetail?.promo_code_id
+)
 
 // Cart details
 const cartDetail = computed<any>(() => orderCartStore?.cart?.detail)

@@ -23,11 +23,14 @@
             <p
               class="text-dark leading-120 font-medium text-xs bg-[#FFE81B] rounded p-1"
             >
-              -{{ product?.discount_percent }}%
+              {{ product?.discount_percent > 0 ? '-' : '' }}
+              {{ product?.discount_percent }}%
             </p>
-            <p class="text-xs text-green font-medium leading-none">
+            <p
+              class="text-xs text-green font-medium leading-none whitespace-nowrap"
+            >
               <span class="text-base font-semibold leading-tight">
-                {{ product?.discount?.detail?.total > 0 ? '-' : '' }}
+                {{ product?.discount > 0 ? '-' : '' }}
                 {{ formatMoneyDecimal(product?.discount ?? 0, 0) }}
               </span>
               UZS
@@ -105,7 +108,7 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val) {
-      cartOrderStore.getCartDiscountDetail(props.promoCode?.id)
+      cartOrderStore.getCartDiscountDetail(props.promoCode)
     }
   }
 )

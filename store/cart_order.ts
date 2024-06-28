@@ -121,9 +121,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
       discount.loading = true
       useApi()
         .$get(`/cart/discounts`, {
-          query: {
-            promo_code_id: id,
-          },
+          query: id ? { promo_code_id: id } : {},
         })
         .then((res: any) => {
           discount.detail = res
