@@ -19,7 +19,7 @@
           class="fixed w-[313px] top-[86px] h-[calc(100vh-100px)] overflow-y-auto pb-16"
         >
           <ClientOnly>
-            <MainMap @change-coords="changeCoords" />
+            <MainMapSidebar @change-coords="changeCoords" />
           </ClientOnly>
           <Transition name="fade" mode="out-in" class="space-y-5 mt-5">
             <CartEmpty v-if="cartProducts.length === 0" />
