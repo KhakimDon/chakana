@@ -7,7 +7,7 @@
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           class="w-full !rounded-10 !py-2"
-          :text="$t('payment')"
+          :text="isAutoOrder ? $t('save_auto_order') : $t('order')"
           variant="green"
           :loading="loading"
           @click="goToPayment"
@@ -25,7 +25,7 @@
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           class="w-full !rounded-10"
-          :text="isAutoOrder ? $t('save_auto_order') : $t('payment')"
+          :text="isAutoOrder ? $t('save_auto_order') : $t('order')"
           variant="green"
           :loading="loading"
           @click="goToPayment"
@@ -87,6 +87,8 @@ const goToPayment = () => {
           full_name: orderDetail.value.full_name,
           phone: orderDetail.value.phone,
         },
+        comment_to_picker: orderDetail.value.comment_to_courier,
+        comment_to_courier: orderDetail.value.picker_comment,
       })
       .then((res) => {
         if (res.redirect) window.location.href = res.payment_url
@@ -119,6 +121,7 @@ const goToPayment = () => {
           phone: orderDetail.value.phone,
         },
         comment_to_courier: orderDetail.value.comment_to_courier,
+        comment_to_picker: orderDetail.value.picker_comment,
         payment_method: {
           balance: orderDetail.value.balance,
           card_to_the_courier: orderDetail.value.card_to_courier,

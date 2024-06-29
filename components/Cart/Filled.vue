@@ -106,6 +106,8 @@ const loading = computed(() => orderCartStore.clearingCart)
 const goToCart = () => {
   router.push(`/${locale.value}/cart`)
 }
+
+orderCartStore.getCartDetail()
 </script>
 
 <style scoped>

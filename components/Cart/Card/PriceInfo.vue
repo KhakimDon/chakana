@@ -21,7 +21,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div class="flex-y-center justify-between">
+      <div v-if="false" class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('delivery_price') }}
         </p>
@@ -37,6 +37,14 @@
         <p class="text-xs font-semibold leading-none text-dark">
           {{ formatMoneyDecimal(cartDetail?.tax_price, 0) }}
           <span class="text-[10px] font-semibold leading-130">UZS</span>
+        </p>
+      </div>
+      <div class="flex-y-center justify-between">
+        <p class="text-xs font-medium text-gray-100 leading-130">
+          {{ $t('promo_code') }}
+        </p>
+        <p class="text-xs font-semibold leading-130 text-red">
+          {{ cartDetail?.reward_discount }} UZS
         </p>
       </div>
       <div class="flex-y-center justify-between">
@@ -96,11 +104,15 @@ const selectedPromoCode = computed(
 // Cart details
 const cartDetail = computed<any>(() => orderCartStore?.cart?.detail)
 
-if (route.path?.includes('/payment')) {
-  orderCartStore.getCartDetailConfirm()
-} else {
-  orderCartStore.getCartDetail()
-}
+onMounted(() => {
+  if (route.path?.includes('/payment')) {
+    orderCartStore.getCartDetailConfirm({
+      promo_code_id: useCookie('order_data').value?.promo_code_id,
+    })
+  } else {
+    orderCartStore.getCartDetail()
+  }
+})
 
 const cartProducts = computed(() => cartStore.products)
 

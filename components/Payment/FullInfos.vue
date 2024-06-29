@@ -36,7 +36,13 @@
             />
             <PaymentSectionCommentForCurier
               :comment="orderCartStore.orderDetail?.comment_to_courier"
+              :subtitle="$t('courier_comment')"
               @save="saveComment"
+            />
+            <PaymentSectionCommentForCurier
+              :comment="orderCartStore.orderDetail?.picker_comment"
+              :subtitle="$t('picker_comment')"
+              @save="savePickerComment"
             />
           </section>
         </PaymentCardInfoHeader>
@@ -81,6 +87,7 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useBalanceStore } from '~/store/profile/balance.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
@@ -88,6 +95,7 @@ import { formatMoneyDecimal } from '~/utils/functions/common.js'
 const { t } = useI18n()
 const router = useRouter()
 
+const authStore = useAuthStore()
 const orderCartStore = useCartOrderStore()
 
 function saveAddress(data: any) {
@@ -96,12 +104,17 @@ function saveAddress(data: any) {
 }
 
 function saveUser(data: any) {
-  orderCartStore.orderDetail.full_name = data.full_name
-  orderCartStore.orderDetail.phone = data.phone
+  orderCartStore.orderDetail.full_name = data.full_name || authStore.user?.name
+  orderCartStore.orderDetail.phone =
+    data.phone || authStore.user?.phone?.slice(4, authStore.user?.phone?.length)
 }
 
 function saveComment(data: any) {
   orderCartStore.orderDetail.comment_to_courier = data.comment_to_courier
+}
+
+function savePickerComment(data: any) {
+  orderCartStore.orderDetail.picker_comment = data.comment_to_courier
 }
 
 function savePayment(data: any) {
@@ -114,6 +127,9 @@ function savePayment(data: any) {
 const selectPromoCode = (item: any) => {
   orderCartStore.orderDetail.promo_code_id = item.promo_code_id
   orderCartStore.orderDetail.promo_info = item.promo_info
+  orderCartStore.getCartDetailConfirm({
+    promo_code_id: item.promo_code_id,
+  })
 }
 
 function saveOrderClock(data: any) {
@@ -125,7 +141,7 @@ const useBalance = ref(false)
 
 const toggleUseBalance = () => {
   useBalance.value = !useBalance.value
-  orderCartStore.orderDetail.use_from_balance = useBalance.value
+  orderCartStore.orderDetail.balance = useBalance.value
 }
 
 const balanceStore = useBalanceStore()

@@ -2,7 +2,7 @@
   <BaseModal
     :model-value="modelValue"
     :title="$t(steps[stepIndex].title)"
-    body-class="w-full"
+    body-class="w-full !max-w-[584px]"
     :has-back="stepIndex > 0"
     disable-outer-close
     @update:model-value="emit('update:modelValue', $event)"
@@ -41,6 +41,7 @@ import {
   LazyOrderInfoFormComment,
   LazyOrderInfoFormName,
   LazyOrderInfoFormPayment,
+  LazyOrderInfoFormPickerComment,
   LazyOrderInfoFormPromocode,
   LazyOrderInfoFormTime,
   LazyOrderInfoFormUserInfo,
@@ -50,6 +51,7 @@ import {
   orderFormComment,
   orderFormName,
   orderFormPayment,
+  orderFormPickerComment,
   orderFormPromocode,
   orderFormTime,
   orderFormUserInfo,
@@ -127,6 +129,13 @@ const orderSteps = [
     title: 'courier_comment',
     component: LazyOrderInfoFormComment,
     form: orderFormComment,
+  },
+  {
+    id: 'picker_comment',
+    icon: 'SvgoProfileMessage',
+    title: 'picker_comment',
+    component: LazyOrderInfoFormPickerComment,
+    form: orderFormPickerComment,
   },
   {
     id: 'promo',
