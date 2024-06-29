@@ -107,7 +107,8 @@ watch(
   (val) => {
     if (val) {
       if (val.id) {
-        coordinates.value = [val.latitude, val.longitude]
+        coordinates.value = [val.longitude, val.latitude]
+        addressStore.coordinates = coordinates.value
         title.value = val.street
       }
     }
