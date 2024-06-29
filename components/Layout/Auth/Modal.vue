@@ -164,6 +164,7 @@ function register() {
             .then(() => {
               authStore.fetchUser().finally(() => {
                 buttonLoading.value = false
+                showToast(t('login_success'), 'success')
               })
             })
             .catch((err) => {
@@ -173,6 +174,7 @@ function register() {
         } else {
           authStore.fetchUser().finally(() => {
             buttonLoading.value = false
+            showToast(t('login_success'), 'success')
           })
         }
         authStore.showAuth = false

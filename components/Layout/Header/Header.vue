@@ -1,5 +1,8 @@
 <template>
-  <header :key="locale" class="w-full border-b border-white-100 py-4">
+  <header
+    :key="locale"
+    class="w-full border-b border-white-100 py-4 !fixed w-full top-0"
+  >
     <div class="container grid grid-cols-3 gap-4">
       <CommonLogo />
       <div class="flex-center gap-6">
