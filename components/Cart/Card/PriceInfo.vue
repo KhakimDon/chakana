@@ -39,7 +39,10 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
-      <div class="flex-y-center justify-between">
+      <div
+        v-if="cartDetail?.reward_discount"
+        class="flex-y-center justify-between"
+      >
         <p class="text-xs font-medium text-gray-100 leading-130">
           {{ $t('promo_code') }}
         </p>

@@ -7,6 +7,10 @@ import { FetchOptions } from 'ofetch'
 import { useAuthStore } from '~/store/auth'
 
 export const useApi = (apiUrl?: string) => {
+  const { $i18n } = useNuxtApp()
+
+  const locale = $i18n?.locale ?? 'ru'
+
   const authStore = useAuthStore()
   const baseURL = apiUrl || (import.meta.env.VITE_API_BASE_URL as string)
   const loading = ref(false)
@@ -17,7 +21,7 @@ export const useApi = (apiUrl?: string) => {
   ): Promise<T> {
     const headers = {
       ...options?.headers,
-      'Accept-Language': useCookie('i18n_redirected').value || 'ru',
+      'Accept-Language': locale.value || 'ru',
       'Device-Id': fingerprint.value,
     }
     const tokens = computed(() => authStore.getTokens())

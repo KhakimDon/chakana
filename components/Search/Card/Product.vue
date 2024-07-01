@@ -43,10 +43,17 @@
       <template v-else>
         <div v-if="count < 1 || addingToCart">
           <BaseButton
-            class="w-24"
-            :text="$t('to_basket')"
+            class="w-24 whitespace-nowrap"
+            :text="
+              product?.quantity > 0 && product?.max_quantity > 0
+                ? $t('to_basket')
+                : $t('out_of_stock')
+            "
             variant="outline"
-            :disabled="addingToCart"
+            :disabled="
+              addingToCart ||
+              !(product?.quantity > 0 && product?.max_quantity > 0)
+            "
             :loading="addingToCart"
             @click="addToCartFirstTime(product)"
           />
