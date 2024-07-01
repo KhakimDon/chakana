@@ -45,14 +45,14 @@ const savedCoords = computed(() => addressStore.coordinates)
 const savedAddress = computed(() => addressStore.savedAddress)
 
 const coordinates = ref([69.240562, 41.311081])
-const title = ref(t('amir_temur'))
+const title = ref('')
 
 function getLocation() {
   useApi()
     .$get('get/address', {
       params: {
-        latitude: coordinates.value[0],
-        longitude: coordinates.value[1],
+        latitude: coordinates.value[1],
+        longitude: coordinates.value[0],
       },
     })
     .then((res: any) => {
@@ -105,12 +105,10 @@ function clearCoords() {
 watch(
   () => savedAddress.value,
   (val) => {
-    if (val) {
-      if (val.id) {
-        coordinates.value = [val.longitude, val.latitude]
-        addressStore.coordinates = coordinates.value
-        title.value = val.street
-      }
+    if (val.id) {
+      coordinates.value = [val.longitude, val.latitude]
+      addressStore.coordinates = coordinates.value
+      title.value = val.street
     }
   },
   {
