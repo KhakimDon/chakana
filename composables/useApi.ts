@@ -3,11 +3,14 @@ import { load } from '@fingerprintjs/fingerprintjs'
 import { isJwtExpired } from 'jwt-check-expiration'
 import { NitroFetchRequest } from 'nitropack'
 import { FetchOptions } from 'ofetch'
-import { useI18n } from 'vue-i18n'
 
 import { useAuthStore } from '~/store/auth'
 
 export const useApi = (apiUrl?: string) => {
+  const { $i18n } = useNuxtApp()
+
+  const locale = $i18n?.locale ?? 'ru'
+
   const authStore = useAuthStore()
   const baseURL = apiUrl || (import.meta.env.VITE_API_BASE_URL as string)
   const loading = ref(false)
@@ -16,7 +19,6 @@ export const useApi = (apiUrl?: string) => {
     endpoint: NitroFetchRequest,
     options?: FetchOptions
   ): Promise<T> {
-    const { locale } = useI18n()
     const headers = {
       ...options?.headers,
       'Accept-Language': locale.value || 'ru',
