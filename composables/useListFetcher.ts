@@ -1,4 +1,3 @@
-import Qr from '~/components/Layout/Auth/Qr/Qr.vue'
 import { ICustomObject, IDefaultResponse } from '~/types'
 
 export const useListFetcher = <T>(
@@ -32,10 +31,15 @@ export const useListFetcher = <T>(
   })
 
   const fetchApplications = async (customParams?: ICustomObject) => {
-    const data = await useApi().$get<IDefaultResponse<T>>(url, {
-      params,
-      ...customParams,
-    })
+    const data = await useApi()
+      .$get<IDefaultResponse<T>>(url, {
+        params,
+        ...customParams,
+      })
+      .finally(() => {
+        loading.list = false
+        loading.button = false
+      })
 
     if (search) {
       if (params.page > 1) {
