@@ -29,15 +29,18 @@
             <p class="text-xl font-extrabold text-dark leading-7">
               {{ item?.query }}
             </p>
-            <!--            <ul v-for="product in 4" :key="product" class="list-disc">-->
-            <!--              <li class="text-sm font-semibold leading-130">-->
-            <!--                <pre>{{ product }}</pre>-->
-            <!--              </li>-->
-            <!--            </ul>-->
+            <ul v-for="product in item?.products" :key="product?.id">
+              <li
+                class="text-sm font-semibold leading-130 flex items-center gap-2"
+              >
+                <div class="w-1 h-1 rounded-full bg-dark"></div>
+                {{ product?.name }}
+              </li>
+            </ul>
           </div>
           <div class="flex-y-center gap-2">
             <SvgoCommonCheck
-              v-if="item?.query?.products?.length"
+              v-if="item?.products?.length > 0"
               class="text-green text-xl"
             />
             <SvgoCommonClose v-else class="text-red text-xl" />
