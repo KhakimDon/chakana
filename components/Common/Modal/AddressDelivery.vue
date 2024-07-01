@@ -19,10 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import IconChevron from '~/assets/icons/Common/chevron.svg'
-import IconPlus from '~/assets/icons/Common/plus.svg'
-import NoDataMap from '~/components/Common/NoData/NoDataMap.vue'
-import { autoOrderSteps, orderSteps, steps } from '~/data/stepper.js'
+import { autoOrderSteps, orderSteps } from '~/data/stepper.js'
 import { useModalStore } from '~/store/modal.js'
 
 interface Props {
@@ -38,7 +35,6 @@ interface Emits {
 }
 
 const $emit = defineEmits<Emits>()
-const addressItem = ref(null)
 
 const route = useRoute()
 const { locale } = useI18n()
@@ -56,10 +52,6 @@ const step = ref('address')
 const goToName = () => {
   modalStore.addressModel = false
   modalStore.autoOrderModel.name = true
-}
-
-const handleAddress = (item: object) => {
-  addressItem.value = item
 }
 
 defineProps<Props>()

@@ -11,6 +11,8 @@ export interface IProduct {
   discount_percentage: null | number
   discount_type: string
   quantity: number
+  max_quantity: number
+  out_of_stock: boolean
   product_uom_amount: number
   product_uom: null | string
 }

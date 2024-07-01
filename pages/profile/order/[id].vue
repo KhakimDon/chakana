@@ -121,23 +121,11 @@
       <PaymentCardInfo
         v-if="status === 'delivered'"
         class="mb-5"
-        icon="SvgoProfileMoney"
-        icon-class="text-green !text-2xl"
+        :icon="paymentIcon"
+        :icon-class="`${paymentIconClass} !text-2xl`"
         no-clickable
         text-wrapper-class="border-none"
-        :title="
-          data.payment_type === 'cash'
-            ? $t('cash')
-            : data.payment_type === 'card_to_courier'
-            ? $t('courier_card')
-            : data.payment_type === 'card'
-            ? $t('payment_via_card')
-            : data.payment_type === 'provider'
-            ? data.provider?.name
-            : data.payment_type === 'balance'
-            ? $t('use_balance')
-            : $t('payment_method')
-        "
+        :title="paymentTitle"
       />
       <BaseButton
         v-if="status === 'delivered' || status === 'cancelled'"
@@ -189,7 +177,6 @@ const steps = [
     icon: SvgoCommonFlag,
   },
 ]
-const step = ref(1)
 
 const { data, error } = await useAsyncData('orderSingle', () =>
   useApi().$get<IOrderDetail>(`/order/detail/${route.params.id}`)
@@ -232,4 +219,38 @@ function reOrder() {
     })
     .finally(() => (reorderLoading.value = false))
 }
+
+const { t } = useI18n()
+
+const paymentIcon = computed(() => {
+  return data.value?.payment_type === 'card_to_courier'
+    ? 'SvgoProfileUser'
+    : data.value?.payment_type === 'card'
+    ? 'SvgoProfileCard'
+    : data.value?.payment_type === 'provider'
+    ? 'SvgoProfileCoins'
+    : 'SvgoProfileMoney'
+})
+
+const paymentIconClass = computed(() => {
+  return data.value?.payment_type === 'cash'
+    ? '!text-green'
+    : data.value?.payment_type === 'card'
+    ? '!text-blue-100'
+    : '!text-orange'
+})
+
+const paymentTitle = computed(() => {
+  return data.value?.payment_type === 'cash'
+    ? t('cash')
+    : data.value?.payment_type === 'card_to_courier'
+    ? t('courier_card')
+    : data.value?.payment_type === 'card'
+    ? t('credit_card')
+    : data.value?.payment_type === 'provider'
+    ? data.value?.provider?.id === 17
+      ? 'Click'
+      : 'Payme'
+    : t('payment_method')
+})
 </script>
