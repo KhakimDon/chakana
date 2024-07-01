@@ -21,7 +21,7 @@
         class="w-full"
         :text="$t('no_other')"
         variant="secondary-dark"
-        @click="$emit('change-coords')"
+        @click="token ? $emit('change-coords') : (authStore.showAuth = true)"
       />
     </div>
     <div v-else class="flex-y-center gap-3 mt-4">
@@ -34,12 +34,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { CONFIG } from '~/config'
 import { useAddressStore } from '~/store/address'
+import { useAuthStore } from '~/store/auth.js'
 
 const { t } = useI18n()
 
 const addressStore = useAddressStore()
+const authStore = useAuthStore()
+
+const token = computed(() => authStore.accessToken)
 
 const savedCoords = computed(() => addressStore.coordinates)
 const savedAddress = computed(() => addressStore.savedAddress)
