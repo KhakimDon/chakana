@@ -23,14 +23,21 @@
         <div
           v-for="(item, key) in results?.list"
           :key
-          class="flex-y-center gap-2 justify-between"
+          class="flex items-start gap-2 justify-between"
         >
-          <p class="text-xl font-extrabold text-dark leading-7">
-            {{ item?.query }}
-          </p>
+          <div>
+            <p class="text-xl font-extrabold text-dark leading-7">
+              {{ item?.query }}
+            </p>
+            <!--            <ul v-for="product in 4" :key="product" class="list-disc">-->
+            <!--              <li class="text-sm font-semibold leading-130">-->
+            <!--                <pre>{{ product }}</pre>-->
+            <!--              </li>-->
+            <!--            </ul>-->
+          </div>
           <div class="flex-y-center gap-2">
             <SvgoCommonCheck
-              v-if="singleList?.notes?.includes(item?.query)"
+              v-if="item?.query?.products?.length"
               class="text-green text-xl"
             />
             <SvgoCommonClose v-else class="text-red text-xl" />

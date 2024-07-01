@@ -138,9 +138,7 @@ const searchByNoteAndOrderProducts = computed(
 const showCheckingList = ref(false)
 const getCheckingAgainstList = () => {
   showCheckingList.value = true
-  if (!searchByNoteAndOrderProducts.value?.list?.length) {
-    listStore.getUserProductsByNotesWithOrder(selectedList.value?.notes)
-  }
+  listStore.getUserProductsByNotesWithOrder(selectedList.value?.notes)
 }
 
 onUnmounted(() => {
