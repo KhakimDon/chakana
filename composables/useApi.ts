@@ -42,7 +42,7 @@ export const useApi = (apiUrl?: string) => {
             refresh_token: tokens.value.refresh,
           })
         } catch (err) {
-          authStore.logout()
+          authStore.logOut()
           throw new Error(err)
         }
         // await authStore.refreshToken()

@@ -9,7 +9,6 @@
       <FormInput
         v-model="form.values.main_name"
         :placeholder="$t('enter_list_title')"
-        :error="form.$v.value.main_name.$error"
         is-transparent
         no-border
         input-class="!pl-0 !text-2xl !font-bold !leading-130"
@@ -129,7 +128,6 @@ const form = useForm(
     notes: [],
   },
   {
-    main_name: { required },
     notes: { required, minLength: minLength(1) },
   }
 )
@@ -138,7 +136,9 @@ function createCard(mode?: string) {
   useApi()
     .$post('/create-user-products-list', {
       body: {
-        main_name: form.values.main_name,
+        main_name:
+          form.values.main_name ||
+          `${t('new_list')} ${dayjs().format('DD.MM.YYYY HH:mm:ss')}`,
         notes: form.values.notes?.filter((note) => note),
       },
     })

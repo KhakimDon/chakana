@@ -11,7 +11,7 @@
       </p>
       <SvgoCommonTrash
         v-if="showDelete"
-        class="text-gray-500 cursor-pointer text-xl hover:text-red transition-300"
+        class="text-gray-500 shrink-0 cursor-pointer text-xl hover:text-red transition-300"
         @click="emit('delete', list?.main_note_id)"
       />
     </div>
