@@ -55,9 +55,15 @@
       <BaseButton
         v-if="count < 1 || addingToCart"
         class="w-full !py-2"
-        :text="$t('to_basket')"
+        :text="
+          card?.quantity > 0 && card?.max_quantity > 0
+            ? $t('to_basket')
+            : $t('out_of_stock')
+        "
         variant="outline"
-        :disabled="addingToCart"
+        :disabled="
+          addingToCart || !(card?.quantity > 0 && card?.max_quantity > 0)
+        "
         :loading="addingToCart"
         @click="addToCartFirstTime(card)"
       />
