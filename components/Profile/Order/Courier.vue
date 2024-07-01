@@ -3,7 +3,7 @@
     <p class="mb-2 text-sm leading-140 font-medium text-gray-100">
       {{ $t('courier') }}
     </p>
-    <div class="flex items-center gap-3 justify-between max-sm:flex-col">
+    <div class="flex sm:items-center gap-3 justify-between max-sm:flex-col">
       <div class="flex items-center gap-3">
         <div class="border border-white-100 rounded-full w-12 h-12">
           <img
@@ -16,8 +16,8 @@
           {{ courier.full_name }}
         </p>
       </div>
-      <div class="flex items-center gap-3 flex max-sm:flex-col">
-        <div class="h-9 w-px bg-gray-200"></div>
+      <div class="flex items-center gap-3 max-sm:flex-col max-sm:w-full">
+        <div class="h-px sm:h-9 w-full sm:w-px bg-gray-200"></div>
         <BaseButton
           v-if="!noWrite"
           class="!bg-gray-200 hover:!bg-white max-sm:w-full"
