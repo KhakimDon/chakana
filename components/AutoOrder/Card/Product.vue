@@ -43,7 +43,7 @@
       <template v-else>
         <BaseButton
           v-if="count < 1 || addingToCart"
-          class="w-24"
+          class="w-24 whitespace-nowrap"
           :text="
             product?.quantity > 0 && product?.max_quantity > 0
               ? $t('to_basket')
