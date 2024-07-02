@@ -206,8 +206,8 @@ const orderCartStore = useCartOrderStore()
 function add() {
   orderCartStore.autoOrderDetail.payment_method.provider_id = paymentType.value
   orderCartStore.autoOrderDetail.payment_method.cash = cash.value
-  orderCartStore.autoOrderDetail.payment_method.card_to_the_courier =
-    courierCard.value
+  // orderCartStore.autoOrderDetail.payment_method.card_to_the_courier =
+  //   courierCard.value
   orderCartStore.autoOrderDetail.payment_method.card_id = cardId.value
 
   if (isCartRoute.value) {

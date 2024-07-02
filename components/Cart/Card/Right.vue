@@ -40,9 +40,6 @@ import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useModalStore } from '~/store/modal.js'
 
-const { locale } = useI18n()
-const router = useRouter()
-
 const orderCartStore = useCartOrderStore()
 const cartStore = useCartStore()
 
@@ -73,6 +70,10 @@ const goToPayment = () => {
 
 const goToAutoOrderPayment = () => {
   if (token.value) {
+    if (!useAuthStore().user?.is_premium) {
+      modalStore.premiumModel = true
+      return
+    }
     showOrder.value = true
     isAuto.value = true
     if (

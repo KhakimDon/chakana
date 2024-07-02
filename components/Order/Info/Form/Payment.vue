@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div
-      class="flex-y-center gap-1 select-none cursor-pointer"
-      @click="values.card_to_courier = !values.card_to_courier"
-    >
-      <SvgoProfileUser class="text-orange text-2xl" />
-      <div
-        class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"
-      >
-        <p class="text-sm font-semibold leading-tight text-dark">
-          {{ $t('courier_card') }}
-        </p>
-        <FormRadio
-          v-if="!values.card_to_courier"
-          v-model="values.card_to_courier"
-          class="!p-0"
-        />
-        <FormRadio v-else class="!p-0" />
-      </div>
-    </div>
+    <!--    <div-->
+    <!--      class="flex-y-center gap-1 select-none cursor-pointer"-->
+    <!--      @click="values.card_to_courier = !values.card_to_courier"-->
+    <!--    >-->
+    <!--      <SvgoProfileUser class="text-orange text-2xl" />-->
+    <!--      <div-->
+    <!--        class="flex-y-center gap-1 border-b border-white-100 py-4 justify-between w-full"-->
+    <!--      >-->
+    <!--        <p class="text-sm font-semibold leading-tight text-dark">-->
+    <!--          {{ $t('courier_card') }}-->
+    <!--        </p>-->
+    <!--        <FormRadio-->
+    <!--          v-if="!values.card_to_courier"-->
+    <!--          v-model="values.card_to_courier"-->
+    <!--          class="!p-0"-->
+    <!--        />-->
+    <!--        <FormRadio v-else class="!p-0" />-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div
       class="flex-y-center gap-1 select-none cursor-pointer"
       @click="values.cash = !values.cash"
@@ -126,30 +126,30 @@ watch(
   () => values.cash,
   (val) => {
     if (val) {
-      values.card_to_courier = false
+      // values.card_to_courier = false
       values.provider_id = 0
       values.card_id = 0
     }
   }
 )
 
-watch(
-  () => values.card_to_courier,
-  (val) => {
-    if (val) {
-      values.cash = false
-      values.provider_id = 0
-      values.card_id = 0
-    }
-  }
-)
+// watch(
+//   () => values.card_to_courier,
+//   (val) => {
+//     if (val) {
+//       values.cash = false
+//       values.provider_id = 0
+//       values.card_id = 0
+//     }
+//   }
+// )
 
 watch(
   () => values.provider_id,
   (val) => {
     if (val) {
       values.cash = false
-      values.card_to_courier = false
+      // values.card_to_courier = false
       values.card_id = 0
       values.provider_info = paymentProviders.value.find((e) => e.id === val)
     }
@@ -161,7 +161,7 @@ watch(
   (val) => {
     if (val) {
       values.cash = false
-      values.card_to_courier = false
+      // values.card_to_courier = false
       values.provider_id = 0
     }
   }

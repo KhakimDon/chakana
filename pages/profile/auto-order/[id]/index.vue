@@ -70,9 +70,9 @@
     <h3 class="text-base text-dark font-extrabold leading-130 mb-3 mt-6">
       {{ $t('payment_method') }}
     </h3>
+    <!--        card_to_courier: data.payment_type === 'card_to_courier',-->
     <PaymentSectionPaymentMethod
       :default-data="{
-        card_to_courier: data.payment_type === 'card_to_courier',
         cash: data.payment_type === 'cash',
         card_id: data.payment_type === 'card' ? data.card_data?.id : 0,
         balance: data.payment_type === 'balance',
@@ -173,10 +173,10 @@ function saveAutoOrder() {
         weekdays: data.value.delivery_date_data.weekdays,
         delivery_time: data.value.delivery_date_data.delivery_time,
         payment_type: {
-          card_to_courier:
-            typeof data.value.payment_type_data?.card_to_courier === 'boolean'
-              ? data.value.payment_type_data?.card_to_courier
-              : data.value.payment_type === 'card_to_courier',
+          // card_to_courier:
+          //   typeof data.value.payment_type_data?.card_to_courier === 'boolean'
+          //     ? data.value.payment_type_data?.card_to_courier
+          //     : data.value.payment_type === 'card_to_courier',
           cash:
             typeof data.value.payment_type_data?.cash === 'boolean'
               ? data.value.payment_type_data?.cash
@@ -238,9 +238,10 @@ function savePayment(item: any) {
     data.value.payment_type = 'cash'
   } else if (item.provider_id > 0) {
     data.value.payment_type = 'provider'
-  } else {
-    data.value.payment_type = 'card_to_courier'
   }
+  // else {
+  //   data.value.payment_type = 'card_to_courier'
+  // }
 }
 
 const cartStore = useCartStore()

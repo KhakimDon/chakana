@@ -44,6 +44,7 @@ import { useCustomToast } from '~/composables/useCustomToast.js'
 import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
+import { useModalStore } from '~/store/modal.js'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -62,6 +63,10 @@ const { showToast } = useCustomToast()
 
 const goToPayment = () => {
   if (isAutoOrder.value) {
+    if (!useAuthStore().user?.is_premium) {
+      useModalStore().premiumModel = true
+      return
+    }
     orderCartStore
       .createAutoOrder({
         name: orderDetail.value.name,
@@ -69,7 +74,7 @@ const goToPayment = () => {
         delivery_time: orderDetail.value.delivery_time.substring(0, 5),
         payment_type: {
           balance: orderDetail.value.balance,
-          card_to_courier: orderDetail.value.card_to_courier,
+          // card_to_courier: orderDetail.value.card_to_courier,
           cash: orderDetail.value.cash,
           card_id: orderDetail.value.card_id,
           provider_id: orderDetail.value.provider_id,
@@ -124,7 +129,7 @@ const goToPayment = () => {
         comment_to_picker: orderDetail.value.picker_comment,
         payment_method: {
           balance: orderDetail.value.balance,
-          card_to_the_courier: orderDetail.value.card_to_courier,
+          // card_to_the_courier: orderDetail.value.card_to_courier,
           cash: orderDetail.value.cash,
           card_id: orderDetail.value.card_id,
           provider_id: orderDetail.value.provider_id,

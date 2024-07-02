@@ -67,7 +67,7 @@ export const orderFormPromocode = useForm(
 
 export const orderFormPayment = useForm(
   {
-    card_to_courier: false,
+    // card_to_courier: false,
     cash: false,
     card_id: 0,
     balance: false,

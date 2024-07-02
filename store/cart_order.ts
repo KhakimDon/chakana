@@ -7,7 +7,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     name: '',
     when_to_deliver: '',
     payment_method: {
-      card_to_the_courier: false,
+      // card_to_the_courier: false,
       cash: false,
       card_id: 0,
       provider_id: 0,
