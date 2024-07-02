@@ -107,7 +107,7 @@
           data.delivery?.carrier?.id &&
           (status === 'on_the_way' || status === 'delivered')
         "
-        :no-write="status === 'delivered'"
+        no-write
         class="mt-6"
         :courier="data.delivery.carrier"
       />
@@ -117,27 +117,14 @@
       >
         {{ $t('payment_method') }}
       </h3>
-      <!--      Todo: fix it-->
       <PaymentCardInfo
         v-if="status === 'delivered'"
         class="mb-5"
-        icon="SvgoProfileMoney"
-        icon-class="text-green !text-2xl"
+        :icon="paymentIcon"
+        :icon-class="`${paymentIconClass} !text-2xl`"
         no-clickable
         text-wrapper-class="border-none"
-        :title="
-          data.payment_type === 'cash'
-            ? $t('cash')
-            : data.payment_type === 'card_to_courier'
-            ? $t('courier_card')
-            : data.payment_type === 'card'
-            ? $t('payment_via_card')
-            : data.payment_type === 'provider'
-            ? data.provider?.name
-            : data.payment_type === 'balance'
-            ? $t('use_balance')
-            : $t('payment_method')
-        "
+        :title="paymentTitle"
       />
       <BaseButton
         v-if="status === 'delivered' || status === 'cancelled'"
@@ -164,10 +151,14 @@ import {
   SvgoCommonTick,
   SvgoProfileSidebarCart,
 } from '#components'
+import { CONFIG } from '~/config/index.js'
 import type { IOrderDetail } from '~/types/profile.js'
 
 const route = useRoute()
 const router = useRouter()
+
+const { t } = useI18n()
+const { handleError } = useErrorHandling()
 
 const localePath = useLocalePath()
 
@@ -189,7 +180,6 @@ const steps = [
     icon: SvgoCommonFlag,
   },
 ]
-const step = ref(1)
 
 const { data, error } = await useAsyncData('orderSingle', () =>
   useApi().$get<IOrderDetail>(`/order/detail/${route.params.id}`)
@@ -205,12 +195,15 @@ const products = ref()
 const productsLoading = ref(true)
 
 const ranked = ref(orderStatus.value?.rank)
-useApi()
-  .$get(`order/products/${route.params.id}`)
-  .then((res) => {
-    products.value = res
-  })
-  .finally(() => (productsLoading.value = false))
+function getProducts() {
+  useApi()
+    .$get(`order/products/${route.params.id}`)
+    .then((res) => {
+      products.value = res
+    })
+    .finally(() => (productsLoading.value = false))
+}
+getProducts()
 
 const reorderLoading = ref(false)
 function reOrder() {
@@ -232,4 +225,78 @@ function reOrder() {
     })
     .finally(() => (reorderLoading.value = false))
 }
+
+const paymentIcon = computed(() => {
+  return data.value?.payment_type === 'card_to_courier'
+    ? 'SvgoProfileUser'
+    : data.value?.payment_type === 'card'
+    ? 'SvgoProfileCard'
+    : data.value?.payment_type === 'provider'
+    ? 'SvgoProfileCoins'
+    : 'SvgoProfileMoney'
+})
+
+const paymentIconClass = computed(() => {
+  return data.value?.payment_type === 'cash'
+    ? '!text-green'
+    : data.value?.payment_type === 'card'
+    ? '!text-blue-100'
+    : '!text-orange'
+})
+
+const paymentTitle = computed(() => {
+  return data.value?.payment_type === 'cash'
+    ? t('cash')
+    : data.value?.payment_type === 'card_to_courier'
+    ? t('courier_card')
+    : data.value?.payment_type === 'card'
+    ? t('credit_card')
+    : data.value?.payment_type === 'provider'
+    ? data.value?.provider?.id === 17
+      ? 'Click'
+      : 'Payme'
+    : t('payment_method')
+})
+
+const connection = ref()
+const connectStatusSocket = () => {
+  try {
+    connection.value = new WebSocket(`${CONFIG.WS_URL}/websocket`)
+
+    connection.value.onopen = () => {
+      const msg = {
+        event_name: 'subscribe',
+        data: {
+          channels: [`order_status_${route.params.id}`],
+          last: 0,
+        },
+      }
+      connection.value.send(JSON.stringify(msg))
+    }
+
+    connection.value.onmessage = (event: any) => {
+      const newData = JSON.parse(JSON.parse(event.data)[0].message.payload)
+      orderStatus.value.status = newData.new_status
+      useApi()
+        .$get(`/order/detail/${route.params.id}`)
+        .then((res) => {
+          data.value = res
+        })
+      productsLoading.value = true
+      getProducts()
+    }
+  } catch (error) {
+    handleError(error)
+  }
+}
+
+onBeforeUnmount(() => {
+  if (connection.value && connection.value.readyState === WebSocket.OPEN) {
+    connection.value.close()
+  }
+})
+
+onMounted(() => {
+  connectStatusSocket()
+})
 </script>
