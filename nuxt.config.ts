@@ -78,6 +78,7 @@ export default defineNuxtConfig({
     defaultLocale: 'uz',
     strategy: 'prefix_and_default',
   },
+  plugins: ['~/plugins/firebase'],
   nitro: {
     serveStatic: true,
   },
