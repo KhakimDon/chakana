@@ -10,3 +10,14 @@
     <LayoutMobileBottomBar v-if="!useMobile('desktop')" />
   </div>
 </template>
+<script setup lang="ts">
+onUpdated(() => {
+  console.clear()
+})
+
+onMounted(() => {
+  console.clear()
+})
+
+console.clear()
+</script>

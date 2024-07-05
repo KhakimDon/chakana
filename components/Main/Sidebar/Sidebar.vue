@@ -91,7 +91,6 @@ watch(
       if (route.name.includes('index-category-slug')) {
         const categories = route.query.categories as string
         if (!categories) {
-          console.log('if watch', props.single?.children)
           checkbox.value = props.single?.children?.map(
             (category) => category.id
           )
@@ -122,7 +121,6 @@ watch(
 if (route.name.includes('index-category-slug')) {
   const categories = route.query.categories as string
   if (!categories) {
-    console.log('if', props.single?.children)
     checkbox.value = props.single?.children?.map((category) => category.id)
   } else {
     checkbox.value = categories.split(',').map((category) => Number(category))

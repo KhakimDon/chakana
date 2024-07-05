@@ -70,7 +70,5 @@ const changeCoords = () => {
   show.value = true
 }
 
-function saveAddress(data: any) {
-  console.log(data)
-}
+function saveAddress(data: any) {}
 </script>

@@ -101,9 +101,6 @@ function getSession() {
       qrCode.value = res.qr_login_value
       useReviewSocket()
     })
-    .catch((err) => {
-      console.log('err', err)
-    })
     .finally(() => {
       loading.value = false
     })

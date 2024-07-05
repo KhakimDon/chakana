@@ -109,7 +109,6 @@ function createCard() {
       step.value = 2
     })
     .catch((err: Error) => {
-      console.log(err)
       handleError(err)
     })
     .finally(() => {
