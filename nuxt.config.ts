@@ -55,6 +55,7 @@ export default defineNuxtConfig({
       },
     ],
     '@nuxt/image',
+    'nuxt-gtag',
   ],
 
   i18n: {
@@ -77,6 +78,7 @@ export default defineNuxtConfig({
     defaultLocale: 'uz',
     strategy: 'prefix_and_default',
   },
+  plugins: ['~/plugins/firebase'],
   nitro: {
     serveStatic: true,
   },
@@ -88,5 +90,8 @@ export default defineNuxtConfig({
     public: {
       baseURL: 'localhost',
     },
+  },
+  gtag: {
+    id: process.env.GOOGLE_TAG_ID,
   },
 })

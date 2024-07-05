@@ -10,14 +10,16 @@ export const useCardsStore = defineStore('cardsStore', {
   }),
   actions: {
     fetchCards() {
-      useApi()
-        .$get<IBankCard[]>('/card/list')
-        .then((res) => {
-          this.cards.list = res
-        })
-        .finally(() => {
-          this.cards.loading = false
-        })
+      if (useCookie('access_token').value) {
+        useApi()
+          .$get<IBankCard[]>('/card/list')
+          .then((res) => {
+            this.cards.list = res
+          })
+          .finally(() => {
+            this.cards.loading = false
+          })
+      }
     },
     deleteCard(card: IBankCard) {
       this.deleteLoading = true
