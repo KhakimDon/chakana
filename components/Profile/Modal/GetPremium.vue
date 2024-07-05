@@ -194,6 +194,8 @@ watch(
   }
 )
 
+const balanceStore = useBalanceStore()
+
 const subscriptionStore = useSubscriptionsStore()
 const authStore = useAuthStore()
 function add() {
@@ -217,6 +219,7 @@ function add() {
       }
       emit('update:modelValue', false)
       emit('close')
+      balanceStore.fetchBalance()
     })
     .catch((err) => {
       handleError(err)

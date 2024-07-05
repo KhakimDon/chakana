@@ -47,22 +47,22 @@
         class="text-xs text-gray-100 leading-140 text-center mt-3"
       >
         <template #terms>
-          <a
-            href="https://www.google.com"
+          <NuxtLinkLocale
+            to="/page/privacy-policy"
             target="_blank"
             class="text-blue-100 hover:underline"
           >
             {{ $t('terms') }}
-          </a>
+          </NuxtLinkLocale>
         </template>
         <template #privacy>
-          <a
-            href="https://www.google.com"
+          <NuxtLinkLocale
+            to="/page/privacy-policy"
             target="_blank"
             class="text-blue-100 hover:underline"
           >
             {{ $t('privacy') }}
-          </a>
+          </NuxtLinkLocale>
         </template>
       </i18n-t>
     </div>
