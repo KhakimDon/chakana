@@ -52,7 +52,7 @@ function saveOrderName(data: any) {
 }
 
 function savePayment(data: any) {
-  orderCartStore.orderDetail.card_to_courier = data.card_to_courier
+  // orderCartStore.orderDetail.card_to_courier = data.card_to_courier
   orderCartStore.orderDetail.cash = data.cash
   orderCartStore.orderDetail.card_id = data.card_id
   orderCartStore.orderDetail.provider_id = data.provider_id

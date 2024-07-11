@@ -131,7 +131,6 @@ getSingle()
 const target = ref<HTMLElement | null>(null)
 
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
-  console.log('isIntersecting', isIntersecting)
   if (isIntersecting) {
     fetchData(false)
   }

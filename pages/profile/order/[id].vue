@@ -226,10 +226,12 @@ function reOrder() {
     .finally(() => (reorderLoading.value = false))
 }
 
+//  data.value?.payment_type === 'card_to_courier'
+//     ? 'SvgoProfileUser'
+//     :
+
 const paymentIcon = computed(() => {
-  return data.value?.payment_type === 'card_to_courier'
-    ? 'SvgoProfileUser'
-    : data.value?.payment_type === 'card'
+  return data.value?.payment_type === 'card'
     ? 'SvgoProfileCard'
     : data.value?.payment_type === 'provider'
     ? 'SvgoProfileCoins'
@@ -244,11 +246,12 @@ const paymentIconClass = computed(() => {
     : '!text-orange'
 })
 
+// data.value?.payment_type === 'card_to_courier'
+//     ? t('courier_card')
+//     :
 const paymentTitle = computed(() => {
   return data.value?.payment_type === 'cash'
     ? t('cash')
-    : data.value?.payment_type === 'card_to_courier'
-    ? t('courier_card')
     : data.value?.payment_type === 'card'
     ? t('credit_card')
     : data.value?.payment_type === 'provider'

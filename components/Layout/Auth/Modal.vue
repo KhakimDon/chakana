@@ -126,7 +126,6 @@ function confirmCode() {
       },
     })
     .then((res: any) => {
-      console.log('res', res)
       params.value.isRegister = res.register
       if (params.value.isRegister) {
         step.value = 'register'

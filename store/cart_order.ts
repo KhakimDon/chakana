@@ -7,7 +7,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     name: '',
     when_to_deliver: '',
     payment_method: {
-      card_to_the_courier: false,
+      // card_to_the_courier: false,
       cash: false,
       card_id: 0,
       provider_id: 0,
@@ -188,11 +188,12 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     promo_code_id?: number
     address_id?: number
     is_use_balance?: boolean
+    when_to_deliver?: boolean
   }) {
     return new Promise((resolve, reject) => {
       cart.loading = true
       useApi()
-        .$get(`/cart/detail/web/confirm`, {
+        .$get(`/cart/detail/mobile/confirm`, {
           query: {
             ...data,
           },

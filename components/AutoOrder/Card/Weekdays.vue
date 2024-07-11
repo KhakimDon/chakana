@@ -38,7 +38,6 @@ const weekdaysLoading = computed(() => orderCartStore.weekdays.loading)
 
 onMounted(() => {
   orderCartStore.getWeekdaysList().then(() => {
-    console.log(props.modelValue)
     if (!props.modelValue) {
       emit('update:modelValue', orderCartStore.weekdays.list[0].id)
     }

@@ -27,7 +27,7 @@ const emit = defineEmits<{
 
 const form = useForm(
   {
-    card_to_courier: false,
+    // card_to_courier: false,
     cash: false,
     card_id: 0,
     balance: false,
@@ -40,7 +40,7 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val) {
-      form.values.card_to_courier = props.defaultInfo.card_to_courier
+      // form.values.card_to_courier = props.defaultInfo.card_to_courier
       form.values.cash = props.defaultInfo.cash
       form.values.card_id = props.defaultInfo.card_id
       form.values.balance = props.defaultInfo.balance

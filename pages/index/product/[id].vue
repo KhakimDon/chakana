@@ -33,16 +33,13 @@
             class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
           >
             <swiper
-              v-if="data?.extra_images?.length"
+              v-if="data?.extra_images?.length || data?.main_image"
               :modules="[Thumbs, Navigation]"
               :thumbs="{ swiper: thumbsSwiper }"
               class="mb-3 md:mb-5 w-full"
               :slides-per-view="'auto'"
             >
-              <swiper-slide
-                v-for="(item, index) in data?.extra_images"
-                :key="index"
-              >
+              <swiper-slide v-for="(item, index) in images" :key="index">
                 <div
                   class="flex-center bg-white-100 rounded-2xl w-full min-h-[313px] p-3 mb-4"
                 >
@@ -436,6 +433,17 @@ const savedProducts = () => {
 const { data, error } = (await useAsyncData('product', async () => {
   return await useApi().$get(`/product/${route?.params.id}`)
 })) as any
+
+const images = computed(() => {
+  return data?.value?.extra_images?.length > 0
+    ? data?.value?.extra_images
+    : [
+        {
+          image: data?.value?.main_image,
+          video_url: null,
+        },
+      ]
+})
 
 if (error.value) {
   showError({

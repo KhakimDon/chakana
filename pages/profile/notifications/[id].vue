@@ -42,13 +42,33 @@
       {{ $t('more_about_auto_order') }}
     </NuxtLinkLocale>
     <div v-if="false" class="flex gap-y-2 gap-x-4 max-sm:flex-col mt-4 md:mt-8">
-      <BaseButton :text="$t('accept')" class="!py-2 md:!py-3 w-full" />
       <BaseButton
+        :loading
+        :text="$t('accept')"
+        class="!py-2 md:!py-3 w-full"
+        @click="submitOrder(true)"
+      />
+      <BaseButton
+        :loading
         :text="$t('cancel')"
         variant="secondary"
         class="!py-2 md:!py-3 w-full"
+        @click="submitOrder(false)"
       />
     </div>
+    <!--    <div-->
+    <!--      v-else-->
+    <!--      class="rounded-xl border p-3 flex-y-center gap-3 text-base leading-140 text-dark font-semibold"-->
+    <!--      :class="true ? 'border-green' : 'border-red'"-->
+    <!--    >-->
+    <!--      <div-->
+    <!--        class="w-11 h-11 rounded-lg flex-center"-->
+    <!--        :class="true ? 'bg-green' : 'bg-red'"-->
+    <!--      >-->
+    <!--        <SvgoCommonInfo class="text-2xl leading-6 text-white" />-->
+    <!--      </div>-->
+    <!--      {{ true ? $t('your_order_accepted') : $t('your_order_canceled') }}-->
+    <!--    </div>-->
   </div>
 </template>
 <script setup lang="ts">
@@ -58,4 +78,26 @@ const { data, error } = await useAsyncData(() =>
   useApi().$get(`/notification/${useRoute().params.id}`)
 )
 if (error.value) showError({ status: 404 })
+
+const { handleError } = useErrorHandling()
+
+const success = ref(false)
+
+const loading = ref(false)
+function submitOrder(confirm: boolean) {
+  loading.value = true
+  useApi()
+    .$post(`/auto-order/confirm/{auto_order_id}`, {
+      body: {
+        confirm,
+      },
+    })
+    .then(() => {
+      success.value = confirm
+    })
+    .catch((err) => {
+      handleError(err)
+    })
+    .finally(() => (loading.value = true))
+}
 </script>

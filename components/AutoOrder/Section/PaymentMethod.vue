@@ -23,10 +23,12 @@ const orderCartStore = useCartOrderStore()
 
 const payment = computed(() => orderCartStore.autoOrderDetail.payment_method)
 
+// payment.value?.card_to_courier
+//     ? 'SvgoProfileUser'
+//     :
+
 const paymentIcon = computed(() => {
-  return payment.value?.card_to_courier
-    ? 'SvgoProfileUser'
-    : payment.value?.card_id
+  return payment.value?.card_id
     ? 'SvgoProfileCard'
     : payment.value?.provider_id
     ? 'SvgoProfileCoins'
@@ -41,11 +43,12 @@ const paymentIconClass = computed(() => {
     : '!text-orange'
 })
 
+// payment.value?.card_to_courier
+//     ? t('courier_card')
+//     :
 const paymentTitle = computed(() => {
   return payment.value?.cash
     ? t('cash')
-    : payment.value?.card_to_courier
-    ? t('courier_card')
     : payment.value?.card_id
     ? t('credit_card')
     : payment.value?.provider_id
