@@ -42,6 +42,7 @@
             <PaymentSectionCommentForCurier
               :comment="orderCartStore.orderDetail?.picker_comment"
               :subtitle="$t('picker_comment')"
+              is-picker
               @save="savePickerComment"
             />
           </section>
@@ -87,6 +88,8 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
+
 import { useAuthStore } from '~/store/auth.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { useBalanceStore } from '~/store/profile/balance.js'
@@ -132,9 +135,40 @@ const selectPromoCode = (item: any) => {
   })
 }
 
+function getExpressDeliveryPrice(data: any) {
+  const now = dayjs()
+  if (data?.delivery_time) {
+    const deliveryTime =
+      data.delivery_time === 'nearest_2_hours'
+        ? dayjs(now.add(2, 'hours')).format('DD.MM.YYYY HH:mm:ss')
+        : dayjs(data.delivery_time).format('DD.MM.YYYY HH:mm:ss')
+
+    const query = orderCartStore.orderDetail.promo_code_id
+      ? {
+          promo_code_id: orderCartStore.orderDetail.promo_code_id,
+          when_to_deliver: deliveryTime,
+        }
+      : {
+          when_to_deliver: deliveryTime,
+        }
+
+    orderCartStore.getCartDetailConfirm(query)
+  }
+
+  const query = {
+    when_to_deliver: dayjs(
+      now.add(2, 'hours').set('minutes', 0).set('seconds', 0)
+    ).format('DD.MM.YYYY HH:mm:ss'),
+  }
+
+  orderCartStore.getCartDetailConfirm(query)
+}
+
 function saveOrderClock(data: any) {
   orderCartStore.orderDetail.delivery_time = data.delivery_time
   orderCartStore.orderDetail.weekdays = data.weekdays
+
+  getExpressDeliveryPrice(data)
 }
 
 const useBalance = ref(false)
@@ -151,4 +185,6 @@ await useAsyncData('balance', () => balanceStore.fetchBalance())
 const goBack = () => {
   router.back()
 }
+
+getExpressDeliveryPrice(orderCartStore.orderDetail)
 </script>

@@ -39,6 +39,15 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
+      <div class="flex-y-center justify-between">
+        <p class="text-xs font-normal leading-none text-gray-100">
+          {{ $t('delivery_price') }}
+        </p>
+        <p class="text-xs font-semibold leading-none text-dark">
+          {{ formatMoneyDecimal(cartDetail?.delivery_price ?? 0, 0) }}
+          <span class="text-[10px] font-semibold leading-130">UZS</span>
+        </p>
+      </div>
       <div
         v-if="cartDetail?.reward_discount"
         class="flex-y-center justify-between"
@@ -109,9 +118,11 @@ const cartDetail = computed<any>(() => orderCartStore?.cart?.detail)
 
 onMounted(() => {
   if (route.path?.includes('/payment')) {
-    orderCartStore.getCartDetailConfirm({
-      promo_code_id: useCookie('order_data').value?.promo_code_id,
-    })
+    if (useCookie('order_data').value?.promo_code_id) {
+      orderCartStore.getCartDetailConfirm({
+        promo_code_id: useCookie('order_data').value?.promo_code_id,
+      })
+    }
   } else {
     orderCartStore.getCartDetail()
   }

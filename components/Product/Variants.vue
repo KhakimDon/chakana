@@ -1,59 +1,58 @@
 <template>
   <div class="w-full mt-4 md:mt-2">
     <div>
-      <Transition name="fade-in">
-        <swiper
-          v-if="variants?.length"
-          :modules="[Thumbs, Navigation]"
-          :thumbs="{ swiper: thumbsSwiper }"
-        >
-          <div class="flex items-start gap-1">
-            <p class="text-gray-100 text-xs">{{ $t('vid') }}:</p>
-            <p class="text-dark text-xs">{{ variant }}</p>
-          </div>
-        </swiper>
-      </Transition>
+      <div class="flex items-start gap-1">
+        <p class="text-gray-100 text-xs">{{ $t('vid') }}:</p>
+        <p class="text-dark text-xs">variant</p>
+      </div>
     </div>
-    <swiper
+    <Swiper
+      :key="trigger"
       v-bind="thumbSettings"
       class="!w-full !pt-[18px] relative"
       :space-between="6"
       @swiper="setThumbsSwiper"
       @slide-change="onChange"
     >
-      <swiper-slide
+      <SwiperSlide
         v-for="(item, index) in variants"
         :key="index"
         class="!w-16 cursor-pointer"
-        @click="variantsName(item)"
       >
-        <div
-          class="rounded-10 h-[46px] relative bg-white-100 image-block opacity-60 border-2 border-transparent"
+        <NuxtLinkLocale
+          :to="`/product/${item?.id}`"
+          class="rounded-10 h-[46px] relative bg-white-100 opacity-60 border-2 border-transparent block"
+          :class="{
+            '!border-orange !opacity-100': activeItemId === item?.id,
+          }"
         >
           <NuxtImg
-            :src="item.main_image"
+            :src="item?.main_image"
             alt="card-image"
             class="absolute-x object-contain top-[-15px] w-[56px]"
             loading="lazy"
           />
-        </div>
+        </NuxtLinkLocale>
         <p class="text-[10px] text-center opacity-60 line-clamp-2 mt-2">
           {{ item.name }}
         </p>
-      </swiper-slide>
+      </SwiperSlide>
       <button
-        v-if="!isEnd && variants?.length > 8"
-        class="bg-white btn-arrow btn-arrow-prev absolute top-1/2 z-10 right-0 p-1"
-        @click="slideNext"
-      >
-        <IconArrow class="icon-chevron text-xl" />
-      </button>
-      <button
-        v-if="!isBeginning && variants?.length > 8"
-        class="bg-white btn-arrow btn-arrow-next absolute top-1/2 z-10 left-0 p-1"
-        @click="slidePrev"
+        class="bg-white btn-arrow btn-arrow-prev absolute top-1/2 z-10 left-0 p-1 opacity-0 pointer-events-none"
+        :class="{
+          '!opacity-100 !pointer-events-auto':
+            !isBeginning && variants?.length > 8,
+        }"
       >
         <IconArrow class="icon-chevron text-xl rotate-180" />
+      </button>
+      <button
+        class="bg-white btn-arrow btn-arrow-next absolute top-1/2 z-10 right-0 p-1 opacity-0 pointer-events-none"
+        :class="{
+          '!opacity-100 !pointer-events-auto': !isEnd && variants?.length > 8,
+        }"
+      >
+        <IconArrow class="icon-chevron text-xl" />
       </button>
       <span
         class="thumb-gradient left-0 pointer-events-none"
@@ -67,12 +66,12 @@
           'pointer-events-none opacity-0': isEnd || variants?.length < 8,
         }"
       />
-    </swiper>
+    </Swiper>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Navigation, Thumbs } from 'swiper/modules'
+import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import IconArrow from '~/assets/icons/Common/arrow.svg'
@@ -87,29 +86,25 @@ const props = defineProps<{
   variants: Variant[]
 }>()
 
+const route = useRoute()
+const activeItemId = computed(() =>
+  route.params.id ? Number(route.params.id) : 0
+)
+
+const activeIndex = computed(() =>
+  props?.variants.findIndex((item) => item?.id === activeItemId.value)
+)
+
 const thumbSettings = {
-  slidesPerView: 12,
+  slidesPerView: 'auto',
   spaceBetween: 6,
-  breakpoints: {
-    640: {
-      slidesPerView: 5,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 6,
-      spaceBetween: 10,
-    },
-    1024: {
-      slidesPerView: 6,
-      spaceBetween: 4,
-    },
-  },
+  initialSlide: activeIndex.value,
   navigation: {
     nextEl: '.btn-arrow-next',
     prevEl: '.btn-arrow-prev',
   },
   watchSlidesProgress: true,
-  modules: [Thumbs, Navigation],
+  modules: [Navigation],
 }
 const thumbsSwiper = ref<Swiper | null>(null)
 const setThumbsSwiper = (swiper: Swiper) => {
@@ -129,34 +124,18 @@ const onChange = (e: Swiper) => {
   }
 }
 
-const variant = ref(props?.variants[0]?.name)
+const trigger = ref(0)
 
-const variantsName = (e: Variant) => {
-  variant.value = e.name
-}
-
-const slideNext = () => {
-  if (thumbsSwiper.value) {
-    thumbsSwiper.value.slideNext()
-  }
-}
-
-const slidePrev = () => {
-  if (thumbsSwiper.value) {
-    thumbsSwiper.value.slidePrev()
-  }
-}
+onMounted(() => {
+  setTimeout(() => {
+    trigger.value++
+  }, 500)
+})
 </script>
 
 <style>
 .swiper-wrapper {
   min-width: 0 !important;
-}
-
-.swiper-slide-thumb-active .image-block {
-  border: 2px solid #ff831b !important;
-  border-radius: 10px !important;
-  opacity: 100%;
 }
 
 .swiper-slide-thumb-active p {
