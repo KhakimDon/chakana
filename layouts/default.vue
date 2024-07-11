@@ -16,15 +16,15 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 
 const messaging = getMessaging()
 
-onUpdated(() => {
-  console.clear()
-})
-
-onMounted(() => {
-  console.clear()
-})
-
-console.clear()
+// onUpdated(() => {
+//   console.clear()
+// })
+//
+// onMounted(() => {
+//   console.clear()
+// })
+//
+// console.clear()
 
 const activate = async () => {
   const token = await getToken(messaging, {

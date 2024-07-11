@@ -48,7 +48,7 @@
             product?.max_quantity > 0 ? $t('to_basket') : $t('out_of_stock')
           "
           variant="outline"
-          :disabled="addingToCart || product?.max_quantity === 0"
+          :disabled="addingToCart || product?.max_quantity <= 0"
           :loading="addingToCart"
           @click="addToCartFirstTime(product)"
         />
