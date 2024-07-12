@@ -192,6 +192,7 @@
             <ProductVariants
               v-if="data?.product_variants?.length"
               :variants="data?.product_variants"
+              :name="data?.name"
             />
           </div>
 
