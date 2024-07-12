@@ -139,15 +139,10 @@
                 v-if="count < 1 || addingToCart"
                 class="w-full"
                 :text="
-                  data?.quantity > 0 && data?.max_quantity > 0
-                    ? $t('to_basket')
-                    : $t('out_of_stock')
+                  data?.max_quantity > 0 ? $t('to_basket') : $t('out_of_stock')
                 "
                 variant="secondary"
-                :disabled="
-                  addingToCart ||
-                  !(data?.quantity > 0 && data?.max_quantity > 0)
-                "
+                :disabled="addingToCart || data?.max_quantity <= 0"
                 :loading="addingToCart"
                 @click="addToCartFirstTime(data)"
               >
