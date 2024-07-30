@@ -56,6 +56,13 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
     'nuxt-gtag',
+    [
+      'yandex-metrika-module-nuxt3',
+      {
+        id: 97948478,
+        webvisor: true,
+      },
+    ],
   ],
 
   i18n: {

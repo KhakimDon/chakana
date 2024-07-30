@@ -3,7 +3,7 @@
     <div>
       <div class="flex items-start gap-1">
         <p class="text-gray-100 text-xs">{{ $t('vid') }}:</p>
-        <p class="text-dark text-xs">variant</p>
+        <p class="text-dark text-xs">{{ name }}</p>
       </div>
     </div>
     <Swiper
@@ -29,7 +29,7 @@
           <NuxtImg
             :src="item?.main_image"
             alt="card-image"
-            class="absolute-x object-contain top-[-15px] w-[56px]"
+            class="absolute-x object-contain top-[-15px] w-[44px]"
             loading="lazy"
           />
         </NuxtLinkLocale>
@@ -84,6 +84,7 @@ interface Variant {
 
 const props = defineProps<{
   variants: Variant[]
+  name: string
 }>()
 
 const route = useRoute()
