@@ -328,7 +328,7 @@ const openDesc = () => {
 }
 
 const { list, loading, paginationData, loadMore } = useListFetcher(
-  'recommend/products',
+  `recommend/products/?product_id=${route.params.id}`,
   25,
   true
 )
