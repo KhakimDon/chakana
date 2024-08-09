@@ -7,7 +7,9 @@ export default defineNuxtConfig({
       },
     },
   },
+
   ssr: false,
+
   app: {
     head: {
       title: 'Холодильник Онлайн',
@@ -31,6 +33,7 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   css: [
     '~/assets/css/tailwind.css',
     '~/assets/css/_transitions.css',
@@ -39,6 +42,7 @@ export default defineNuxtConfig({
     'vue-toastification/dist/index.css',
     'swiper/css',
   ],
+
   modules: [
     '@nuxtjs/device',
     '@nuxtjs/tailwindcss',
@@ -85,20 +89,28 @@ export default defineNuxtConfig({
     defaultLocale: 'uz',
     strategy: 'prefix_and_default',
   },
+
   plugins: ['~/plugins/firebase'],
+
   nitro: {
     serveStatic: true,
   },
+
   build: {
     transpile: ['vue-toastification'],
   },
+
   devServerHandlers: [],
+
   runtimeConfig: {
     public: {
       baseURL: 'localhost',
     },
   },
+
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
   },
+
+  compatibilityDate: '2024-08-09',
 })

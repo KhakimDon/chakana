@@ -110,6 +110,7 @@ const goToPayment = () => {
       })
   } else {
     const now = dayjs()
+    console.log(orderDetail.value.delivery_time)
     orderCartStore
       .createOrder({
         address: {

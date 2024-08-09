@@ -50,10 +50,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import {
-  generateOrderIntervals,
-  generateOrderTomorrowIntervals,
-} from '~/components/Order/Info/Form/index.js'
+import { generateOrderIntervals } from '~/components/Order/Info/Form/index.js'
 
 interface Props {
   form: any
@@ -72,9 +69,8 @@ function chooseTime(interval: string) {
 }
 
 const intervals = ref()
-
 onMounted(() => {
-  intervals.value = generateOrderIntervals(props.isAuto)
+  intervals.value = generateOrderIntervals(props.isAuto, dayjs)
   if (!props.isAuto) {
     intervals.value.unshift('nearest_2_hours')
   }

@@ -1,5 +1,4 @@
 import { minLength, required } from '@vuelidate/validators'
-import dayjs from 'dayjs'
 
 import { isValidPhone } from '~/utils/functions/common.js'
 
@@ -76,7 +75,7 @@ export const orderFormPayment = useForm(
   {}
 )
 
-export function generateOrderIntervals(isAuto: boolean) {
+export function generateOrderIntervals(isAuto: boolean, dayjs: Function) {
   const now = isAuto ? new Date('2023-01-01 09:00:00') : new Date()
   const intervals = []
 
@@ -129,7 +128,11 @@ export function generateOrderIntervals(isAuto: boolean) {
         currentHour + 2,
         0
       )
-      intervals.push(startInterval.toISOString())
+      // console.log(
+      //   startInterval,
+      //   dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss')
+      // )
+      intervals.push(dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'))
       trigger += 1
       currentHour += 1
     }
@@ -138,7 +141,7 @@ export function generateOrderIntervals(isAuto: boolean) {
   return intervals
 }
 
-export function generateOrderTomorrowIntervals() {
+export function generateOrderTomorrowIntervals(dayjs: Function) {
   const newDate = new Date()
   const now = new Date(
     newDate.getFullYear(),
@@ -167,7 +170,7 @@ export function generateOrderTomorrowIntervals() {
       currentHour,
       currentMinute
     )
-    intervals.push(startInterval.toISOString().slice(0, -8))
+    intervals.push(dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'))
     currentHour += 1
   }
 
