@@ -315,7 +315,12 @@ import IconHeartPlus from '~/assets/icons/Common/heart-plus.svg'
 import { shareData } from '~/data'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
-import { debounce, formatMoneyDecimal, share } from '~/utils/functions/common'
+import {
+  debounce,
+  formatMoneyDecimal,
+  getImageSize,
+  share,
+} from '~/utils/functions/common'
 
 const open = ref(false)
 const show = ref(false)
@@ -435,7 +440,7 @@ const images = computed(() => {
     ? data?.value?.extra_images
     : [
         {
-          image: data?.value?.main_image,
+          image: getImageSize(data?.value, data?.value?.main_image, 'small'),
           video_url: null,
         },
       ]

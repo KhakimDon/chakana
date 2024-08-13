@@ -140,6 +140,7 @@ export const checkExpireDate = (value: any) => {
 }
 
 export const getImageSize = (
+  card: any,
   url: string,
   size: 'small' | 'medium' | 'large'
 ) => {
@@ -148,8 +149,16 @@ export const getImageSize = (
     medium: 578,
     large: 1024,
   }
+
   const newUrl = url?.split('_')
 
+  if (card?.thumbnails?.image_256 && size === 'small') {
+    return card?.thumbnails?.image_256
+  } else if (card?.thumbnails?.image_512 && size === 'medium') {
+    return card?.thumbnails?.image_512
+  } else if (card?.thumbnails?.image_1024 && size === 'large') {
+    return card?.thumbnails?.image_1024
+  }
   return newUrl?.[0] + '_' + sizes[size]
 }
 

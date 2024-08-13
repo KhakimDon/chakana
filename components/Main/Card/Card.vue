@@ -12,7 +12,7 @@
           :type="card?.discount_type"
         />
         <nuxt-img
-          :src="getImageSize(card?.main_image, 'small')"
+          :src="getImageSize(card, card?.main_image, 'small')"
           alt="card-image"
           class="w-[135px] h-full object-contain -translate-y-6"
           loading="lazy"
