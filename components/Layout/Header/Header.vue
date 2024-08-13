@@ -1,7 +1,7 @@
 <template>
   <header
     :key="locale"
-    class="w-full border-b border-white-100 py-4 !fixed w-full top-0"
+    class="w-full border-b border-white-100 py-4 !fixed top-0"
   >
     <div class="container grid grid-cols-3 gap-4">
       <CommonLogo />
@@ -12,7 +12,7 @@
             :to="item?.isPremium ? '#' : item?.link"
             exact-active-class="text-orange"
             class="text-sm leading-[18px] cursor-pointer font-semibold text-dark hover:text-orange transition-300 flex-y-center gap-1"
-            @click="item?.isPremium ? (modalStore.premiumModel = true) : null"
+            @click="item?.isPremium ? showPremiumModal() : null"
           >
             {{ item?.title }}
             <IconCrown
@@ -79,6 +79,14 @@ const user = computed(() => authStore.user)
 const hasPremium = computed(() => user.value?.is_premium)
 
 const { locale } = useI18n()
+
+function showPremiumModal() {
+  if (user.value?.id) {
+    modalStore.premiumModel = true
+  } else {
+    openAuthModal()
+  }
+}
 
 function openAuthModal() {
   authStore.showAuth = true
