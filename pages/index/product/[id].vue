@@ -440,7 +440,7 @@ const images = computed(() => {
     ? data?.value?.extra_images
     : [
         {
-          image: getImageSize(data?.value, data?.value?.main_image, 'small'),
+          image: getImageSize(data?.value, data?.value?.main_image, 'large'),
           video_url: null,
         },
       ]
