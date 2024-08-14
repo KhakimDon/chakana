@@ -75,42 +75,43 @@
         </div>
       </Transition>
     </CommonSectionWrapper>
-    <CommonSectionWrapper title="popular_brands" class="my-6">
-      <MainBrandsWrapper
-        :list="popularBrands?.list"
-        :loading="popularBrands?.loading"
-      />
-    </CommonSectionWrapper>
-    <CommonSectionWrapper title="profitable_shelf" class="my-6">
-      <Transition name="fade" mode="out-in">
-        <div
-          :key="products?.loading"
-          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"
-        >
-          <template v-if="products?.loading">
-            <MainCardLoading v-for="key in 16" :key />
-          </template>
-          <template v-else-if="!products?.loading && products?.list.length">
-            <MainCard
-              v-for="(card, index) in products?.list"
-              :key="index"
-              :card
-            />
-          </template>
-          <template v-if="products?.params?.loading">
-            <MainCardLoading v-for="key in 10" :key />
-          </template>
-        </div>
-      </Transition>
-      <div
-        v-if="
-          products.params?.total > products?.list.length &&
-          !products?.loading &&
-          !products?.params?.loading
-        "
-        ref="target"
-      />
-    </CommonSectionWrapper>
+    <!--    <CommonSectionWrapper v-if="false" title="popular_brands" class="my-6">-->
+    <!--      <MainBrandsWrapper-->
+    <!--        :list="popularBrands?.list"-->
+    <!--        :loading="popularBrands?.loading"-->
+    <!--      />-->
+    <!--    </CommonSectionWrapper>-->
+    <!--    ~~~~-->
+    <!--    <CommonSectionWrapper title="profitable_shelf" class="my-6">-->
+    <!--      <Transition name="fade" mode="out-in">-->
+    <!--        <div-->
+    <!--          :key="products?.loading"-->
+    <!--          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"-->
+    <!--        >-->
+    <!--          <template v-if="products?.loading">-->
+    <!--            <MainCardLoading v-for="key in 16" :key />-->
+    <!--          </template>-->
+    <!--          <template v-else-if="!products?.loading && products?.list.length">-->
+    <!--            <MainCard-->
+    <!--              v-for="(card, index) in products?.list"-->
+    <!--              :key="index"-->
+    <!--              :card-->
+    <!--            />-->
+    <!--          </template>-->
+    <!--          <template v-if="products?.params?.loading">-->
+    <!--            <MainCardLoading v-for="key in 10" :key />-->
+    <!--          </template>-->
+    <!--        </div>-->
+    <!--      </Transition>-->
+    <!--      <div-->
+    <!--        v-if="-->
+    <!--          products.params?.total > products?.list.length &&-->
+    <!--          !products?.loading &&-->
+    <!--          !products?.params?.loading-->
+    <!--        "-->
+    <!--        ref="target"-->
+    <!--      />-->
+    <!--    </CommonSectionWrapper>-->
   </div>
 </template>
 
@@ -123,22 +124,22 @@ import { useMainStore } from '~/store/main'
 
 const mainStore = useMainStore()
 
-const products = computed(() => mainStore.products)
+// const products = computed(() => mainStore.products)
 const discounts = computed(() => mainStore.discounts)
-const popularBrands = computed(() => mainStore.popularBrands)
+// const popularBrands = computed(() => mainStore.popularBrands)
 const banners = computed(() => mainStore.banners)
 
-if (!products.value?.list.length) {
-  mainStore.fetchProducts()
-}
+// if (!products.value?.list.length) {
+//   mainStore.fetchProducts()
+// }
 
 if (!discounts.value?.list.length) {
   mainStore.fetchDiscounts()
 }
 
-if (!popularBrands.value?.list.length) {
-  mainStore.fetchPopularBrands()
-}
+// if (!popularBrands.value?.list.length) {
+//   mainStore.fetchPopularBrands()
+// }
 
 if (!banners.value?.list.length) {
   mainStore.fetchBanners()
