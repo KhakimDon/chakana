@@ -1,7 +1,5 @@
 import { getApps, initializeApp } from 'firebase/app'
-import { getMessaging } from 'firebase/messaging'
-
-// CHANGE THIS TO YOUR APP ID
+import { getMessaging, onMessage } from 'firebase/messaging'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDEv5OF3zxnwslBwba8-Lv7KuzJZtf8rkE',
@@ -13,14 +11,32 @@ const firebaseConfig = {
   measurementId: 'G-YGJDLXQDWY',
 }
 
-const apps = getApps()
+export default defineNuxtPlugin((nuxtApp) => {
+  if (
+    process.client &&
+    'serviceWorker' in navigator &&
+    'PushManager' in window
+  ) {
+    const apps = getApps()
+    const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
 
-const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
+    navigator.serviceWorker
+      .register('/firebase-messaging-sw.js')
+      .then((registration) => {
+        const messaging = getMessaging(app)
+        messaging.useServiceWorker(registration)
 
-export default defineNuxtPlugin(() => {
-  return {
-    provide: {
-      messaging: getMessaging(app),
-    },
+        // Handle incoming messages
+        onMessage(messaging, (payload) => {
+          console.log('Message received. ', payload)
+        })
+
+        nuxtApp.provide('messaging', messaging)
+      })
+      .catch((err) => {
+        console.error('Service Worker registration failed: ', err)
+      })
+  } else {
+    console.warn("This browser doesn't support Firebase Messaging.")
   }
 })
