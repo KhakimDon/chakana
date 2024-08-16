@@ -90,7 +90,17 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
 
-  plugins: ['~/plugins/firebase'],
+  plugins: [
+    {
+      src: '~/plugins/firebase',
+      mode: 'client',
+    },
+  ],
+
+  // plugins: [
+  //   { src: '~/plugins/firebase-messaging', mode: 'client' },
+  //   // Other plugins...
+  // ],
 
   nitro: {
     serveStatic: true,
