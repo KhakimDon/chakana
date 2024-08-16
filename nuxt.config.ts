@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: true,
+  ssr: false,
 
   app: {
     head: {
@@ -90,7 +90,7 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
 
-  // plugins: ['~/plugins/firebase'],
+  plugins: ['~/plugins/firebase'],
 
   nitro: {
     serveStatic: true,
