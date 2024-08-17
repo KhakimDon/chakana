@@ -96,12 +96,12 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
 
-  plugins: [
-    {
-      src: '~/plugins/firebase',
-      mode: 'client',
-    },
-  ],
+  // plugins: [
+  //   {
+  //     src: '~/plugins/firebase',
+  //     mode: 'client',
+  //   },
+  // ],
 
   // plugins: [
   //   { src: '~/plugins/firebase-messaging', mode: 'client' },
@@ -127,6 +127,4 @@ export default defineNuxtConfig({
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
   },
-
-  compatibilityDate: '2024-08-09',
 })
