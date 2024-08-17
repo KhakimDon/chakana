@@ -1,5 +1,6 @@
 <template>
   <div>
+    xolodilnik
     <!--    <NuxtLoadingIndicator-->
     <!--      color="linear-gradient(183deg, #FF831B -51.95%, #F30 124.83%)"-->
     <!--    />-->
