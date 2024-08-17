@@ -20,11 +20,7 @@ export default defineNuxtConfig({
         },
         {
           rel: 'canonical',
-          href: 'https://xolodilnik.uz',
-        },
-        {
-          rel: 'preconnect',
-          href: 'https://xolodilnik.uz',
+          href: '',
         },
       ],
       meta: [
