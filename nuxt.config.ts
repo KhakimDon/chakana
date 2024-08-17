@@ -8,14 +8,10 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: false,
+  ssr: true,
 
   app: {
     head: {
-      title: 'Холодильник Онлайн',
-      htmlAttrs: {
-        lang: 'ru',
-      },
       link: [
         {
           rel: 'icon',
@@ -24,11 +20,21 @@ export default defineNuxtConfig({
         },
         {
           rel: 'canonical',
-          href: '',
+          href: 'https://xolodilnik.uz',
         },
         {
           rel: 'preconnect',
           href: 'https://xolodilnik.uz',
+        },
+      ],
+      meta: [
+        {
+          name: 'og:site_name',
+          content: 'Xolodilnik',
+        },
+        {
+          name: 'keywords',
+          content: 'Xolodilnik, Xolodilnik sayti',
         },
       ],
     },

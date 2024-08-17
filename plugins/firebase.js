@@ -17,13 +17,13 @@ const apps = getApps()
 
 const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
 
-export default defineNuxtPlugin(() => {
-  return {
-    provide: {
-      messaging: getMessaging(app),
-    },
-  }
-})
+// export default defineNuxtPlugin(() => {
+//   return {
+//     provide: {
+//       messaging: getMessaging(app),
+//     },
+//   }
+// })
 
 // import { getApps, initializeApp } from 'firebase/app'
 // import { getMessaging } from 'firebase/messaging'
