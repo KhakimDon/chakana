@@ -12,10 +12,6 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Холодильник Онлайн',
-      htmlAttrs: {
-        lang: 'ru',
-      },
       link: [
         {
           rel: 'icon',
@@ -26,9 +22,15 @@ export default defineNuxtConfig({
           rel: 'canonical',
           href: '',
         },
+      ],
+      meta: [
         {
-          rel: 'preconnect',
-          href: 'https://xolodilnik.uz',
+          name: 'og:site_name',
+          content: 'Xolodilnik',
+        },
+        {
+          name: 'keywords',
+          content: 'Xolodilnik, Xolodilnik sayti',
         },
       ],
     },
@@ -90,12 +92,12 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
 
-  plugins: [
-    {
-      src: '~/plugins/firebase',
-      mode: 'client',
-    },
-  ],
+  // plugins: [
+  //   {
+  //     src: '~/plugins/firebase',
+  //     mode: 'client',
+  //   },
+  // ],
 
   // plugins: [
   //   { src: '~/plugins/firebase-messaging', mode: 'client' },
@@ -121,6 +123,4 @@ export default defineNuxtConfig({
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
   },
-
-  compatibilityDate: '2024-08-09',
 })
