@@ -111,7 +111,6 @@ if (process.client) {
       console.log('authFirebase successful')
     } catch (error) {
       console.error('authFirebase error:', error)
-      // Handle the error appropriately
     }
   }
 
