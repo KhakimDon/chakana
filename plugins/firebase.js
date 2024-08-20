@@ -1,7 +1,5 @@
 import { getApps, initializeApp } from 'firebase/app'
-import { getMessaging } from 'firebase/messaging'
-
-// CHANGE THIS TO YOUR APP ID
+import { getMessaging, isSupported } from 'firebase/messaging'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBhVDIWESPjDMIBNHwb8H_2DuladXbAvy0',
@@ -14,17 +12,19 @@ const firebaseConfig = {
 }
 
 const apps = getApps()
-
 export const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
 
-export const messaging = getMessaging(app)
+export default defineNuxtPlugin(async (nuxtApp) => {
+  const { $isClient } = useNuxtApp()
 
-export default defineNuxtPlugin(() => {
-  if (process.client) {
-    return {
-      provide: {
-        messaging,
-      },
+  if ($isClient) {
+    // Check if messaging is supported in the current browser
+    const supported = await isSupported()
+    if (supported) {
+      const messaging = getMessaging(app)
+      nuxtApp.provide('messaging', messaging)
+    } else {
+      console.warn('Firebase Messaging is not supported in this browser.')
     }
   }
 })
