@@ -123,4 +123,5 @@ export default defineNuxtConfig({
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
   },
+  compatibilityDate: '2024-08-20',
 })
