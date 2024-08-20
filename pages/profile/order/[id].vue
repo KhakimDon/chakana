@@ -1,14 +1,39 @@
 <template>
   <div>
-    <NuxtLinkLocale
-      to="/profile/orders"
-      class="inline-flex items-center gap-1 md:gap-2 text-lg md:text-[22px] font-extrabold leading-7 text-dark group"
-    >
-      <SvgoCommonChevron
-        class="text-xl md:text-[28px] leading-5 md:leading-[28px] text-dark group-hover:-translate-x-0.5 transition-300"
-      />
-      #{{ $route.params.id }}
-    </NuxtLinkLocale>
+    <div class="flex flex-row justify-between items-center w-full">
+      <NuxtLinkLocale
+        to="/profile/orders"
+        class="inline-flex items-center gap-1 md:gap-2 text-lg md:text-[22px] font-extrabold leading-7 text-dark group"
+      >
+        <SvgoCommonChevron
+          class="text-xl md:text-[28px] leading-5 md:leading-[28px] text-dark group-hover:-translate-x-0.5 transition-300"
+        />
+        #{{ $route.params.id }}
+      </NuxtLinkLocale>
+
+      <button
+        class="text-gray-100 flex-nowrap p-1 hover:bg-gray-100/10 rounded px-1.5 text-nowrap flex flex-row items-center font-semibold text-sm space-x-[4px]"
+        @click="showElectronCheck = true"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.49935 5.83333H12.4993M7.49935 9.16667H12.4993M10.8327 12.5H12.4993M4.16602 17.5V4.16667C4.16602 3.72464 4.34161 3.30072 4.65417 2.98816C4.96673 2.67559 5.39065 2.5 5.83268 2.5H14.166C14.608 2.5 15.032 2.67559 15.3445 2.98816C15.6571 3.30072 15.8327 3.72464 15.8327 4.16667V17.5L13.3327 15.8333L11.666 17.5L9.99935 15.8333L8.33268 17.5L6.66602 15.8333L4.16602 17.5Z"
+            stroke="#8F8F8F"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>{{ $t('online_receipt_title') }}</span>
+      </button>
+    </div>
+
     <ProfileOrderRate
       v-if="status === 'delivered' && !orderStatus?.rank && !ranked"
       :id="$route.params.id"
@@ -138,6 +163,8 @@
         </template>
       </BaseButton>
     </template>
+
+    <ElectronCheck v-model="showElectronCheck" title="Электронный чек" />
   </div>
 </template>
 
@@ -151,11 +178,14 @@ import {
   SvgoCommonTick,
   SvgoProfileSidebarCart,
 } from '#components'
+import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
+import ElectronCheck from '~/components/Common/Modal/ElectronCheck.vue'
 import { CONFIG } from '~/config/index.js'
 import type { IOrderDetail } from '~/types/profile.js'
 
 const route = useRoute()
 const router = useRouter()
+const showElectronCheck = ref(false)
 
 const { t } = useI18n()
 const { handleError } = useErrorHandling()

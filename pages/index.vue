@@ -84,8 +84,6 @@ if (process.client) {
     })
 
     if (token) {
-      console.log('FCM token: ', token)
-
       onMessage(messaging, (payload) => {
         console.log('Message from firebase: ', payload)
         return self?.registration?.showNotification(
