@@ -164,7 +164,10 @@
       </BaseButton>
     </template>
 
-    <ElectronCheck v-model="showElectronCheck" title="Электронный чек" />
+    <ElectronCheck
+      v-model="showElectronCheck"
+      :title="$t('online_receipt_title')"
+    />
   </div>
 </template>
 
