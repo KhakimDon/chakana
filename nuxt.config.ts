@@ -16,7 +16,7 @@ export default defineNuxtConfig({
         {
           rel: 'icon',
           type: 'image/x-icon',
-          href: `/favicon.svg`,
+          href: `/favicon.ico`,
         },
         {
           rel: 'canonical',
