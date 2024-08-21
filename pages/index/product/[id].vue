@@ -493,6 +493,7 @@ onMounted(() => {
 useSeoMeta({
   title: data.value?.name,
   description: data.value?.description,
+  ogDescription: data.value?.description,
   ogTitle: data.value?.name,
   twitterTitle: data.value?.name,
   twitterCard: 'summary',

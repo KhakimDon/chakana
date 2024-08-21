@@ -8,27 +8,34 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: false,
+  ssr: true,
 
   app: {
     head: {
-      title: 'Холодильник Онлайн',
-      htmlAttrs: {
-        lang: 'ru',
-      },
       link: [
         {
           rel: 'icon',
           type: 'image/x-icon',
-          href: `/favicon.svg`,
+          href: `/favicon.ico`,
         },
         {
           rel: 'canonical',
           href: '',
         },
+      ],
+      meta: [
         {
-          rel: 'preconnect',
-          href: 'https://xolodilnik.uz',
+          name: 'og:site_name',
+          content: 'Xolodilnik',
+        },
+        {
+          name: 'keywords',
+          content: 'Xolodilnik, Xolodilnik sayti',
+        },
+        {
+          // Google Search Console website verification
+          name: 'google-site-verification',
+          content: 'Ip3Y5Anc5Hk6iGPHu9U0sOC_ACgQOYWPqNJrtw7Ao3Y',
         },
       ],
     },
@@ -90,7 +97,17 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
 
-  plugins: ['~/plugins/firebase'],
+  // plugins: [
+  //   {
+  //     src: '~/plugins/firebase',
+  //     mode: 'client',
+  //   },
+  // ],
+
+  // plugins: [
+  //   { src: '~/plugins/firebase-messaging', mode: 'client' },
+  //   // Other plugins...
+  // ],
 
   nitro: {
     serveStatic: true,
@@ -111,6 +128,5 @@ export default defineNuxtConfig({
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
   },
-
-  compatibilityDate: '2024-08-09',
+  compatibilityDate: '2024-08-20',
 })

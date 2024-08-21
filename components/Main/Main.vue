@@ -2,25 +2,22 @@
   <div class="w-full">
     <Transition v-if="useMobile('desktop')" name="fade" mode="out-in">
       <div :key="banners?.loading" class="h-[150px] md:mt-0">
-        <div
+        <Swiper
           v-if="!banners?.loading"
-          class="grid grid-cols-1 md:grid-cols-2 gap-3"
+          :space-between="12"
+          :slides-per-view="2"
         >
-          <a
-            v-for="(banner, index) in banners?.list"
-            :key="index"
-            :href="banner?.redirect_url"
-            target="_blank"
-          >
-            <img
-              :src="banner?.image"
-              alt="banner"
-              class="w-full max-h-[150px] h-full object-cover rounded-10"
-            />
-          </a>
-        </div>
-        <div v-else class="grid grid-cols-2 gap-3 shimmer-wrapper">
-          <div class="shimmer w-full h-[150px] rounded-10" />
+          <SwiperSlide v-for="(banner, index) in banners?.list" :key="index">
+            <a :href="banner?.redirect_url" target="_blank">
+              <img
+                :src="banner?.image"
+                alt="banner"
+                class="w-full max-h-[150px] h-full object-cover rounded-10"
+              />
+            </a>
+          </SwiperSlide>
+        </Swiper>
+        <div v-else class="gap-3 shimmer-wrapper">
           <div class="shimmer w-full h-[150px] rounded-10" />
         </div>
       </div>

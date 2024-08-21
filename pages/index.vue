@@ -27,7 +27,7 @@
           </Transition>
         </div>
       </template>
-      <OrderInfoEditAddress v-model="show" @save="saveAddress" />
+      <OrderInfoEditAddress v-model="show" />
     </LayoutWrapper>
     <LayoutMobile v-else>
       <Transition name="fade" mode="out-in">
@@ -69,6 +69,4 @@ watch(
 const changeCoords = () => {
   show.value = true
 }
-
-function saveAddress(data: any) {}
 </script>
