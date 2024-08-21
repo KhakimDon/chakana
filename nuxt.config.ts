@@ -32,6 +32,11 @@ export default defineNuxtConfig({
           name: 'keywords',
           content: 'Xolodilnik, Xolodilnik sayti',
         },
+        {
+          // Google Search Console website verification
+          name: 'google-site-verification',
+          content: 'Ip3Y5Anc5Hk6iGPHu9U0sOC_ACgQOYWPqNJrtw7Ao3Y',
+        },
       ],
     },
   },
