@@ -16,7 +16,7 @@ export default defineNuxtConfig({
         {
           rel: 'icon',
           type: 'image/x-icon',
-          href: `/favicon.ico`,
+          href: `/favicon.svg`,
         },
         {
           rel: 'canonical',
@@ -67,6 +67,8 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
     'nuxt-gtag',
+    'nuxt-simple-robots',
+    'nuxt-simple-sitemap',
     [
       'yandex-metrika-module-nuxt3',
       {
@@ -82,7 +84,7 @@ export default defineNuxtConfig({
     locales: [
       { code: 'ru', iso: 'ru-RU', file: 'ru' },
       { code: 'uz', iso: 'uz', file: 'uz' },
-      { code: 'en', iso: 'en', file: 'en' },
+      // { code: 'en', iso: 'en', file: 'en' },
     ],
     lazy: true,
     useCookie: true,
@@ -133,7 +135,7 @@ export default defineNuxtConfig({
       },
     ],
     sitemaps: {
-      companies: {
+      products: {
         includeAppSources: false,
 
         sources: ['/api/__sitemap__/urls/products'],

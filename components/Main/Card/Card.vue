@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-between gap-5 cursor-pointer">
-    <NuxtLinkLocale :to="'/product/' + card?.id">
+    <NuxtLinkLocale :to="'/product/' + card?.slug">
       <div
         class="w-full h-[113px] rounded-10 bg-white-100 flex-center relative"
         @click="$emit('open')"

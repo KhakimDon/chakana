@@ -4,9 +4,7 @@ import { asSitemapUrl, defineSitemapEventHandler } from '#imports'
 export default defineSitemapEventHandler(async () => {
   console.log('working sitemap')
   const products = await $fetch<ReturnType<typeof asSitemapUrl>>(
-    `${
-      useRuntimeConfig().public.baseURL
-    }review/api/v1/front_office/SiteMapObjectsCatalog/company/`
+    `https://xolodilnik-erp.uicgroup.tech/fastapi/new/products?page=1&page_size=20`
   )
 
   return products?.data.items.map(

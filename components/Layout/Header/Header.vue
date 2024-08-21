@@ -93,11 +93,11 @@ function openAuthModal() {
 }
 
 const menu = computed(() => [
-  {
-    title: t('brands'),
-    link: '/brands',
-    isPremium: false,
-  },
+  // {
+  //   title: t('brands'),
+  //   link: '/brands',
+  //   isPremium: false,
+  // },
   {
     title: t('discounts'),
     link: '/discounts',

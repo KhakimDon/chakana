@@ -333,7 +333,7 @@ const openDesc = () => {
 }
 
 const { list, loading, paginationData, loadMore } = useListFetcher(
-  `alternative/products/?product_id=${route.params.id}`,
+  `alternative/products-slug/?slug=${route.params.id}`,
   25,
   true
 )
@@ -432,7 +432,7 @@ const savedProducts = () => {
 }
 
 const { data, error } = (await useAsyncData('product', async () => {
-  return await useApi().$get(`/product/${route?.params.id}`)
+  return await useApi().$get(`/product-slug/${route?.params.id}`)
 })) as any
 
 const images = computed(() => {

@@ -11,11 +11,11 @@ export const useLanguageSwitcher = () => {
       nameFull: "O'zbek",
       code: 'uz',
     },
-    {
-      name: 'En',
-      nameFull: 'English',
-      code: 'en',
-    },
+    // {
+    //   name: 'En',
+    //   nameFull: 'English',
+    //   code: 'en',
+    // },
     {
       name: 'Ру',
       nameFull: 'Русский',
