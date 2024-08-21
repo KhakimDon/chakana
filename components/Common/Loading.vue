@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed w-full h-screen flex-center bg-orange inset-0 z-10">
+  <div class="fixed w-full h-screen flex-center bg-orange inset-0 z-[99999]">
     <div class="spinner" />
   </div>
 </template>

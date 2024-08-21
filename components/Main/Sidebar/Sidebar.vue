@@ -42,7 +42,7 @@
           v-if="single?.children?.length"
           v-model="checkbox"
           :list="single?.children"
-          parent-text="All"
+          :parent-text="$t('all')"
           class="mt-5"
         />
       </div>

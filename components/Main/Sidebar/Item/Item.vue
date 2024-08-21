@@ -14,7 +14,7 @@
       />
     </div>
     <p
-      class="text-sm sm:text-xs leading-130 text-dark font-semibold md:group-hover:text-orange transition-300"
+      class="text-xs leading-130 text-dark font-semibold md:group-hover:text-orange transition-300"
     >
       {{ item?.name }}
     </p>

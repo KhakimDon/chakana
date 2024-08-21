@@ -8,7 +8,10 @@
           :slides-per-view="2"
         >
           <SwiperSlide v-for="(banner, index) in banners?.list" :key="index">
-            <a :href="banner?.redirect_url" target="_blank">
+            <a
+              :href="banner?.redirect_url === '#' ? null : banner?.redirect_url"
+              target="_blank"
+            >
               <img
                 :src="banner?.image"
                 alt="banner"
@@ -26,7 +29,9 @@
       <div :key="banners?.loading" class="h-[150px] md:mt-0">
         <Swiper v-if="!banners?.loading" :space-between="12">
           <SwiperSlide v-for="(banner, index) in banners?.list" :key="index">
-            <a :href="banner?.redirect_url" target="_blank">
+            <a
+              :href="banner?.redirect_url === '#' ? null : banner?.redirect_url"
+            >
               <img
                 :src="banner?.image"
                 alt="banner"

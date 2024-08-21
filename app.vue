@@ -1,11 +1,15 @@
 <template>
   <div>
+    <ClientOnly>
+      <SmartAppBanner title="Xolodilnik" />
+    </ClientOnly>
     <NuxtLoadingIndicator
       color="linear-gradient(183deg, #FF831B -51.95%, #F30 124.83%)"
     />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <WidgetDownload />
     <LayoutAuthModal v-model="authStore.showAuth" />
     <CommonLoading v-if="loading" />
   </div>

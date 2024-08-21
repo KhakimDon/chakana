@@ -1,0 +1,15 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.uicgroup.xolodilnikapp",
+      "sha256_cert_fingerprints":
+      [
+        "BB:25:A1:C2:6E:33:5C:5F:CA:2A:1D:2A:16:8F:3D:B8:33:25:0E:2F:0F:22:FC:CC:3D:DF:82:B4:6A:53:D4:E4",
+        "4F:76:E9:96:36:DB:ED:8A:64:A4:DD:19:58:CA:FC:4C:87:5C:D3:5A:DF:42:46:D3:EF:4D:D3:AC:21:D5:92:C7",
+        "1E:6E:44:81:21:17:32:DD:00:9E:D2:76:DB:89:39:F0:1C:A5:8A:ED:1D:72:7D:C9:6B:0E:26:6C:2C:A9:32:6E"
+      ]
+    }
+  }
+]

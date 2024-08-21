@@ -11,7 +11,7 @@
       </div>
       <div class="space-y-0.5">
         <NuxtLinkLocale
-          :to="`/product/${product?.id}`"
+          :to="`/product/${product?.slug}`"
           class="font-semibold hover:text-orange md:text-[13px] md:leading-none text-[12px] line-clamp-3 max-w-[120px] md:max-w-full transition-300 text-dark"
           :class="titleClass"
           @click="saveSearchHistory"
