@@ -1,67 +1,30 @@
 import { getApps, initializeApp } from 'firebase/app'
-import { getMessaging } from 'firebase/messaging'
-
-// CHANGE THIS TO YOUR APP ID
+import { getMessaging, isSupported } from 'firebase/messaging'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDEv5OF3zxnwslBwba8-Lv7KuzJZtf8rkE',
-  authDomain: 'xolodilnik-55eb9.firebaseapp.com',
-  projectId: 'xolodilnik-55eb9',
-  storageBucket: 'xolodilnik-55eb9.appspot.com',
-  messagingSenderId: '667771902581',
-  appId: '1:667771902581:web:cb4db1e59ee2abf1bbf63c',
-  measurementId: 'G-YGJDLXQDWY',
+  apiKey: 'AIzaSyBhVDIWESPjDMIBNHwb8H_2DuladXbAvy0',
+  authDomain: 'xolodilnik-a9b1c.firebaseapp.com',
+  projectId: 'xolodilnik-a9b1c',
+  storageBucket: 'xolodilnik-a9b1c.appspot.com',
+  messagingSenderId: '982363687648',
+  appId: '1:982363687648:web:e81c44677fc8be41d35e85',
+  measurementId: 'G-XYCKJ6PDBY',
 }
 
 const apps = getApps()
+export const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
 
-const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
+export default defineNuxtPlugin(async (nuxtApp) => {
+  const { $isClient } = useNuxtApp()
 
-// export default defineNuxtPlugin(() => {
-//   return {
-//     provide: {
-//       messaging: getMessaging(app),
-//     },
-//   }
-// })
-
-// import { getApps, initializeApp } from 'firebase/app'
-// import { getMessaging } from 'firebase/messaging'
-//
-// // CHANGE THIS TO YOUR APP ID
-//
-// const firebaseConfig = {
-//   apiKey: 'AIzaSyDEv5OF3zxnwslBwba8-Lv7KuzJZtf8rkE',
-//   authDomain: 'xolodilnik-55eb9.firebaseapp.com',
-//   projectId: 'xolodilnik-55eb9',
-//   storageBucket: 'xolodilnik-55eb9.appspot.com',
-//   messagingSenderId: '667771902581',
-//   appId: '1:667771902581:web:cb4db1e59ee2abf1bbf63c',
-//   measurementId: 'G-YGJDLXQDWY',
-// }
-//
-// const apps = getApps()
-//
-// const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig)
-//
-// // if ('serviceWorker' in navigator) {
-// //   navigator.serviceWorker
-// //     .register('/firebase-messaging-sw.js')
-// //     .then((registration) => {
-// //       getMessaging(app).useServiceWorker(registration)
-// //     })
-// //     .catch((err) => {
-// //       console.error('Service Worker registration failed', err)
-// //     })
-// // }
-//
-// export default defineNuxtPlugin(() => {
-//   if (process.client) {
-//     const messaging = getMessaging(app)
-//     return {
-//       provide: {
-//         messaging,
-//       },
-//     }
-//   }
-// })
+  if ($isClient) {
+    // Check if messaging is supported in the current browser
+    const supported = await isSupported()
+    if (supported) {
+      const messaging = getMessaging(app)
+      nuxtApp.provide('messaging', messaging)
+    } else {
+      console.warn('Firebase Messaging is not supported in this browser.')
+    }
+  }
+})
