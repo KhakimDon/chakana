@@ -193,3 +193,7 @@ export const share = (network: string, title: string) => {
     }
   }
 }
+
+export function formatDateISO() {
+  return new Date().toString('yyyy-mm-ddThh:mm:ss:zzz')
+}
