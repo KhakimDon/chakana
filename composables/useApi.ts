@@ -23,6 +23,7 @@ export const useApi = (apiUrl?: string) => {
       ...options?.headers,
       'Accept-Language': locale.value || 'ru',
       'Device-Id': fingerprint.value,
+      'Cache-Control': 'no-store',
     }
     const tokens = computed(() => authStore.getTokens())
     if (tokens.value?.refresh) {

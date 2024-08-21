@@ -1,46 +1,43 @@
 import { defineStore } from 'pinia'
 
-export const useCartStore = defineStore('cartStore', () => {
-  const products = ref<any[]>([])
-  const autoOrderProducts = ref<any[]>([])
-  const cartProductsLoading = ref(false)
-
-  function getCartProducts() {
-    return new Promise((resolve, reject) => {
-      cartProductsLoading.value = true
-      useApi()
-        .$get(`/cart/products/mobile`, {})
-        .then((res: any) => {
-          products.value = res
-          resolve(res)
-        })
-        .catch((error) => {
-          reject(error)
-        })
-        .finally(() => {
-          cartProductsLoading.value = false
-        })
-    })
-  }
-
-  function addToCart(product: any, quantity: number) {
-    if (quantity === 0) {
-      products.value = products.value?.filter((p) => p.id !== product.id)
-    } else if (products.value?.find((p) => p?.id === product.id)) {
-      products.value.find((p) => p?.id === product.id).quantity = quantity
-    } else {
-      products.value?.push({
-        ...product,
-        quantity,
+export const useCartStore = defineStore('cartStore', {
+  state: () => ({
+    products: [],
+    autoOrderProducts: [],
+    cartProductsLoading: false,
+  }),
+  actions: {
+    getCartProducts() {
+      return new Promise((resolve, reject) => {
+        this.cartProductsLoading = true
+        useApi()
+          .$get(`/cart/products/mobile`, {})
+          .then((res) => {
+            this.products = res
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+          .finally(() => {
+            this.cartProductsLoading = false
+          })
       })
-    }
-  }
-
-  return {
-    products,
-    autoOrderProducts,
-    cartProductsLoading,
-    getCartProducts,
-    addToCart,
-  }
+    },
+    addToCart(product: any, quantity: any) {
+      if (quantity === 0) {
+        this.products = this.products.filter((p) => p.id !== product.id)
+      } else {
+        const existingProduct = this.products.find((p) => p.id === product.id)
+        if (existingProduct) {
+          existingProduct.quantity = quantity
+        } else {
+          this.products.push({
+            ...product,
+            quantity,
+          })
+        }
+      }
+    },
+  },
 })

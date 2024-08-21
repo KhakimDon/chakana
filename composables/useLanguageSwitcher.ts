@@ -33,8 +33,11 @@ export const useLanguageSwitcher = () => {
       Object.entries(activepinia.state.value).forEach(([storeName, state]) => {
         const storeDefinition = defineStore(storeName, state)
         const store = storeDefinition(activepinia)
-
-        if (store.$id === 'categories') {
+        if (
+          store.$id === 'categories' ||
+          store.$id === 'mainStore' ||
+          store.$id === 'cartStore'
+        ) {
           store.$reset()
         }
       })

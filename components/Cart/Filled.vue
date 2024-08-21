@@ -77,9 +77,9 @@
 
 <script setup lang="ts">
 import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
-import { useCartStore } from '~/store/cart.js'
-import { useCartOrderStore } from '~/store/cart_order.js'
-import { formatMoneyDecimal } from '~/utils/functions/common.js'
+import { useCartStore } from '~/store/cart'
+import { useCartOrderStore } from '~/store/cart_order'
+import { formatMoneyDecimal } from '~/utils/functions/common'
 
 const router = useRouter()
 const { t, locale } = useI18n()
