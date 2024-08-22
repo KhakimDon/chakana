@@ -134,13 +134,13 @@ export default defineNuxtConfig({
         width: '12.5%',
       },
     ],
-    sitemaps: {
-      products: {
-        includeAppSources: false,
-
-        sources: ['/api/__sitemap__/urls/products'],
-      },
-    },
+    // sitemaps: {
+    //   products: {
+    //     includeAppSources: false,
+    //
+    //     sources: ['/api/__sitemap__/urls/products'],
+    //   },
+    // },
   },
 
   // plugins: [
