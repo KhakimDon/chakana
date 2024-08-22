@@ -16,7 +16,7 @@
         class="p-2 pr-5 rounded-[20px] bg-white flex-center-between gap-2 download-app-box-shadow max-w-[480px] w-full relative z-10"
       >
         <div class="flex-y-center gap-4">
-          <div class="size-[56px] rounded-xl download-app-shadow">
+          <div class="size-[56px] rounded-xl download-app-shadow shrink-0">
             <img
               src="/images/xolodilnik.png"
               alt="xolodilnik-app"
