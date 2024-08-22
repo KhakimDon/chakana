@@ -36,6 +36,7 @@
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n()
+const $emit = defineEmits(['change'])
 
 const isOpen = ref(false)
 
@@ -50,6 +51,8 @@ watch(
     } else {
       document.body.classList.remove('overflow-hidden')
     }
+
+    $emit('change', isOpen.value)
   }
 )
 </script>

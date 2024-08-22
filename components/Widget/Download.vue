@@ -28,18 +28,18 @@
           </p>
         </div>
 
-        <div class="flex-y-center gap-4">
+        <div class="flex-y-center gap-2 shrink-0">
           <a
             href="https://app.xolodilnik.uz"
             target="_blank"
-            class="px-4 py-2 bg-green rounded-2xl transition-300 text-white text-xs !leading-4 font-semibold"
+            class="px-4 py-2 bg-green rounded-2xl transition-300 text-white text-xs !leading-4 font-semibold shrink-0"
             @mouseenter="mouseOn = true"
             @mouseleave="mouseOn = false"
           >
             {{ $t('download') }}
           </a>
           <SvgoCommonClose
-            class="cursor-pointer transition-300 hover:text-red"
+            class="cursor-pointer transition-300 hover:text-red shrink-0"
             @click="show = false"
           />
         </div>

@@ -19,7 +19,7 @@
       target="_blank"
       class="px-4 py-2 bg-green rounded-2xl transition-300 text-white text-xs !leading-4 font-semibold"
     >
-      VIEW
+      {{ $t('view') }}
     </a>
   </div>
 </template>
