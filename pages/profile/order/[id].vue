@@ -11,9 +11,11 @@
         #{{ $route.params.id }}
       </NuxtLinkLocale>
 
-      <button
-        class="text-gray-100 flex-nowrap p-1 hover:bg-gray-100/10 rounded px-1.5 text-nowrap flex flex-row items-center font-semibold text-sm space-x-[4px]"
-        @click="showElectronCheck = true"
+      <a
+        :href="orderDetale?.ofd_url || undefined"
+        class="text-gray-100 cursor-pointer flex-nowrap p-1 hover:bg-gray-100/10 rounded px-1.5 text-nowrap flex flex-row items-center font-semibold text-sm space-x-[4px]"
+        :target="orderDetale?.ofd_url ? '_blank' : undefined"
+        @click="!orderDetale?.ofd_url ? (showElectronCheck = true) : undefined"
       >
         <svg
           width="20"
@@ -31,7 +33,7 @@
           />
         </svg>
         <span>{{ $t('online_receipt_title') }}</span>
-      </button>
+      </a>
     </div>
 
     <ProfileOrderRate
@@ -194,6 +196,7 @@ const { t } = useI18n()
 const { handleError } = useErrorHandling()
 
 const localePath = useLocalePath()
+const orderDetale = ref(null)
 
 const steps = [
   {
@@ -309,6 +312,12 @@ const connectStatusSocket = () => {
       }
       connection.value.send(JSON.stringify(msg))
     }
+
+    useApi()
+      .$get(`/order/detail/info/${route.params.id}`)
+      .then((res) => {
+        orderDetale.value = res
+      })
 
     connection.value.onmessage = (event: any) => {
       const newData = JSON.parse(JSON.parse(event.data)[0].message.payload)
