@@ -16,9 +16,9 @@
     "@vuelidate/core": "2.0.0",
     "@vuelidate/validators": "2.0.0",
     "eslint-config-prettier": "^8.6.0",
-    "nuxt": "^3.9.1",
     "nuxt-gtag": "^2.0.6",
     "nuxt-smart-app-banner": "^0.2.0",
+    "nuxt": "3.11.2",
     "nuxt-simple-robots": "4.0.0-rc.13",
     "nuxt-simple-sitemap": "^4.1.7",
     "nuxt-svgo": "^4.0.0"
