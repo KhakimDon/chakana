@@ -68,7 +68,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-gtag',
     // 'nuxt-simple-robots',
-    'nuxt-simple-sitemap',
+    // 'nuxt-simple-sitemap',
     [
       'yandex-metrika-module-nuxt3',
       {
