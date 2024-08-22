@@ -33,11 +33,6 @@ export default defineNuxtConfig({
           content: 'Xolodilnik, Xolodilnik sayti',
         },
         {
-          name: 'apple-itunes-app',
-          content:
-            'app-id=6499511120, app-argument=https://apps.apple.com/uz/app/xolodilnik/id6499511120',
-        },
-        {
           // Google Search Console website verification
           name: 'google-site-verification',
           content: 'Ip3Y5Anc5Hk6iGPHu9U0sOC_ACgQOYWPqNJrtw7Ao3Y',
@@ -60,7 +55,6 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
     '@nuxtjs/i18n',
-    'nuxt-smart-app-banner',
     [
       '@pinia/nuxt',
       {
@@ -81,16 +75,6 @@ export default defineNuxtConfig({
       },
     ],
   ],
-
-  'nuxt-smart-app-banner': {
-    bannerOptions: {
-      title: 'Xolodilnik',
-      androidAppId: 'org.uicgroup.xolodilnikapp',
-      icon: 'https://play-lh.googleusercontent.com/hHcwYBbrll3bQJuQ3szijqMd0VJ6ui48pntqNmIEj-ujBlA33Bc_Vr951uV_U3UMQLU=w240-h480-rw',
-      iosAppId: '6499511120',
-      appStoreLanguage: 'en',
-    },
-  },
 
   i18n: {
     langDir: 'locales',

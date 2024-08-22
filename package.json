@@ -18,7 +18,6 @@
     "eslint-config-prettier": "^8.6.0",
     "nuxt": "^3.9.1",
     "nuxt-gtag": "^2.0.6",
-    "nuxt-smart-app-banner": "^0.2.0",
     "nuxt-svgo": "^4.0.0"
   },
   "dependencies": {
