@@ -1,5 +1,6 @@
 <template>
   <div class="max-md:pb-16">
+    <WidgetBanner v-if="useMobile('mobile')" />
     <LayoutHeader v-if="useMobile('desktop')" class="top-0 bg-white z-10" />
     <LayoutHeaderMobile v-else class="sticky top-0 bg-white z-10" />
     <div
