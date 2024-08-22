@@ -99,22 +99,22 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
 
-  routeRules: {
-    '/': {
-      sitemap: {
-        changefreq: 'daily',
-        priority: 1,
-        lastmod: new Date().toString('yyyy-mm-ddThh:mm:ss:zzz'),
-      },
-    },
-    '/ru': {
-      sitemap: {
-        changefreq: 'daily',
-        priority: 1,
-        lastmod: new Date().toString('yyyy-mm-ddThh:mm:ss:zzz'),
-      },
-    },
-  },
+  // routeRules: {
+  //   '/': {
+  //     sitemap: {
+  //       changefreq: 'daily',
+  //       priority: 1,
+  //       lastmod: new Date().toString('yyyy-mm-ddThh:mm:ss:zzz'),
+  //     },
+  //   },
+  //   '/ru': {
+  //     sitemap: {
+  //       changefreq: 'daily',
+  //       priority: 1,
+  //       lastmod: new Date().toString('yyyy-mm-ddThh:mm:ss:zzz'),
+  //     },
+  //   },
+  // },
   // sitemap: {
   //   exclude: [
   //     '/profile/**',
