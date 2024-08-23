@@ -7,7 +7,7 @@ RUN npm install pm2 -g
 # Set the working directory in the container
 
 # Copy package.json and package-lock.json to the working directory
-COPY package.json ./
+COPY package.json .
 
 # Install dependencies
 RUN yarn install
