@@ -114,7 +114,7 @@ const orderSteps = [
     icon: 'SvgoProfileClockLocation',
     title: 'when_delivery',
     component: LazyOrderInfoFormTime,
-    form: orderFormTime,
+    form: orderFormTime(props.isAuto),
   },
   {
     id: 'user',
@@ -164,7 +164,7 @@ const autoOrderNameStep = {
 const steps = computed(() =>
   props.isAuto ? [autoOrderNameStep, ...orderSteps] : orderSteps
 )
-const stepIndex = ref(2)
+const stepIndex = ref(1)
 const step = computed(() => steps.value[stepIndex.value].id)
 
 const beforeRefresh = (event) => {

@@ -1,4 +1,4 @@
-import { minLength, required } from '@vuelidate/validators'
+import { minLength, required, requiredIf } from '@vuelidate/validators'
 
 import { isValidPhone } from '~/utils/functions/common.js'
 
@@ -32,15 +32,19 @@ export const orderFormUserInfo = useForm(
   }
 )
 
-export const orderFormTime = useForm(
-  {
-    delivery_times: [],
-    when_to_deliver: '',
-  },
-  {
-    delivery_time: { required },
-  }
-)
+export const orderFormTime = (isAuto: boolean) =>
+  useForm(
+    {
+      delivery_times: [],
+      when_to_deliver: '',
+    },
+    {
+      delivery_times: {
+        checkDelivery: (value) => value.length > 0 && isAuto,
+      },
+      when_to_deliver: { requiredIf: requiredIf(!isAuto) },
+    }
+  )
 
 export const orderFormComment = useForm(
   {
