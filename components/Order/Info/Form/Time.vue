@@ -11,11 +11,13 @@
     >
       {{ $t('free_delivery_badge') }}
     </p>
-    <section class="max-h-96 overflow-y-auto space-y-4 md:pr-2">
+    <section
+      class="max-h-96 overflow-y-auto md:pr-2 flex flex-col -mr-5 md:-mr-7"
+    >
       <div
         v-for="(interval, key) in intervals"
         :key
-        class="flex-y-center cursor-pointer hover:text-orange transition-300 justify-between"
+        class="flex-y-center cursor-pointer hover:text-orange transition-300 justify-between py-[14px] border-y-[0.5px] border-white-100 first:border-t last:border-b-0 text-sm font-semibold leading-130 pr-5 md:pr-7"
         :class="{
           'text-orange':
             selectedInterval === interval ||
@@ -36,13 +38,17 @@
           }}
         </p>
         <p v-else>{{ $t(interval) }}</p>
-        <SvgoCommonCheck
-          v-if="
-            selectedInterval === interval ||
-            selectedInterval === interval.substring(0, 5)
-          "
-          class="text-orange text-xl !mb-0"
-        />
+        <div class="w-5 h-5 flex-center">
+          <Transition name="fade-fast" mode="out-in">
+            <SvgoCommonCheck
+              v-if="
+                selectedInterval === interval ||
+                selectedInterval === interval.substring(0, 5)
+              "
+              class="text-orange text-xl !mb-0"
+            />
+          </Transition>
+        </div>
       </div>
     </section>
   </div>
@@ -59,13 +65,30 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const { values, $v } = unref(props.form)
+const { values } = unref(props.form)
 
 const selectedInterval = ref(values?.delivery_time || 'nearest_2_hours')
 
 function chooseTime(interval: string) {
   selectedInterval.value = interval
-  values.delivery_time = selectedInterval.value
+  if (props.isAuto) {
+    const index = values.delivery_times.findIndex(
+      (item) => item.delivery_time === interval
+    )
+    console.log(index, 'index')
+    if (index !== -1) {
+      values.delivery_times[index].delivery_time = interval
+    } else {
+      values.delivery_times.push({
+        delivery_time: interval,
+        weekday: values.weekdays,
+      })
+    }
+  } else {
+    values.when_to_deliver = selectedInterval.value
+  }
+
+  console.log(values)
 }
 
 const intervals = ref()
@@ -74,7 +97,7 @@ onMounted(() => {
   if (!props.isAuto) {
     intervals.value.unshift('nearest_2_hours')
   }
-  if (!values?.delivery_time) {
+  if (!values?.when_to_deliver) {
     chooseTime(intervals.value[0])
   }
 })

@@ -34,8 +34,8 @@ export const orderFormUserInfo = useForm(
 
 export const orderFormTime = useForm(
   {
-    delivery_time: '',
-    weekdays: null,
+    delivery_times: [],
+    when_to_deliver: '',
   },
   {
     delivery_time: { required },

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-y-center overflow-x-auto pb-3 gap-2">
+  <div class="flex-y-center overflow-x-auto gap-2">
     <div v-if="weekdaysLoading">
       <span
         class="shimmer bg-white-100 w-5 rounded-md px-2 py-1.5 space-y-3"
