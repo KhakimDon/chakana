@@ -1,5 +1,9 @@
 # Use a Node.js base image
 FROM node:18.20-alpine3.19
+RUN mkdir /app
+
+WORKDIR /app
+
 
 # Install PM2 globally
 RUN npm install pm2 -g
@@ -7,7 +11,7 @@ RUN npm install pm2 -g
 # Set the working directory in the container
 
 # Copy package.json and package-lock.json to the working directory
-COPY package.json .
+COPY package.json ./
 
 # Install dependencies
 RUN yarn install
