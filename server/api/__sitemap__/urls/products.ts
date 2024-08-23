@@ -1,20 +1,16 @@
-import { formatDateISO } from '@/utils/index'
 import { asSitemapUrl, defineSitemapEventHandler } from '#imports'
+import { formatDateISO } from '~/utils/functions/common'
 
 export default defineSitemapEventHandler(async () => {
-  const companies = await $fetch<ReturnType<typeof asSitemapUrl>>(
-    `${
-      useRuntimeConfig().public.baseURL
-    }review/api/v1/front_office/SiteMapObjectsCatalog/company/`
+  const products = await $fetch<ReturnType<typeof asSitemapUrl>>(
+    `https://web.xolodilnikgo.uz/fastapi/product/list/for/sitemap`
   )
 
-  return companies?.data.map(
-    (company: { slug: string; updated_at: string }) => {
-      return {
-        loc: '/' + company.slug,
-        lastmod: formatDateISO(company?.updated_at),
-        priority: 0.8,
-      }
+  return products.map((product: { slug: string; write_date: string }) => {
+    return {
+      loc: '/' + product.slug,
+      lastmod: formatDateISO(product?.write_date),
+      priority: 0.8,
     }
-  )
+  })
 })
