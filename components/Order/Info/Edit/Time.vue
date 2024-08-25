@@ -42,8 +42,12 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val && props.defaultInfo) {
-      form.values.delivery_time = props.defaultInfo?.delivery_time
-      form.values.weekdays = props.defaultInfo?.weekdays
+      if (props.isAuto) {
+        form.values.delivery_times = props.defaultInfo?.delivery_times
+      } else {
+        form.values.when_to_deliver = props.defaultInfo?.when_to_deliver
+      }
+      // form.values.weekdays = props.defaultInfo?.weekdays
     }
   }
 )

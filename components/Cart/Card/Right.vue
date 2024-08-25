@@ -30,7 +30,7 @@
       :disabled="cartProducts.length === 0"
       @click="goToAutoOrderPayment"
     />
-    <OrderInfoFormModal v-model="showOrder" :is-auto="isAuto" />
+    <OrderInfoFormModal :key="isAuto" v-model="showOrder" :is-auto="isAuto" />
   </section>
 </template>
 

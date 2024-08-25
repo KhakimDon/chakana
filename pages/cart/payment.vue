@@ -70,8 +70,14 @@ const goToPayment = () => {
     orderCartStore
       .createAutoOrder({
         name: orderDetail.value.name,
-        weekdays: [orderDetail.value.weekdays],
-        delivery_time: orderDetail.value.delivery_time.substring(0, 5),
+        // weekdays: [orderDetail.value.weekdays],
+        delivery_times: orderDetail.value.delivery_times.map((el) => {
+          return {
+            ...el,
+            delivery_time: el.delivery_time.substring(0, 5),
+          }
+        }),
+        // delivery_times
         payment_type: {
           balance: orderDetail.value.balance,
           // card_to_courier: orderDetail.value.card_to_courier,
@@ -110,7 +116,6 @@ const goToPayment = () => {
       })
   } else {
     const now = dayjs()
-    console.log(orderDetail.value.delivery_time)
     orderCartStore
       .createOrder({
         address: {
@@ -119,9 +124,9 @@ const goToPayment = () => {
           longitude: null,
         },
         when_to_deliver:
-          orderDetail.value.delivery_time === 'nearest_2_hours'
+          orderDetail.value.when_to_deliver === 'nearest_2_hours'
             ? getCurrentDateTimeISO(now.add(2, 'hours'))
-            : orderDetail.value.delivery_time,
+            : orderDetail.value.when_to_deliver,
         recipient: {
           full_name: orderDetail.value.full_name,
           phone: orderDetail.value.phone,

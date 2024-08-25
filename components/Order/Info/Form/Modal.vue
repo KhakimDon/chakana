@@ -114,7 +114,7 @@ const orderSteps = [
     icon: 'SvgoProfileClockLocation',
     title: 'when_delivery',
     component: LazyOrderInfoFormTime,
-    form: orderFormTime,
+    form: orderFormTime(props.isAuto),
   },
   {
     id: 'user',
