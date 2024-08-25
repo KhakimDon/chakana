@@ -70,8 +70,13 @@ const goToPayment = () => {
     orderCartStore
       .createAutoOrder({
         name: orderDetail.value.name,
-        weekdays: [orderDetail.value.weekdays],
-        delivery_time: orderDetail.value.delivery_time.substring(0, 5),
+        // weekdays: [orderDetail.value.weekdays],
+        delivery_times: orderDetail.value.delivery_times.map((el) => {
+          return {
+            ...el,
+            delivery_time: el.delivery_time.substring(0, 5),
+          }
+        }),
         // delivery_times
         payment_type: {
           balance: orderDetail.value.balance,
@@ -111,7 +116,6 @@ const goToPayment = () => {
       })
   } else {
     const now = dayjs()
-    console.log(orderDetail.value.delivery_time)
     orderCartStore
       .createOrder({
         address: {

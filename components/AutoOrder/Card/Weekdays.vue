@@ -39,7 +39,7 @@ const weekdays = computed(() => orderCartStore.weekdays.list)
 const weekdaysLoading = computed(() => orderCartStore.weekdays.loading)
 
 const isSelected = (id: number) => {
-  return !!props.deliveryTimes.find((item) => item.weekday === id)
+  return !!props.deliveryTimes?.find((item) => item.weekday === id)
 }
 
 onMounted(() => {

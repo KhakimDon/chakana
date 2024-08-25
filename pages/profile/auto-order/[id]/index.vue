@@ -46,11 +46,10 @@
     </h3>
 
     <PaymentSectionOrderName :default-info="data" @save="saveName" />
-
+    <!--        weekdays: data.delivery_date_data.weekdays[0],-->
     <PaymentSectionClockLocation
       :default-info="{
-        weekdays: data.delivery_date_data.weekdays[0],
-        delivery_time: data.delivery_date_data.delivery_time,
+        delivery_times: delivery_times,
       }"
       is-auto
       @save="saveOrderClock"
@@ -127,16 +126,25 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 
 const { data, error, refresh } = await useAsyncData('orderSingle', () =>
-  useApi().$get<IOrderDetail>(`/auto-order/${route.params.id}`)
+  useApi().$get<IOrderDetail>(`/new-auto-order/${route.params.id}`)
 )
 if (error.value) showError({ statusCode: 404 })
+
+const delivery_times = ref(
+  data.value?.delivery_times.map((el) => {
+    return {
+      delivery_time: el.delivery_time,
+      weekday: el.weekday.id,
+    }
+  })
+)
 
 const products = ref()
 const productsLoading = ref(true)
 
 const getProducts = async () =>
   await useApi()
-    .$get(`auto-order/products/${route.params.id}`)
+    .$get(`new-auto-order/products/${route.params.id}`)
     .then((res) => {
       products.value = res
       refresh()
@@ -167,11 +175,11 @@ const saveLoading = ref(false)
 function saveAutoOrder() {
   saveLoading.value = true
   useApi()
-    .$put(`/auto-order/update/${route.params.id}`, {
+    .$put(`/new-auto-order/${route.params.id}`, {
       body: {
         name: data.value.name,
-        weekdays: data.value.delivery_date_data.weekdays,
-        delivery_time: data.value.delivery_date_data.delivery_time,
+        // weekdays: data.value.delivery_date_data.weekdays,
+        delivery_times: delivery_times.value,
         payment_type: {
           // card_to_courier:
           //   typeof data.value.payment_type_data?.card_to_courier === 'boolean'
@@ -214,8 +222,15 @@ function saveName(item: any) {
 }
 
 function saveOrderClock(item: any) {
-  data.value.delivery_date_data.delivery_time = item.delivery_time
-  data.value.delivery_date_data.weekdays = [item.weekdays]
+  delivery_times.value = item.delivery_times.map((item: any) => {
+    return {
+      delivery_time:
+        item.delivery_time.length > 5
+          ? item.delivery_time.substring(0, 5)
+          : item.delivery_time,
+      weekday: item.weekday,
+    }
+  })
 }
 
 function saveUser(item: any) {

@@ -35,12 +35,12 @@ export const orderFormUserInfo = useForm(
 export const orderFormTime = (isAuto: boolean) =>
   useForm(
     {
-      delivery_times: [],
+      delivery_times: null,
       when_to_deliver: '',
     },
     {
       delivery_times: {
-        checkDelivery: (value) => value.length > 0 && isAuto,
+        requiredIf: requiredIf(isAuto),
       },
       when_to_deliver: { requiredIf: requiredIf(!isAuto) },
     }

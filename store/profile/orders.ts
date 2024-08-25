@@ -33,7 +33,7 @@ export const useOrderStore = defineStore('orderStore', {
 
     fetchAutoOrders() {
       useApi()
-        .$get('/auto-order/list')
+        .$get('/new-auto-order/list')
         .then((res: IOrderCard[]) => {
           this.autoOrder.list = res.items
         })
@@ -44,7 +44,7 @@ export const useOrderStore = defineStore('orderStore', {
     deleteAutoOrder(id: number) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$delete(`/auto-order/${id}`)
+          .$delete(`/new-auto-order/${id}`)
           .then((res) => {
             this.fetchAutoOrders()
             resolve(res)

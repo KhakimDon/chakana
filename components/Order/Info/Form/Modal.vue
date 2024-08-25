@@ -164,7 +164,7 @@ const autoOrderNameStep = {
 const steps = computed(() =>
   props.isAuto ? [autoOrderNameStep, ...orderSteps] : orderSteps
 )
-const stepIndex = ref(1)
+const stepIndex = ref(0)
 const step = computed(() => steps.value[stepIndex.value].id)
 
 const beforeRefresh = (event) => {
