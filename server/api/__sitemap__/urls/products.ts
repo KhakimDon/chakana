@@ -8,7 +8,7 @@ export default defineSitemapEventHandler(async () => {
 
   return products.map((product: { slug: string; write_date: string }) => {
     return {
-      loc: '/' + product.slug,
+      loc: '/product/' + product.slug,
       lastmod: formatDateISO(product?.write_date),
       priority: 0.8,
     }
