@@ -132,11 +132,26 @@ export function generateOrderIntervals(isAuto: boolean, dayjs: Function) {
         currentHour + 2,
         0
       )
-      // console.log(
-      //   startInterval,
-      //   dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss')
-      // )
-      intervals.push(dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'))
+
+      const endInterval = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        currentHour + 3,
+        currentMinute
+      )
+      intervals.push({
+        time: dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'),
+        time_text: `${startInterval.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })} - ${endInterval.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })}`,
+      })
       trigger += 1
       currentHour += 1
     }

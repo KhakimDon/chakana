@@ -19,11 +19,9 @@
         :key
         class="flex-y-center cursor-pointer hover:text-orange transition-300 justify-between py-[14px] border-y-[0.5px] border-white-100 first:border-t last:border-b-0 text-sm font-semibold leading-130 pr-5 md:pr-7"
         :class="{
-          'text-orange':
-            activeInterval === interval ||
-            activeInterval === interval.substring(0, 5),
+          'text-orange': isActiveInterval(interval, key),
         }"
-        @click="chooseTime(interval)"
+        @click="chooseTime(isAuto || key === 0 ? interval : interval.time)"
       >
         <p v-if="key !== 0 || isAuto">
           {{
@@ -33,7 +31,7 @@
                   new Date(interval).getDate() === new Date().getDate()
                     ? 'today_interval'
                     : 'tomorrow_interval',
-                  { time: dayjs(interval).format('HH:mm') }
+                  { time: interval.time_text }
                 )
           }}
         </p>
@@ -41,10 +39,7 @@
         <div class="w-5 h-5 flex-center">
           <Transition name="fade-fast" mode="out-in">
             <SvgoCommonCheck
-              v-if="
-                activeInterval === interval ||
-                activeInterval === interval.substring(0, 5)
-              "
+              v-if="isActiveInterval(interval, key)"
               class="text-orange text-xl !mb-0"
             />
           </Transition>
@@ -67,9 +62,23 @@ const props = defineProps<Props>()
 
 const { values, $v } = unref(props.form)
 
+const isActiveInterval = (
+  interval: string | { time: string; time_text: string },
+  index: number
+) => {
+  if ((props.isAuto && typeof interval === 'string') || index === 0) {
+    return (
+      interval === activeInterval.value ||
+      interval.substring(0, 5) === activeInterval.value
+    )
+  } else {
+    return interval.time === activeInterval.value
+  }
+}
+
 const weekday = ref()
 
-const selectedInterval = ref(values?.delivery_time || 'nearest_2_hours')
+const selectedInterval = ref(values?.delivery_times || 'nearest_2_hours')
 
 const activeInterval = computed(() => {
   if (props.isAuto && values.delivery_times?.length) {
