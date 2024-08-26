@@ -3,10 +3,7 @@
     <div v-if="promoCodes?.loading" class="space-y-2">
       <ProfilePromocodesCardLoading v-for="key in 4" :key />
     </div>
-    <div
-      v-else-if="promoCodes?.list?.length"
-      class="space-y-3 max-h-96 overflow-y-auto md:pr-3"
-    >
+    <div v-else-if="promoCodes?.list?.length" class="space-y-3 md:pr-3">
       <div
         v-for="(promo, index) in promoCodes?.list"
         :key="index"

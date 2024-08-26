@@ -11,9 +11,7 @@
     >
       {{ $t('free_delivery_badge') }}
     </p>
-    <section
-      class="max-h-96 overflow-y-auto md:pr-2 flex flex-col -mr-5 md:-mr-7"
-    >
+    <section class="md:pr-2 flex flex-col -mr-5 md:-mr-7">
       <div
         v-for="(interval, key) in intervals"
         :key

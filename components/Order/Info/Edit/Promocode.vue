@@ -4,7 +4,10 @@
     :title="$t('promo_code')"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <OrderInfoFormPromocode :form />
+    <OrderInfoFormPromocode
+      class="overflow-y-auto sm:max-h-96 max-h-[50vh]"
+      :form
+    />
     <BaseButton
       class="!py-3 w-full !mt-6"
       :text="$t('save')"

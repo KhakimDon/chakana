@@ -1,9 +1,6 @@
 <template>
   <Transition name="fade" mode="out-in">
-    <div
-      :key="loading.list"
-      class="grid grid-cols-2 gap-4 overflow-y-scroll max-h-[60vh]"
-    >
+    <div :key="loading.list" class="grid grid-cols-2 gap-4">
       <template v-if="loading.list">
         <ProfileAddressCardLoading v-for="key in 4" :key />
       </template>

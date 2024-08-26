@@ -4,7 +4,11 @@
     :title="$t('when_delivery')"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <OrderInfoFormTime :form :is-auto="isAuto" />
+    <OrderInfoFormTime
+      class="overflow-y-auto sm:max-h-96 max-h-[50vh] overflow-x-hidden"
+      :form
+      :is-auto="isAuto"
+    />
     <BaseButton
       class="!py-3 w-full !mt-6"
       :text="$t('save')"
