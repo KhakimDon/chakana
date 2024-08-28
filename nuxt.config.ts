@@ -55,6 +55,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
     'nuxt-simple-sitemap',
+    'nuxt-simple-robots',
     '@nuxtjs/i18n',
     [
       '@pinia/nuxt',
