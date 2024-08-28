@@ -54,6 +54,7 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
+    'nuxt-simple-sitemap',
     '@nuxtjs/i18n',
     [
       '@pinia/nuxt',
@@ -67,6 +68,8 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
     'nuxt-gtag',
+    // 'nuxt-simple-robots',
+    // 'nuxt-simple-sitemap',
     [
       'yandex-metrika-module-nuxt3',
       {
@@ -95,6 +98,50 @@ export default defineNuxtConfig({
     },
     defaultLocale: 'uz',
     strategy: 'prefix_and_default',
+  },
+
+  routeRules: {
+    '/': {
+      sitemap: {
+        changefreq: 'daily',
+        priority: 1,
+        lastmod: new Date().toString('yyyy-mm-ddThh:mm:ss:zzz'),
+      },
+    },
+    '/ru': {
+      sitemap: {
+        changefreq: 'daily',
+        priority: 1,
+        lastmod: new Date().toString('yyyy-mm-ddThh:mm:ss:zzz'),
+      },
+    },
+  },
+  sitemap: {
+    exclude: [
+      '/profile/**',
+      '/profile',
+      '/payment/**',
+      '/payment',
+      '/cart/**',
+      '/cart',
+    ],
+    xslColumns: [
+      { label: 'URL', width: '50%' },
+      { label: 'Last Modified', select: 'sitemap:lastmod', width: '25%' },
+      { label: 'Priority', select: 'sitemap:priority', width: '12.5%' },
+      {
+        label: 'Change Frequency',
+        select: 'sitemap:changefreq',
+        width: '12.5%',
+      },
+    ],
+    sitemaps: {
+      products: {
+        includeAppSources: false,
+
+        sources: ['/api/__sitemap__/urls/products'],
+      },
+    },
   },
 
   // plugins: [
