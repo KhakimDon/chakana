@@ -2,7 +2,7 @@
   <BaseModal
     :model-value="modelValue"
     :title="$t('status_payment')"
-    @update:model-value="$emit('update:model-value', $event)"
+    @update:model-value="close"
   >
     <div class="flex flex-col items-center">
       <img :src="iconStatus" class="mb-4" />

@@ -256,7 +256,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
   ) {
     return new Promise((resolve, reject) => {
       useApi()
-        .$post(`/auto-order/product/add/${id}`, {
+        .$post(`/new-auto-order/product/add/${id}`, {
           body: {
             product_id: pId,
             count,
@@ -300,7 +300,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
     return new Promise((resolve, reject) => {
       autoOrderCreating.value = true
       useApi()
-        .$post(`/auto-order/create`, {
+        .$post(`/new-auto-order/create`, {
           body,
         })
         .then((res: any) => {

@@ -17,11 +17,13 @@
         step-icon-class="!text-xl !leading-5"
         line-class="!w-full !min-w-4"
       />
-      <component
-        :is="steps[stepIndex].component"
-        :form="steps[stepIndex].form"
-        :is-auto="isAuto"
-      />
+      <div class="overflow-y-auto sm:max-h-96 max-h-[50vh] overflow-x-hidden">
+        <component
+          :is="steps[stepIndex].component"
+          :form="steps[stepIndex].form"
+          :is-auto="isAuto"
+        />
+      </div>
       <BaseButton
         class="!py-3 w-full !mt-6"
         :loading
@@ -37,14 +39,14 @@
 import { useEventListener } from '@vueuse/core'
 
 import {
-  LazyOrderInfoFormAddress,
-  LazyOrderInfoFormComment,
-  LazyOrderInfoFormName,
-  LazyOrderInfoFormPayment,
-  LazyOrderInfoFormPickerComment,
-  LazyOrderInfoFormPromocode,
-  LazyOrderInfoFormTime,
-  LazyOrderInfoFormUserInfo,
+  OrderInfoFormAddress,
+  OrderInfoFormComment,
+  OrderInfoFormName,
+  OrderInfoFormPayment,
+  OrderInfoFormPickerComment,
+  OrderInfoFormPromocode,
+  OrderInfoFormTime,
+  OrderInfoFormUserInfo,
 } from '#components'
 import {
   orderFormAddress,
@@ -106,49 +108,49 @@ const orderSteps = [
     id: 'address',
     icon: 'SvgoProfileTruck',
     title: 'address_delivery',
-    component: LazyOrderInfoFormAddress,
+    component: OrderInfoFormAddress,
     form: orderFormAddress,
   },
   {
     id: 'when_to_deliver',
     icon: 'SvgoProfileClockLocation',
     title: 'when_delivery',
-    component: LazyOrderInfoFormTime,
-    form: orderFormTime,
+    component: OrderInfoFormTime,
+    form: orderFormTime(props.isAuto),
   },
   {
     id: 'user',
     icon: 'SvgoProfileUserCircle',
     title: 'recipient_details',
-    component: LazyOrderInfoFormUserInfo,
+    component: OrderInfoFormUserInfo,
     form: orderFormUserInfo,
   },
   {
     id: 'comment',
     icon: 'SvgoProfileMessage',
     title: 'courier_comment',
-    component: LazyOrderInfoFormComment,
+    component: OrderInfoFormComment,
     form: orderFormComment,
   },
   {
     id: 'picker_comment',
     icon: 'SvgoProfileMessage',
     title: 'picker_comment',
-    component: LazyOrderInfoFormPickerComment,
+    component: OrderInfoFormPickerComment,
     form: orderFormPickerComment,
   },
   {
     id: 'promo',
     icon: 'SvgoProfileTicket',
     title: 'promo_code',
-    component: LazyOrderInfoFormPromocode,
+    component: OrderInfoFormPromocode,
     form: orderFormPromocode,
   },
   {
     id: 'payment',
     icon: 'SvgoProfileMoney',
     title: 'payment_method',
-    component: LazyOrderInfoFormPayment,
+    component: OrderInfoFormPayment,
     form: orderFormPayment,
   },
 ]
@@ -157,7 +159,7 @@ const autoOrderNameStep = {
   id: 'name',
   icon: 'SvgoCommonEdit',
   title: 'auto_order_title',
-  component: LazyOrderInfoFormName,
+  component: OrderInfoFormName,
   form: orderFormName,
 }
 
