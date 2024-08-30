@@ -139,18 +139,26 @@ const loading = ref(false)
 function changeAvatar(file: File | null) {
   avatar.value = file
 }
-
+const avatarError = ref(false)
 async function submit() {
   form.$v.value.$touch()
   if (form.$v.value.$invalid) return
   loading.value = true
+  avatarError.value = false
   if (avatar.value) {
     const imageFormData = new FormData()
     imageFormData.append('image', avatar.value)
-    await useApi().$post('upload/avatar', { body: imageFormData })
+    await useApi()
+      .$post('upload/avatar', { body: imageFormData })
+      .catch((err) => {
+        showToast(err._data.detail, 'error')
+        loading.value = false
+        avatarError.value = true
+      })
   } else if (avatar.value === null) {
     await useApi().$delete('delete/avatar')
   }
+  if (avatarError.value) return
   authStore
     .updateUser(form.values)
     .then(() => {
