@@ -136,39 +136,36 @@ const selectPromoCode = (item: any) => {
 }
 
 function getExpressDeliveryPrice(data: any) {
-  const now = dayjs()
-  if (data?.delivery_time) {
+  if (data?.when_to_deliver) {
     const deliveryTime =
-      data.delivery_time === 'nearest_half_hour'
+      data.when_to_deliver === 'nearest_half_hour'
         ? undefined
-        : dayjs(data.delivery_time).format('DD.MM.YYYY HH:mm:ss')
+        : dayjs(data.when_to_deliver).format('DD.MM.YYYY HH:mm:ss')
 
-    const query = orderCartStore.orderDetail.promo_code_id
-      ? {
-          promo_code_id: orderCartStore.orderDetail.promo_code_id,
-          when_to_deliver: deliveryTime,
-          express: deliveryTime === 'nearest_half_hour',
-        }
-      : {
-          when_to_deliver: deliveryTime,
-          express: deliveryTime === 'nearest_half_hour',
-        }
+    const query = {
+      promo_code_id: orderCartStore.orderDetail.promo_code_id || undefined,
+      when_to_deliver: deliveryTime,
+      express: deliveryTime === 'nearest_half_hour',
+    }
 
     orderCartStore.getCartDetailConfirm(query)
+    // } else {
+    //   const query = {
+    //     when_to_deliver: dayjs(
+    //       now.add(30, 'minutes').set('minutes', 0).set('seconds', 0)
+    //     ).format('DD.MM.YYYY HH:mm:ss'),
+    //   }
+    //
+    //   orderCartStore.getCartDetailConfirm(query)
   }
-
-  const query = {
-    when_to_deliver: dayjs(
-      now.add(30, 'minutes').set('minutes', 0).set('seconds', 0)
-    ).format('DD.MM.YYYY HH:mm:ss'),
-  }
-
-  orderCartStore.getCartDetailConfirm(query)
 }
 
 function saveOrderClock(data: any) {
-  orderCartStore.orderDetail.delivery_time = data.delivery_time
-  orderCartStore.orderDetail.weekdays = data.weekdays
+  if (orderCartStore.orderDetail.isAuto) {
+    orderCartStore.orderDetail.delivery_times = data.delivery_times
+  } else {
+    orderCartStore.orderDetail.when_to_deliver = data.when_to_deliver
+  }
 
   getExpressDeliveryPrice(data)
 }

@@ -127,6 +127,7 @@ const goToPayment = () => {
           orderDetail.value.when_to_deliver === 'nearest_half_hour'
             ? getCurrentDateTimeISO(now.add(30, 'minutes'))
             : orderDetail.value.when_to_deliver,
+        express: orderDetail.value.when_to_deliver === 'nearest_half_hour',
         recipient: {
           full_name: orderDetail.value.full_name,
           phone: orderDetail.value.phone,
