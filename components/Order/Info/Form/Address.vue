@@ -1,10 +1,10 @@
 <template>
   <div>
     <CartCardAddress
-      :key="defaultId"
+      :key="addressDefaultId"
       :list
       :loading
-      :default-id="defaultId"
+      :default-id="addressDefaultId"
       @handle-address="handleAddress"
       @add="showAddModal = true"
     />
@@ -50,6 +50,10 @@ const handleAddress = (item: any) => {
 }
 
 const { list, resetList, loading } = useListFetcher('/saved/address')
+
+const addressDefaultId = computed(() => {
+  return props.defaultId || list.value?.[0]?.id
+})
 
 watch(
   () => list.value,

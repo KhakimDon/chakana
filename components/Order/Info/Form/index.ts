@@ -1,4 +1,4 @@
-import { minLength, required } from '@vuelidate/validators'
+import { minLength, required, requiredIf } from '@vuelidate/validators'
 
 import { isValidPhone } from '~/utils/functions/common.js'
 
@@ -32,15 +32,19 @@ export const orderFormUserInfo = useForm(
   }
 )
 
-export const orderFormTime = useForm(
-  {
-    delivery_time: '',
-    weekdays: null,
-  },
-  {
-    delivery_time: { required },
-  }
-)
+export const orderFormTime = (isAuto: boolean) =>
+  useForm(
+    {
+      delivery_times: null,
+      when_to_deliver: '',
+    },
+    {
+      delivery_times: {
+        requiredIf: requiredIf(isAuto),
+      },
+      when_to_deliver: { requiredIf: requiredIf(!isAuto) },
+    }
+  )
 
 export const orderFormComment = useForm(
   {
@@ -128,11 +132,26 @@ export function generateOrderIntervals(isAuto: boolean, dayjs: Function) {
         currentHour + 2,
         0
       )
-      // console.log(
-      //   startInterval,
-      //   dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss')
-      // )
-      intervals.push(dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'))
+
+      const endInterval = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        currentHour + 3,
+        currentMinute
+      )
+      intervals.push({
+        time: dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'),
+        time_text: `${startInterval.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })} - ${endInterval.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })}`,
+      })
       trigger += 1
       currentHour += 1
     }

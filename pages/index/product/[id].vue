@@ -415,7 +415,7 @@ const savedProducts = () => {
   useApi()
     .$post('/saved/products', {
       body: {
-        product_id: route.params.id,
+        product_id: data.value?.id,
       },
     })
     .then((res: any) => {

@@ -16,7 +16,7 @@ export default defineNuxtConfig({
         {
           rel: 'icon',
           type: 'image/x-icon',
-          href: `/favicon.svg`,
+          href: `/new-favicon.svg`,
         },
         {
           rel: 'canonical',
@@ -55,6 +55,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-svgo',
     'nuxt-simple-sitemap',
+    'nuxt-simple-robots',
     '@nuxtjs/i18n',
     [
       '@pinia/nuxt',

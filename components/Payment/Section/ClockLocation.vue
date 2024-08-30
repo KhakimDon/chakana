@@ -36,8 +36,7 @@ const showEdit = ref(false)
 const text = computed(() => {
   return props.isAuto
     ? t('auto_order_time', {
-        week: t(`weekday[${props.defaultInfo?.weekdays}]`),
-        time: props.defaultInfo?.delivery_time,
+        per_week: props.defaultInfo.delivery_times?.length,
       })
     : props.defaultInfo?.delivery_time === 'nearest_half_hour'
     ? t(props.defaultInfo?.delivery_time)

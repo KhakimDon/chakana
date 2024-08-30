@@ -6,6 +6,7 @@
         {{ $t('auto_order') }}
       </h1>
       <NuxtLinkLocale
+        v-if="false"
         :to="localePath(`/profile/auto-order/${$route.params.id}/search`)"
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
       >

@@ -43,7 +43,10 @@
           </p>
         </div>
         <Transition name="fade" mode="out-in">
-          <div :key="cards.loading" class="w-full mb-2">
+          <div
+            :key="cards.loading"
+            class="w-full mb-2 overflow-y-auto md:max-h-[212px]"
+          >
             <template v-if="cards.loading">
               <ProfileMyCardLoading v-for="i in 4" :key="i" />
             </template>

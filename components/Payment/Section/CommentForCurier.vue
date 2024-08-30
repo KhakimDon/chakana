@@ -2,7 +2,9 @@
   <PaymentCardInfo
     icon="SvgoProfileMessage"
     icon-class="!text-blue-100 !text-2xl"
-    :title="comment || isPicker ? $t('picker_comment') : $t('courier_comment')"
+    :title="
+      comment || (isPicker ? $t('picker_comment') : $t('courier_comment'))
+    "
     :subtitle
     @open-details="showEdit = true"
   />

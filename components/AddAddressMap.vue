@@ -66,6 +66,10 @@ load().then((mapglAPI) => {
           })
 
           markers.value.push(marker)
+          emit('update:center', [
+            position.coords?.longitude,
+            position.coords?.latitude,
+          ])
         })
       }
     })
