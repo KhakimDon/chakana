@@ -110,7 +110,7 @@ const goToPayment = () => {
       })
   } else {
     const now = dayjs()
-    console.log(orderDetail.value.delivery_time)
+    console.log(getCurrentDateTimeISO(now.add(30, 'minutes')))
     orderCartStore
       .createOrder({
         address: {
@@ -119,8 +119,8 @@ const goToPayment = () => {
           longitude: null,
         },
         when_to_deliver:
-          orderDetail.value.delivery_time === 'nearest_2_hours'
-            ? getCurrentDateTimeISO(now.add(2, 'hours'))
+          orderDetail.value.delivery_time === 'nearest_half_hour'
+            ? getCurrentDateTimeISO(now.add(30, 'minutes'))
             : orderDetail.value.delivery_time,
         recipient: {
           full_name: orderDetail.value.full_name,

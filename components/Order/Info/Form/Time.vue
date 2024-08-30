@@ -61,7 +61,7 @@ const props = defineProps<Props>()
 
 const { values, $v } = unref(props.form)
 
-const selectedInterval = ref(values?.delivery_time || 'nearest_2_hours')
+const selectedInterval = ref(values?.delivery_time || 'nearest_half_hour')
 
 function chooseTime(interval: string) {
   selectedInterval.value = interval
@@ -72,7 +72,7 @@ const intervals = ref()
 onMounted(() => {
   intervals.value = generateOrderIntervals(props.isAuto, dayjs)
   if (!props.isAuto) {
-    intervals.value.unshift('nearest_2_hours')
+    intervals.value.unshift('nearest_half_hour')
   }
   if (!values?.delivery_time) {
     chooseTime(intervals.value[0])

@@ -39,7 +39,7 @@ const text = computed(() => {
         week: t(`weekday[${props.defaultInfo?.weekdays}]`),
         time: props.defaultInfo?.delivery_time,
       })
-    : props.defaultInfo?.delivery_time === 'nearest_2_hours'
+    : props.defaultInfo?.delivery_time === 'nearest_half_hour'
     ? t(props.defaultInfo?.delivery_time)
     : t(
         new Date(props.defaultInfo?.delivery_time).getDate() ===

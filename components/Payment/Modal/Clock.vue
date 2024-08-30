@@ -76,7 +76,7 @@ const isCartRoute = computed(() => {
   )
 })
 
-const selectedInterval = ref('nearest_2_hours')
+const selectedInterval = ref('nearest_half_hour')
 
 function generateIntervals() {
   const now = new Date()
@@ -132,11 +132,11 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 
 function add() {
-  if (selectedInterval.value === 'nearest_2_hours') {
+  if (selectedInterval.value === 'nearest_half_hour') {
     const now = dayjs()
-    now.add(2, 'hours')
+    now.add(30, 'minutes')
     orderCartStore.orderDetail.when_to_deliver = getCurrentDateTimeISO(
-      now.add(2, 'hours')
+      now.add(30, 'minutes')
     )
   } else {
     const now = dayjs()
@@ -154,7 +154,7 @@ function add() {
 const intervals = ref()
 
 onMounted(() => {
-  intervals.value = ['nearest_2_hours', ...generateIntervals()]
+  intervals.value = ['nearest_half_hour', ...generateIntervals()]
 })
 
 const step = ref('when_to_deliver')

@@ -68,7 +68,7 @@ const emit = defineEmits<{
   (e: 'openSavedAddress'): void
 }>()
 
-const selectedInterval = ref('nearest_2_hours')
+const selectedInterval = ref('nearest_half_hour')
 
 function generateIntervals() {
   const now = new Date('2023-01-01 01:00:00')
@@ -124,11 +124,11 @@ const modalStore = useModalStore()
 const orderCartStore = useCartOrderStore()
 function add() {
   // TODO: when to deliver format like this 09:00 (start only)
-  if (selectedInterval.value === 'nearest_2_hours') {
+  if (selectedInterval.value === 'nearest_half_hour') {
     const now = dayjs()
-    now.add(2, 'hours')
+    now.add(30, 'minutes')
     orderCartStore.autoOrderDetail.when_to_deliver = getCurrentDateTimeISO(
-      now.add(2, 'hours')
+      now.add(30, 'minutes')
     )
   } else {
     const now = dayjs()

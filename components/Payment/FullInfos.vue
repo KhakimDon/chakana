@@ -139,17 +139,19 @@ function getExpressDeliveryPrice(data: any) {
   const now = dayjs()
   if (data?.delivery_time) {
     const deliveryTime =
-      data.delivery_time === 'nearest_2_hours'
-        ? dayjs(now.add(2, 'hours')).format('DD.MM.YYYY HH:mm:ss')
+      data.delivery_time === 'nearest_half_hour'
+        ? undefined
         : dayjs(data.delivery_time).format('DD.MM.YYYY HH:mm:ss')
 
     const query = orderCartStore.orderDetail.promo_code_id
       ? {
           promo_code_id: orderCartStore.orderDetail.promo_code_id,
           when_to_deliver: deliveryTime,
+          express: deliveryTime === 'nearest_half_hour',
         }
       : {
           when_to_deliver: deliveryTime,
+          express: deliveryTime === 'nearest_half_hour',
         }
 
     orderCartStore.getCartDetailConfirm(query)
@@ -157,7 +159,7 @@ function getExpressDeliveryPrice(data: any) {
 
   const query = {
     when_to_deliver: dayjs(
-      now.add(2, 'hours').set('minutes', 0).set('seconds', 0)
+      now.add(30, 'minutes').set('minutes', 0).set('seconds', 0)
     ).format('DD.MM.YYYY HH:mm:ss'),
   }
 
