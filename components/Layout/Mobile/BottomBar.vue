@@ -75,6 +75,14 @@ const totalPrice = computed(() => cartOrderStore.cart?.detail?.total_price)
 const token = computed(() => authStore.accessToken)
 const user = computed(() => authStore.user)
 
+watch(
+  () => user.value?.id,
+  () => {
+    console.log('change')
+    cartOrderStore.getCartDetail()
+  }
+)
+
 const openSaved = () => {
   if (token.value) {
     router.push(`/${locale.value}/saved`)
