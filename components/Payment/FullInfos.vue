@@ -145,7 +145,7 @@ function getExpressDeliveryPrice(data: any) {
     const query = {
       promo_code_id: orderCartStore.orderDetail.promo_code_id || undefined,
       when_to_deliver: deliveryTime,
-      express: deliveryTime === 'nearest_half_hour',
+      express: data.when_to_deliver === 'nearest_half_hour',
     }
 
     orderCartStore.getCartDetailConfirm(query)
