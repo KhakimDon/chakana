@@ -8,7 +8,7 @@
     </h1>
     <ProfileSidebarPremium v-if="!hasPremium" />
     <ProfileSidebarBalance />
-    <ProfileSidebarMenu class="my-4" :menu />
+    <ProfileSidebarMenu class="my-4" :menu @menu-click="menuClick" />
     <button
       class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
       @click="logoutModal = true"
@@ -59,6 +59,7 @@ import {
   SvgoProfileUserCircle,
 } from '#components'
 import { useAuthStore } from '~/store/auth.js'
+import { useModalStore } from '~/store/modal.js'
 
 definePageMeta({
   middleware: ['auth'],
@@ -71,6 +72,14 @@ const localePath = useLocalePath()
 const { t } = useI18n()
 
 const menu = [
+  {
+    link: '/profile/auto-order',
+    title: t('auto_order'),
+    icon: 'SvgoCommonCalendar',
+    iconClass: 'text-orange group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
+    isPremium: true,
+  },
   {
     link: '/profile/edit',
     title: t('my_infos'),
@@ -139,5 +148,11 @@ async function logout() {
   await useAuthStore().logOut()
   logoutModal.value = false
   router.push(localePath('/'))
+}
+
+const menuClick = (item: any) => {
+  if (item?.isPremium && !useAuthStore().user?.is_premium) {
+    useModalStore().premiumModel = true
+  }
 }
 </script>
