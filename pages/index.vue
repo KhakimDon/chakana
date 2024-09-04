@@ -15,9 +15,7 @@
         </div>
       </Transition>
       <template #right>
-        <div
-          class="fixed w-[313px] top-[86px] h-[calc(100vh-100px)] overflow-y-auto pb-16"
-        >
+        <div class="sticky bottom-0 w-[313px] overflow-y-auto pb-16">
           <ClientOnly>
             <MainMapSidebar class="md:mr-2" @change-coords="changeCoords" />
           </ClientOnly>

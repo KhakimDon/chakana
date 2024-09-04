@@ -26,8 +26,11 @@
       </div>
     </client-only>
     <button
-      :disabled="disableIncrease"
+      :disabled="disableIncrease || checkMax"
       class="text-base text-dark hover:text-orange transition-300"
+      :class="{
+        'text-opacity-50 pointer-events-none': disableIncrease || checkMax,
+      }"
       @click="increase"
     >
       <IconPlus class="!mb-0" />
@@ -63,9 +66,14 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
   (e: 'decrease'): void
+  (e: 'change'): void
 }>()
 
 const count = ref(0)
+
+const checkMax = computed(() => {
+  return count.value >= props.max
+})
 
 watch(
   () => props.defaultCount,
@@ -100,11 +108,13 @@ const decrease = () => {
   ) {
     emit('decrease')
     count.value--
+    emit('change')
   }
 }
 const increase = () => {
-  if (!props.disableIncrease) {
+  if (!props.disableIncrease && !checkMax.value) {
     count.value++
+    emit('change')
   }
 }
 const onChangeCount = (event: InputEvent) => {

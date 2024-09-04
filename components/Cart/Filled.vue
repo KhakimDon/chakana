@@ -38,7 +38,8 @@
           </p>
         </div>
       </div>
-      <div class="max-h-72 h-fit overflow-y-auto space-y-5">
+      <!--      overflow-y-auto max-h-72 -->
+      <div class="h-fit space-y-5">
         <SearchCardProduct
           v-for="(product, key) in cartProducts"
           :key

@@ -67,7 +67,7 @@
         :default-count="count"
         :max="card?.max_quantity ?? 100000"
         readonly
-        @click="addToCart(card)"
+        @change="addToCart(card)"
       />
     </ClientOnly>
   </div>
@@ -98,6 +98,7 @@ const addingToCart = ref(false)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
+  console.log('count', count.value, product?.max_quantity)
   if (count.value <= product?.max_quantity) {
     debounce(
       'addToCart',

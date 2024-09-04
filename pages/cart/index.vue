@@ -15,6 +15,9 @@
         <CartSectionProducts />
       </section>
     </LayoutMobile>
+    <ClientOnly>
+      <BaseButtonToTop />
+    </ClientOnly>
   </main>
 </template>
 
