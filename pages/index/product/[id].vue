@@ -304,6 +304,7 @@
 
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core'
+import { convert } from 'html-to-text'
 import { Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
@@ -321,6 +322,14 @@ import {
   getImageSize,
   share,
 } from '~/utils/functions/common'
+
+function htmlToText(html: string) {
+  return convert(html, {
+    wordwrap: false, // Prevents wrapping text
+    ignoreHref: true, // Ignores links in the text
+    ignoreImage: true, // Ignores images in the text
+  })
+}
 
 const open = ref(false)
 const show = ref(false)
@@ -492,8 +501,8 @@ onMounted(() => {
 
 useSeoMeta({
   title: data.value?.name,
-  description: data.value?.description,
-  ogDescription: data.value?.description,
+  description: htmlToText(data.value?.description),
+  ogDescription: htmlToText(data.value?.description),
   ogTitle: data.value?.name,
   twitterTitle: data.value?.name,
   twitterCard: 'summary',
