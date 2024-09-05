@@ -68,6 +68,7 @@ export default defineNuxtConfig({
       },
     ],
     '@nuxt/image',
+    'nuxt3-meta-pixel',
     'nuxt-gtag',
     // 'nuxt-simple-robots',
     // 'nuxt-simple-sitemap',
@@ -79,6 +80,14 @@ export default defineNuxtConfig({
       },
     ],
   ],
+
+  facebook: {
+    /* module options */
+    track: 'PageView',
+    pixelId: '1032075698305757',
+    autoPageView: true,
+    disabled: false,
+  },
 
   i18n: {
     langDir: 'locales',
