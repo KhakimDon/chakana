@@ -6,7 +6,6 @@
     :text-wrapper-class="textWrapperClass"
     @open-details="showEdit = true"
   />
-
   <OrderInfoEditTime
     v-model="showEdit"
     :default-info="defaultInfo"
@@ -38,14 +37,14 @@ const text = computed(() => {
     ? t('auto_order_time', {
         per_week: props.defaultInfo.delivery_times?.length,
       })
-    : props.defaultInfo?.delivery_time === 'nearest_half_hour'
-    ? t(props.defaultInfo?.delivery_time)
+    : props.defaultInfo?.when_to_deliver === 'nearest_half_hour'
+    ? t(props.defaultInfo?.when_to_deliver)
     : t(
-        new Date(props.defaultInfo?.delivery_time).getDate() ===
+        new Date(props.defaultInfo?.when_to_deliver).getDate() ===
           new Date().getDate()
           ? 'today_interval'
           : 'tomorrow_interval',
-        { time: dayjs(props.defaultInfo?.delivery_time).format('HH:mm') }
+        { time: dayjs(props.defaultInfo?.when_to_deliver).format('HH:mm') }
       )
 })
 </script>

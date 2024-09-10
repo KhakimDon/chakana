@@ -26,7 +26,7 @@
             isAuto
               ? interval
               : $t(
-                  new Date(interval).getDate() === new Date().getDate()
+                  new Date(interval.time).getDate() === new Date().getDate()
                     ? 'today_interval'
                     : 'tomorrow_interval',
                   { time: interval.time_text }
