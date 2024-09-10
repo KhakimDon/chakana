@@ -226,7 +226,7 @@ function saveOrderClock(item: any) {
     return {
       delivery_time:
         item.delivery_time.length > 5
-          ? item.delivery_time.substring(0, 5)
+          ? item.delivery_time.slice(-5)
           : item.delivery_time,
       weekday: item.weekday,
     }

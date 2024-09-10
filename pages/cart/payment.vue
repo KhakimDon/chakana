@@ -74,7 +74,7 @@ const goToPayment = () => {
         delivery_times: orderDetail.value.delivery_times.map((el) => {
           return {
             ...el,
-            delivery_time: el.delivery_time.substring(0, 5),
+            delivery_time: el.delivery_time.slice(-5),
           }
         }),
         // delivery_times

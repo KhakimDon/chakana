@@ -67,7 +67,7 @@ const isActiveInterval = (
   if ((props.isAuto && typeof interval === 'string') || index === 0) {
     return (
       interval === activeInterval.value ||
-      interval.substring(0, 5) === activeInterval.value
+      interval.slice(-5) === activeInterval.value
     )
   } else {
     return interval.time === activeInterval.value

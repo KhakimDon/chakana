@@ -141,7 +141,7 @@ export function generateOrderIntervals(isAuto: boolean, dayjs: Function) {
         currentMinute
       )
       intervals.push({
-        time: dayjs(startInterval).format('YYYY-MM-DDTHH:mm:ss'),
+        time: dayjs(endInterval).format('YYYY-MM-DDTHH:mm:ss'),
         time_text: `${startInterval.toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
