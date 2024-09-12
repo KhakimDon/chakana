@@ -70,6 +70,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt3-meta-pixel',
     'nuxt-gtag',
+    'nuxt3-meta-pixel',
     // 'nuxt-simple-robots',
     // 'nuxt-simple-sitemap',
     [
