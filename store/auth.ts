@@ -1,4 +1,5 @@
 import type { IUser } from '~/types/auth'
+import { useCartStore } from '~/store/cart.js'
 
 interface TAuthTokens {
   refresh_token?: string
@@ -34,6 +35,7 @@ export const useAuthStore = defineStore('authStore', {
             this.user = res
             this.userFetched = true
             this.userFetchTrigger++
+            useCartStore().getCartProducts()
             resolve(res)
           })
           .catch((error) => {
@@ -165,6 +167,8 @@ export const useAuthStore = defineStore('authStore', {
       access.value = null
       const refresh = useCookie('refresh_token')
       refresh.value = null
+
+      useCartStore().$reset()
     },
     getDeviceID(id: string) {
       return new Promise((resolve, reject) => {

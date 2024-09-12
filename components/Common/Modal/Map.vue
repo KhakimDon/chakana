@@ -12,8 +12,8 @@
       <p class="text-dark-100 text-sm font-medium leading-140">
         {{ $t('map_modal_desc') }}
       </p>
-      <div class="grid grid-cols-12 mt-4 gap-x-4 gap-y-2">
-        <div class="relative col-span-12 sm:col-span-8 md:col-span-9">
+      <div class="flex mt-4 gap-x-4 gap-y-2">
+        <div class="relative w-full">
           <FormInputSearch
             v-model="search"
             :no-search-icon="false"
@@ -46,14 +46,14 @@
           </Transition>
         </div>
         <BaseButton
-          class="col-span-12 sm:col-span-4 md:col-span-3"
+          class="shrink-0 !py-2.5 !px-7 !rounded-[10px]"
           :loading="false"
           :text="$t('confirm')"
           variant="primary"
           @click="addAddress"
         />
       </div>
-      <div class="rounded-10 overflow-x-auto">
+      <div class="rounded-10 overflow-x-auto mt-4">
         <Map
           :zoom="15"
           class="h-[300px] md:h-[440px]"
