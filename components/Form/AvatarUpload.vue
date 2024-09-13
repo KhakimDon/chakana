@@ -23,7 +23,6 @@
       <div
         v-if="image"
         class="absolute inset-0 flex-center group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none opacity-0 bg-dark/60 transition-300"
-        @click="getFile"
       >
         <SvgoCommonEditPenSquare class="text-2xl leading-6 text-white" />
       </div>
