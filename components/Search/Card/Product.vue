@@ -50,9 +50,13 @@
             variant="outline"
             :disabled="addingToCart || product?.max_quantity <= 0"
             :loading="addingToCart"
+            size="sm"
             @click="addToCartFirstTime(product)"
           />
-          <p class="mt-1 text-xs font-medium text-dark leading-none">
+          <p
+            v-if="count <= 0"
+            class="mt-1 text-xs font-medium text-dark leading-none"
+          >
             {{
               product?.discount_price
                 ? formatMoneyDecimal(product?.discount_price)
