@@ -47,6 +47,11 @@
           </div>
         </div>
       </div>
+      <CommonNoData
+        v-else
+        class="w-full"
+        image="/images/no-data/no-searches.png"
+      />
     </div>
   </BaseModal>
 </template>

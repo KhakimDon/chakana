@@ -57,12 +57,13 @@
 import { required } from '@vuelidate/validators'
 
 import { usePromocodesStore } from '~/store/profile/promocodes'
+import { useCustomToast } from '~/composables/useCustomToast.js'
 
 const { t } = useI18n()
 const promocodesStore = usePromocodesStore()
 const animate = ref(false)
 const promocodes = computed(() => promocodesStore.promocodes)
-
+const { showToast } = useCustomToast()
 promocodesStore.fetchPromocodes()
 
 const form = useForm(
@@ -93,7 +94,7 @@ const applyPromocode = () => {
       form.$v.value.$reset()
     })
     .catch((e) => {
-      useErrorHandling().handleError(e)
+      showToast(t(e._data?.detail?.code), 'error')
       animate.value = true
     })
     .finally(() => {
