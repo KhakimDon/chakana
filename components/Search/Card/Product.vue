@@ -41,7 +41,19 @@
         </i18n-t>
       </template>
       <template v-else>
-        <div v-if="count < 1 || addingToCart">
+        <BaseButton
+          v-if="isCart ? !product?.published : false"
+          class="w-24 whitespace-nowrap"
+          :text="
+            (isCart ? !product?.published : true)
+              ? $t('to_basket')
+              : $t('out_of_stock')
+          "
+          variant="outline"
+          disabled
+          size="sm"
+        />
+        <div v-else-if="count < 1 || addingToCart">
           <BaseButton
             class="w-24 whitespace-nowrap"
             :text="
@@ -117,6 +129,7 @@ interface Props {
   titleClass?: string
   showCount?: boolean
   returned?: boolean
+  isCart?: boolean
 }
 
 const props = defineProps<Props>()
