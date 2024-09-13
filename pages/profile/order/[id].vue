@@ -244,12 +244,18 @@ getProducts()
 const reorderLoading = ref(false)
 function reOrder() {
   reorderLoading.value = true
-  const list = products.value?.delivered_products.map((el) => {
-    return {
-      product_id: el.id,
-      count: el.quantity,
-    }
-  })
+  const list = products.value?.delivered_products
+    .filter((el) => el.can_add)
+    .map((el) => {
+      return {
+        product_id: el.id,
+        count: el.real_quantity,
+      }
+    })
+  if (!list.length) {
+    useCustomToast().showToast(t('no_products_to_reorder'), 'error')
+    return
+  }
   useApi()
     .$post(`/cart/add/mobile`, {
       body: {
