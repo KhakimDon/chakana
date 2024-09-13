@@ -58,7 +58,9 @@ const cartStore = useCartStore()
 
 const cartProducts = computed(() => cartStore.products)
 
-cartStore.getCartProducts()
+onMounted(() => {
+  cartStore.getCartProducts()
+})
 
 watch(
   () => route.name,

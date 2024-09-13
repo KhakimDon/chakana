@@ -57,6 +57,7 @@
           :key
           :product="product"
           :class="{ 'bg-gray-300/50': key % 2 === 0 }"
+          is-cart
         />
       </div>
       <section v-else class="my-5">
