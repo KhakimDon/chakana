@@ -105,6 +105,7 @@ export const useCartOrderStore = defineStore('cartOrderStore', () => {
         })
         .catch((error) => {
           isInvalidPromoCode.value = true
+          useErrorHandling().handleError(error)
           reject(error)
         })
         .finally(() => {

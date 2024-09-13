@@ -26,7 +26,7 @@
             />
             <BaseButton
               :text="$t('apply')"
-              class="sm:!p-3"
+              class="sm:!p-3 shrink-0"
               @click="applyPromocode"
             />
           </div>
