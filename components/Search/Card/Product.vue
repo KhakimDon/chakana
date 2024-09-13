@@ -76,7 +76,7 @@
           :max="product?.max_quantity ?? 100000"
           class="w-24 border-none bg-white-100"
           readonly
-          @click="addToCart(product)"
+          @change="addToCart(product)"
         />
       </template>
       <p
