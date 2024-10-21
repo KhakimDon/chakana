@@ -7,9 +7,9 @@
       >
         <MainCardBadge
           v-if="card?.discount_type === 'percentage'"
-          class="absolute bottom-1.5 left-2"
           :percent="card?.discount_percentage"
           :type="card?.discount_type"
+          class="absolute bottom-1.5 left-2"
         />
         <nuxt-img
           :src="getImageSize(card, card?.main_image, 'small')"
@@ -33,8 +33,8 @@
         </p>
       </div>
       <p
-        class="mt-2 text-sm leading-122 font-bold text-green"
         :class="{ '!text-red !mt-0': card?.discount_price }"
+        class="mt-2 text-sm leading-122 font-bold text-green"
       >
         {{ formatMoneyDecimal(card?.discount_price ?? card?.price) }}
         <span class="text-[11px] font-[150%]">UZS</span>
@@ -54,11 +54,11 @@
     <ClientOnly>
       <BaseButton
         v-if="count < 1 || addingToCart"
-        class="w-full !py-2"
-        :text="card?.max_quantity > 0 ? $t('to_basket') : $t('out_of_stock')"
-        variant="outline"
         :disabled="addingToCart || card?.max_quantity <= 0"
         :loading="addingToCart"
+        :text="card?.max_quantity > 0 ? $t('to_basket') : $t('out_of_stock')"
+        class="w-full !py-2"
+        variant="outline"
         @click="addToCartFirstTime(card)"
       />
       <MainCardCounter
@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import type { IProduct } from '~/types/products'
@@ -98,7 +98,6 @@ const addingToCart = ref(false)
 
 const cartProducts = computed(() => cartStore.products)
 const addToCart = (product: any) => {
-  console.log('count', count.value, product?.max_quantity)
   if (count.value <= product?.max_quantity) {
     debounce(
       'addToCart',

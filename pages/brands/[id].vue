@@ -1,6 +1,6 @@
 <template>
-  <section class="mb-24 space-y-6">
-    <CommonSectionWrapper :title="single.title" class="my-6" title-link>
+  <section class="container mb-24 space-y-6">
+    <CommonSectionWrapper :title="single?.title" class="my-6" title-link>
       <template #beforeTitle>
         <NuxtLinkLocale to="/brands">
           <IconChevron
@@ -8,9 +8,10 @@
           />
         </NuxtLinkLocale>
       </template>
+
       <Transition mode="out-in" name="fade">
         <div
-          :key="loading.list"
+          :key="loading?.list"
           class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-10"
         >
           <template v-if="loading?.list">
@@ -21,9 +22,6 @@
           </template>
           <template v-else>
             <CommonNoData class="col-span-4" />
-          </template>
-          <template>
-            <MainCardLoading v-for="key in 16" :key />
           </template>
         </div>
       </Transition>
@@ -39,26 +37,25 @@
     </CommonSectionWrapper>
   </section>
 </template>
+
 <script lang="ts" setup>
 import { useIntersectionObserver } from '@vueuse/core'
 import IconChevron from 'assets/icons/Common/chevron.svg'
 
 import type { IProduct } from '~/types/products.js'
 
-const showProduct = ref(false)
-const selectedProduct = ref<IProduct | null>(null)
 const route = useRoute()
-
+const { data: single } = await useAsyncData<IProduct>('brands-single', () =>
+  useApi().$get(`/brand/${route.params.id}`)
+)
 const { list, loading, loadMore, paginationData } = useListFetcher<IProduct>(
   `/brand/products/pagination/${route.params.id}`,
   25,
   true
 )
 
-const { data: single } = await useAsyncData<IProduct>('brands-single', () =>
-  useApi().$get(`/brand/${route.params.id}`)
-)
-
+const showProduct = ref(false)
+const selectedProduct = ref<IProduct | null>(null)
 const infiniteScrollTrigger = ref<HTMLElement | null>(null)
 
 useIntersectionObserver(infiniteScrollTrigger, ([{ isIntersecting }]) => {
@@ -78,5 +75,3 @@ useSeoMeta({
   twitterImage: '/og.png',
 })
 </script>
-
-<style scoped></style>
