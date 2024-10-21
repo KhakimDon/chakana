@@ -1,9 +1,9 @@
 <template>
   <BaseModal
-    :model-value="modelValue"
     :has-back="!showAddAddress"
-    body-class="!max-w-[868px] !w-full"
+    :model-value="modelValue"
     :title="defaultAddress ? $t('edit') : $t('specify_your_delivery_address')"
+    body-class="!max-w-[868px] !w-full"
     disable-outer-close
     @back="emit('update:model-value', false)"
     @update:model-value="emit('update:model-value', $event)"
@@ -16,14 +16,14 @@
         <div class="relative w-full">
           <FormInputSearch
             v-model="search"
-            :no-search-icon="false"
             :no-clear="false"
+            :no-search-icon="false"
             :placeholder="$t('search')"
-            @search="searchQuery"
-            @focus="isFocus = true"
             @blur="isFocus = false"
+            @focus="isFocus = true"
+            @search="searchQuery"
           />
-          <Transition name="fade" mode="out-in">
+          <Transition mode="out-in" name="fade">
             <div
               v-if="openSearchList && searchAddressList.length && isFocus"
               class="bg-white w-full max-h-[400px] absolute rounded-xl shadow-map z-10 overflow-hidden overflow-y-scroll mt-2"
@@ -46,9 +46,10 @@
           </Transition>
         </div>
         <BaseButton
-          class="shrink-0 !py-2.5 !px-7 !rounded-[10px]"
+          :disabled="!isInTashkent"
           :loading="false"
           :text="$t('confirm')"
+          class="shrink-0 !py-2.5 !px-7 !rounded-[10px]"
           variant="primary"
           @click="addAddress"
         />
@@ -64,11 +65,11 @@
     <div v-else>
       <div class="relative">
         <AddAddressMap
-          :zoom="15"
-          no-controls
-          no-actions
           :center="selectedCoords"
+          :zoom="15"
           class="h-[180px] w-full mt-4 rounded-lg"
+          no-actions
+          no-controls
           @update:center="selectedCoords = $event"
         />
         <p
@@ -87,13 +88,13 @@
         <FormGroup :label="$t('select_icon')">
           <FormSelect
             v-model="selectIcons"
+            :error="error"
             :options="icons"
+            :placeholder="$t('select_icon')"
+            head-styles="h-11"
+            is-radio
             label-key="title"
             value-key="id"
-            head-styles="h-11"
-            :placeholder="$t('select_icon')"
-            is-radio
-            :error="error"
           />
         </FormGroup>
         <FormGroup :label="$t('name_address')">
@@ -103,17 +104,17 @@
       <div class="flex items-center gap-4 mt-6">
         <BaseButton
           v-if="!defaultAddress"
-          class="w-full group"
           :text="$t('cancel')"
+          class="w-full group"
           variant="secondary"
           @click="showAddAddress = false"
         />
         <BaseButton
           v-else
-          class="w-full group"
-          :text="$t('delete')"
-          variant="secondary"
           :loading="deleteLoading"
+          :text="$t('delete')"
+          class="w-full group"
+          variant="secondary"
           @click="showDeleteConfirmModal = true"
         >
           <template #prefix>
@@ -121,24 +122,24 @@
           </template>
         </BaseButton>
         <BaseButton
-          class="w-full group"
           :loading="buttonLoading"
           :text="defaultAddress ? $t('save') : $t('add')"
+          class="w-full group"
           variant="primary"
           @click="sendAddress"
         />
       </div>
       <DeleteConfirm
         v-model="showDeleteConfirmModal"
-        :title="$t('delete')"
         :loading="deleteLoading"
+        :title="$t('delete')"
         @do-action="deleteAddress"
       />
     </div>
   </BaseModal>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCustomToast } from '~/composables/useCustomToast.js'
@@ -148,13 +149,17 @@ interface Props {
   modelValue: boolean
   defaultAddress?: any
 }
+
 const props = defineProps<Props>()
 
 interface Emits {
   (e: 'open-saved-adress'): void
+
   (e: 'edited'): void
+
   (e: 'update:model-value', value: boolean): void
 }
+
 const emit = defineEmits<Emits>()
 
 const { t } = useI18n()
@@ -175,13 +180,21 @@ const isFocus = ref<boolean>(false)
 const openSearchList = ref<boolean>(false)
 const nameAddress = ref<string>('')
 const error = ref<boolean>(false)
+const isInTashkent = ref(true)
 
 const { list: icons } = useListFetcher('get/icons', 10, false)
 
 const getAddress = (coords?: any) => {
-  addressStore.fetchAddress(coords[1], coords[0]).then((res) => {
-    search.value = res?.street
-  })
+  addressStore
+    .fetchAddress(coords[1], coords[0])
+    .then((res) => {
+      isInTashkent.value = true
+      search.value = res?.street
+    })
+    .catch((error) => {
+      isInTashkent.value = false
+      handleError(error)
+    })
 }
 
 watch(
