@@ -21,7 +21,7 @@
   </main>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useCartStore } from '~/store/cart.js'
 
 const cartStore = useCartStore()

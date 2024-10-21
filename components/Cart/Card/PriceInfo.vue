@@ -3,6 +3,7 @@
     <p class="text-base font-extrabold text-dark mb-1">
       {{ $t('shall_we_count') }}
     </p>
+
     <div
       v-if="false"
       class="text-xs mb-3 flex-y-center gap-1 font-semibold leading-none text-gray-100"
@@ -11,6 +12,7 @@
       <p class="w-1 h-1 bg-gray-100 rounded-full"></p>
       {{ t('products_weight', { weight: totalCartWeight }) }}
     </div>
+
     <div class="space-y-2">
       <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
@@ -21,6 +23,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
+
       <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('ndc') }}
@@ -30,6 +33,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
+
       <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('delivery_price') }}
@@ -39,6 +43,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
+
       <div
         v-if="cartDetail?.reward_discount"
         class="flex-y-center justify-between"
@@ -50,6 +55,7 @@
           {{ cartDetail?.reward_discount }} UZS
         </p>
       </div>
+
       <div class="flex-y-center justify-between">
         <p class="text-xs font-normal leading-none text-gray-100">
           {{ $t('discount') }}
@@ -60,6 +66,7 @@
           <span class="text-[10px] font-semibold leading-130">UZS</span>
         </p>
       </div>
+
       <p
         class="text-xs cursor-pointer font-medium leading-none text-green"
         @click="showDiscountDetails = true"

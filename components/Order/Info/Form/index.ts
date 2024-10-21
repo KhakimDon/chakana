@@ -49,8 +49,18 @@ export const orderFormTime = (isAuto: boolean) =>
 export const orderFormComment = useForm(
   {
     comment_to_courier: '',
+    location_details: {
+      entrance: '',
+      floor: '',
+      home_number: '',
+      entrance_code: '',
+    },
   },
-  {}
+  {
+    location_details: {
+      home_number: { required },
+    },
+  }
 )
 
 export const orderFormPickerComment = useForm(

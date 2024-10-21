@@ -6,10 +6,10 @@
         <CartCardPriceInfo />
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
-          class="w-full !rounded-10 !py-2"
-          :text="$t(isAutoOrder ? 'save_auto_order' : 'order')"
-          variant="green"
           :loading="loading"
+          :text="$t(isAutoOrder ? 'save_auto_order' : 'order')"
+          class="w-full !rounded-10 !py-2"
+          variant="green"
           @click="goToPayment"
         />
       </section>
@@ -24,10 +24,10 @@
         <CartCardPriceInfo />
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
-          class="w-full !rounded-10"
-          :text="isAutoOrder ? $t('save_auto_order') : $t('order')"
-          variant="green"
           :loading="loading"
+          :text="isAutoOrder ? $t('save_auto_order') : $t('order')"
+          class="w-full !rounded-10"
+          variant="green"
           @click="goToPayment"
         />
       </section>
@@ -36,7 +36,7 @@
   </LayoutMobile>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
 
@@ -100,6 +100,7 @@ const goToPayment = () => {
         },
         comment_to_picker: orderDetail.value.comment_to_courier,
         comment_to_courier: orderDetail.value.picker_comment,
+        location_details: orderDetail.value.location_details,
       })
       .then((res) => {
         if (res.redirect) window.location.href = res.payment_url
@@ -143,6 +144,7 @@ const goToPayment = () => {
         },
         promo_code_id: orderDetail.value.promo_code_id || 0,
         use_from_balance: orderDetail.value.balance,
+        location_details: orderDetail.value.location_details,
       })
       .then((res: any) => {
         if (res.redirect) window.location.href = res.payment_url
@@ -186,11 +188,6 @@ const totalCartProductsPrice = computed(
 //   },
 //   { immediate: true, deep: true }
 // )
-onMounted(() => {
-  // if (!orderCartStore.orderDetail.id) {
-  //   router.push(`/${locale.value}/cart`)
-  // }
-})
 
 onMounted(() => {
   if (useCookie('order_data').value) {
@@ -208,5 +205,3 @@ watch(
   }
 )
 </script>
-
-<style scoped></style>
