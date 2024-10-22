@@ -50,10 +50,10 @@ export const orderFormComment = useForm(
   {
     comment_to_courier: '',
     location_details: {
-      entrance: '',
-      floor: '',
-      home_number: '',
-      entrance_code: '',
+      entrance: orderFormAddress.values?.address_info?.entrance ?? '',
+      floor: orderFormAddress.values?.address_info?.floor ?? '',
+      home_number: orderFormAddress.values?.address_info?.home_number ?? '',
+      entrance_code: orderFormAddress.values?.address_info?.entrance_code ?? '',
     },
   },
   {

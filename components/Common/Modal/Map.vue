@@ -75,9 +75,9 @@
         <p
           class="bg-white mr-12 flex items-center justify-between shadow-card absolute left-1.5 md:left-2.5 right-1.5 md:right-2.5 bottom-1.5 md:bottom-2.5 text-dark text-sm font-medium px-3 py-2 rounded-[10px]"
         >
-          <span class="max-w-[250px] md:max-w-[400px] truncate">{{
-            search
-          }}</span>
+          <span class="max-w-[250px] md:max-w-[400px] truncate">
+            {{ search }}
+          </span>
           <IEditCircle
             class="text-white text-xl cursor-pointer"
             @click="showAddAddress = false"
@@ -99,6 +99,45 @@
         </FormGroup>
         <FormGroup :label="$t('name_address')">
           <FormInput v-model="nameAddress" :placeholder="$t('name_address')" />
+        </FormGroup>
+
+        <FormGroup :label="$t('apartment')">
+          <FormInput
+            v-model="addressForm.values.home_number"
+            v-maska="'#########'"
+            :placeholder="$t('apartment_number')"
+            class="px-3"
+            input-class="!pl-2 text-base md:text-sm font-medium leading-tight h-32"
+            type="number"
+          />
+        </FormGroup>
+        <FormGroup :label="$t('entrance')">
+          <FormInput
+            v-model="addressForm.values.entrance"
+            v-maska="'#########'"
+            :placeholder="$t('entrance')"
+            class="px-3"
+            input-class="!pl-2 text-base md:text-sm font-medium leading-tight h-32"
+            type="number"
+          />
+        </FormGroup>
+        <FormGroup :label="$t('floor')">
+          <FormInput
+            v-model="addressForm.values.floor"
+            v-maska="'#########'"
+            :placeholder="$t('floor')"
+            class="px-3"
+            input-class="!pl-2 text-base md:text-sm font-medium leading-tight h-32"
+            type="number"
+          />
+        </FormGroup>
+        <FormGroup :label="$t('entrance_code')">
+          <FormInput
+            v-model="addressForm.values.entrance_code"
+            :placeholder="$t('entrance_code')"
+            class="px-3"
+            input-class="!pl-2 text-base md:text-sm font-medium leading-tight h-32"
+          />
         </FormGroup>
       </div>
       <div class="flex items-center gap-4 mt-6">
@@ -122,6 +161,7 @@
           </template>
         </BaseButton>
         <BaseButton
+          :disabled="!Boolean(addressForm.values?.home_number?.length)"
           :loading="buttonLoading"
           :text="defaultAddress ? $t('save') : $t('add')"
           class="w-full group"
@@ -140,6 +180,8 @@
 </template>
 
 <script lang="ts" setup>
+import { required } from '@vuelidate/validators'
+
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
 import { useCustomToast } from '~/composables/useCustomToast.js'
@@ -167,6 +209,18 @@ const { t } = useI18n()
 const addressStore = useAddressStore()
 const { handleError } = useErrorHandling()
 const { showToast } = useCustomToast()
+
+const addressForm = useForm(
+  {
+    floor: props?.defaultAddress?.floor ?? '',
+    entrance: props?.defaultAddress?.entrance ?? '',
+    home_number: props?.defaultAddress?.home_number ?? '',
+    entrance_code: props?.defaultAddress?.entrance_code ?? '',
+  },
+  {
+    home_number: { required },
+  }
+)
 
 const searchAddressList = computed(() => addressStore.searchAddressList.list)
 const addressClick = computed(() => addressStore.addressMap.list)
@@ -200,6 +254,7 @@ const getAddress = (coords?: any) => {
 watch(
   () => selectedCoords.value,
   () => {
+    console.log('cooords fom watched', selectedCoords.value)
     getAddress(selectedCoords.value)
   },
   { deep: true }
@@ -275,6 +330,11 @@ watch(
         props.defaultAddress?.longitude,
         props.defaultAddress?.latitude,
       ]
+      addressForm.values.home_number = props?.defaultAddress?.home_number ?? ''
+      addressForm.values.floor = props?.defaultAddress?.floor ?? ''
+      addressForm.values.entrance = props?.defaultAddress?.entrance ?? ''
+      addressForm.values.entrance_code =
+        props?.defaultAddress?.entrace_code ?? ''
       showAddAddress.value = true
     } else {
       showAddAddress.value = false
@@ -291,6 +351,7 @@ function saveAddress() {
   useApi()
     .$post('/saved/address', {
       body: {
+        ...addressForm.values,
         icon_id: selectIcons.value,
         title: nameAddress.value,
         street: addressClick.value.street,
@@ -320,6 +381,7 @@ function editAddress() {
   useApi()
     .$put(`/saved/address/${props.defaultAddress?.id}`, {
       body: {
+        ...addressForm.values,
         icon_id: selectIcons.value,
         title: nameAddress.value,
         street: addressClick.value.street,

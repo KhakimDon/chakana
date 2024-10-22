@@ -1,21 +1,21 @@
 <template>
   <BaseModal
+    :has-back="stepIndex > 0"
     :model-value="modelValue"
     :title="$t(steps[stepIndex].title)"
     body-class="w-full !max-w-[584px]"
-    :has-back="stepIndex > 0"
     disable-outer-close
-    @update:model-value="emit('update:modelValue', $event)"
     @back="stepIndex--"
+    @update:model-value="emit('update:modelValue', $event)"
   >
     <div class="space-y-4">
       <BaseStepper
-        :steps
         :step
+        :steps
         class="!mb-5 w-full max-sm:overflow-x-auto"
+        line-class="!w-full !min-w-4"
         step-class="!w-9 !h-9"
         step-icon-class="!text-xl !leading-5"
-        line-class="!w-full !min-w-4"
       />
       <div class="overflow-y-auto sm:max-h-96 max-h-[50vh] overflow-x-hidden">
         <component
@@ -25,17 +25,17 @@
         />
       </div>
       <BaseButton
-        class="!py-3 w-full !mt-6"
+        :disabled="disabledConfirm"
         :loading
         :text="stepIndex === steps.length - 1 ? $t('save') : $t('next')"
-        :disabled="disabledConfirm"
+        class="!py-3 w-full !mt-6"
         size="md"
         @click="confirm"
       />
     </div>
   </BaseModal>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 
 import {
@@ -85,6 +85,7 @@ const disabledConfirm = computed(
       ))
 )
 let data = {}
+
 function confirm() {
   data = {
     ...data,
@@ -182,5 +183,18 @@ watch(
       useEventListener(document, 'beforeunload', beforeRefresh)
     }
   }
+)
+
+watch(
+  orderFormAddress.values,
+  () => {
+    orderFormComment.values.location_details = {
+      entrance: orderFormAddress.values?.address_info?.entrance ?? '',
+      floor: orderFormAddress.values?.address_info?.floor ?? '',
+      home_number: orderFormAddress.values?.address_info?.home_number ?? '',
+      entrance_code: orderFormAddress.values?.address_info?.entrance_code ?? '',
+    }
+  },
+  { deep: true }
 )
 </script>

@@ -20,12 +20,11 @@ export function useErrorHandling() {
     if (res?.status === 500) {
       showToast('Server error', 'error')
     } else {
-      showToast(res._data?.detail?.code, 'error')
+      showToast(res._data?.detail?.detail, 'error')
     }
 
-    return { error: res._data?.detail?.code }
+    return { error: res._data?.detail?.detail }
   }
 
   return { handleError }
 }
-1
