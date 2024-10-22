@@ -254,7 +254,6 @@ const getAddress = (coords?: any) => {
 watch(
   () => selectedCoords.value,
   () => {
-    console.log('cooords fom watched', selectedCoords.value)
     getAddress(selectedCoords.value)
   },
   { deep: true }
