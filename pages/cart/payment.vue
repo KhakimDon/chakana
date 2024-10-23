@@ -4,6 +4,10 @@
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
         <CartCardPriceInfo />
+        <CartCardPriceChanges
+          v-if="cartDetails?.price_maybe_change"
+          :price="cartDetails?.extra_price"
+        />
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           :loading="loading"
@@ -54,6 +58,7 @@ const orderCartStore = useCartOrderStore()
 
 const isPremiumUser = computed(() => authStore.user?.is_premium)
 const orderDetail = computed(() => orderCartStore.orderDetail)
+const cartDetails = computed(() => orderCartStore.cart.detail)
 const loading = computed(
   () => orderCartStore.orderCreating || orderCartStore.autoOrderCreating
 )

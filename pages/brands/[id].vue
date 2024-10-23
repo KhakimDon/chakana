@@ -12,7 +12,7 @@
       <section class="container space-y-6 max-sm:mt-16">
         <CommonSectionWrapper :title="single?.title" title-link>
           <template #beforeTitle>
-            <NuxtLinkLocale to="/brands">
+            <NuxtLinkLocale to="/">
               <IconChevron
                 class="text-2xl text-dark group-hover:-translate-x-1 transition-300 group-hover:text-orange"
               />

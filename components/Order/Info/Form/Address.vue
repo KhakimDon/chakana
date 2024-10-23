@@ -22,6 +22,7 @@
     </BaseButton>
     <CommonModalMap
       v-model="showAddModal"
+      @update:model-value="(val) => (showAddModal = val)"
       @open-saved-adress="openSavedAddress"
     />
   </div>

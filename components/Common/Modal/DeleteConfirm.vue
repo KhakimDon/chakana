@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :model-value="modelValue"
-    :title="$t('clear_cart')"
+    :title="title ?? $t('clear_cart')"
     body-class="!w-[424px]"
     @update:model-value="$emit('update:modelValue', false)"
   >
@@ -11,17 +11,17 @@
       </p>
       <div class="grid grid-cols-2 gap-4 mt-6">
         <BaseButton
-          class="!py-3 !rounded-[10px]"
           :text="$t('cancel')"
+          class="!py-3 !rounded-[10px]"
           size="md"
           variant="secondary"
           @click="$emit('update:modelValue', false)"
         />
         <BaseButton
-          class="!py-3 !rounded-[10px]"
-          :text="title || $t('confirm')"
-          size="md"
           :loading="loading"
+          :text="title || $t('confirm')"
+          class="!py-3 !rounded-[10px]"
+          size="md"
           @click="$emit('doAction')"
         />
       </div>
@@ -29,7 +29,7 @@
   </BaseModal>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 interface Props {
   modelValue: boolean
   title?: string

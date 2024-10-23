@@ -2,12 +2,12 @@
   <PaymentCardInfoHeader :title="$t('additional')">
     <section class="space-y-2">
       <PaymentCardInfo
-        icon="SvgoProfileTicket"
-        icon-class="text-orange !text-2xl"
         :no-clickable="!!cartOrderStore.orderDetail?.promo_code_id"
         :title="
           !cartOrderStore.orderDetail?.promo_code_id ? $t('promo_code') : ''
         "
+        icon="SvgoProfileTicket"
+        icon-class="text-orange !text-2xl"
         @open-details="editPromo = true"
       >
         <div
@@ -15,10 +15,10 @@
           class="px-2 py-1 bg-orange flex-y-center gap-1 rounded-md text-white"
         >
           <i18n-t
-            keypath="promo_badge"
-            tag="p"
-            scope="global"
             class="text-white text-xs cursor-pointer select-none font-semibold leading-none"
+            keypath="promo_badge"
+            scope="global"
+            tag="p"
             @click="showDetails"
           >
             <template #text>
@@ -44,19 +44,20 @@
   />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useCartOrderStore } from '~/store/cart_order.js'
-import { useModalStore } from '~/store/modal.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
 
 interface Props {
   defaultData: any
 }
+
 const props = defineProps<Props>()
 
 interface Emits {
   (e: 'save', data: any): void
 }
+
 const emit = defineEmits<Emits>()
 
 const editPromo = ref(false)
@@ -77,6 +78,7 @@ const selectedPromoCode = computed(() => {
 })
 
 const removePromoCode = () => {
+  cartOrderStore.getCartDetail()
   emit('save', {
     promo_code_id: 0,
     promo_info: null,

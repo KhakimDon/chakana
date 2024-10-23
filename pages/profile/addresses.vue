@@ -11,8 +11,8 @@ const showEditAddressModal = (item: any) => {
 }
 
 const showAddAddressModal = () => {
-  addAddressModal.value = true
   activeAddress.value = undefined
+  addAddressModal.value = true
 }
 </script>
 
