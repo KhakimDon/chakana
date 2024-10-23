@@ -3,11 +3,11 @@
     <template #right>
       <section class="space-y-5">
         <CartCardFreeDelivery :cart-total-price="totalCartProductsPrice" />
-        <CartCardPriceInfo />
         <CartCardPriceChanges
           v-if="cartDetails?.price_maybe_change"
           :price="cartDetails?.extra_price"
         />
+        <CartCardPriceInfo />
         <AutoOrderCard v-if="isPremiumUser" @change="isAutoOrder = $event" />
         <BaseButton
           :loading="loading"

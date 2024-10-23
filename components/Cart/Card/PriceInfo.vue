@@ -52,7 +52,7 @@
           {{ $t('promo_code') }}
         </p>
         <p class="text-xs font-semibold leading-130 text-red">
-          {{ cartDetail?.reward_discount }} UZS
+          {{ formatMoneyDecimal(cartDetail?.reward_discount) }} UZS
         </p>
       </div>
 
@@ -95,7 +95,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 import { formatMoneyDecimal } from '~/utils/functions/common.js'
