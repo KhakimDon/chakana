@@ -28,4 +28,3 @@ export function useErrorHandling() {
 
   return { handleError }
 }
-1

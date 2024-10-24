@@ -1,5 +1,5 @@
 <template>
-  <Transition name="fade" mode="out-in">
+  <Transition mode="out-in" name="fade">
     <div :key="$route.name">
       <div class="flex-y-center gap-1 cursor-pointer" @click="goBack">
         <SvgoCommonChevron class="text-base text-gray-100" />
@@ -35,14 +35,11 @@
               @save="saveUser"
             />
             <PaymentSectionCommentForCurier
-              :comment="orderCartStore.orderDetail?.comment_to_courier"
-              :subtitle="$t('courier_comment')"
+              :form="orderCartStore.orderDetail"
               @save="saveComment"
             />
-            <PaymentSectionCommentForCurier
-              :comment="orderCartStore.orderDetail?.picker_comment"
-              :subtitle="$t('picker_comment')"
-              is-picker
+            <PaymentSectionCommentForPicker
+              :form="orderCartStore.orderDetail"
               @save="savePickerComment"
             />
           </section>
@@ -87,7 +84,7 @@
   </Transition>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import dayjs from 'dayjs'
 
 import { useAuthStore } from '~/store/auth.js'
@@ -117,7 +114,7 @@ function saveComment(data: any) {
 }
 
 function savePickerComment(data: any) {
-  orderCartStore.orderDetail.picker_comment = data.comment_to_courier
+  orderCartStore.orderDetail.picker_comment = data.picker_comment
 }
 
 function savePayment(data: any) {

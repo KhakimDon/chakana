@@ -2,15 +2,15 @@
   <div>
     <CartCardAddress
       :key="addressDefaultId"
+      :default-id="addressDefaultId"
       :list
       :loading
-      :default-id="addressDefaultId"
-      @handle-address="handleAddress"
       @add="showAddModal = true"
+      @handle-address="handleAddress"
     />
     <BaseButton
-      class="mt-3 md:mt-6 w-full group !py-2.5"
       :text="$t('other_address')"
+      class="mt-3 md:mt-6 w-full group !py-2.5"
       variant="secondary"
       @click="showAddModal = true"
     >
@@ -20,25 +20,29 @@
         />
       </template>
     </BaseButton>
-
     <CommonModalMap
       v-model="showAddModal"
+      @update:model-value="(val) => (showAddModal = val)"
       @open-saved-adress="openSavedAddress"
     />
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 interface Props {
   form: any
   defaultId?: string
 }
+
 const props = defineProps<Props>()
 
 interface Emits {
   (e: 'open-map-modal', v: boolean): void
+
   (e: 'handle-address', v: object): void
+
   (e: 'change-address', v: object): void
 }
+
 const emit = defineEmits<Emits>()
 
 const { values } = unref(props.form)

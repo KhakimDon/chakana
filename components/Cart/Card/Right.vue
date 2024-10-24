@@ -1,6 +1,10 @@
 <template>
   <section class="space-y-5">
     <CartCardFreeDelivery :cart-total-price="cartDetails?.total_price ?? 0" />
+    <CartCardPriceChanges
+      v-if="cartDetails?.price_maybe_change"
+      :price="cartDetails?.extra_price"
+    />
     <div
       v-if="loading"
       class="shimmer bg-white-100 rounded-10 p-4 h-[200px] space-y-3"
@@ -12,10 +16,10 @@
     ></div>
     <BaseButton
       v-else
-      class="w-full !rounded-10 !py-2 !border-orange disabled:!border-white-100"
-      :text="$t('go_to_registration')"
-      variant="outline-primary"
       :disabled="cartProducts.length === 0"
+      :text="$t('go_to_registration')"
+      class="w-full !rounded-10 !py-2 !border-orange disabled:!border-white-100"
+      variant="outline-primary"
       @click="goToPayment"
     />
     <div
@@ -24,17 +28,17 @@
     ></div>
     <BaseButton
       v-else
-      class="w-full !rounded-10 !py-2"
-      :text="$t('save_auto_order')"
-      variant="primary"
       :disabled="cartProducts.length === 0"
+      :text="$t('save_auto_order')"
+      class="w-full !rounded-10 !py-2"
+      variant="primary"
       @click="goToAutoOrderPayment"
     />
     <OrderInfoFormModal :key="isAuto" v-model="showOrder" :is-auto="isAuto" />
   </section>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useAuthStore } from '~/store/auth.js'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'

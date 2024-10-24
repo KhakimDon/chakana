@@ -1,12 +1,12 @@
 <template>
   <PaymentCardInfo
-    :subtitle="form?.comment_to_courier"
-    :title="$t('courier_comment')"
+    :subtitle="form?.picker_comment"
+    :title="$t('picker_comment')"
     icon="SvgoProfileMessage"
     icon-class="!text-blue-100 !text-2xl"
     @open-details="showEdit = true"
   />
-  <OrderInfoEditComment
+  <OrderInfoEditPicker
     v-model="showEdit"
     :default-info="form"
     @save="$emit('save', $event)"
@@ -16,13 +16,7 @@
 <script lang="ts" setup>
 interface Props {
   form: {
-    comment_to_courier?: string
-    location_details: {
-      home_number: number
-      entrance: number
-      floor: number
-      entrance_code: number | string
-    }
+    picker_comment: string
   }
   subtitle?: string
 }

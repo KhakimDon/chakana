@@ -6,8 +6,7 @@
         {{ $t('auto_order') }}
       </h1>
       <NuxtLinkLocale
-        v-if="false"
-        :to="localePath(`/profile/auto-order/${$route.params.id}/search`)"
+        :to="localePath(`/search`)"
         class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
       >
         <SvgoCommonPlus
@@ -24,9 +23,9 @@
         <ProfileOrderCard
           v-for="item in orders.list"
           :key="item.id"
+          :extra-button-loading="deleteLoading"
           :item="item"
           auto-order
-          :extra-button-loading="deleteLoading"
           @delete="deleteAutoOrder"
         >
           <template #body="{ data }">
@@ -56,7 +55,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useOrderStore } from '~/store/profile/orders.js'
 
 const localePath = useLocalePath()

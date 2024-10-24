@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const { list, resetList, loading } = useListFetcher('/saved/address', 50)
 
 const addAddressModal = ref(false)
@@ -11,8 +11,8 @@ const showEditAddressModal = (item: any) => {
 }
 
 const showAddAddressModal = () => {
-  addAddressModal.value = true
   activeAddress.value = undefined
+  addAddressModal.value = true
 }
 </script>
 
@@ -33,7 +33,7 @@ const showAddAddressModal = () => {
         {{ $t('add_address') }}
       </button>
     </div>
-    <Transition name="fade" mode="out-in">
+    <Transition mode="out-in" name="fade">
       <div
         :key="loading.list"
         class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
@@ -41,7 +41,7 @@ const showAddAddressModal = () => {
         <template v-if="loading.list">
           <ProfileAddressCardLoading v-for="index in 12" :key="index" />
         </template>
-        <template v-else-if="list.length">
+        <template v-else-if="list?.length">
           <div
             v-for="(item, index) in list"
             :key="index"
@@ -50,18 +50,18 @@ const showAddAddressModal = () => {
           >
             <div class="flex-center-between">
               <img
-                :src="item.icon"
-                :alt="item.title"
-                width="24px"
+                :alt="item?.title"
+                :src="item?.icon"
                 height="24px"
+                width="24px"
               />
               <SvgoCommonEditPenSquare
                 class="text-2xl leading-6 text-gray group-hover:text-orange transition-300"
               />
             </div>
-            <h3 class="mt-3 text-dark font-bold">{{ item.title }}</h3>
+            <h3 class="mt-3 text-dark font-bold">{{ item?.title }}</h3>
             <p class="line-clamp-1 text-xs text-gray-100 mt-1">
-              {{ item.street }}
+              {{ item?.street }}
             </p>
           </div>
         </template>
@@ -70,11 +70,12 @@ const showAddAddressModal = () => {
         </template>
       </div>
     </Transition>
-
-    <CommonModalMap
-      v-model="addAddressModal"
-      :default-address="activeAddress"
-      @edited="resetList"
-    />
+    <client-only>
+      <CommonModalMap
+        v-model="addAddressModal"
+        :default-address="activeAddress"
+        @edited="resetList"
+      />
+    </client-only>
   </div>
 </template>
