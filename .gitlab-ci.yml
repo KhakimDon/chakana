@@ -15,11 +15,11 @@ build:
     - make build-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=latest
     - make push-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=latest 
   rules:
-    - if: '$CI_COMMIT_BRANCH == "abdulaziz"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
       changes:
         - package.json
       when: never
-    - if: '$CI_COMMIT_BRANCH == "abdulaziz"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
       when: always
 
 build-base:
@@ -32,7 +32,7 @@ build-base:
     - make build-base-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=latest
     - make push-base-image TAG=$CI_PIPELINE_IID SERVICE_NAME=$CI_PROJECT_NAME PROJECT_NAME=$CI_PROJECT_NAMESPACE REGISTRY=$CI_REGISTRY ENV_TAG=latest 
   rules:
-    - if: '$CI_COMMIT_BRANCH == "abdulaziz"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
       changes:
         - package.json
       when: always
