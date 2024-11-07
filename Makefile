@@ -5,7 +5,7 @@ APP=$(shell basename ${CURRENT_DIR})
 APP_CMD_DIR=${CURRENT_DIR}/cmd
 
 REGISTRY=registry.uicgroup.tech
-TAG=latest
+TAG=prod
 ENV_TAG=latest
 ENV_MODULES_TAG=prod
 PROJECT_NAME=xolodilnik
