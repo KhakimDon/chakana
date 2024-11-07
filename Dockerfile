@@ -6,6 +6,9 @@ WORKDIR /app
 
 COPY . . 
 
+RUN ls -all /app
+
+
 COPY --from=modules /app/node_modules /app/node_modules 
 
 RUN yarn build 
