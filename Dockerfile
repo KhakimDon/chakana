@@ -4,10 +4,7 @@ FROM node:18.20-alpine3.19 as build
 
 WORKDIR /app 
 
-COPY . . 
-
-RUN ls -all /app
-
+COPY . /app
 
 COPY --from=modules /app/node_modules /app/node_modules 
 
