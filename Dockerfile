@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY . . 
 
-COPY --from=modules /app/node_modules /app/node_modules 
+COPY --from=modules /node_modules /app/node_modules 
 
 RUN yarn build 
 
