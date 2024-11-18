@@ -21,5 +21,3 @@ COPY --from=build /app/.output /app/.output
 COPY --from=build /app/ecosystem.config.cjs /app/ecosystem.config.cjs
 
 CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]
-
-
