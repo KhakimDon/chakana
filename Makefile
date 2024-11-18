@@ -7,7 +7,7 @@ APP_CMD_DIR=${CURRENT_DIR}/cmd
 REGISTRY=registry.uicgroup.tech
 TAG=prod
 ENV_TAG=latest
-ENV_MODULES_TAG=prod
+ENV_MODULES_TAG=node_modules
 PROJECT_NAME=xolodilnik
 KEYS=KEYS
 
