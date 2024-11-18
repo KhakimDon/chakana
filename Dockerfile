@@ -1,4 +1,4 @@
-FROM registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:prod AS modules
+FROM registry.uicgroup.tech/xolodilnik/xolodilnik-frontend:node_modules AS modules
 
 FROM node:18.20-alpine3.19 as build
 
