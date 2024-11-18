@@ -48,7 +48,7 @@
       >
         <template #terms>
           <NuxtLinkLocale
-            to="/page/privacy-policy"
+            to="/page/public-oferta"
             target="_blank"
             class="text-blue-100 hover:underline"
           >

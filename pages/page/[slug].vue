@@ -15,7 +15,7 @@
 const route = useRoute()
 
 const { data, error } = await useAsyncData('static-page', () =>
-  useApi().$get(`/privacy/policy/`, { params: { slug: route.params.slug } })
+  useApi().$get(`/static-pages/${route.params.slug}/`)
 )
 if (error.value) showError({ statusCode: 404 })
 </script>
