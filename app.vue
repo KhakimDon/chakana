@@ -19,6 +19,9 @@ import { load } from '@fingerprintjs/fingerprintjs'
 
 import { useAuthStore } from '~/store/auth'
 
+const router = useRouter()
+const localePath = useLocalePath()
+
 useSeoMeta({
   title: 'Холодильник Онлайн',
   description:
@@ -72,6 +75,7 @@ if (!fingerprint.value) {
 }
 
 onMounted(() => {
+  router.push(localePath('/holiday'))
   if (useMobile('desktop')) {
     useHead({
       script: [
