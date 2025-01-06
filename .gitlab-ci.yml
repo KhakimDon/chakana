@@ -46,5 +46,5 @@ deploy_k8s:
   tags: 
     - master_runner_k8s
   only:
-    - k8s-new 
+    - master 
 
