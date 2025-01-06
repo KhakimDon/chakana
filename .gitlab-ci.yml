@@ -44,4 +44,3 @@ deploy_k8s:
     - master_runner_k8s
   only:
     - master 
-
