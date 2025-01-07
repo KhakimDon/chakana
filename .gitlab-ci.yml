@@ -1,8 +1,6 @@
-before_script:
-  - docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password $CI_REGISTRY_PASSWORD
-
 stages:
   - build
+  - deployment_kubernetes
   
 
 build:
@@ -37,3 +35,12 @@ build-base:
         - package.json
       when: always
 
+deploy_k8s:
+  stage: deployment_kubernetes
+  script:
+    - export KUBECONFIG=~/.kube/config
+    - cd /home/gitlab-runner/microservice_v2 && helm upgrade frontend --values values.yaml --set image.tag=$CI_PIPELINE_IID .
+  tags: 
+    - master_runner_k8s
+  only:
+    - master 
