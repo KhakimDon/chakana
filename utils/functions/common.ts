@@ -139,6 +139,27 @@ export const checkExpireDate = (value: any) => {
   return checkYear && checkMonth
 }
 
+/**
+ * Валидация пароля согласно требованиям:
+ * - 8 и более символов
+ * - минимум одна заглавная буква латинская
+ * - минимум одна прописная буква латинская
+ * - минимум 1 цифра
+ * - минимум 1 спецсимвол
+ */
+export const isValidPassword = (value: string): boolean => {
+  if (!value || value.length < 8) {
+    return false
+  }
+
+  const hasUpperCase = /[A-Z]/.test(value)
+  const hasLowerCase = /[a-z]/.test(value)
+  const hasDigit = /[0-9]/.test(value)
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)
+
+  return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar
+}
+
 export const getImageSize = (
   card: any,
   url: string,

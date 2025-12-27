@@ -11,6 +11,7 @@ interface IState {
   reasons: any[]
   userFetchTrigger: number
   showAuth: boolean
+  authMode: 'login' | 'register'
   accessToken?: string | null
   refreshToken?: string | null
   userFetched: boolean
@@ -22,6 +23,7 @@ export const useAuthStore = defineStore('authStore', {
     reasons: [],
     userFetchTrigger: 0,
     showAuth: false,
+    authMode: 'login',
     accessToken: undefined,
     refreshToken: undefined,
     userFetched: false,
@@ -30,7 +32,7 @@ export const useAuthStore = defineStore('authStore', {
     fetchUser() {
       return new Promise((resolve, reject) => {
         useApi()
-          .$get<IUser>('get/detail')
+          .$get<IUser>('auth/profile/')
           .then((res) => {
             this.user = res
             this.userFetched = true
@@ -46,7 +48,7 @@ export const useAuthStore = defineStore('authStore', {
     updateUser(user: IUser) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$put<IUser>('update/detail', {
+          .$patch<IUser>('auth/profile/update/', {
             body: user,
           })
           .then((res) => {
@@ -61,7 +63,9 @@ export const useAuthStore = defineStore('authStore', {
     deleteAccount(id: string) {
       return new Promise((resolve, reject) => {
         useApi()
-          .$delete<IUser>(`delete/account/?reason_id=${id}`)
+          .$post<IUser>('auth/delete-account/', {
+            body: {},
+          })
           .then((res) => {
             resolve(res)
           })
@@ -134,24 +138,28 @@ export const useAuthStore = defineStore('authStore', {
     },
     refreshTokens() {
       return new Promise((resolve, reject) => {
-        useApi()
-          .$post<{ access: string }>('/sso/api/v1/TokenRefresh/', {
-            body: {
-              refresh: this.refreshToken,
-            },
-          })
-          .then((res) => {
-            if (res.error) {
-              this.logOut()
-              reject(res.error)
-            } else {
-              this.setTokens(res.access)
-              resolve(res.access)
-            }
+        const identityApi = useIdentityApi()
+        const tokens = this.getTokens()
 
-            this.setTokens({
-              access: res.access,
-            })
+        if (!tokens.access || !tokens.refresh) {
+          this.logOut()
+          reject(new Error('No tokens available'))
+          return
+        }
+
+        identityApi
+          .refreshToken(tokens.access, tokens.refresh, false)
+          .then((res) => {
+            if (res.authToken) {
+              this.setTokens({
+                access_token: res.authToken,
+                refresh_token: tokens.refresh, // Сохраняем refresh token
+              })
+              resolve(res.authToken)
+            } else {
+              this.logOut()
+              reject(new Error('Invalid refresh response'))
+            }
           })
           .catch((err) => {
             this.logOut()
@@ -186,11 +194,10 @@ export const useAuthStore = defineStore('authStore', {
     sendSms(phone_number: string, type_ = 'login_sms_verification') {
       return new Promise((resolve, reject) => {
         useApi()
-          .$post<{ code: string }>('/send-sms', {
+          .$post<{ session: string }>('auth/phone/send-sms/', {
             body: {
               // eslint-disable-next-line camelcase
               phone_number,
-              type_,
             },
           })
           .then((res) => {

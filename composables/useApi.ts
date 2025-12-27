@@ -28,25 +28,13 @@ export const useApi = (apiUrl?: string) => {
     const tokens = computed(() => authStore.getTokens())
     if (tokens.value?.refresh) {
       if (!tokens.value?.access || isJwtExpired(tokens.value?.access)) {
-        const dFetch = $fetch.create({
-          method: 'POST',
-          baseURL,
-          headers,
-          body: {
-            refresh_token: tokens.value.refresh,
-          },
-        })
         try {
-          const _res = await dFetch('refresh/token')
-          authStore.setTokens({
-            access_token: (_res as Pick<any, 'accessToken'>).access_token,
-            refresh_token: tokens.value.refresh,
-          })
+          // Используем новый метод refresh-token из identity-api
+          await authStore.refreshTokens()
         } catch (err) {
           authStore.logOut()
-          throw new Error(err)
+          throw new Error(err as string)
         }
-        // await authStore.refreshToken()
       }
     }
 
