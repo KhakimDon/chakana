@@ -51,7 +51,7 @@
       <CommonNoData
         :title="$t('search_nodata_title')"
         :subtitle="$t('search_nodata_subtitle')"
-        image="/images/no-data/no-searches.png"
+        image="/images/no-data/nf.svg"
       />
       <SearchSectionNewProducts />
     </section>

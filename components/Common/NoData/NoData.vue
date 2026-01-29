@@ -46,7 +46,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  image: '/images/no-data/no-searches.png',
+  image: '/images/no-data/nf.svg',
   title: 'no_data_search',
 })
 </script>

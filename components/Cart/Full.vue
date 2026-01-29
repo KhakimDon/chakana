@@ -2,18 +2,20 @@
   <Transition name="fade" mode="out-in">
     <div :key="$route.name">
       <div
-        class="hidden md:flex flex-y-center gap-1 cursor-pointer"
-        @click="goBack"
+        class="flex items-center gap-1 text-gray-100 cursor-pointer group mb-4"
+        @click="router.back()"
       >
-        <SvgoCommonChevron class="text-base text-gray-100" />
-        <p class="text-sm font-semibold text-gray-100">
-          {{ $t('go_back') }}
+        <IconChevron
+          class="cursor-pointer text-gray-100 group-hover:-translate-x-1 transition-300 group-hover:text-orange"
+        />
+        <p class="text-gray-100 group-hover:text-orange transition-300">
+          {{ $t('go_back') || 'Вернуться назад' }}
         </p>
       </div>
-      <div class="flex-y-center justify-between mt-3">
-        <p class="text-[22px] font-extrabold leading-7">
+      <div class="flex-y-center justify-between mb-6">
+        <h1 class="text-[22px] md:text-[28px] font-bold leading-130 text-dark">
           {{ $t('basket') }}
-        </p>
+        </h1>
         <div
           v-if="cartProducts.length > 0"
           class="flex flex-center gap-2 group cursor-pointer select-none"
@@ -64,7 +66,7 @@
         <CommonNoData
           :title="$t('search_nodata_title')"
           :subtitle="$t('search_nodata_subtitle')"
-          image="/images/no-data/no-searches.png"
+          image="/images/no-data/nf.svg"
         />
       </section>
       <slot />
@@ -75,20 +77,16 @@
 
 <script setup lang="ts">
 import DeleteConfirm from '~/components/Common/Modal/DeleteConfirm.vue'
+import IconChevron from '~/assets/icons/Common/chevron.svg'
 import { useCartStore } from '~/store/cart.js'
 import { useCartOrderStore } from '~/store/cart_order.js'
 
-const { locale } = useI18n()
 const router = useRouter()
 
 const cartStore = useCartStore()
 const orderCartStore = useCartOrderStore()
 
 const cartProducts = computed(() => cartStore.products)
-
-const goBack = () => {
-  router.push(`/${locale.value}`)
-}
 
 const loading = computed(() => cartStore.cartProductsLoading)
 

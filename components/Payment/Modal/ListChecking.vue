@@ -50,7 +50,7 @@
       <CommonNoData
         v-else
         class="w-full"
-        image="/images/no-data/no-searches.png"
+        image="/images/no-data/nf.svg"
       />
     </div>
   </BaseModal>

@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: true,
+  ssr: false,
 
   app: {
     head: {
@@ -48,6 +48,7 @@ export default defineNuxtConfig({
     '~/assets/fonts/fonts.css',
     'vue-toastification/dist/index.css',
     'swiper/css',
+    'swiper/css/pagination',
   ],
 
   modules: [
@@ -94,17 +95,17 @@ export default defineNuxtConfig({
     langDir: 'locales',
     baseUrl: 'https://xolodilnik.uz',
     locales: [
-      { code: 'ru', iso: 'ru-RU', file: 'ru' },
-      { code: 'uz', iso: 'uz', file: 'uz' },
-      // { code: 'en', iso: 'en', file: 'en' },
+      { code: 'ru', iso: 'ru-RU', file: 'ru.ts' },
+      { code: 'uz', iso: 'uz', file: 'uz.ts' },
+      // { code: 'en', iso: 'en', file: 'en.ts' },
     ],
-    lazy: true,
+    lazy: false, // Переводы загружаются через плагин i18n-loader.client.ts
     useCookie: true,
     cookieKey: 'i18n_redirected',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
-      onlyOnRoot: true, // recommended
+      onlyOnRoot: true,
       fallbackLocale: 'uz',
     },
     defaultLocale: 'uz',

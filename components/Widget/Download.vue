@@ -30,7 +30,7 @@
 
         <div class="flex-y-center gap-2 shrink-0">
           <a
-            href="https://app.xolodilnik.uz"
+            href="https://express.chakana.uz/app/"
             target="_blank"
             class="px-4 py-2 bg-green rounded-2xl transition-300 text-white text-xs !leading-4 font-semibold shrink-0"
             @mouseenter="mouseOn = true"
@@ -56,13 +56,13 @@ const link = computed(() => {
   // if (process.client) {
   //   return window.location.origin + '/get-app'
   // }
-  return 'https://app.xolodilnik.uz'
+  return 'https://express.chakana.uz/app/'
 })
 </script>
 
 <style scoped>
 .download-app-shadow {
-  box-shadow: 0 4px 8px 0 rgba(255, 51, 0, 0.32);
+  box-shadow: 0 4px 8px 0 #00000030;
 }
 
 .download-app-box-shadow {

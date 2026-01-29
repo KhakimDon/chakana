@@ -3,94 +3,105 @@
     <CommonBack v-if="useMobile('mobile')" to="/profile" />
     <div class="flex-center-between mb-4">
       <h1 class="text-xl font-extrabold leading-7 text-dark">
-        {{ $t('saved_list') }}
+        {{ $t('saved') || 'Избранное' }}
       </h1>
-      <button
-        class="flex-y-center gap-1 text-red text-sm font-semibold leading-5 transition-300 group hover:text-orange"
-        @click="openAddListModal"
-      >
-        <SvgoCommonPlus
-          class="text-xl leading-5 text-red transition-300 group-hover:text-orange"
-        />
-        <span class="hidden md:inline">{{ $t('new_list') }}</span>
-      </button>
+      <span v-if="savedProducts.length > 0" class="text-sm text-gray-100">
+        {{ savedProducts.length }} {{ $t('products') || 'товаров' }}
+      </span>
     </div>
+    
     <section class="w-full">
-      <div v-if="lists?.loading" class="flex-y-center flex-wrap gap-3 my-4">
-        <div
-          v-for="key in 7"
-          :key
-          class="w-full md:w-44 h-52 shimmer rounded-10"
-        ></div>
+      <!-- Loading state -->
+      <div v-if="loading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <MainCardLoading v-for="key in 8" :key="key" />
       </div>
-      <div
-        v-else-if="lists?.list?.length && !lists?.loading"
-        class="flex-y-center flex-wrap gap-4 my-4"
-      >
-        <SearchListCard
-          v-for="(list, key) in lists?.list"
-          :key
-          :list="list"
-          show-delete
-          @open-details="openDetailsModal(list)"
-          @delete="deleteList"
-        />
-      </div>
-      <div v-else class="flex-center flex-col gap-3 md:mt-40">
+      
+      <!-- Error state -->
+      <div v-else-if="error" class="flex-center flex-col gap-3 py-12 md:py-20">
         <CommonNoData
           class="w-full"
-          image="/images/no-data/no-searches.png"
-          :title="$t('search_list_no_data_title')"
-          :subtitle="$t('search_list_no_data_subtitle')"
+          image="/images/no-data/nf.svg"
+          title="error_occurred"
+          :subtitle="error"
         />
         <BaseButton
           class="w-fit py-2 px-7"
-          :text="$t('new_list')"
-          @click="openAddListModal"
-        >
-          <template #prefix>
-            <SvgoCommonPlus class="text-white text-xl" />
-          </template>
-        </BaseButton>
+          :text="$t('retry') || 'Повторить'"
+          @click="fetchSaved"
+        />
+      </div>
+      
+      <!-- Products grid -->
+      <div
+        v-else-if="savedProducts.length > 0"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+      >
+        <MainCard 
+          v-for="product in savedProducts" 
+          :key="product.id" 
+          :card="product"
+        />
+      </div>
+      
+      <!-- Empty state -->
+      <div v-else class="flex-center flex-col gap-3 py-12 md:py-20">
+        <CommonNoData
+          class="w-full"
+          image="/images/no-data/nf.svg"
+          title="saved_empty_title"
+          subtitle="saved_empty_subtitle"
+        />
+        <NuxtLinkLocale to="/">
+          <BaseButton
+            class="w-fit py-2 px-7"
+            :text="$t('go_shopping') || 'Перейти к покупкам'"
+          />
+        </NuxtLinkLocale>
       </div>
     </section>
-    <PaymentModalListAdd
-      v-model="addListModal"
-      has-save
-      :selected-list="selectedList"
-    />
   </main>
 </template>
 
 <script setup lang="ts">
-import { useListStore } from '~/store/list.js'
+import { useAuthStore } from '~/store/auth'
+import { useSavedStore } from '~/store/saved'
 
-const addListModal = ref(false)
-const listStore = useListStore()
+const authStore = useAuthStore()
+const savedStore = useSavedStore()
+const localePath = useLocalePath()
 
-const lists = computed(() => listStore.lists)
+const loading = computed(() => savedStore.loading)
+const savedProducts = computed(() => savedStore.products)
+const error = computed(() => savedStore.error)
 
-const params = {
-  limit: 20,
-  offset: 0,
+// Fetch saved products
+const fetchSaved = async () => {
+  // Only fetch if user is authenticated
+  if (!authStore.isAuthorized) {
+    return
+  }
+  
+  try {
+    await savedStore.fetchSavedProducts()
+  } catch (err) {
+    console.error('Error fetching saved products:', err)
+  }
 }
 
-listStore.getUserProductsList(params)
+// Redirect to login if not authenticated
+onMounted(() => {
+  if (!authStore.isAuthorized) {
+    // Show auth modal instead of redirecting
+    authStore.showAuth = true
+    navigateTo(localePath('/profile'))
+    return
+  }
+  
+  fetchSaved()
+})
 
-const selectedList = computed(() => listStore.selectedList)
-const openDetailsModal = (list: any) => {
-  listStore.selectedList = list
-  addListModal.value = true
-}
-
-const openAddListModal = () => {
-  listStore.selectedList = null
-  addListModal.value = true
-}
-
-const deleteList = (id: string) => {
-  listStore.deleteList(id).then(() => {
-    listStore.getUserProductsList(params)
-  })
-}
+// SEO
+useHead({
+  title: 'Избранное — Chakana',
+})
 </script>

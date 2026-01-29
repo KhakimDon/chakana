@@ -49,10 +49,12 @@ export const useListFetcher = <T>(
       }
     }
     if (itself && !search) {
+      // Support both 'results' and 'items' response formats
+      const items = (data as any).results || data.items || []
       if (params.page > 1) {
-        list.value = [...(list.value ?? []), ...data.items]
+        list.value = [...(list.value ?? []), ...items]
       } else {
-        list.value = data.items
+        list.value = items
       }
     } else if (!itself && !search) {
       if (params.page > 1) {

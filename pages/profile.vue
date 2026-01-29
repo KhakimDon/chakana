@@ -2,7 +2,6 @@
   <LayoutWrapper v-if="useMobile('desktop')">
     <template #left>
       <div class="sticky top-[86px]">
-        <ProfileSidebarPremium v-if="!hasPremium" class="mb-4" />
         <ProfileSidebarMenu class="mb-4" :menu @menu-click="menuClick" />
         <button
           class="p-[14px] flex items-center gap-1.5 w-full group bg-gray-300 rounded-xl"
@@ -45,8 +44,18 @@
     </template>
     <template #default> <NuxtPage /> </template>
     <template #right>
-      <div>
-        <ProfileSidebarBalance />
+      <div class="sticky top-[86px]">
+        <a 
+          href="https://express.chakana.uz/app/" 
+          target="_blank"
+          class="block rounded-2xl overflow-hidden hover:opacity-90 transition-300"
+        >
+          <img 
+            src="/images/Sidebar.png" 
+            alt="Download App" 
+            class="w-full h-auto rounded-2xl"
+          />
+        </a>
       </div>
     </template>
   </LayoutWrapper>
@@ -68,77 +77,70 @@ const router = useRouter()
 const localePath = useLocalePath()
 const { t } = useI18n()
 
-const hasPremium = computed(() => useAuthStore().user?.is_premium)
-
 const menu = [
   {
     link: '/profile/auto-order',
     title: t('auto_order'),
     icon: 'SvgoCommonCalendar',
-    iconClass: 'text-orange group-[.active]:text-white',
-    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
-    isPremium: true,
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
+    isPremium: false,
   },
   {
     link: '/profile/edit',
     title: t('my_infos'),
     icon: 'SvgoProfileUserCircle',
-    iconClass: 'text-orange group-[.active]:text-white',
-    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-orange/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-black group-hover:bg-gray-200',
   },
   {
     link: '/profile/orders',
     title: t('orders'),
     icon: 'SvgoProfileSidebarCart',
-    iconClass: 'text-blue-100 group-[.active]:text-white',
-    iconWrapperClass: 'group-[.active]:bg-blue-100 group-hover:bg-blue-100/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
   {
     link: '/profile/addresses',
     title: t('addresses'),
     icon: 'SvgoProfileSidebarLocation',
-    iconClass: 'text-[#088339] group-[.active]:text-white',
-    iconWrapperClass:
-      'group-[.active]:bg-[#088339] group-hover:bg-[#088339]/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
   {
     link: '/profile/my-cards',
     title: t('my_cards'),
     icon: 'SvgoProfileCard',
-    iconClass: 'text-blue-100 group-[.active]:text-white',
-    iconWrapperClass: 'group-[.active]:bg-blue-100 group-hover:bg-blue-100/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
   {
     link: '/profile/notifications',
     title: t('notifications'),
     icon: 'SvgoCommonBell',
-    iconClass: 'text-[#F7C954] group-[.active]:text-white',
-    iconWrapperClass:
-      'group-[.active]:bg-[#F7C954] group-hover:bg-[#F7C954]/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
   {
     link: '/profile/saved',
     title: t('saved_list'),
     icon: 'SvgoProfileSidebarMenuList',
-    iconClass: 'text-[#9747FF] group-[.active]:text-white',
-    iconWrapperClass:
-      'group-[.active]:bg-[#9747FF] group-hover:bg-[#9747FF]/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
   {
     link: '/profile/promocodes',
     title: t('discounts_and_promocodes'),
     icon: 'SvgoProfileSidebarTag',
-    iconClass: 'text-[#F5C005] group-[.active]:text-white',
-    iconWrapperClass:
-      'group-[.active]:bg-[#F5C005]  group-hover:bg-[#F5C005]/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
   {
     link: '/profile/settings',
     title: t('settings'),
     icon: 'SvgoProfileSidebarSettings',
-    iconClass: 'text-[#FF831B] group-[.active]:text-white',
-    iconWrapperClass:
-      'group-[.active]:bg-[#FF831B]  group-hover:bg-[#FF831B]/20',
+    iconClass: 'text-dark group-[.active]:text-white',
+    iconWrapperClass: 'group-[.active]:bg-orange group-hover:bg-gray-200',
   },
 ]
 const logoutModal = ref(false)

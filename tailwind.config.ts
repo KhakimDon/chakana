@@ -31,7 +31,7 @@ export default <Partial<Config>>{
           DEFAULT: '#1C1C1C',
         },
         orange: {
-          DEFAULT: '#FF831B',
+          DEFAULT: '#ED2024',
         },
         red: {
           DEFAULT: '#FF3300',

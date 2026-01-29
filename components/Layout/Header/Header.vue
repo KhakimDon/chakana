@@ -28,7 +28,7 @@
           v-if="!user?.id"
           variant="secondary"
           class="!h-9 flex-center"
-          :text="$t('register')"
+          :text="$t('authorization')"
           @click="openAuthModal"
         >
           <template #prefix>
@@ -38,7 +38,7 @@
         <div v-else class="flex-y-center gap-2">
           <div class="w-px h-7 bg-white-100" />
           <NuxtLinkLocale to="/cart" class="flex-y-center gap-1.5 group">
-            <IconCart class="text-2xl text-blue-100" />
+            <IconCart class="text-2xl text-[#4DB839]" />
             <p
               class="text-sm leading-130 font-semibold text-dark transition-300 group-hover:text-orange"
             >
@@ -93,11 +93,11 @@ function openAuthModal() {
 }
 
 const menu = computed(() => [
-  // {
-  //   title: t('brands'),
-  //   link: '/brands',
-  //   isPremium: false,
-  // },
+  {
+    title: t('stores'),
+    link: '/',
+    isPremium: false,
+  },
   {
     title: t('discounts'),
     link: '/discounts',
@@ -107,6 +107,11 @@ const menu = computed(() => [
     title: 'Premium',
     link: '/search',
     isPremium: true,
+  },
+  {
+    title: t('about_us'),
+    link: '/about',
+    isPremium: false,
   },
 ])
 </script>

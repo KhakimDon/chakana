@@ -1,9 +1,19 @@
 <template>
   <main>
-    <LayoutWrapper v-if="useMobile('desktop')" has-fixed>
+    <LayoutWrapper 
+      v-if="useMobile('desktop')" 
+      has-fixed 
+      :left-sidebar-cols="isStorePage ? 3 : 2"
+      :hide-left-sidebar="isSavedPage"
+    >
       <template #left>
-        <div class="w-[202px]">
+        <!-- Hide left sidebar for saved page -->
+        <div v-if="!isSavedPage" :class="isStorePage ? 'w-[280px]' : 'w-[202px]'">
+          <!-- Store sidebar when on store page -->
+          <MainSidebarStoreSidebar v-if="isStorePage" />
+          <!-- Main sidebar for other pages -->
           <MainSidebar
+            v-else
             :loading="categoriesLoading"
             v-bind="{ categories, single }"
           />
@@ -42,8 +52,16 @@
 
 import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
+import { useStorePageStore } from '~/store/storePage'
 
 const route = useRoute()
+const storePageStore = useStorePageStore()
+
+// Check if we're on a store page
+const isStorePage = computed(() => storePageStore.isStorePage)
+
+// Check if we're on saved page (hide left sidebar)
+const isSavedPage = computed(() => route.path.includes('/saved'))
 
 const categoriesStore = useCategoriesStore()
 const show = ref(false)

@@ -1,52 +1,74 @@
 <template>
   <div class="w-full">
-    <Transition v-if="useMobile('desktop')" name="fade" mode="out-in">
-      <div :key="banners?.loading" class="h-[150px] md:mt-0">
-        <Swiper
-          v-if="!banners?.loading"
-          :space-between="12"
-          :slides-per-view="2"
-        >
-          <SwiperSlide v-for="(banner, index) in banners?.list" :key="index">
-            <a
-              :href="banner?.redirect_url === '#' ? null : banner?.redirect_url"
-              target="_blank"
+    <!-- Баннеры (скрываются при выборе категории) -->
+    <Transition name="slide-fade">
+      <div v-if="!hasSelectedCategory">
+        <Transition v-if="useMobile('desktop')" name="fade" mode="out-in">
+          <div :key="banners?.loading" class="h-[150px] md:mt-0">
+            <Swiper
+              v-if="!banners?.loading && banners?.list?.length"
+              :space-between="12"
+              :slides-per-view="2"
             >
-              <img
-                :src="banner?.image"
-                alt="banner"
-                class="w-full max-h-[150px] h-full object-cover rounded-10"
-              />
-            </a>
-          </SwiperSlide>
-        </Swiper>
-        <div v-else class="gap-3 shimmer-wrapper">
-          <div class="shimmer w-full h-[150px] rounded-10" />
-        </div>
-      </div>
-    </Transition>
-    <Transition v-else name="fade" mode="out-in">
-      <div :key="banners?.loading" class="h-[150px] md:mt-0">
-        <Swiper v-if="!banners?.loading" :space-between="12">
-          <SwiperSlide v-for="(banner, index) in banners?.list" :key="index">
-            <a
-              :href="banner?.redirect_url === '#' ? null : banner?.redirect_url"
+              <SwiperSlide
+                v-for="(banner, index) in banners?.list"
+                :key="index"
+              >
+                <a
+                  :href="
+                    banner?.redirect_url === '#' ? null : banner?.redirect_url
+                  "
+                  target="_blank"
+                >
+                  <img
+                    :src="banner?.image"
+                    alt="banner"
+                    class="w-full max-h-[150px] h-full object-cover rounded-10"
+                  />
+                </a>
+              </SwiperSlide>
+            </Swiper>
+            <div v-else-if="banners?.loading" class="gap-3 shimmer-wrapper">
+              <div class="shimmer w-full h-[150px] rounded-10" />
+            </div>
+          </div>
+        </Transition>
+        <Transition v-else name="fade" mode="out-in">
+          <div :key="banners?.loading" class="h-[150px] md:mt-0">
+            <Swiper
+              v-if="!banners?.loading && banners?.list?.length"
+              :space-between="12"
             >
-              <img
-                :src="banner?.image"
-                alt="banner"
-                class="w-full max-h-[150px] h-full object-cover rounded-10"
-              />
-            </a>
-          </SwiperSlide>
-        </Swiper>
-        <div v-else class="gap-3 shimmer-wrapper">
-          <div class="shimmer w-full h-[150px] rounded-10" />
-        </div>
+              <SwiperSlide
+                v-for="(banner, index) in banners?.list"
+                :key="index"
+              >
+                <a
+                  :href="
+                    banner?.redirect_url === '#' ? null : banner?.redirect_url
+                  "
+                >
+                  <img
+                    :src="banner?.image"
+                    alt="banner"
+                    class="w-full max-h-[150px] h-full object-cover rounded-10"
+                  />
+                </a>
+              </SwiperSlide>
+            </Swiper>
+            <div v-else-if="banners?.loading" class="gap-3 shimmer-wrapper">
+              <div class="shimmer w-full h-[150px] rounded-10" />
+            </div>
+          </div>
+        </Transition>
       </div>
     </Transition>
     <MainCategories v-if="!useMobile('desktop')" />
-    <div v-if="useMobile('desktop')" class="w-full flex-y-center gap-2 mt-4">
+    <div
+      v-if="useMobile('desktop')"
+      class="w-full flex-y-center gap-2 transition-all duration-300"
+      :class="hasSelectedCategory ? 'mt-0' : 'mt-4'"
+    >
       <NuxtLinkLocale to="/search" class="w-full" @click.stop>
         <FormInputSearch :placeholder="$t('search')" class="w-full !h-10" />
       </NuxtLinkLocale>
@@ -58,100 +80,309 @@
         <IconList class="text-2xl text-blue-100" />
       </NuxtLinkLocale>
     </div>
-    <CommonSectionWrapper title="take_and_go" class="mt-4">
+    <!-- Секция магазинов (показываем только если есть активная локация) -->
+    <div v-if="hasActiveLocation" class="mt-6">
       <Transition name="fade" mode="out-in">
         <div
-          :key="discounts?.loading"
-          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"
+          :key="nearbyStores?.loading"
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5"
         >
-          <template v-if="discounts?.loading">
-            <MainCardLoading v-for="key in 16" :key />
+          <template v-if="nearbyStores?.loading">
+            <MainCardStoreCardLoading v-for="key in 6" :key="key" />
           </template>
-          <template v-else-if="!discounts?.loading && discounts?.list.length">
-            <MainCard
-              v-for="(card, index) in discounts?.list"
-              :key="index"
-              :card
+          <template v-else-if="nearbyStores?.list?.length">
+            <MainCardStoreCard
+              v-for="store in nearbyStores.list"
+              :key="store.id"
+              :store="store"
             />
+          </template>
+          <template v-else>
+            <div
+              class="col-span-full flex flex-col items-center justify-center py-12"
+            >
+              <svg
+                width="140"
+                height="140"
+                viewBox="0 0 140 140"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M128.925 70.0611C128.925 83.6552 124.403 96.2606 116.825 106.394C112.669 111.832 107.658 116.652 101.913 120.359C92.6242 126.538 81.5017 130.122 69.5237 130.122C36.6451 130.122 10 103.181 10 70.0611C10 36.8174 36.6451 10 69.4014 10C81.3795 10 92.502 13.5839 101.791 19.6394C107.536 23.3469 112.547 28.1666 116.703 33.6043C124.403 43.8616 128.925 56.467 128.925 70.0611Z"
+                  fill="#E5E8EA"
+                />
+                <path
+                  d="M135.892 51.7705C137.726 50.0403 137.848 47.1979 136.137 45.3442C134.426 43.4904 131.614 43.3669 129.659 45.097C127.825 46.8272 127.703 49.6696 129.414 51.5233C131.125 53.2535 134.059 53.377 135.892 51.7705Z"
+                  fill="#E5E8EA"
+                />
+                <path
+                  d="M70.2985 54.4505C74.2469 54.4505 77.4476 51.2367 77.4476 47.2721C77.4476 43.3076 74.2469 40.0938 70.2985 40.0938C66.3501 40.0938 63.1494 43.3076 63.1494 47.2721C63.1494 51.2367 66.3501 54.4505 70.2985 54.4505Z"
+                  fill="#A3A3A3"
+                />
+                <path
+                  d="M51.8787 47.8354L50.2806 44.4292C50.1405 44.0913 50.0003 43.7535 49.8321 43.4439C48.0097 40.0377 44.4211 37.7012 40.2999 37.7012C36.487 37.7012 33.1507 39.6717 31.2162 42.6838L28.0762 46.9064L29.5621 47.3005C29.5061 47.7228 29.478 48.1732 29.478 48.5954C29.478 54.5915 34.3282 59.4616 40.2999 59.4616C46.2715 59.4616 51.1217 54.5915 51.1217 48.5954C51.1217 48.3984 51.1217 48.2013 51.0937 48.0043L51.8787 47.8354Z"
+                  fill="#A3A3A3"
+                />
+                <path
+                  d="M88.7173 47.8346L90.3153 44.4565C90.4555 44.1187 90.5957 43.7809 90.7639 43.4712C92.5862 40.065 96.1748 37.7285 100.296 37.7285C104.109 37.7285 107.445 39.6991 109.38 42.7112L112.52 46.9056L111.034 47.2997C111.09 47.722 111.118 48.1724 111.118 48.5946C111.118 54.5907 106.268 59.4608 100.296 59.4608C94.3245 59.4608 89.4743 54.5907 89.4743 48.5946C89.4743 48.3976 89.4743 48.2005 89.5023 48.0035L88.7173 47.8346Z"
+                  fill="#A3A3A3"
+                />
+                <path
+                  d="M129.174 83.5294C129.174 87.6676 127.884 84.4584 127.884 84.4584L118.184 69.6512L89.3907 78.1527L83.5312 79.8699L70.3263 66.6954L57.1215 79.8699L22.4691 69.6512L12.7687 84.4584C12.7687 84.4584 11.4791 87.6394 11.4791 83.5294C11.4791 74.0145 18.2918 60.3897 24.3756 50.2273C27.095 45.6669 32.1976 43.2178 37.3562 42.8237C41.0569 42.5422 45.2623 43.1334 48.4303 45.1602C49.1032 45.5825 50.3928 46.8774 51.262 46.7367C56 46.0047 60.9904 44.935 64.6911 44.0905C68.476 43.2178 72.401 43.2178 76.1578 44.1187C79.8025 44.9632 84.6807 46.0329 89.3907 46.7648C90.2598 46.9056 91.5495 45.6388 92.2224 45.1884C95.3904 43.1334 99.5958 42.5422 103.297 42.8519C108.455 43.246 113.558 45.6669 116.277 50.2555C122.361 60.4178 129.174 74.0145 129.174 83.5294Z"
+                  fill="url(#paint0_linear_253_11427)"
+                />
+                <path
+                  opacity="0.2"
+                  d="M109.408 65.1192L89.3626 78.1811L83.5031 79.8983L70.2982 66.7238V52.9863C75.4288 52.9863 83.9797 56.7867 87.3721 60.1647C92.026 56.3081 99.035 52.5078 109.408 54.4502C119.782 56.3644 109.408 65.1192 109.408 65.1192Z"
+                  fill="url(#paint1_linear_253_11427)"
+                />
+                <path
+                  opacity="0.2"
+                  d="M31.1886 65.1192L51.2342 78.1811L57.0937 79.8983L70.2986 66.7238V52.9863C65.168 52.9863 56.6171 56.7867 53.2248 60.1647C48.5708 56.3081 41.5619 52.5078 31.1886 54.4502C20.8153 56.3644 31.1886 65.1192 31.1886 65.1192Z"
+                  fill="url(#paint2_linear_253_11427)"
+                />
+                <path
+                  d="M70.2985 70.1019C74.2469 70.1019 77.4476 66.888 77.4476 62.9235C77.4476 58.959 74.2469 55.7451 70.2985 55.7451C66.3501 55.7451 63.1494 58.959 63.1494 62.9235C63.1494 66.888 66.3501 70.1019 70.2985 70.1019Z"
+                  fill="#A3A3A3"
+                />
+                <path
+                  d="M35.3658 109.625C48.589 109.625 59.3085 98.8618 59.3085 85.5845C59.3085 72.3073 48.589 61.5439 35.3658 61.5439C22.1427 61.5439 11.4232 72.3073 11.4232 85.5845C11.4232 98.8618 22.1427 109.625 35.3658 109.625Z"
+                  fill="#E5E8EA"
+                />
+                <path
+                  d="M35.3657 103.516C45.2289 103.516 53.2246 95.4878 53.2246 85.5843C53.2246 75.6807 45.2289 67.6523 35.3657 67.6523C25.5026 67.6523 17.5069 75.6807 17.5069 85.5843C17.5069 95.4878 25.5026 103.516 35.3657 103.516Z"
+                  fill="#E5E8EA"
+                />
+                <path
+                  d="M35.3657 96.7037C43.3553 96.7037 49.8322 90.2004 49.8322 82.178C49.8322 74.1557 43.3553 67.6523 35.3657 67.6523C27.376 67.6523 20.8992 74.1557 20.8992 82.178C20.8992 90.2004 27.376 96.7037 35.3657 96.7037Z"
+                  fill="#A3A3A3"
+                />
+                <path
+                  opacity="0.4"
+                  d="M25.8336 83.3047C25.2168 83.3047 24.7122 82.798 24.7122 82.1787C24.7122 76.267 29.5063 71.4814 35.3658 71.4814C35.9826 71.4814 36.4872 71.9882 36.4872 72.6075C36.4872 73.2268 35.9826 73.7335 35.3658 73.7335C30.7118 73.7335 26.955 77.5338 26.955 82.1787C26.955 82.798 26.4504 83.3047 25.8336 83.3047Z"
+                  fill="white"
+                />
+                <path
+                  d="M105.231 109.625C118.454 109.625 129.173 98.8618 129.173 85.5845C129.173 72.3073 118.454 61.5439 105.231 61.5439C92.0077 61.5439 81.2882 72.3073 81.2882 85.5845C81.2882 98.8618 92.0077 109.625 105.231 109.625Z"
+                  fill="#E5E8EA"
+                />
+                <path
+                  d="M105.231 103.516C115.094 103.516 123.09 95.4878 123.09 85.5843C123.09 75.6807 115.094 67.6523 105.231 67.6523C95.3681 67.6523 87.3724 75.6807 87.3724 85.5843C87.3724 95.4878 95.3681 103.516 105.231 103.516Z"
+                  fill="#E5E8EA"
+                />
+                <path
+                  d="M105.231 96.7037C113.221 96.7037 119.698 90.2004 119.698 82.178C119.698 74.1557 113.221 67.6523 105.231 67.6523C97.2415 67.6523 90.7646 74.1557 90.7646 82.178C90.7646 90.2004 97.2415 96.7037 105.231 96.7037Z"
+                  fill="#A3A3A3"
+                />
+                <path
+                  opacity="0.4"
+                  d="M105.848 72.6075C105.848 71.9882 105.343 71.4814 104.727 71.4814C98.8391 71.4814 94.073 76.2952 94.073 82.1787C94.073 82.798 94.5776 83.3047 95.1944 83.3047C95.8112 83.3047 96.3159 82.798 96.3159 82.1787C96.3159 77.5057 100.101 73.7335 104.727 73.7335C105.343 73.7335 105.848 73.2268 105.848 72.6075Z"
+                  fill="white"
+                />
+                <g style="mix-blend-mode: color">
+                  <path
+                    d="M128.925 70.0621C128.925 83.6561 124.403 96.2616 116.825 106.395C112.669 111.833 107.658 116.653 101.913 120.36C92.6242 126.539 81.5017 130.123 69.5237 130.123C36.6451 130.123 10 103.182 10 70.0621C10 36.8184 36.6451 10.001 69.4014 10.001C81.3795 10.001 92.502 13.5849 101.791 19.6404C107.536 23.3479 112.547 28.1676 116.703 33.6052C124.403 43.8626 128.925 56.468 128.925 70.0621Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M135.892 51.7719C137.726 50.0417 137.848 47.1993 136.137 45.3456C134.426 43.4918 131.614 43.3683 129.659 45.0984C127.825 46.8286 127.703 49.671 129.414 51.5247C131.125 53.2549 134.059 53.3784 135.892 51.7719Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M70.2985 54.4514C74.2469 54.4514 77.4476 51.2375 77.4476 47.273C77.4476 43.3084 74.2469 40.0946 70.2985 40.0946C66.3501 40.0946 63.1494 43.3084 63.1494 47.273C63.1494 51.2375 66.3501 54.4514 70.2985 54.4514Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M51.8787 47.836L50.2806 44.4298C50.1404 44.092 50.0003 43.7542 49.832 43.4445C48.0097 40.0383 44.4211 37.7018 40.2998 37.7018C36.487 37.7018 33.1507 39.6724 31.2162 42.6845L28.0762 46.9071L29.5621 47.3012C29.506 47.7234 29.478 48.1738 29.478 48.5961C29.478 54.5922 34.3282 59.4622 40.2998 59.4622C46.2715 59.4622 51.1217 54.5922 51.1217 48.5961C51.1217 48.399 51.1217 48.202 51.0937 48.0049L51.8787 47.836Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M88.7173 47.8356L90.3153 44.4575C90.4555 44.1197 90.5957 43.7819 90.7639 43.4723C92.5862 40.066 96.1748 37.7295 100.296 37.7295C104.109 37.7295 107.445 39.7001 109.38 42.7122L112.52 46.9066L111.034 47.3007C111.09 47.723 111.118 48.1734 111.118 48.5957C111.118 54.5917 106.268 59.4618 100.296 59.4618C94.3244 59.4618 89.4742 54.5917 89.4742 48.5957C89.4742 48.3986 89.4742 48.2016 89.5023 48.0045L88.7173 47.8356Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M129.174 83.5306C129.174 87.6687 127.884 84.4596 127.884 84.4596L118.184 69.6524L89.3907 78.1538L83.5312 79.871L70.3263 66.6966L57.1214 79.871L22.4691 69.6524L12.7687 84.4596C12.7687 84.4596 11.4791 87.6406 11.4791 83.5306C11.4791 74.0157 18.2918 60.3908 24.3755 50.2285C27.095 45.6681 32.1976 43.219 37.3562 42.8249C41.0569 42.5434 45.2623 43.1345 48.4303 45.1614C49.1032 45.5836 50.3928 46.8786 51.2619 46.7378C56 46.0059 60.9904 44.9362 64.6911 44.0917C68.476 43.219 72.401 43.219 76.1578 44.1198C79.8025 44.9643 84.6807 46.034 89.3907 46.766C90.2598 46.9067 91.5495 45.6399 92.2223 45.1895C95.3904 43.1345 99.5958 42.5434 103.297 42.853C108.455 43.2471 113.558 45.6681 116.277 50.2566C122.361 60.419 129.174 74.0157 129.174 83.5306Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M109.408 65.1204L89.3626 78.1822L83.5031 79.8994L70.2982 66.7249V52.9875C75.4288 52.9875 83.9797 56.7878 87.372 60.1659C92.026 56.3092 99.035 52.5089 109.408 54.4513C119.782 56.3655 109.408 65.1204 109.408 65.1204Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M31.1886 65.1204L51.2342 78.1822L57.0937 79.8994L70.2982 66.7249V52.9875C65.1676 52.9875 56.6171 56.7878 53.2247 60.1659C48.5708 56.3092 41.5618 52.5089 31.1886 54.4513C20.8153 56.3655 31.1886 65.1204 31.1886 65.1204Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M70.2985 70.1029C74.2469 70.1029 77.4476 66.889 77.4476 62.9245C77.4476 58.96 74.2469 55.7461 70.2985 55.7461C66.3501 55.7461 63.1494 58.96 63.1494 62.9245C63.1494 66.889 66.3501 70.1029 70.2985 70.1029Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M35.3658 109.626C48.589 109.626 59.3084 98.8629 59.3084 85.5856C59.3084 72.3084 48.589 61.545 35.3658 61.545C22.1427 61.545 11.4232 72.3084 11.4232 85.5856C11.4232 98.8629 22.1427 109.626 35.3658 109.626Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M35.3657 103.517C45.2289 103.517 53.2246 95.4887 53.2246 85.5852C53.2246 75.6817 45.2289 67.6533 35.3657 67.6533C25.5025 67.6533 17.5069 75.6817 17.5069 85.5852C17.5069 95.4887 25.5025 103.517 35.3657 103.517Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M35.3657 96.7047C43.3553 96.7047 49.8322 90.2013 49.8322 82.179C49.8322 74.1567 43.3553 67.6533 35.3657 67.6533C27.3761 67.6533 20.8992 74.1567 20.8992 82.179C20.8992 90.2013 27.3761 96.7047 35.3657 96.7047Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M25.8335 83.3052C25.2167 83.3052 24.7121 82.7985 24.7121 82.1791C24.7121 76.2675 29.5062 71.4819 35.3657 71.4819C35.9825 71.4819 36.4872 71.9886 36.4872 72.6079C36.4872 73.2273 35.9825 73.734 35.3657 73.734C30.7118 73.734 26.955 77.5343 26.955 82.1791C26.955 82.7985 26.4503 83.3052 25.8335 83.3052Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M105.231 109.626C118.454 109.626 129.173 98.8629 129.173 85.5856C129.173 72.3084 118.454 61.545 105.231 61.545C92.0077 61.545 81.2882 72.3084 81.2882 85.5856C81.2882 98.8629 92.0077 109.626 105.231 109.626Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M105.231 103.517C115.094 103.517 123.09 95.4887 123.09 85.5852C123.09 75.6817 115.094 67.6533 105.231 67.6533C95.3681 67.6533 87.3724 75.6817 87.3724 85.5852C87.3724 95.4887 95.3681 103.517 105.231 103.517Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M105.231 96.7047C113.221 96.7047 119.698 90.2013 119.698 82.179C119.698 74.1567 113.221 67.6533 105.231 67.6533C97.2416 67.6533 90.7647 74.1567 90.7647 82.179C90.7647 90.2013 97.2415 96.7047 105.231 96.7047Z"
+                    fill="#ED2024"
+                  />
+                  <path
+                    d="M105.848 72.6079C105.848 71.9886 105.343 71.4819 104.727 71.4819C98.8391 71.4819 94.073 76.2957 94.073 82.1791C94.073 82.7985 94.5776 83.3052 95.1944 83.3052C95.8112 83.3052 96.3158 82.7985 96.3158 82.1791C96.3158 77.5061 100.101 73.734 104.727 73.734C105.343 73.734 105.848 73.2273 105.848 72.6079Z"
+                    fill="#ED2024"
+                  />
+                </g>
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_253_11427"
+                    x1="70.3263"
+                    y1="45.9108"
+                    x2="70.3263"
+                    y2="62.1222"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#CCBDB0" />
+                    <stop offset="1" stop-color="#AEA196" />
+                  </linearGradient>
+                  <linearGradient
+                    id="paint1_linear_253_11427"
+                    x1="104.953"
+                    y1="61.7896"
+                    x2="72.3532"
+                    y2="68.4059"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="white" stop-opacity="0" />
+                    <stop offset="1" stop-color="white" />
+                  </linearGradient>
+                  <linearGradient
+                    id="paint2_linear_253_11427"
+                    x1="30.5684"
+                    y1="61.7896"
+                    x2="68.3079"
+                    y2="56.1893"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop
+                      offset="0.00289017"
+                      stop-color="white"
+                      stop-opacity="0"
+                    />
+                    <stop offset="1" stop-color="white" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <h3 class="text-lg font-bold text-dark mb-2">
+                {{ $t('nothing_found') || 'Похоже, ничего не найдено' }}
+              </h3>
+              <p class="text-sm text-gray-500 text-center max-w-[300px]">
+                {{
+                  $t('no_stores_available') ||
+                  'В ближайшее время доступных магазинов не будет, следите за новостями.'
+                }}
+              </p>
+            </div>
           </template>
         </div>
       </Transition>
-    </CommonSectionWrapper>
-    <!--    <CommonSectionWrapper v-if="false" title="popular_brands" class="my-6">-->
-    <!--      <MainBrandsWrapper-->
-    <!--        :list="popularBrands?.list"-->
-    <!--        :loading="popularBrands?.loading"-->
-    <!--      />-->
-    <!--    </CommonSectionWrapper>-->
-    <!--    ~~~~-->
-    <!--    <CommonSectionWrapper title="profitable_shelf" class="my-6">-->
-    <!--      <Transition name="fade" mode="out-in">-->
-    <!--        <div-->
-    <!--          :key="products?.loading"-->
-    <!--          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"-->
-    <!--        >-->
-    <!--          <template v-if="products?.loading">-->
-    <!--            <MainCardLoading v-for="key in 16" :key />-->
-    <!--          </template>-->
-    <!--          <template v-else-if="!products?.loading && products?.list.length">-->
-    <!--            <MainCard-->
-    <!--              v-for="(card, index) in products?.list"-->
-    <!--              :key="index"-->
-    <!--              :card-->
-    <!--            />-->
-    <!--          </template>-->
-    <!--          <template v-if="products?.params?.loading">-->
-    <!--            <MainCardLoading v-for="key in 10" :key />-->
-    <!--          </template>-->
-    <!--        </div>-->
-    <!--      </Transition>-->
-    <!--      <div-->
-    <!--        v-if="-->
-    <!--          products.params?.total > products?.list.length &&-->
-    <!--          !products?.loading &&-->
-    <!--          !products?.params?.loading-->
-    <!--        "-->
-    <!--        ref="target"-->
-    <!--      />-->
-    <!--    </CommonSectionWrapper>-->
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useIntersectionObserver } from '@vueuse/core'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import IconList from '~/assets/icons/Common/list.svg'
 import { useMainStore } from '~/store/main'
+import { useCategoriesStore } from '~/store/categories'
+import { useLocationsStore } from '~/store/locations'
+import { useAuthStore } from '~/store/auth'
 
 const mainStore = useMainStore()
+const categoriesStore = useCategoriesStore()
+const locationsStore = useLocationsStore()
+const authStore = useAuthStore()
 
-// const products = computed(() => mainStore.products)
-const discounts = computed(() => mainStore.discounts)
-// const popularBrands = computed(() => mainStore.popularBrands)
 const banners = computed(() => mainStore.banners)
+const nearbyStores = computed(() => mainStore.nearbyStores)
 
-// if (!products.value?.list.length) {
-//   mainStore.fetchProducts()
-// }
+// Проверяем, выбрана ли категория
+const hasSelectedCategory = computed(
+  () => categoriesStore.selectedCategoryId !== null
+)
 
-if (!discounts.value?.list.length) {
-  mainStore.fetchDiscounts()
-}
+const hasActiveLocation = computed(() => {
+  return authStore.isAuthorized && locationsStore.getActiveLocation !== null
+})
 
-// if (!popularBrands.value?.list.length) {
-//   mainStore.fetchPopularBrands()
-// }
+onMounted(async () => {
+  // Загружаем баннеры если список пуст
+  if (!banners.value?.list.length) {
+    mainStore.fetchBanners().catch(() => {
+      // Игнорируем ошибки загрузки
+    })
+  }
 
-if (!banners.value?.list.length) {
-  mainStore.fetchBanners()
-}
+  // Локации загружаются в MainMapSidebar, не нужно дублировать здесь
 
-const target = ref<HTMLElement | null>(null)
-
-useIntersectionObserver(target, ([{ isIntersecting }]) => {
-  if (isIntersecting) {
-    mainStore.fetchProducts(false)
+  // Загружаем ближайшие магазины только если есть активная локация
+  if (hasActiveLocation.value && !nearbyStores.value?.list.length) {
+    mainStore.fetchNearbyStores().catch(() => {
+      // Игнорируем ошибки загрузки
+    })
   }
 })
+
+// Отслеживаем изменения активной локации и загружаем магазины
+watch(
+  () => hasActiveLocation.value,
+  async (hasLocation) => {
+    if (hasLocation && !nearbyStores.value?.list.length) {
+      await mainStore.fetchNearbyStores().catch(() => {
+        // Игнорируем ошибки загрузки
+      })
+    }
+  },
+  { immediate: true }
+)
 </script>
+
+<style scoped>
+/* Плавное появление/исчезновение баннера */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>

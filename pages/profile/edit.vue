@@ -20,7 +20,7 @@
       <div class="relative">
         <img
           class="w-full max-md:h-[100px] rounded-t-xl relative z-0"
-          src="~/public/images/profile-pattern.webp"
+          src="~/public/images/profile-pattern.png"
           alt="Pattern"
         />
         <p
@@ -36,8 +36,9 @@
         class="relative object-cover left-4 md:left-7 z-10 rounded-full w-20 md:w-[100px] h-20 md:h-[100px] border-2 md:border-4 border-gray-300 bg-gray-300 -mt-10 md:-mt-[50px]"
         width="100%"
         height="100%"
-        :src="data?.image"
+        :src="data?.image || '/images/default/user.png'"
         :alt="data?.name"
+        @error="handleImageError"
       />
       <div class="px-4 md:px-6 pb-4 md:pb-6 flex-center-between mt-2 md:mt-4">
         <p class="text-lg md:text-xl font-bold text-dark leading-130">
@@ -84,7 +85,7 @@
           {{ $t('social_contacts') }}
         </p>
         <div class="flex items-center gap-2 p-1.5 pr-3 bg-white rounded-xl">
-          <div class="w-[30px] h-[30px] bg-orange/10 flex-center rounded-lg">
+          <div class="w-[30px] h-[30px] bg-[#FDE9E9] flex-center rounded-lg">
             <img src="/images/svg/socials/instagram-gradient.svg" alt="" />
           </div>
           <p
@@ -95,7 +96,7 @@
           </p>
         </div>
         <div class="flex items-center gap-2 p-1.5 pr-3 bg-white rounded-xl">
-          <div class="w-[30px] h-[30px] bg-orange/10 flex-center rounded-lg">
+          <div class="w-[30px] h-[30px] bg-[#FDE9E9] flex-center rounded-lg">
             <img src="/images/svg/socials/telegram-gradient.svg" alt="" />
           </div>
           <p
@@ -118,4 +119,9 @@ const data = computed(() => useAuthStore().user)
 const userTrigger = computed(() => useAuthStore().userFetchTrigger)
 
 const editModal = ref(false)
+
+const handleImageError = (e: Event) => {
+  const target = e.target as HTMLImageElement
+  target.src = '/images/default/user.png'
+}
 </script>

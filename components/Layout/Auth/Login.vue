@@ -52,45 +52,86 @@
       </svg>
     </div>
 
-    <FormGroup :label="$t('phone_number')">
-      <FormInput
-        v-model="form.values.phone"
-        v-maska="'## ###-##-##'"
-        placeholder="00 000-00-00"
-        input-class="!pl-1"
-        type="number"
-        :error="form.$v.value.phone.$error"
-        @keydown.enter="submit"
-      >
-        <template #prefix>
-          <div class="flex-center h-11">
-            <p
-              class="text-base sm:text-sm leading-5 text-dark pl-3 font-medium max-sm:-mb-0.5"
-            >
-              +998
-            </p>
-          </div>
-        </template>
-      </FormInput>
-    </FormGroup>
+    <!-- Шаг 1: Ввод номера телефона -->
+    <template v-if="!showPassword">
+      <FormGroup :label="$t('phone_number')">
+        <FormInput
+          ref="phoneInputRef"
+          v-model="form.values.phone"
+          v-maska="'## ###-##-##'"
+          placeholder="00 000-00-00"
+          input-class="!pl-1"
+          type="number"
+          :error="form.$v.value.phone.$error"
+          @keydown.enter="handlePhoneSubmit"
+        >
+          <template #prefix>
+            <div class="flex-center h-11">
+              <p
+                class="text-base sm:text-sm leading-5 text-dark pl-3 font-medium max-sm:-mb-0.5"
+              >
+                +998
+              </p>
+            </div>
+          </template>
+        </FormInput>
+      </FormGroup>
+    </template>
 
-    <FormGroup :label="$t('password')">
-      <FormInput
-        v-model="form.values.password"
-        type="password"
-        :placeholder="$t('enter_password')"
-        :error="form.$v.value.password?.$error"
-        @keydown.enter="submit"
-      />
-    </FormGroup>
+    <!-- Шаг 2: Ввод пароля -->
+    <template v-else>
+      <p class="text-sm leading-140 text-gray-100 mb-4">
+        {{ $t('enter_password_for_account') || 'Введите пароль от аккаунта' }}: {{ formattedPhone }}
+      </p>
+      <FormGroup :label="$t('password')">
+        <FormInput
+          ref="passwordInputRef"
+          v-model="form.values.password"
+          :type="showPasswordInput ? 'text' : 'password'"
+          :placeholder="$t('enter_password') || 'Введите пароль'"
+          :error="form.$v.value.password.$error"
+          @keydown.enter="submit"
+        >
+          <template #suffix>
+            <button
+              type="button"
+              class="flex items-center justify-center w-10 h-11 hover:opacity-70 transition-opacity cursor-pointer"
+              @click.stop="showPasswordInput = !showPasswordInput"
+            >
+              <img
+                v-if="showPasswordInput"
+                :src="eyeOpenIcon"
+                alt="Hide password"
+                class="w-5 h-5"
+              />
+              <img
+                v-else
+                :src="eyeClosedIcon"
+                alt="Show password"
+                class="w-5 h-5"
+              />
+            </button>
+          </template>
+        </FormInput>
+      </FormGroup>
+      <div class="flex justify-end mt-2">
+        <button
+          type="button"
+          class="text-sm text-blue-100 hover:underline"
+          @click="$emit('forgot-password')"
+        >
+          {{ $t('forgot_password') || 'Забыл пароль?' }}
+        </button>
+      </div>
+    </template>
 
     <div>
       <BaseButton
         class="w-full h-11"
-        :disabled="form.$v.value.$invalid"
+        :disabled="isButtonDisabled"
         :text="$t('continue')"
         v-bind="{ loading }"
-        @click="submit"
+        @click="handleButtonClick"
       />
       <i18n-t
         keypath="login_policy_text"
@@ -121,18 +162,98 @@
 </template>
 
 <script setup lang="ts">
-import IconQr from '~/assets/icons/Common/qr.svg'
-import type { TForm } from '~/composables/useForm'
+import { nextTick, onMounted, watch } from 'vue'
+import type { TForm } from '../../../composables/useForm.js'
+import eyeOpenIcon from '~/assets/icons/Common/eye-open.svg?url'
+import eyeClosedIcon from '~/assets/icons/Common/eye-closed.svg?url'
 
 interface Props {
   form: TForm<any>
   loading?: boolean
+  showPassword?: boolean
+  phone?: string
 }
 
-const props = defineProps<Props>()
-const emit = defineEmits(['submit', 'to-qr'])
+const props = withDefaults(defineProps<Props>(), {
+  showPassword: false,
+  phone: '',
+})
+
+const emit = defineEmits(['submit', 'to-qr', 'forgot-password', 'phone-submit'])
 
 const { form } = unref(props)
+
+const showPasswordInput = ref(false)
+const phoneInputRef = ref()
+const passwordInputRef = ref()
+
+const formattedPhone = computed(() => {
+  if (!props.phone) return ''
+  const digits = props.phone.replace(/\D/g, '')
+  if (digits.length === 12 && digits.startsWith('998')) {
+    const phone = digits.substring(3)
+    return `+998 ${phone.substring(0, 2)} ${phone.substring(2, 5)} ${phone.substring(5, 7)} ${phone.substring(7)}`
+  }
+  return props.phone
+})
+
+// Проверка активности кнопки в зависимости от шага
+const isButtonDisabled = computed(() => {
+  if (props.showPassword) {
+    // На шаге ввода пароля проверяем оба поля
+    return form.$v.value.$invalid
+  } else {
+    // На шаге ввода номера проверяем только телефон
+    // Проверяем, что номер заполнен и проходит валидацию
+    if (!form.values.phone || form.values.phone.trim() === '') return true
+    
+    // Убираем все нецифровые символы для проверки
+    const phoneWithoutSpaces = form.values.phone.replace(/[\s)(-]/g, '')
+    
+    // Должно быть 9 цифр
+    if (phoneWithoutSpaces.length !== 9) return true
+    
+    // Проверяем код оператора
+    const validPhones = ['90', '91', '33', '50', '93', '94', '88', '95', '97', '98', '99', '77', '20']
+    const operatorCode = phoneWithoutSpaces.substring(0, 2)
+    if (!validPhones.includes(operatorCode)) return true
+    
+    return false
+  }
+})
+
+const handleButtonClick = () => {
+  if (props.showPassword) {
+    // На шаге ввода пароля вызываем submit
+    submit()
+  } else {
+    // На шаге ввода номера вызываем handlePhoneSubmit
+    handlePhoneSubmit()
+  }
+}
+
+function handlePhoneSubmit() {
+  // Проверяем валидацию телефона
+  form.$v.value.phone.$touch()
+  
+  // Проверяем, что номер валиден
+  const phoneWithoutSpaces = form.values.phone?.replace(/[\s)(-]/g, '') || ''
+  
+  if (phoneWithoutSpaces.length !== 9) {
+    return
+  }
+  
+  const validPhones = ['90', '91', '33', '50', '93', '94', '88', '95', '97', '98', '99', '77', '20']
+  const operatorCode = phoneWithoutSpaces.substring(0, 2)
+  if (!validPhones.includes(operatorCode)) {
+    return
+  }
+  
+  // Если валидация прошла, эмитим событие
+  if (!form.$v.value.phone.$error) {
+    emit('phone-submit')
+  }
+}
 
 function submit() {
   form.$v.value.$touch()
@@ -140,4 +261,38 @@ function submit() {
     emit('submit')
   }
 }
+
+// Фокус при смене шага
+watch(() => props.showPassword, (newValue) => {
+  if (newValue) {
+    // Фокус на инпут пароля когда переходим на шаг пароля
+    nextTick(() => {
+      passwordInputRef.value?.Input?.focus()
+    })
+  } else {
+    // Фокус на инпут телефона когда переходим на шаг телефона
+    nextTick(() => {
+      phoneInputRef.value?.Input?.focus()
+    })
+  }
+}, { immediate: true })
+
+// Фокус при монтировании компонента
+onMounted(() => {
+  if (!props.showPassword) {
+    nextTick(() => {
+      phoneInputRef.value?.Input?.focus()
+    })
+  } else {
+    nextTick(() => {
+      passwordInputRef.value?.Input?.focus()
+    })
+  }
+})
+
+// Экспортируем refs для использования в родительском компоненте
+defineExpose({
+  phoneInputRef,
+  passwordInputRef,
+})
 </script>

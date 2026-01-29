@@ -64,7 +64,7 @@
         >
           <CommonNoData
             class="w-full"
-            image="/images/no-data/no-searches.png"
+            image="/images/no-data/nf.svg"
             :title="$t('search_list_no_data_title')"
             :subtitle="$t('search_list_no_data_subtitle')"
           />

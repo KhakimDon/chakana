@@ -38,3 +38,18 @@ export interface IResponse<T = any> {
   next: string
   previous: string
 }
+
+// Баннер из API /common/banner/
+export interface IBanner {
+  id: number
+  title: string
+  image: string
+  image_url?: string
+  link?: string
+  redirect_url?: string
+  order: number
+  is_active: boolean
+}
+
+// Экспорт типов для локаций
+export * from './locations'

@@ -1,71 +1,57 @@
 <template>
-  <div class="w-full mt-4 md:mt-2">
-    <div>
-      <div class="flex items-start gap-1">
-        <p class="text-gray-100 text-xs">{{ $t('vid') }}:</p>
-        <p class="text-dark text-xs">{{ name }}</p>
-      </div>
-    </div>
+  <div class="w-full">
     <Swiper
       :key="trigger"
       v-bind="thumbSettings"
-      class="!w-full !pt-[18px] relative"
-      :space-between="6"
+      class="!w-full relative"
+      :space-between="8"
       @swiper="setThumbsSwiper"
       @slide-change="onChange"
     >
       <SwiperSlide
         v-for="(item, index) in variants"
         :key="index"
-        class="!w-16 cursor-pointer"
+        class="!w-[72px] cursor-pointer"
       >
         <NuxtLinkLocale
           :to="`/product/${item?.id}`"
-          class="rounded-10 h-[46px] relative bg-white-100 opacity-60 border-2 border-transparent block"
-          :class="{
-            '!border-orange !opacity-100': activeItemId === item?.id,
-          }"
+          class="block"
         >
-          <NuxtImg
-            :src="item?.main_image"
-            alt="card-image"
-            class="absolute-x object-contain top-[-15px] w-[44px]"
-            loading="lazy"
-          />
+          <div
+            class="rounded-xl h-[72px] relative bg-white border-2 transition-300 flex-center overflow-hidden"
+            :class="activeItemId === item?.id ? 'border-[#ED2024]' : 'border-gray-200 hover:border-gray-300'"
+          >
+            <NuxtImg
+              :src="item?.main_image"
+              :alt="item?.name"
+              class="w-14 h-14 object-contain"
+              loading="lazy"
+            />
+          </div>
+          <p 
+            class="text-[10px] text-center line-clamp-2 mt-1.5 leading-tight"
+            :class="activeItemId === item?.id ? 'text-dark font-semibold' : 'text-gray-100'"
+          >
+            {{ item.name }}
+          </p>
         </NuxtLinkLocale>
-        <p class="text-[10px] text-center opacity-60 line-clamp-2 mt-2">
-          {{ item.name }}
-        </p>
       </SwiperSlide>
       <button
-        class="bg-white btn-arrow btn-arrow-prev absolute top-1/2 z-10 left-0 p-1 opacity-0 pointer-events-none"
+        class="bg-white btn-arrow btn-arrow-prev absolute top-1/3 z-10 -left-2 p-1.5 shadow-lg rounded-full opacity-0 pointer-events-none transition-300"
         :class="{
-          '!opacity-100 !pointer-events-auto':
-            !isBeginning && variants?.length > 8,
+          '!opacity-100 !pointer-events-auto': !isBeginning && variants?.length > 5,
         }"
       >
-        <IconArrow class="icon-chevron text-xl rotate-180" />
+        <IconArrow class="icon-chevron text-lg rotate-180" />
       </button>
       <button
-        class="bg-white btn-arrow btn-arrow-next absolute top-1/2 z-10 right-0 p-1 opacity-0 pointer-events-none"
+        class="bg-white btn-arrow btn-arrow-next absolute top-1/3 z-10 -right-2 p-1.5 shadow-lg rounded-full opacity-0 pointer-events-none transition-300"
         :class="{
-          '!opacity-100 !pointer-events-auto': !isEnd && variants?.length > 8,
+          '!opacity-100 !pointer-events-auto': !isEnd && variants?.length > 5,
         }"
       >
-        <IconArrow class="icon-chevron text-xl" />
+        <IconArrow class="icon-chevron text-lg" />
       </button>
-      <span
-        class="thumb-gradient left-0 pointer-events-none"
-        :class="{
-          'pointer-events-none opacity-0': isBeginning || variants?.length < 8,
-        }"
-      />
-      <span
-        class="thumb-gradient reverse right-0 pointer-events-none"
-        :class="{
-          'pointer-events-none opacity-0': isEnd || variants?.length < 8,
-        }"
-      />
     </Swiper>
   </div>
 </template>
@@ -134,33 +120,18 @@ onMounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
 .swiper-wrapper {
   min-width: 0 !important;
 }
 
-.swiper-slide-thumb-active p {
-  opacity: 100%;
-}
-
-.thumb-gradient {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 86px;
-  height: 100%;
-  background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
-  z-index: 2;
-  transition: all 0.3s;
-}
-.thumb-gradient.reverse {
-  transform: rotateY(180deg);
-}
-
 .btn-arrow {
-  border-radius: 100px;
   border: 1px solid #f2f2f2;
   background: #fff;
-  box-shadow: 0px 4px 28px 0px rgba(28, 28, 28, 0.16);
+  box-shadow: 0px 4px 16px 0px rgba(28, 28, 28, 0.12);
+}
+
+.btn-arrow:hover {
+  border-color: #ff831b;
 }
 </style>

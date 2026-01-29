@@ -1,7 +1,7 @@
 export const useMainStore = defineStore('mainStore', {
   state: () => ({
     products: {
-      list: [],
+      list: [] as any[],
       loading: true,
       params: {
         page: 1,
@@ -12,16 +12,16 @@ export const useMainStore = defineStore('mainStore', {
     },
 
     discounts: {
-      list: [],
+      list: [] as any[],
       loading: true,
     },
     searchAddressList: {
-      list: [],
+      list: [] as any[],
       loading: true,
     },
 
     brands: {
-      list: [],
+      list: [] as any[],
       loading: true,
       params: {
         page: 1,
@@ -31,16 +31,21 @@ export const useMainStore = defineStore('mainStore', {
       },
     },
     popularBrands: {
-      list: [],
+      list: [] as any[],
       loading: true,
     },
 
     banners: {
-      list: [],
-      loading: true,
+      list: [] as any[],
+      loading: false,
+    },
+    // Ближайшие магазины
+    nearbyStores: {
+      list: [] as any[],
+      loading: false,
     },
     addressMap: {
-      list: [],
+      list: [] as any[],
       loading: true,
     },
   }),
@@ -81,13 +86,15 @@ export const useMainStore = defineStore('mainStore', {
 
     fetchDiscounts() {
       return new Promise((resolve, reject) => {
+        this.discounts.loading = true
         useApi()
           .$get('/discount/products')
           .then((res: any) => {
-            this.discounts.list = res?.items
+            this.discounts.list = res?.items || []
             resolve(res)
           })
           .catch((error) => {
+            this.discounts.list = []
             reject(error)
           })
           .finally(() => {
@@ -149,17 +156,52 @@ export const useMainStore = defineStore('mainStore', {
     },
     fetchBanners() {
       return new Promise((resolve, reject) => {
-        useApi()
-          .$get('/banners')
+        this.banners.loading = true
+        useChakanaApi()
+          .$get('/common/banner/')
           .then((res: any) => {
-            this.banners.list = res
-            resolve(res)
+            // API возвращает: [{ id, title, media, link, created_at }]
+            const banners = Array.isArray(res) ? res.map((banner: any) => ({
+              id: banner.id,
+              title: banner.title,
+              image: banner.media || banner.image_url || banner.image,
+              redirect_url: banner.link || '#',
+            })) : []
+            this.banners.list = banners
+            console.log('[Banners] Loaded:', banners.length, 'banners')
+            resolve(banners)
           })
-          .catch((error) => {
+          .catch((error: any) => {
+            console.error('[Banners] Error fetching:', error)
+            this.banners.list = []
             reject(error)
           })
           .finally(() => {
             this.banners.loading = false
+          })
+      })
+    },
+
+    // Получить ближайшие магазины
+    fetchNearbyStores(categoryId?: number) {
+      return new Promise((resolve, reject) => {
+        this.nearbyStores.loading = true
+        const params = categoryId ? `?category_id=${categoryId}` : ''
+        useChakanaApi()
+          .$get(`/stores/nearby/${params}`)
+          .then((res: any) => {
+            // API возвращает массив магазинов
+            this.nearbyStores.list = Array.isArray(res) ? res : []
+            console.log('[Stores] Loaded:', this.nearbyStores.list.length, 'stores')
+            resolve(this.nearbyStores.list)
+          })
+          .catch((error: any) => {
+            console.error('[Stores] Error fetching:', error)
+            this.nearbyStores.list = []
+            reject(error)
+          })
+          .finally(() => {
+            this.nearbyStores.loading = false
           })
       })
     },

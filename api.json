@@ -1,0 +1,2399 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Chakana Api",
+        "description": "UIC Group",
+        "termsOfService": "https://www.google.com/policies/terms/",
+        "contact": {
+            "email": "info@uic.group"
+        },
+        "license": {
+            "name": "BSD License"
+        },
+        "version": "v1"
+    },
+    "host": "chakana-api.uicgroup.tech",
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "basePath": "/api/v1",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "Basic": {
+            "type": "basic"
+        }
+    },
+    "security": [
+        {
+            "Basic": []
+        }
+    ],
+    "paths": {
+        "/auth/login/": {
+            "post": {
+                "operationId": "auth_login_create",
+                "summary": "User Login with Username/Password",
+                "description": "\nAuthenticate user with username and password to get JWT tokens.\n\n**Legacy Authentication Method**: This endpoint is kept for backward compatibility.\nNew users should use phone-based authentication.\n\n**Response**: Returns access token, refresh token, and user profile data.\n",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "username",
+                                "password"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "description": "Username for authentication",
+                                    "type": "string",
+                                    "example": "john_doe"
+                                },
+                                "password": {
+                                    "description": "User password",
+                                    "type": "string",
+                                    "example": "securepassword123"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "examples": {
+                            "application/json": {
+                                "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                "user": {
+                                    "id": 1,
+                                    "username": "john_doe",
+                                    "full_name": "John Doe",
+                                    "email": "john@example.com",
+                                    "phone_number": "998901234567"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "examples": {
+                            "application/json": {
+                                "detail": "No active account found with the given credentials"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Login"
+                ]
+            },
+            "parameters": []
+        },
+        "/auth/phone/send-sms/": {
+            "post": {
+                "operationId": "auth_phone_send-sms_create",
+                "summary": "Send SMS Code for Phone Login",
+                "description": "Send a 6-digit SMS verification code to the provided phone number for login.",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PhoneLoginSms"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/PhoneLoginSms"
+                        }
+                    }
+                },
+                "tags": [
+                    "Login"
+                ]
+            },
+            "parameters": []
+        },
+        "/auth/phone/verify/": {
+            "post": {
+                "operationId": "auth_phone_verify_create",
+                "summary": "Verify SMS Code and Login",
+                "description": "\nVerify the SMS code and login with phone number.\n\n**Development Note**: Use '081020' as the SMS code for testing.\n\n**Rate Limiting**: Maximum 5 verification attempts per session with 5-minute lockout.\n\n**Response**: \n- If user exists: Returns JWT tokens and user data\n- If user doesn't exist: Returns registration_required flag\n",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PhoneLoginVerify"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "examples": {
+                            "application/json": {
+                                "success": true,
+                                "message": "Login successful",
+                                "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                "user": {
+                                    "id": 1,
+                                    "username": "user_123",
+                                    "full_name": "John Doe",
+                                    "email": "john@example.com",
+                                    "phone_number": "998901234567",
+                                    "instagram_link": "https://instagram.com/johndoe",
+                                    "telegram_link": "https://t.me/johndoe",
+                                    "date_joined": "2024-01-01T00:00:00Z",
+                                    "last_login": "2024-01-01T00:00:00Z"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "User needs to register",
+                        "examples": {
+                            "application/json": {
+                                "success": true,
+                                "message": "Phone number verified. Please complete registration.",
+                                "registration_required": true,
+                                "session_id": "12345678-1234-1234-1234-123456789012",
+                                "phone_number": "998901234567"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid code or session",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Invalid verification code"
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many attempts",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Too many attempts! Try again in 5 minutes"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Login"
+                ]
+            },
+            "parameters": []
+        },
+        "/auth/refresh/": {
+            "post": {
+                "operationId": "auth_refresh_create",
+                "summary": "Refresh JWT Access Token",
+                "description": "\nRefresh an expired access token using a valid refresh token.\n\n**Usage**: When your access token expires (typically after 1 hour), use this endpoint\nto get a new access token without requiring the user to login again.\n\n**Token Expiry**: \n- Access tokens expire after 1 hour\n- Refresh tokens expire after 7 days\n",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "refresh"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "refresh": {
+                                    "description": "Valid refresh token",
+                                    "type": "string",
+                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "examples": {
+                            "application/json": {
+                                "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid or expired refresh token",
+                        "examples": {
+                            "application/json": {
+                                "detail": "Token is invalid or expired"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "JWT"
+                ]
+            },
+            "parameters": []
+        },
+        "/auth/register/": {
+            "post": {
+                "operationId": "auth_register_create",
+                "summary": "User Registration",
+                "description": "\nRegister a new user with verified phone number.\n\n**Prerequisites**: \n- Phone number must be verified using SMS verification\n- Valid session ID from SMS verification must be provided\n\n**No Password Required**: Users authenticate via phone/SMS, not passwords.\nA random password is generated automatically for system compatibility.\n\n**Profile Information**: Users can provide optional profile information\nincluding social media links and avatar image.\n",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserRegistration"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "examples": {
+                            "application/json": {
+                                "success": true,
+                                "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid data or verification required",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Phone not verified or verification expired"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Registration"
+                ]
+            },
+            "parameters": []
+        },
+        "/auth/send/sms/": {
+            "post": {
+                "operationId": "auth_send_sms_create",
+                "summary": "Send SMS Code for Registration (Legacy)",
+                "description": "\nSend a 6-digit SMS verification code to the provided phone number for user registration.\n\n**Legacy Endpoint**: This endpoint is kept for backward compatibility.\nFor login, use the new phone-based authentication endpoints.\n\n**Rate Limiting**: Maximum 3 SMS requests per phone number per minute.\n\n**Phone Number Format**: Accepts various formats:\n- +998901234567\n- 998901234567\n- +998 90 123 45 67\n- 998 90 123 45 67\n",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SendLoginSms"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SMS code sent successfully"
+                    },
+                    "400": {
+                        "description": "Invalid phone number"
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded"
+                    }
+                },
+                "tags": [
+                    "Registration"
+                ]
+            },
+            "parameters": []
+        },
+        "/auth/verify/sms/": {
+            "post": {
+                "operationId": "auth_verify_sms_create",
+                "summary": "Verify SMS Code for Registration (Legacy)",
+                "description": "\nVerify the SMS code sent to the phone number for user registration.\n\n**Legacy Endpoint**: This endpoint is kept for backward compatibility.\nFor login, use the new phone-based authentication endpoints.\n\n**Session Management**: The session ID from the SMS send response must be provided.\nThe verification code expires after 5 minutes.\n\n**Rate Limiting**: Maximum 5 verification attempts per session.\n",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/VerifySms"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SMS code verified successfully",
+                        "examples": {
+                            "application/json": {
+                                "success": true,
+                                "message": "SMS code verified successfully",
+                                "session_id": "12345678-1234-1234-1234-123456789012",
+                                "phone_number": "998901234567"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid code or session",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Invalid verification code"
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many attempts",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Too many attempts! Try again in 5 minutes"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Registration"
+                ]
+            },
+            "parameters": []
+        },
+        "/brands/": {
+            "get": {
+                "operationId": "brands_list",
+                "description": "List all product brands",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ProductBrand"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "brands"
+                ]
+            },
+            "parameters": []
+        },
+        "/categories/": {
+            "get": {
+                "operationId": "categories_list",
+                "summary": "📂 Product Categories List",
+                "description": "\nGet a list of product categories with advanced filtering and caching.\n\n## 🎯 Key Features\n- **Branch-specific filtering** - Filter categories by products available in specific branch\n- **Performance optimized** - Uses caching and optimized queries\n- **Hierarchical support** - Include nested children with configurable depth\n- **Search functionality** - Search in category titles and slugs\n- **Flexible ordering** - Order by various fields\n\n## 🔍 Filtering Options\n\n### 📍 **Branch Filtering**\n- `branch_id` - Filter categories that have products available in this branch\n- Only returns categories with active products in the specified branch\n- Optimized with subqueries for better performance\n\n### 🏗️ **Hierarchical Filtering**\n- `parent` - Filter by parent category (null for root categories)\n- `include_children` - Include nested children (true/false)\n- `max_depth` - Maximum depth for nested children (default: 3)\n\n### 🔍 **Search & Ordering**\n- `search` - Search in title and slug fields\n- `ordering` - Order by field (order, -order, id, -id, title, -title, etc.)\n\n## ⚡ Performance Features\n- **Intelligent caching** - Results cached for 5 minutes based on query parameters\n- **Optimized queries** - Uses select_related and prefetch_related\n- **Subquery optimization** - Efficient branch filtering with minimal database hits\n- **Smart counting** - Product counts reflect branch availability when filtered\n\n## 📊 Response Structure\nEach category includes:\n- Basic info (id, title, slug, icon, order)\n- Hierarchical data (parent, children_count)\n- Product counts (products_count - reflects branch filtering)\n- Nested children (if include_children=true)\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search in title and slug fields",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "description": "Filter categories by products available in this branch",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "parent",
+                        "in": "query",
+                        "description": "Filter by parent category ID (null for root categories)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "ordering",
+                        "in": "query",
+                        "description": "Order by field (order, -order, id, -id, title, -title, created_at, -created_at, children_count, -children_count, products_count, -products_count)",
+                        "required": false,
+                        "type": "string",
+                        "default": "order,-id"
+                    },
+                    {
+                        "name": "include_children",
+                        "in": "query",
+                        "description": "Include nested children (true/false)",
+                        "required": false,
+                        "type": "boolean",
+                        "default": false
+                    },
+                    {
+                        "name": "max_depth",
+                        "in": "query",
+                        "description": "Maximum depth for nested children",
+                        "required": false,
+                        "type": "integer",
+                        "default": 3
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProductCategoryList"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    }
+                },
+                "tags": [
+                    "Product Categories"
+                ]
+            },
+            "parameters": []
+        },
+        "/categories/tree/": {
+            "get": {
+                "operationId": "categories_tree_list",
+                "summary": "Get the complete category tree with all nested children.",
+                "description": "Query Parameters:\n- root_only: Return only root categories (true/false)\n- max_depth: Maximum depth for nested children (default: 5)",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "categories"
+                ]
+            },
+            "parameters": []
+        },
+        "/categories/{id}/": {
+            "get": {
+                "operationId": "categories_read",
+                "summary": "Retrieve a specific product category with its children.",
+                "description": "Query Parameters:\n- include_children: Include nested children (true/false)\n- max_depth: Maximum depth for nested children (default: 3)",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/ProductCategoryDetail"
+                        }
+                    }
+                },
+                "tags": [
+                    "categories"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this Product Category.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/categories/{id}/children/": {
+            "get": {
+                "operationId": "categories_children_list",
+                "summary": "Get all children of a specific category.",
+                "description": "Query Parameters:\n- recursive: Include all nested children recursively (true/false)\n- max_depth: Maximum depth for nested children (default: 3)",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "categories"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/chakana-id-token/": {
+            "post": {
+                "operationId": "chakana-id-token_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ChakanaLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/ChakanaLogin"
+                        }
+                    }
+                },
+                "tags": [
+                    "chakana-id-token"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/FrontendTranslations/": {
+            "get": {
+                "operationId": "common_FrontendTranslations_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "key",
+                        "in": "query",
+                        "description": "Key",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/FrontendTranslation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/VersionHistory/": {
+            "get": {
+                "operationId": "common_VersionHistory_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/address/": {
+            "get": {
+                "operationId": "common_address_list",
+                "summary": "Reverse Geocoding - Get Address from Coordinates",
+                "description": "\nGet address information from latitude and longitude coordinates.\n\n**Service**: Uses Nominatim geocoding service to convert coordinates to human-readable addresses.\n\n**Response**: Returns structured address information including:\n- Short address (concise format)\n- Long address (full detailed format)\n- ZIP/Postal code\n- Street name\n\n**Use Case**: Convert GPS coordinates to addresses for delivery locations.\n",
+                "parameters": [
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "description": "Latitude coordinate (-90 to 90)",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "description": "Longitude coordinate (-180 to 180)",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address information retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/ReverseGeocodeResponse"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "short_address": "12A, Amir Temur Street, Tashkent",
+                                "long_address": "12A, Amir Temur Street, Yunusabad District, Tashkent, Uzbekistan",
+                                "zip_code": "100000",
+                                "street": "Amir Temur Street"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid coordinates provided",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Invalid coordinates provided",
+                                "errors": {
+                                    "latitude": [
+                                        "Ensure this value is between -90 and 90."
+                                    ],
+                                    "longitude": [
+                                        "Ensure this value is between -180 and 180."
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Geocoding service error",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Unable to retrieve address information"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Location"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/address/suggestions/": {
+            "get": {
+                "operationId": "common_address_suggestions_list",
+                "summary": "Address Suggestions - Search Locations",
+                "description": "\nSearch for address suggestions based on a query string.\n\n**Service**: Uses Nominatim geocoding service to find matching addresses.\n\n**Features**:\n- Returns up to 5 relevant suggestions\n- Limited to Uzbekistan locations\n- Includes coordinates and formatted addresses\n\n**Response**: Returns a list of address suggestions with:\n- Latitude and longitude coordinates\n- Formatted address string\n\n**Use Case**: Auto-complete functionality for address input fields.\n",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Search query for location (minimum 2 characters)",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address suggestions retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/AddressSuggestionsResponse"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "success": true,
+                                "message": "Address suggestions retrieved successfully",
+                                "data": {
+                                    "suggestions": [
+                                        {
+                                            "latitude": 41.3111,
+                                            "longitude": 69.2797,
+                                            "address": "Amir Temur Street, Tashkent, Uzbekistan"
+                                        },
+                                        {
+                                            "latitude": 41.315,
+                                            "longitude": 69.28,
+                                            "address": "Amir Temur Square, Tashkent, Uzbekistan"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query provided",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Invalid query provided",
+                                "errors": {
+                                    "query": [
+                                        "Ensure this field has at least 2 characters."
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Geocoding service error",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "message": "Unable to retrieve address suggestions"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Location"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/banner/": {
+            "get": {
+                "operationId": "common_banner_list",
+                "summary": "Get Active Banners",
+                "description": "\nRetrieve a list of active banners for the application.\n\n**Features:**\n- Only active banners are returned\n- Ordered by the order field\n- No authentication required\n- No pagination (returns all active banners)\n\n**Use Case:**\nDisplay banners in the mobile app or website.\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Banners retrieved successfully",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "id": 1,
+                                    "title": "Summer Sale",
+                                    "image_url": "https://example.com/banners/summer_sale.jpg",
+                                    "link": "https://example.com/sale",
+                                    "order": 1,
+                                    "is_active": true
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "New Arrivals",
+                                    "image_url": "https://example.com/banners/new_arrivals.jpg",
+                                    "link": "https://example.com/new",
+                                    "order": 2,
+                                    "is_active": true
+                                }
+                            ]
+                        }
+                    }
+                },
+                "tags": [
+                    "Common FAQ"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/card/identify/": {
+            "get": {
+                "operationId": "common_card_identify_list",
+                "summary": "Identify Card Source and Vendor",
+                "description": "\nIdentify the processing source and vendor of a card based on its number.\n\n**Purpose**: Determine card type and processing network for payment processing.\n\n**Features**:\n- Uses first 4-6 digits (BIN) for identification\n- Supports multiple card types (HUMO, UZCARD, VISA, MASTERCARD, etc.)\n- Fast lookup with optimized data structures\n- No authentication required (public endpoint)\n\n**Supported Card Types**:\n- HUMO (HUMO, VISA, MASTERCARD)\n- UZCARD (UZCARD, UNIONPAY, MIR, MASTERCARD)\n\n**Use Case**: Payment form validation and card type detection.\n\n**Note**: This endpoint only supports GET requests. Use the card_number query parameter.\n",
+                "parameters": [
+                    {
+                        "name": "card_number",
+                        "in": "query",
+                        "description": "Card number (at least 4 digits)",
+                        "required": true,
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 4
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Card identified successfully",
+                        "schema": {
+                            "$ref": "#/definitions/CardIdentificationResponse"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "source": "HUMO",
+                                "vendor": "VISA"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid card number or card not recognized",
+                        "examples": {
+                            "application/json": {
+                                "error": "Card number must have at least 4 digits"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Card type not found",
+                        "examples": {
+                            "application/json": {
+                                "error": "Card type not recognized"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Card Identification"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/faqs/": {
+            "get": {
+                "operationId": "common_faqs_list",
+                "summary": "Get Application FAQs",
+                "description": "\nRetrieve a list of frequently asked questions for the application.\n\n**Features:**\n- Only active FAQs are returned\n- Ordered by the order field\n- No authentication required\n- No pagination (returns all active FAQs)\n\n**Use Case:**\nDisplay FAQ section in the mobile app or website.\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "FAQs retrieved successfully",
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "id": 1,
+                                    "question": "How do I place an order?",
+                                    "answer": "You can place an order by browsing products and adding them to your cart.",
+                                    "order": 1,
+                                    "is_active": true
+                                },
+                                {
+                                    "id": 2,
+                                    "question": "What payment methods do you accept?",
+                                    "answer": "We accept credit cards, debit cards, and mobile payments.",
+                                    "order": 2,
+                                    "is_active": true
+                                }
+                            ]
+                        }
+                    }
+                },
+                "tags": [
+                    "Common FAQ"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/health-check/": {
+            "get": {
+                "operationId": "common_health-check_list",
+                "description": "Comprehensive system health check endpoint",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/health-check/celery/": {
+            "get": {
+                "operationId": "common_health-check_celery_list",
+                "description": "Celery-specific health check",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/health-check/celery/old/": {
+            "get": {
+                "operationId": "common_health-check_celery_old_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/health-check/database/": {
+            "get": {
+                "operationId": "common_health-check_database_list",
+                "description": "Database-specific health check",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/health-check/redis/": {
+            "get": {
+                "operationId": "common_health-check_redis_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/health-check/simple/": {
+            "get": {
+                "operationId": "common_health-check_simple_list",
+                "description": "Simple health check endpoint for load balancers and basic monitoring",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "common"
+                ]
+            },
+            "parameters": []
+        },
+        "/common/privacy-policy/": {
+            "get": {
+                "operationId": "common_privacy-policy_read",
+                "summary": "Get Privacy Policy",
+                "description": "\nRetrieve the latest active privacy policy for the application.\n\n**Features:**\n- Returns only the most recent active privacy policy\n- No authentication required\n- Includes application policy, delivery policy, and contact information\n\n**Use Case:**\nDisplay privacy policy and terms of service in the app.\n",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Privacy policy retrieved successfully",
+                        "examples": {
+                            "application/json": {
+                                "id": 1,
+                                "application_policy": "This is our application privacy policy...",
+                                "delivery_policy": "This is our delivery policy...",
+                                "delivery_courier_phone": "+998901234567",
+                                "delivery_support_email": "support@example.com",
+                                "delivery_support_telegram": "@support_bot",
+                                "is_active": true,
+                                "created_at": "2024-12-23T10:30:00Z",
+                                "updated_at": "2024-12-23T10:30:00Z"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No active privacy policy found"
+                    }
+                },
+                "tags": [
+                    "Common FAQ"
+                ]
+            },
+            "parameters": []
+        },
+        "/location-icons/": {
+            "get": {
+                "operationId": "location-icons_list",
+                "summary": "Get Location Icons List",
+                "description": "\nRetrieve a list of all available location icons.\n\n**Purpose**: Provides icons that users can select when creating or updating their delivery locations.\n\n**Features**:\n- Returns all available location icons (no pagination)\n- Includes icon URLs for easy access\n- No authentication required (public endpoint)\n- Ordered by creation date (newest first)\n\n**Use Case**: Populate icon selection dropdown in location creation/update forms.\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Location icons retrieved successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LocationIcon"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "id": 1,
+                                    "title": "Home",
+                                    "icon": "/media/icons/home_icon.png",
+                                    "icon_url": "http://localhost:8000/media/icons/home_icon.png",
+                                    "created_at": "2024-01-15T10:30:00Z",
+                                    "updated_at": "2024-01-15T10:30:00Z"
+                                },
+                                {
+                                    "id": 2,
+                                    "title": "Office",
+                                    "icon": "/media/icons/office_icon.png",
+                                    "icon_url": "http://localhost:8000/media/icons/office_icon.png",
+                                    "created_at": "2024-01-15T10:25:00Z",
+                                    "updated_at": "2024-01-15T10:25:00Z"
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "examples": {
+                            "application/json": {
+                                "detail": "A server error occurred."
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Profile"
+                ]
+            },
+            "parameters": []
+        },
+        "/options/": {
+            "get": {
+                "operationId": "options_list",
+                "description": "List all product options",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Option"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "options"
+                ]
+            },
+            "parameters": []
+        },
+        "/product-webhook/delete/": {
+            "post": {
+                "operationId": "product-webhook_delete_create",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "product-webhook"
+                ]
+            },
+            "parameters": []
+        },
+        "/products/list/": {
+            "get": {
+                "operationId": "products_list_list",
+                "summary": "📦 Product List API - Location-Based Marketplace",
+                "description": "\n# 🏪 Product List API - Complete Guide\n\nGet a list of products available in nearby stores within the configured radius (10km).\n\n## 🎯 Key Features\n- **📍 Location-based filtering** - Shows products from stores within 10km radius\n- **🔄 Automatic location activation** - Activates inactive location if provided\n- **💰 Real-time pricing** - Live pricing and inventory from nearby stores\n- **📏 Distance calculations** - Store distance and delivery info\n- **🔍 Comprehensive filtering** - Multiple filter options available\n- **📦 Quantity filtering** - Shows only products with more than 1 quantity available\n- **🎯 Main offer selection** - Smart offer selection based on branch_id, store_id, or cheapest price\n\n## 📍 Location Handling\n- If `user_location_id` provided and location is **inactive** → **automatically activated**\n- Other user locations will be **deactivated** to maintain single active location\n- If no `user_location_id` provided → uses user's **currently active location**\n\n## 🎯 Main Offer Selection\nThe API now includes a `main_offer` field in each product response that shows the most relevant offer:\n\n### **Priority Order:**\n1. **`branch_id`** - If provided, shows offer from that specific branch\n2. **`store_id`** - If provided, shows offer from that specific store/seller  \n3. **Cheapest offer** - If no specific selection, shows cheapest available offer (with quantity > 0)\n\n### **Main Offer Response:**\n```json\n{\n  \"main_offer\": {\n    \"branch_id\": 123,        // Branch ID (null if store-level or cheapest)\n    \"price\": \"25.50\",        // Final price (sale_price or regular price)\n    \"quantity\": 15           // Available quantity in that branch/store\n  }\n}\n```\n\n### **Use Cases:**\n- **Branch-specific**: `?branch_id=123` → Shows offer from branch 123\n- **Store-specific**: `?store_id=456` → Shows offer from store 456  \n- **Best price**: No params → Shows cheapest available offer\n\n## 🛠️ Available Filters & Usage\n\n### 📍 **Location Parameters**\n- `user_location_id` - Your location ID (activates if inactive)\n\n### 🏪 **Store & Product Filters**\n- `store_id` - Filter by specific store/seller ID\n- `has_discount` - Show only discounted products (true/false)\n- `brand_id` - Filter by brand ID\n- `category_id` - Filter by category (includes child categories)\n- `from_price` - Minimum price filter\n- `to_price` - Maximum price filter\n- `saved_only` - Show only saved/favorite products (true/false)\n\n### 🔍 **Search & Ordering**\n- `search` - Search in product title, description, and SKU\n- `ordering` - Sort results (see ordering options below)\n\n## 📋 Ordering Options\n\n### 📦 **Product Information**\n- `product__title` - Product title (A-Z)\n- `-product__title` - Product title (Z-A)\n\n### 💰 **Pricing**\n- `base_price` - Price (low to high)\n- `-base_price` - Price (high to low)\n\n### 📊 **Availability (NEW!)**\n- `total_quantity` - Total available quantity (low to high)\n- `-total_quantity` - Total available quantity (high to low) 🔥\n\n### 📅 **Date**\n- `created_at` - Oldest first\n- `-created_at` - Newest first (default)\n\n## 💡 Usage Examples\n\n### Basic Usage\n```\nGET /api/v1/products/list/?user_location_id=123\n```\n\n### Filter by Discount\n```\nGET /api/v1/products/list/?user_location_id=123&has_discount=true\n```\n\n### Filter by Brand + Price Range\n```\nGET /api/v1/products/list/?user_location_id=123&brand_id=456&from_price=100&to_price=500\n```\n\n### Order by Quantity (Most Available First)\n```\nGET /api/v1/products/list/?user_location_id=123&ordering=-total_quantity\n```\n\n### Combined Filters + Search\n```\nGET /api/v1/products/list/?user_location_id=123&category_id=101&has_discount=true&search=iPhone&ordering=-total_quantity\n```\n\n### Show Saved Products Only\n```\nGET /api/v1/products/list/?user_location_id=123&saved_only=true\n```\n\n### Show Products from Specific Branch (with main_offer)\n```\nGET /api/v1/products/list/?user_location_id=123&branch_id=456\n```\n\n### Show Products from Specific Store (with main_offer)\n```\nGET /api/v1/products/list/?user_location_id=123&store_id=789\n```\n\n### Show Cheapest Available Products (main_offer = cheapest)\n```\nGET /api/v1/products/list/?user_location_id=123&ordering=-total_quantity\n```\n\n## 📊 Response Structure\nReturns paginated results with:\n- **Product details** (title, description, images)\n- **Pricing info** (base price, discounts, final price)\n- **Store information** (distance, delivery fee, operating hours)\n- **Availability** (stock quantity, status)\n- **Main offer** (branch_id, price, quantity) - Smart offer selection\n- **Metadata** (user location, applied filters, store radius)\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "🔍 **Search Query** - Search across product title, description, and SKU. Example: `iPhone` finds all iPhone products",
+                        "required": false,
+                        "type": "string",
+                        "example": "iPhone"
+                    },
+                    {
+                        "name": "ordering",
+                        "in": "query",
+                        "description": "📋 **Sort Results** - Order products by specified field. Use `-` prefix for descending order.\n\n**📦 Product Information:**\n- `product__title` - Sort by title A-Z\n- `-product__title` - Sort by title Z-A\n\n**💰 Pricing:**\n- `base_price` - Sort by price (low to high)\n- `-base_price` - Sort by price (high to low)\n\n**📊 Availability (NEW!):**\n- `total_quantity` - Sort by quantity (low to high)\n- `-total_quantity` - Sort by quantity (high to low) 🔥\n\n**📅 Date:**\n- `created_at` - Sort by oldest first\n- `-created_at` - Sort by newest first (default)\n\n**💡 Popular Examples:**\n- `-total_quantity` - Most available products first\n- `-base_price` - Most expensive first\n- `product__title` - Alphabetical order\n",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "product__title",
+                            "-product__title",
+                            "base_price",
+                            "-base_price",
+                            "total_quantity",
+                            "-total_quantity",
+                            "created_at",
+                            "-created_at"
+                        ],
+                        "example": "-total_quantity"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user_location_id",
+                        "in": "query",
+                        "description": "📍 **User Location ID** - Your saved location ID. If this location is inactive, it will be automatically activated and other locations will be deactivated. Example: `123`",
+                        "required": false,
+                        "type": "integer",
+                        "example": 123
+                    },
+                    {
+                        "name": "is_top",
+                        "in": "query",
+                        "description": "⭐ **Top Products Filter** - Show only products marked as top in the store/branch. Use with `store_id` or `branch_id` to filter for specific store/branch. Example: `true`",
+                        "required": false,
+                        "type": "boolean",
+                        "example": true
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "🏪 **Store Filter** - Filter products by specific store/seller ID. Only shows products available from this store. Also sets the main_offer to show offer from this store. Example: `456`",
+                        "required": false,
+                        "type": "integer",
+                        "example": 456
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "description": "🏪 **Branch Filter** - Filter products by specific branch ID. Also sets the main_offer to show offer from this branch. Example: `123`",
+                        "required": false,
+                        "type": "integer",
+                        "example": 123
+                    },
+                    {
+                        "name": "has_discount",
+                        "in": "query",
+                        "description": "💸 **Discount Filter** - Show only products with active discounts. Set to `true` to see discounted items only, `false` for non-discounted, or omit for all products.",
+                        "required": false,
+                        "type": "boolean",
+                        "example": true
+                    },
+                    {
+                        "name": "brand_id",
+                        "in": "query",
+                        "description": "🏷️ **Brand Filter** - Filter products by brand ID. Shows all products from the specified brand. Example: `789` for Apple products",
+                        "required": false,
+                        "type": "integer",
+                        "example": 789
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "📂 **Category Filter** - Filter by category ID. **Includes all child categories automatically**. Example: `101` for Electronics (includes Smartphones, Laptops, etc.)",
+                        "required": false,
+                        "type": "integer",
+                        "example": 101
+                    },
+                    {
+                        "name": "from_price",
+                        "in": "query",
+                        "description": "💰 **Minimum Price** - Filter products with price >= this value. Use with `to_price` for price range. Example: `50.00`",
+                        "required": false,
+                        "type": "number",
+                        "example": 50.0
+                    },
+                    {
+                        "name": "to_price",
+                        "in": "query",
+                        "description": "💰 **Maximum Price** - Filter products with price <= this value. Use with `from_price` for price range. Example: `500.00`",
+                        "required": false,
+                        "type": "number",
+                        "example": 500.0
+                    },
+                    {
+                        "name": "saved_only",
+                        "in": "query",
+                        "description": "💾 **Saved Products Only** - Show only products that the user has saved to their favorites. Set to `true` to see saved products only. Example: `true`",
+                        "required": false,
+                        "type": "boolean",
+                        "example": true
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "📄 **Page Number** - Pagination page number (starts from 1). Combine with `page_size` if supported. Example: `2` for second page",
+                        "required": false,
+                        "type": "integer",
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "✅ **Success Response** - Product list retrieved successfully with all requested filters applied",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SkuProductList"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "❌ **Bad Request** - Invalid parameters provided"
+                    },
+                    "401": {
+                        "description": "🔒 **Authentication Required** - Valid JWT token required in Authorization header"
+                    },
+                    "404": {
+                        "description": "📍 **Location Not Found** - User location not found or access denied"
+                    }
+                },
+                "tags": [
+                    "Products"
+                ]
+            },
+            "parameters": []
+        },
+        "/products/webhook/": {
+            "post": {
+                "operationId": "products_webhook_create",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "products"
+                ]
+            },
+            "parameters": []
+        },
+        "/search/product/by-note/": {
+            "post": {
+                "operationId": "search_product_by-note_create",
+                "summary": "Search products by multiple note queries.",
+                "description": "This endpoint allows searching for products using multiple search terms.\nIt searches in product titles and SKUs, returning results for each query.\n\nRequest Body:\n{\n    \"queries\": [\"coca cola\", \"pepsi\", \"sprite\"]\n}",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "search"
+                ]
+            },
+            "parameters": []
+        },
+        "/stores/categories/": {
+            "get": {
+                "operationId": "stores_categories_list",
+                "summary": "📂 Seller Categories List",
+                "description": "\n# 📂 Seller Categories List API\n\nGet a list of all available seller categories with their icons and seller counts.\n\n## 🎯 Features\n- **📂 Category listing** - All available seller categories\n- **🖼️ Category icons** - Icons for each category\n- **📊 Seller counts** - Number of sellers in each category\n- **🔍 No pagination** - Complete list in single response\n- **🌐 Public access** - No authentication required\n\n## 📊 Response Fields\n- **id** - Category unique identifier\n- **title** - Category name/title\n- **icon** - Category icon file path\n- **icon_url** - Full URL to category icon\n- **sellers_count** - Number of sellers in this category\n- **created_at** - Category creation timestamp\n- **updated_at** - Category last update timestamp\n\n## 💡 Usage Examples\n\n### Basic Usage\n```\nGET /api/v1/stores/categories/\n```\n\n### Response Example\n```json\n[\n  {\n    \"id\": 1,\n    \"title\": \"Supermarkets\",\n    \"icon\": \"/media/images/supermarket_icon.png\",\n    \"icon_url\": \"https://example.com/media/images/supermarket_icon.png\",\n    \"sellers_count\": 15,\n    \"created_at\": \"2024-01-15T10:30:00Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Restaurants\",\n    \"icon\": \"/media/images/restaurant_icon.png\",\n    \"icon_url\": \"https://example.com/media/images/restaurant_icon.png\",\n    \"sellers_count\": 8,\n    \"created_at\": \"2024-01-15T10:30:00Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\"\n  }\n]\n```\n\n## 🔗 Related APIs\n- **Nearby Stores**: Use category IDs to filter nearby stores\n- **Store Details**: Get detailed information about stores in categories\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SellerCategory"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Stores"
+                ]
+            },
+            "parameters": []
+        },
+        "/stores/nearby/": {
+            "get": {
+                "operationId": "stores_nearby_list",
+                "summary": "🏪 Nearby Stores API",
+                "description": "\n# 🏪 Nearby Stores API\n\nGet stores with location-based filtering for authenticated users or all stores for unauthenticated users.\n\n## 🎯 Features\n- **🔐 Authentication-based behavior** - Different behavior for authenticated vs unauthenticated users\n- **📍 Location-based filtering** - Shows stores within configured radius (authenticated users only)\n- **📂 Category filtering** - Filter stores by seller category\n- **🔄 One store per seller** - Shows only one store for each seller\n- **📏 Distance calculation** - Real-time distance from your location (authenticated users only)\n- **🕐 Operating hours** - Current store availability\n- **🚚 Delivery info** - Delivery fees and estimated times\n- **🖼️ Store images** - Branch images with seller logo fallback\n- **📊 Category information** - Seller category details for each store\n\n## 🔐 Authentication Behavior\n\n### 🔑 Authenticated Users (with active location)\n- **Location-based filtering** - Shows stores within configured radius\n- **Distance calculation** - Real-time distance from user's active location\n- **Sorted by distance** - Nearest stores first\n- **One nearest store per seller** - Shows closest branch for each seller\n\n### 🌐 Unauthenticated Users\n- **All stores returned** - No location or radius restrictions\n- **No distance calculation** - Distance fields return `null`\n- **One store per seller** - Shows first available branch for each seller\n- **Category filtering still works** - Can filter by category_id\n\n## 📍 Location Requirements (Authenticated Users Only)\n- User must have an **active location** set\n- Location must have valid **latitude and longitude**\n- Uses **currently active location** automatically\n\n## 🔍 Query Parameters\n- **category_id** (optional) - Filter stores by seller category ID\n  - Use category IDs from `/api/v1/stores/categories/` endpoint\n  - Example: `?category_id=1` to show only supermarkets\n  - Works for both authenticated and unauthenticated users\n\n## 📊 Response Fields\n- **id** - Store branch unique identifier\n- **seller_name** - Store/seller name\n- **seller_category** - Seller category title (e.g., \"Supermarkets\")\n- **seller_category_id** - Seller category ID for filtering\n- **store_name** - Branch/store name\n- **address** - Store address\n- **store_image** - Store image (branch image first, seller image fallback)\n- **seller_logo** - Seller logo/brand image\n- **distance** - Formatted distance (e.g., \"150 м.\") - `null` for unauthenticated users\n- **distance_meters** - Distance in meters (integer) - `null` for unauthenticated users\n- **delivery_time_formatted** - Delivery time range (e.g., \"20-30 daqiqa\")\n- **operating_hours** - Store hours (e.g., \"08:00 - 22:00\")\n- **is_open_now** - Whether store is currently open\n- **delivery_fee** - Delivery fee amount\n- **is_open** - Store open status\n\n## 💡 Usage Examples\n\n### Unauthenticated User (All Stores)\n```\nGET /api/v1/stores/nearby/\n```\n\n### Unauthenticated User (Filtered by Category)\n```\nGET /api/v1/stores/nearby/?category_id=1\n```\n\n### Authenticated User (Location-based)\n```\nGET /api/v1/stores/nearby/\nAuthorization: Bearer <token>\n```\n\n### Response Example (Authenticated User)\n```json\n[\n  {\n    \"id\": 1,\n    \"seller_name\": \"Makro Supermarket\",\n    \"seller_category\": \"Supermarkets\",\n    \"seller_category_id\": 1,\n    \"store_name\": \"Makro Minor\",\n    \"address\": \"Minor district, Tashkent\",\n    \"store_image\": \"https://example.com/branch/image.jpg\",\n    \"seller_logo\": \"https://example.com/seller/logo.jpg\",\n    \"distance\": \"150 м.\",\n    \"distance_meters\": 150,\n    \"delivery_time_formatted\": \"20-30 daqiqa\",\n    \"operating_hours\": \"08:00 - 22:00\",\n    \"is_open_now\": true,\n    \"delivery_fee\": \"5.00\",\n    \"is_open\": true\n  }\n]\n```\n\n### Response Example (Unauthenticated User)\n```json\n[\n  {\n    \"id\": 1,\n    \"seller_name\": \"Makro Supermarket\",\n    \"seller_category\": \"Supermarkets\",\n    \"seller_category_id\": 1,\n    \"store_name\": \"Makro Minor\",\n    \"address\": \"Minor district, Tashkent\",\n    \"store_image\": \"https://example.com/branch/image.jpg\",\n    \"seller_logo\": \"https://example.com/seller/logo.jpg\",\n    \"distance\": null,\n    \"distance_meters\": null,\n    \"delivery_time_formatted\": \"20-30 daqiqa\",\n    \"operating_hours\": \"08:00 - 22:00\",\n    \"is_open_now\": true,\n    \"delivery_fee\": \"5.00\",\n    \"is_open\": true\n  }\n]\n```\n\n## 🔗 Related APIs\n- **Seller Categories**: `/api/v1/stores/categories/` - Get available categories\n- **User Locations**: Set active location for distance calculation (authenticated users)\n\n## ⚙️ Configuration\n- **Store Radius**: Configured in `STORE_RADIUS_KM` setting (default: 10.0km) - authenticated users only\n- **Distance Format**: Automatically formatted for display - authenticated users only\n- **Image Priority**: Branch image → Seller image → None\n- **Category Filtering**: Invalid category IDs are ignored\n- **Authentication**: No authentication required, but behavior differs based on auth status\n",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filter stores by seller category ID",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success - Returns all stores for unauthenticated users or nearby stores for authenticated users",
+                        "examples": {
+                            "application/json": {
+                                "authenticated_user": [
+                                    {
+                                        "id": 1,
+                                        "seller_name": "Makro Supermarket",
+                                        "seller_category": "Supermarkets",
+                                        "seller_category_id": 1,
+                                        "store_name": "Makro Minor",
+                                        "address": "Minor district, Tashkent",
+                                        "store_image": "https://example.com/branch/image.jpg",
+                                        "seller_logo": "https://example.com/seller/logo.jpg",
+                                        "distance": "150 м.",
+                                        "distance_meters": 150,
+                                        "delivery_time_formatted": "20-30 daqiqa",
+                                        "operating_hours": "08:00 - 22:00",
+                                        "is_open_now": true,
+                                        "delivery_fee": "5.00",
+                                        "is_open": true
+                                    }
+                                ],
+                                "unauthenticated_user": [
+                                    {
+                                        "id": 1,
+                                        "seller_name": "Makro Supermarket",
+                                        "seller_category": "Supermarkets",
+                                        "seller_category_id": 1,
+                                        "store_name": "Makro Minor",
+                                        "address": "Minor district, Tashkent",
+                                        "store_image": "https://example.com/branch/image.jpg",
+                                        "seller_logo": "https://example.com/seller/logo.jpg",
+                                        "distance": null,
+                                        "distance_meters": null,
+                                        "delivery_time_formatted": "20-30 daqiqa",
+                                        "operating_hours": "08:00 - 22:00",
+                                        "is_open_now": true,
+                                        "delivery_fee": "5.00",
+                                        "is_open": true
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Stores"
+                ]
+            },
+            "parameters": []
+        },
+        "/tags/": {
+            "get": {
+                "operationId": "tags_list",
+                "description": "List all product tags",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "A search term.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "x-nullable": true
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ProductTag"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "tags"
+                ]
+            },
+            "parameters": []
+        }
+    },
+    "definitions": {
+        "PhoneLoginSms": {
+            "required": [
+                "phone_number"
+            ],
+            "type": "object",
+            "properties": {
+                "phone_number": {
+                    "title": "Phone number",
+                    "description": "Phone number in international format",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "PhoneLoginVerify": {
+            "required": [
+                "phone_number",
+                "session",
+                "code"
+            ],
+            "type": "object",
+            "properties": {
+                "phone_number": {
+                    "title": "Phone number",
+                    "description": "Phone number in international format",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "session": {
+                    "title": "Session",
+                    "description": "Session ID from SMS send response",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "code": {
+                    "title": "Code",
+                    "description": "6-digit SMS verification code",
+                    "type": "string",
+                    "maxLength": 6,
+                    "minLength": 1
+                }
+            }
+        },
+        "UserRegistration": {
+            "required": [
+                "full_name",
+                "phone_number",
+                "session"
+            ],
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "title": "Full name",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "instagram_link": {
+                    "title": "Instagram link",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "telegram_link": {
+                    "title": "Telegram link",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "phone_number": {
+                    "title": "Phone number",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "session": {
+                    "title": "Session",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "code": {
+                    "title": "Code",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "avatar": {
+                    "title": "Avatar",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                }
+            }
+        },
+        "SendLoginSms": {
+            "required": [
+                "phone_number"
+            ],
+            "type": "object",
+            "properties": {
+                "phone_number": {
+                    "title": "Phone number",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "VerifySms": {
+            "required": [
+                "phone_number",
+                "session",
+                "code"
+            ],
+            "type": "object",
+            "properties": {
+                "phone_number": {
+                    "title": "Phone number",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "session": {
+                    "title": "Session",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "code": {
+                    "title": "Code",
+                    "type": "string",
+                    "maxLength": 6,
+                    "minLength": 1
+                }
+            }
+        },
+        "ProductBrand": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "slug": {
+                    "title": "Slug",
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "icon": {
+                    "title": "Icon",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                }
+            }
+        },
+        "ProductCategoryList": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "slug": {
+                    "title": "Slug",
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "icon": {
+                    "title": "Icon",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "order": {
+                    "title": "Order",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648
+                },
+                "parent": {
+                    "title": "Parent",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "children_count": {
+                    "title": "Children count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "products_count": {
+                    "title": "Products count",
+                    "type": "string",
+                    "readOnly": true
+                }
+            }
+        },
+        "ProductCategoryDetail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "slug": {
+                    "title": "Slug",
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "icon": {
+                    "title": "Icon",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "order": {
+                    "title": "Order",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648
+                },
+                "parent": {
+                    "title": "Parent",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "children_count": {
+                    "title": "Children count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "products_count": {
+                    "title": "Products count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "children": {
+                    "title": "Children",
+                    "type": "string",
+                    "readOnly": true
+                }
+            }
+        },
+        "ChakanaLogin": {
+            "required": [
+                "chakana_token",
+                "chakana_refresh_token"
+            ],
+            "type": "object",
+            "properties": {
+                "chakana_token": {
+                    "title": "Chakana token",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "full_name": {
+                    "title": "Full name",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "instagram_link": {
+                    "title": "Instagram link",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "telegram_link": {
+                    "title": "Telegram link",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "avatar": {
+                    "title": "Avatar",
+                    "type": "string",
+                    "readOnly": true,
+                    "format": "uri"
+                },
+                "chakana_refresh_token": {
+                    "title": "Chakana refresh token",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "FrontendTranslation": {
+            "required": [
+                "key",
+                "text"
+            ],
+            "type": "object",
+            "properties": {
+                "key": {
+                    "title": "Ключ",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "text": {
+                    "title": "Текст",
+                    "type": "string",
+                    "maxLength": 1024,
+                    "minLength": 1
+                }
+            }
+        },
+        "ReverseGeocodeResponse": {
+            "required": [
+                "short_address",
+                "long_address",
+                "zip_code",
+                "street"
+            ],
+            "type": "object",
+            "properties": {
+                "short_address": {
+                    "title": "Short address",
+                    "description": "Short formatted address",
+                    "type": "string"
+                },
+                "long_address": {
+                    "title": "Long address",
+                    "description": "Long formatted address",
+                    "type": "string"
+                },
+                "zip_code": {
+                    "title": "Zip code",
+                    "description": "Postal/ZIP code",
+                    "type": "string"
+                },
+                "street": {
+                    "title": "Street",
+                    "description": "Street name",
+                    "type": "string"
+                }
+            }
+        },
+        "AddressSuggestionItem": {
+            "description": "List of address suggestions",
+            "required": [
+                "latitude",
+                "longitude",
+                "address"
+            ],
+            "type": "object",
+            "properties": {
+                "latitude": {
+                    "title": "Latitude",
+                    "description": "Latitude coordinate",
+                    "type": "number"
+                },
+                "longitude": {
+                    "title": "Longitude",
+                    "description": "Longitude coordinate",
+                    "type": "number"
+                },
+                "address": {
+                    "title": "Address",
+                    "description": "Formatted address",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "AddressSuggestionsResponse": {
+            "required": [
+                "suggestions"
+            ],
+            "type": "object",
+            "properties": {
+                "suggestions": {
+                    "description": "List of address suggestions",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AddressSuggestionItem"
+                    }
+                }
+            }
+        },
+        "CardIdentificationResponse": {
+            "required": [
+                "source",
+                "vendor"
+            ],
+            "type": "object",
+            "properties": {
+                "source": {
+                    "title": "Source",
+                    "description": "Card processing source (e.g., HUMO, UZCARD)",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "vendor": {
+                    "title": "Vendor",
+                    "description": "Card vendor (e.g., VISA, MASTERCARD, HUMO)",
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "LocationIcon": {
+            "required": [
+                "title"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "icon": {
+                    "title": "Icon",
+                    "type": "string",
+                    "readOnly": true,
+                    "format": "uri"
+                },
+                "icon_url": {
+                    "title": "Icon url",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                }
+            }
+        },
+        "Option": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "values_count": {
+                    "title": "Values count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                }
+            }
+        },
+        "ProductCategory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "slug": {
+                    "title": "Slug",
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "icon": {
+                    "title": "Icon",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "order": {
+                    "title": "Order",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648
+                },
+                "parent": {
+                    "title": "Parent",
+                    "type": "integer",
+                    "x-nullable": true
+                },
+                "children_count": {
+                    "title": "Children count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "products_count": {
+                    "title": "Products count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                }
+            }
+        },
+        "ProductTag": {
+            "required": [
+                "slug"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "slug": {
+                    "title": "Slug",
+                    "type": "string",
+                    "format": "slug",
+                    "pattern": "^[-a-zA-Z0-9_]+$",
+                    "maxLength": 50,
+                    "minLength": 1
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                }
+            }
+        },
+        "SkuProductList": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "sku": {
+                    "title": "SKU",
+                    "type": "string",
+                    "maxLength": 255,
+                    "x-nullable": true
+                },
+                "base_price": {
+                    "title": "Base Price (Reference Only)",
+                    "type": "number",
+                    "x-nullable": true
+                },
+                "is_active": {
+                    "title": "Is Active",
+                    "type": "boolean"
+                },
+                "product_title": {
+                    "title": "Product title",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "uom": {
+                    "title": "Uom",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "product_description": {
+                    "title": "Product description",
+                    "type": "string",
+                    "readOnly": true,
+                    "minLength": 1
+                },
+                "category": {
+                    "$ref": "#/definitions/ProductCategory"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProductTag"
+                    },
+                    "readOnly": true
+                },
+                "product_images": {
+                    "title": "Product images",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "sku_images": {
+                    "title": "Sku images",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "min_price": {
+                    "title": "Min price",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "max_price": {
+                    "title": "Max price",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "has_discount": {
+                    "title": "Has discount",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "available_stores_count": {
+                    "title": "Available stores count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "total_availability": {
+                    "title": "Total availability",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "main_offer": {
+                    "title": "Main offer",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "is_top": {
+                    "title": "Is top",
+                    "type": "string",
+                    "readOnly": true
+                }
+            }
+        },
+        "SellerCategory": {
+            "required": [
+                "title"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "title": {
+                    "title": "Title",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "icon": {
+                    "title": "Icon",
+                    "type": "string",
+                    "readOnly": true,
+                    "x-nullable": true,
+                    "format": "uri"
+                },
+                "icon_url": {
+                    "title": "Icon url",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "sellers_count": {
+                    "title": "Sellers count",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "title": "Created at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "title": "Updated at",
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                }
+            }
+        }
+    }
+}

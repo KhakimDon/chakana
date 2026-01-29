@@ -1,12 +1,11 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
-
-export default async () => {
-  const fingerprint = useCookie('fingerprint')
-  const data = await fetch(`${BASE_URL}/translations`, {
-    headers: {
-      'Accept-Language': 'en',
-      'Device-Id': fingerprint.value,
-    },
-  })
-  return await data.json()
+// Переводы загружаются из API через плагин i18n-loader.client.ts
+// Этот файл содержит только fallback на случай если API недоступен
+export default {
+  loading: 'Loading...',
+  error: 'Error',
+  saved: 'Saved',
+  saved_empty_title: 'No saved products yet',
+  saved_empty_subtitle: 'Click the heart icon to add a product to saved',
+  product_added_to_saved: 'Product added to saved',
+  product_removed_from_saved: 'Product removed from saved',
 }
