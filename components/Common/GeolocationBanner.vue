@@ -1,7 +1,8 @@
 <template>
   <Transition name="slide-down">
     <div v-if="showBanner"
-      class="w-full bg-[#ED2024] text-white py-[10px] fixed top-0 left-0 right-0 z-[60]">
+      data-geolocation-banner
+      class="w-full bg-red text-white py-[10px] fixed top-0 left-0 right-0 z-[60]">
       <div class="w-full overflow-hidden">
         <div class="marquee-container flex items-center gap-2 md:gap-[50px]">
           <!-- Дублированный контент для бесконечной прокрутки -->

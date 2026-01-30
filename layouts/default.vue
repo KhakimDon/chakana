@@ -36,7 +36,7 @@ onMounted(() => {
   
   const updateHeight = () => {
     // Ищем баннер в DOM
-    const bannerElement = document.querySelector('.bg-red')
+    const bannerElement = document.querySelector('[data-geolocation-banner]')
     if (bannerElement) {
       const computedStyle = window.getComputedStyle(bannerElement)
       // Проверяем, виден ли баннер (не скрыт через display: none или высота > 0)
@@ -55,7 +55,7 @@ onMounted(() => {
   let mutationObserver: MutationObserver | null = null
   
   const initObserver = () => {
-    const bannerElement = document.querySelector('.bg-red')
+    const bannerElement = document.querySelector('[data-geolocation-banner]')
     if (bannerElement) {
       resizeObserver = new ResizeObserver(() => {
         updateHeight()
@@ -68,7 +68,7 @@ onMounted(() => {
   mutationObserver = new MutationObserver(() => {
     updateHeight()
     // Переинициализируем ResizeObserver если баннер появился
-    if (document.querySelector('.bg-red') && !resizeObserver) {
+    if (document.querySelector('[data-geolocation-banner]') && !resizeObserver) {
       initObserver()
     }
   })

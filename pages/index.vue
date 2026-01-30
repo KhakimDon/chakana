@@ -70,7 +70,7 @@ const isSavedPage = computed(() => route.path.includes('/saved'))
 const bannerHeight = ref(0)
 if (process.client) {
   const updateBannerHeight = () => {
-    const bannerElement = document.querySelector('.bg-red')
+    const bannerElement = document.querySelector('[data-geolocation-banner]')
     if (bannerElement) {
       const computedStyle = window.getComputedStyle(bannerElement)
       if (computedStyle.display !== 'none' && bannerElement.clientHeight > 0) {

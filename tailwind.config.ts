@@ -34,7 +34,7 @@ export default <Partial<Config>>{
           DEFAULT: '#ED2024',
         },
         red: {
-          DEFAULT: '#FF3300',
+          DEFAULT: '#ED2024',
         },
         green: {
           DEFAULT: '#13B541',
