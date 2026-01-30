@@ -29,7 +29,8 @@
     <Transition name="fade">
       <LayoutHeaderNavbar v-if="isOpen" @close="isOpen = false" />
     </Transition>
-    <ProfileSidebarPremium class="hidden" />
+    <!-- Убрано: ProfileSidebarPremium - делал автоматический запрос к /subscriptions -->
+    <!-- <ProfileSidebarPremium class="hidden" /> -->
   </header>
 </template>
 <script setup lang="ts">

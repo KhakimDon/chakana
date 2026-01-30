@@ -1,24 +1,35 @@
 <template>
-  <div class="p-4 pt-3 rounded-xl bg-gray-300">
+  <div class="p-4 pt-3 rounded-xl bg-gray-300 min-h-[200px]">
     <!-- Если пользователь не авторизован - показываем placeholder -->
     <NoLocationPlaceholder
       v-if="!isAuthorized"
       @add-location="showAddModal = true"
     />
 
-    <!-- Если загружается - показываем загрузку -->
-    <div v-else-if="locationsLoading" class="flex flex-col items-center justify-center py-12 px-4">
+    <!-- Если авторизован и загружается - показываем загрузку -->
+    <div
+      v-else-if="locationsLoading"
+      class="flex flex-col items-center justify-center py-12 px-4"
+    >
       <p class="text-sm text-gray-500">{{ $t('loading') || 'Загрузка...' }}</p>
     </div>
 
-    <!-- Если нет локаций после загрузки - показываем placeholder -->
+    <!-- Если авторизован, загрузка завершена, но нет локаций - показываем placeholder -->
     <NoLocationPlaceholder
       v-else-if="!hasLocations"
       @add-location="showAddModal = true"
     />
 
-    <!-- Если есть локации - показываем карту -->
-    <template v-else>
+    <!-- Если авторизован, есть локации, но нет активной - показываем подтверждение первой локации -->
+    <LocationConfirmation
+      v-else-if="!activeLocation && firstLocation"
+      :location="firstLocation"
+      @confirmed="handleLocationConfirmed"
+      @select-another="showAddModal = true"
+    />
+
+    <!-- Если есть активная локация - показываем карту с кнопкой изменения -->
+    <template v-else-if="activeLocation">
       <p class="text-xs leading-130 font-medium text-dark">
         {{ $t('your_address') }}
       </p>
@@ -42,10 +53,23 @@
         <BaseButton
           class="w-full"
           :text="$t('change_address') || 'Изменить адрес'"
-          @click="showAddModal = true"
+          @click="handleChangeAddress"
         />
       </div>
     </template>
+
+    <!-- Fallback: если ничего не подошло, показываем placeholder -->
+    <NoLocationPlaceholder
+      v-else
+      @add-location="showAddModal = true"
+    />
+
+    <!-- Модалка выбора локации -->
+    <SelectLocationModal
+      v-model="showSelectModal"
+      @location-selected="handleLocationSelected"
+      @add-new="showAddModal = true"
+    />
 
     <!-- Модалка добавления локации -->
     <AddLocationModal
@@ -55,6 +79,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import NoLocationPlaceholder from '~/components/Main/Map/NoLocationPlaceholder.vue'
+import LocationConfirmation from '~/components/Main/Map/LocationConfirmation.vue'
+import AddLocationModal from '~/components/Main/Map/AddLocationModal.vue'
+import SelectLocationModal from '~/components/Main/Map/SelectLocationModal.vue'
 import { useLocationsStore } from '~/store/locations'
 import { useAuthStore } from '~/store/auth.js'
 import { useMainStore } from '~/store/main'
@@ -66,11 +94,17 @@ const authStore = useAuthStore()
 const mainStore = useMainStore()
 
 const showAddModal = ref(false)
+const showSelectModal = ref(false)
 
 const isAuthorized = computed(() => authStore.isAuthorized)
+
 const hasLocations = computed(() => locationsStore.hasLocations)
+
 const locationsLoading = computed(() => locationsStore.locationsLoading)
+
 const activeLocation = computed(() => locationsStore.getActiveLocation)
+
+const firstLocation = computed(() => locationsStore.getFirstLocation)
 
 const activeLocationTitle = computed(() => {
   if (activeLocation.value) {
@@ -91,11 +125,12 @@ const mapCoordinates = computed(() => {
 
 // Загружаем локации при монтировании если пользователь авторизован
 onMounted(async () => {
-  if (isAuthorized.value && !locationsStore.locations.length) {
+  // Если пользователь авторизован - загружаем локации
+  if (isAuthorized.value) {
     try {
       await locationsStore.fetchLocations()
     } catch (error) {
-      console.error('Error fetching locations:', error)
+      console.error('[MainMapSidebar] Error fetching locations:', error)
     }
   }
 })
@@ -115,11 +150,33 @@ watch(
   }
 )
 
+// Обработка нажатия на "Изменить адрес"
+const handleChangeAddress = () => {
+  console.log('[MainMapSidebar] Change address clicked, opening SelectLocationModal')
+  showSelectModal.value = true
+}
+
+// Обработка выбора локации
+const handleLocationSelected = async () => {
+  // Локация уже активирована в SelectLocationModal компоненте
+  // Просто обновляем список локаций для синхронизации
+  await locationsStore.fetchLocations()
+  // Магазины и категории уже обновлены в SelectLocationModal
+}
+
 // Обработка добавления локации
 const handleLocationAdded = async () => {
   // Обновляем список локаций
   await locationsStore.fetchLocations()
   // Обновляем список магазинов
   await mainStore.fetchNearbyStores()
+}
+
+// Обработка подтверждения локации
+const handleLocationConfirmed = async () => {
+  // Локация уже активирована в LocationConfirmation компоненте
+  // Просто обновляем список локаций для синхронизации
+  await locationsStore.fetchLocations()
+  // Магазины уже обновлены в LocationConfirmation
 }
 </script>

@@ -1,5 +1,7 @@
 import { $fetch } from 'ofetch'
 import type { FetchOptions } from 'ofetch'
+import { isJwtExpired } from 'jwt-check-expiration'
+import { useAuthStore } from '~/store/auth'
 
 /**
  * Chakana API для аутентификации
@@ -8,21 +10,16 @@ import type { FetchOptions } from 'ofetch'
 export const useChakanaApi = () => {
   const { $i18n } = useNuxtApp()
   const locale = $i18n?.locale ?? 'ru'
+  const authStore = useAuthStore()
 
-  // BaseURL для Chakana API
+  // BaseURL для Chakana API - используем из переменной окружения
   const envBaseURL = import.meta.env.VITE_API_BASE_URL as string
-  let baseURL =
-    envBaseURL && !envBaseURL.includes('localhost')
-      ? envBaseURL
-      : 'https://chakana-api.uicgroup.tech'
-
-  // Убеждаемся, что baseURL имеет протокол
-  const finalBaseURL = baseURL.startsWith('http')
-    ? baseURL
-    : `https://${baseURL}`
+  let baseURL = envBaseURL || 'https://chakana-api.uicgroup.tech'
 
   // Убираем /api/v1 из baseURL, если он там есть, чтобы избежать дублирования
-  const cleanBaseURL = finalBaseURL.replace(/\/api\/v1\/?$/, '')
+  const cleanBaseURL = baseURL.replace(/\/api\/v1\/?$/, '')
+  
+  console.log('[useChakanaApi] Using baseURL:', cleanBaseURL)
 
   const request = async <T = unknown>(
     path: string, 
@@ -32,6 +29,47 @@ export const useChakanaApi = () => {
       'Accept-Language': (locale as any).value || 'ru',
       'Content-Type': 'application/json',
       ...(options.headers as any),
+    }
+
+    // Добавляем Authorization заголовок если есть токен
+    const tokens = authStore.getTokens()
+    if (tokens?.access) {
+      // Проверяем, не истек ли токен
+      if (isJwtExpired(tokens.access)) {
+        // Токен истек, пытаемся обновить
+        if (tokens?.refresh) {
+          try {
+            await authStore.refreshTokens()
+            const updatedTokens = authStore.getTokens()
+            if (updatedTokens?.access) {
+              headers.Authorization = `Bearer ${updatedTokens.access}`
+            }
+          } catch (err) {
+            console.error('[useChakanaApi] Failed to refresh token:', err)
+            authStore.logOut()
+            throw new Error(err as string)
+          }
+        } else {
+          // Нет refresh token, используем истекший access token
+          headers.Authorization = `Bearer ${tokens.access}`
+        }
+      } else {
+        // Токен валиден, используем его
+        headers.Authorization = `Bearer ${tokens.access}`
+      }
+    } else if (tokens?.refresh) {
+      // Есть только refresh token, пытаемся обновить
+      try {
+        await authStore.refreshTokens()
+        const updatedTokens = authStore.getTokens()
+        if (updatedTokens?.access) {
+          headers.Authorization = `Bearer ${updatedTokens.access}`
+        }
+      } catch (err) {
+        console.error('[useChakanaApi] Failed to refresh token:', err)
+        authStore.logOut()
+        throw new Error(err as string)
+      }
     }
 
     // Убираем начальный слеш из path, если он есть
@@ -280,9 +318,33 @@ export const useChakanaApi = () => {
     return request<T>(path, { ...options, method: 'POST', body })
   }
 
+  /**
+   * PUT запрос к API
+   */
+  const $put = async <T = unknown>(path: string, body?: any, options: FetchOptions = {}): Promise<T> => {
+    return request<T>(path, { ...options, method: 'PUT', body })
+  }
+
+  /**
+   * PATCH запрос к API
+   */
+  const $patch = async <T = unknown>(path: string, body?: any, options: FetchOptions = {}): Promise<T> => {
+    return request<T>(path, { ...options, method: 'PATCH', body })
+  }
+
+  /**
+   * DELETE запрос к API
+   */
+  const $delete = async <T = unknown>(path: string, options: FetchOptions = {}): Promise<T> => {
+    return request<T>(path, { ...options, method: 'DELETE' })
+  }
+
   return {
     $get,
     $post,
+    $put,
+    $patch,
+    $delete,
     request,
     sendSms,
     verifyPhone,

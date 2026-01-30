@@ -137,7 +137,9 @@ const subscriptionModal = ref(false)
 const subscriptionsStore = useSubscriptionsStore()
 const subscription = computed(() => subscriptionsStore.subscription)
 
-await useAsyncData('subscription', subscriptionsStore.fetchSubscription)
+// Убрано: автоматический запрос к /subscriptions при загрузке компонента
+// Запрос будет выполняться только при необходимости (например, при открытии модалки)
+// await useAsyncData('subscription', subscriptionsStore.fetchSubscription)
 
 const { t } = useI18n()
 

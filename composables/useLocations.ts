@@ -8,6 +8,7 @@ import type {
   ActivateLocationResponse,
   DeleteLocationResponse,
 } from '~/types/locations'
+import { useChakanaApi } from './useChakanaApi'
 
 /**
  * Composable для работы с локациями пользователя
@@ -15,16 +16,35 @@ import type {
  */
 export const useLocations = () => {
   const api = useApi()
+  const chakanaApi = useChakanaApi()
 
   /**
    * Получить список иконок локаций
    * GET /location-icons/
+   * Использует Chakana API
    */
   const getLocationIcons = async (
     search?: string
   ): Promise<LocationIcon[]> => {
     const params = search ? { search } : {}
-    return api.$get<LocationIcon[]>('/location-icons/', { params })
+    const response = await chakanaApi.$get<LocationIcon[] | {
+      success?: boolean
+      message?: string
+      data?: LocationIcon[]
+      results?: LocationIcon[]
+    }>('/location-icons/', { params })
+    
+    // API может вернуть массив или объект с data/results
+    if (Array.isArray(response)) {
+      return response
+    }
+    if (response?.data && Array.isArray(response.data)) {
+      return response.data
+    }
+    if (response?.results && Array.isArray(response.results)) {
+      return response.results
+    }
+    return []
   }
 
   /**
@@ -57,11 +77,22 @@ export const useLocations = () => {
   /**
    * Создать новую локацию
    * POST /locations/add/
+   * Использует Chakana API
    */
   const createLocation = async (
     data: UserLocationCreate
   ): Promise<UserLocation> => {
-    return api.$post<UserLocation>('/locations/add/', { body: data })
+    console.log('[useLocations] createLocation called with data:', data)
+    const response = await chakanaApi.$post<any>('/locations/add/', data)
+    console.log('[useLocations] createLocation response:', response)
+    
+    // API может вернуть { success, message, data: {...} } или напрямую объект
+    if (response?.data) {
+      console.log('[useLocations] Using response.data')
+      return response.data
+    }
+    console.log('[useLocations] Using response directly')
+    return response
   }
 
   /**
@@ -89,37 +120,91 @@ export const useLocations = () => {
   /**
    * Удалить локацию
    * DELETE /locations/{id}/
+   * Использует Chakana API для правильной аутентификации
    */
   const deleteLocation = async (
     id: number | string
   ): Promise<DeleteLocationResponse> => {
-    return api.$delete<DeleteLocationResponse>(`/locations/${id}/`)
+    console.log('[useLocations] deleteLocation called with id:', id)
+    
+    // Используем request напрямую с методом DELETE
+    const response = await chakanaApi.request<DeleteLocationResponse>(`/locations/${id}/`, {
+      method: 'DELETE',
+    })
+    console.log('[useLocations] deleteLocation response:', response)
+    return response
   }
 
   /**
    * Активировать локацию
    * POST /locations/{location_id}/activate/
+   * Использует Chakana API
    */
   const activateLocation = async (
     locationId: number | string
   ): Promise<ActivateLocationResponse> => {
-    return api.$post<ActivateLocationResponse>(
+    console.log('[useLocations] activateLocation called with id:', locationId)
+    if (!locationId || locationId === 'undefined') {
+      throw new Error('Location ID is required for activation')
+    }
+    const response = await chakanaApi.$post<ActivateLocationResponse>(
       `/locations/${locationId}/activate/`,
-      { body: {} }
+      {}
     )
+    console.log('[useLocations] activateLocation response:', response)
+    return response
   }
 
   /**
    * Обратное геокодирование - получить адрес по координатам
    * GET /common/address/
+   * Использует Chakana API
+   * API возвращает { success, message, data: { short_address, long_address, ... } }
    */
   const reverseGeocode = async (
     latitude: number,
     longitude: number
   ): Promise<ReverseGeocodeResponse> => {
-    return api.$get<ReverseGeocodeResponse>('/common/address/', {
+    console.log('[useLocations] reverseGeocode called with lat:', latitude, 'lng:', longitude)
+    const response = await chakanaApi.$get<{
+      success?: boolean
+      message?: string
+      data?: {
+        short_address?: string
+        long_address?: string
+        zip_code?: string
+        street?: string
+      }
+      short_address?: string
+      long_address?: string
+    }>('/common/address/', {
       params: { latitude, longitude },
     })
+    
+    console.log('[useLocations] API response:', JSON.stringify(response, null, 2))
+    console.log('[useLocations] response.data:', response?.data)
+    
+    // API возвращает { success, message, data: { ... } }
+    if (response?.data) {
+      const result = {
+        short_address: response.data.short_address || '',
+        long_address: response.data.long_address || '',
+        zip_code: response.data.zip_code || '',
+        street: response.data.street || '',
+      }
+      console.log('[useLocations] Parsed result:', result)
+      return result
+    }
+    
+    // Fallback для старого формата
+    const fallback = {
+      short_address: response.short_address || '',
+      long_address: response.long_address || '',
+      zip_code: '',
+      street: '',
+    }
+    console.log('[useLocations] Using fallback:', fallback)
+    return fallback
   }
 
   /**

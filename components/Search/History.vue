@@ -36,6 +36,7 @@ const deleteHistory = (id: number) => {
 }
 
 const clickHistory = (text: string) => {
+  // Устанавливаем значение поиска, watch в родительском компоненте обработает сохранение
   router.push({ query: { query: text } })
 }
 </script>

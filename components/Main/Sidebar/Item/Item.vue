@@ -36,6 +36,7 @@
 import type { ICategory } from '~/types/categories'
 import { useCategoriesStore } from '~/store/categories'
 import { useMainStore } from '~/store/main'
+import { useLocationsStore } from '~/store/locations'
 
 interface Props {
   item: ICategory
@@ -44,6 +45,7 @@ interface Props {
 const props = defineProps<Props>()
 const categoriesStore = useCategoriesStore()
 const mainStore = useMainStore()
+const locationsStore = useLocationsStore()
 
 const fallbackIcon = '/images/svg/cart.svg'
 const isFallback = ref(!(props.item?.image || props.item?.icon || props.item?.icon_url))
@@ -56,8 +58,10 @@ const isSelected = computed(() => {
 // Выбор категории
 const selectCategory = () => {
   categoriesStore.selectCategory(props.item.id)
-  // Загружаем магазины с фильтром по категории
-  mainStore.fetchNearbyStores(props.item.id)
+  // Загружаем магазины с фильтром по категории только если есть активная локация
+  if (locationsStore.getActiveLocation) {
+    mainStore.fetchNearbyStores(props.item.id)
+  }
 }
 
 const onImageError = (event: Event) => {

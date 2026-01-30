@@ -3,19 +3,19 @@
     <CommonSectionWrapper title="take_and_go" class="mt-4">
       <Transition name="fade" mode="out-in">
         <div
-          :key="newProducts?.loading"
-          class="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10"
+          :key="nearbyStores?.loading"
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5"
         >
-          <template v-if="newProducts?.loading">
-            <MainCardLoading v-for="key in 16" :key />
+          <template v-if="nearbyStores?.loading">
+            <MainCardStoreCardLoading v-for="key in 6" :key="key" />
           </template>
           <template
-            v-else-if="!newProducts?.loading && newProducts?.list.length"
+            v-else-if="!nearbyStores?.loading && nearbyStores?.list.length"
           >
-            <MainCard
-              v-for="(card, index) in newProducts?.list"
-              :key="index"
-              :card
+            <MainCardStoreCard
+              v-for="store in nearbyStores.list"
+              :key="store.id"
+              :store="store"
             />
           </template>
         </div>
@@ -25,15 +25,16 @@
 </template>
 
 <script setup lang="ts">
-// New products section
+// Stores section instead of products
 import { useMainStore } from '~/store/main'
 
 const mainStore = useMainStore()
 
-const newProducts = computed(() => mainStore.products)
+const nearbyStores = computed(() => mainStore.nearbyStores)
 
-if (!newProducts.value?.list.length) {
-  mainStore.fetchProducts()
+// Загружаем магазины вместо продуктов
+if (!nearbyStores.value?.list.length && !nearbyStores.value?.loading) {
+  mainStore.fetchNearbyStores()
 }
 </script>
 

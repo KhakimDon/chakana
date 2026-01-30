@@ -58,6 +58,7 @@ import { useQuery } from '~/composables/useQuery'
 import type { ICategory } from '~/types/categories'
 import { useCategoriesStore } from '~/store/categories'
 import { useMainStore } from '~/store/main'
+import { useLocationsStore } from '~/store/locations'
 
 interface Props {
   loading: boolean
@@ -69,6 +70,7 @@ const props = defineProps<Props>()
 
 const categoriesStore = useCategoriesStore()
 const mainStore = useMainStore()
+const locationsStore = useLocationsStore()
 
 const { updateQuery } = useQuery()
 
@@ -83,7 +85,10 @@ const selectedCategoryId = computed(() => categoriesStore.selectedCategoryId)
 // Выбрать "Все" категории
 const selectAllCategories = () => {
   categoriesStore.clearCategorySelection()
-  mainStore.fetchNearbyStores() // Загружаем все магазины
+  // Загружаем магазины только если есть активная локация
+  if (locationsStore.getActiveLocation) {
+    mainStore.fetchNearbyStores() // Загружаем все магазины
+  }
 }
 
 const isSingle = computed(() => route.name.includes('index-category-slug'))

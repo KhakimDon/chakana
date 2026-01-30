@@ -73,7 +73,7 @@ const isShowSuggestions = computed(() => {
   )
 })
 const clickAutocompleteItem = (text: string) => {
-  searchStore.saveSearch(text)
+  // Устанавливаем значение поиска, watch в родительском компоненте обработает сохранение
   router.push({ query: { query: text } })
   searchStore.autoCompleteItemClicked = true
 }

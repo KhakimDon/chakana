@@ -18,14 +18,14 @@
             :no-clear="false"
             :no-search-icon="false"
             :placeholder="$t('search') || 'Поиск'"
-            @blur="isFocus = false"
-            @focus="isFocus = true"
+            @blur="handleBlur"
+            @focus="handleFocus"
             @search="handleSearch"
           />
           <Transition mode="out-in" name="fade">
             <div
-              v-if="isFocus && addressSuggestions.length"
-              class="bg-white w-full max-h-[400px] absolute rounded-xl shadow-map z-10 overflow-hidden overflow-y-scroll mt-2"
+              v-if="showSuggestions"
+              class="bg-white w-full max-h-[400px] absolute top-full left-0 right-0 rounded-xl shadow-map z-50 overflow-hidden overflow-y-auto mt-2"
             >
               <ul>
                 <li
@@ -35,6 +35,7 @@
                 >
                   <p
                     class="px-4 py-3 border border-white-100 text-dark text-sm leading-130 font-semibold last:border-b-0 hover:bg-gray-200 transition-300"
+                    @mousedown.prevent
                     @click="selectAddress(item)"
                   >
                     {{ item.address }}
@@ -58,7 +59,7 @@
         <Map
           :zoom="15"
           class="h-[300px] md:h-[440px]"
-          @update:center="selectedCoords = $event"
+          @update:center="handleMapCenterChange"
         />
       </div>
     </div>
@@ -170,6 +171,7 @@
 import IEditCircle from '~/assets/icons/Common/edit-circle.svg'
 import { useLocationsStore } from '~/store/locations'
 import { useMainStore } from '~/store/main'
+import { useCategoriesStore } from '~/store/categories'
 import { useCustomToast } from '~/composables/useCustomToast'
 import { useErrorHandling } from '~/composables/useErrorHandling'
 import type { AddressSuggestionItem } from '~/types/locations'
@@ -193,6 +195,7 @@ const { handleError } = useErrorHandling()
 
 const locationsStore = useLocationsStore()
 const mainStore = useMainStore()
+const categoriesStore = useCategoriesStore()
 
 const searchQuery = ref('')
 const isFocus = ref(false)
@@ -211,13 +214,26 @@ const formData = ref({
   location_icon: null as number | null,
 })
 
-const locationIcons = computed(() => locationsStore.locationIcons)
+// Преобразуем иконки для FormSelect (добавляем поле image из icon)
+const locationIcons = computed(() => {
+  return locationsStore.locationIcons.map(icon => ({
+    ...icon,
+    image: icon.icon || icon.icon || '',
+  }))
+})
 
 const canSubmit = computed(() => {
   return (
     selectedCoords.value.length === 2 &&
     formData.value.title.trim().length > 0
   )
+})
+
+// Показывать подсказки когда они есть
+const showSuggestions = computed(() => {
+  const hasSuggestions = addressSuggestions.value.length > 0
+  console.log('[AddLocationModal] showSuggestions:', hasSuggestions, 'count:', addressSuggestions.value.length)
+  return hasSuggestions
 })
 
 // Загружаем иконки при открытии модалки
@@ -227,9 +243,11 @@ watch(
     if (value) {
       // Сбрасываем форму
       resetForm()
-      // Загружаем иконки если их нет
-      if (!locationIcons.value.length) {
+      // Загружаем иконки всегда при открытии модалки
+      try {
         await locationsStore.fetchLocationIcons()
+      } catch (error) {
+        console.error('[AddLocationModal] Error loading icons:', error)
       }
       // Получаем текущее местоположение
       getCurrentLocation()
@@ -237,19 +255,75 @@ watch(
   }
 )
 
+// Загружаем иконки при переходе на вторую часть формы
+watch(
+  () => showAddressForm.value,
+  async (value) => {
+    if (value && !locationIcons.value.length) {
+      // Если перешли на вторую часть и иконок нет - загружаем
+      try {
+        await locationsStore.fetchLocationIcons()
+      } catch (error) {
+        console.error('[AddLocationModal] Error loading icons:', error)
+      }
+    }
+  }
+)
+
+// Автоматический поиск при изменении текста в инпуте
+watch(
+  () => searchQuery.value,
+  async (newValue, oldValue) => {
+    console.log('[AddLocationModal] searchQuery changed:', oldValue, '->', newValue)
+    if (newValue && newValue.length >= 2) {
+      await handleSearch(newValue)
+    } else if (newValue.length < 2) {
+      addressSuggestions.value = []
+    }
+  },
+  { immediate: false }
+)
+
+// Обработка фокуса
+const handleFocus = () => {
+  isFocus.value = true
+  // Если уже есть подсказки, показываем их
+  if (addressSuggestions.value.length > 0) {
+    return
+  }
+  // Если есть текст в инпуте, запускаем поиск
+  if (searchQuery.value.length >= 2) {
+    handleSearch(searchQuery.value)
+  }
+}
+
 // Поиск адресов
 const handleSearch = async (query: string) => {
   if (query.length < 2) {
     addressSuggestions.value = []
     return
   }
-  searchQuery.value = query
   try {
+    console.log('[AddLocationModal] Searching for:', query)
+    console.log('[AddLocationModal] Store before call:', locationsStore.addressSuggestions.length)
     await locationsStore.searchAddressSuggestions(query)
-    addressSuggestions.value = locationsStore.addressSuggestions
+    console.log('[AddLocationModal] Store after call:', locationsStore.addressSuggestions.length)
+    console.log('[AddLocationModal] Store data:', locationsStore.addressSuggestions)
+    addressSuggestions.value = [...locationsStore.addressSuggestions]
+    console.log('[AddLocationModal] Address suggestions loaded:', addressSuggestions.value.length)
+    console.log('[AddLocationModal] Suggestions data:', addressSuggestions.value)
   } catch (error) {
-    console.error('Error searching addresses:', error)
+    console.error('[AddLocationModal] Error searching addresses:', error)
+    addressSuggestions.value = []
   }
+}
+
+// Обработка blur - скрываем подсказки с небольшой задержкой для возможности клика
+const handleBlur = () => {
+  // Небольшая задержка чтобы можно было кликнуть на подсказку
+  setTimeout(() => {
+    isFocus.value = false
+  }, 200)
 }
 
 // Выбор адреса из предложений
@@ -261,14 +335,58 @@ const selectAddress = (item: AddressSuggestionItem) => {
   getAddressFromCoords(selectedCoords.value)
 }
 
+// Обработка изменения центра карты (при клике или перетаскивании)
+const handleMapCenterChange = (coords: number[]) => {
+  console.log('[AddLocationModal] Map center changed:', coords)
+  selectedCoords.value = coords
+  getAddressFromCoords(coords)
+}
+
 // Получение адреса по координатам
 const getAddressFromCoords = async (coords: number[]) => {
-  if (coords.length !== 2) return
+  console.log('[AddLocationModal] getAddressFromCoords called with coords:', coords)
+  if (coords.length !== 2) {
+    console.log('[AddLocationModal] Invalid coords length')
+    return
+  }
   try {
+    console.log('[AddLocationModal] Calling reverseGeocode with lat:', coords[1], 'lng:', coords[0])
     const response = await locationsStore.reverseGeocode(coords[1], coords[0])
-    currentAddress.value = response.short_address || response.long_address || ''
+    console.log('[AddLocationModal] Reverse geocode response:', response)
+    console.log('[AddLocationModal] Response type:', typeof response)
+    console.log('[AddLocationModal] Response keys:', Object.keys(response || {}))
+    console.log('[AddLocationModal] response.data:', response?.data)
+    console.log('[AddLocationModal] response.data?.long_address:', response?.data?.long_address)
+    
+    // Используем long_address для инпута (как просил пользователь)
+    // Проверяем оба формата ответа
+    let address = ''
+    if (response?.data?.long_address) {
+      address = response.data.long_address
+      console.log('[AddLocationModal] Using response.data.long_address')
+    } else if (response?.data?.short_address) {
+      address = response.data.short_address
+      console.log('[AddLocationModal] Using response.data.short_address')
+    } else if (response?.long_address) {
+      address = response.long_address
+      console.log('[AddLocationModal] Using response.long_address')
+    } else if (response?.short_address) {
+      address = response.short_address
+      console.log('[AddLocationModal] Using response.short_address')
+    }
+    
+    console.log('[AddLocationModal] Extracted address:', address)
+    currentAddress.value = address
+    // Обновляем инпут поиска с полученным адресом (long_address)
+    if (address) {
+      console.log('[AddLocationModal] Setting searchQuery to:', address)
+      searchQuery.value = address
+      console.log('[AddLocationModal] searchQuery after setting:', searchQuery.value)
+    } else {
+      console.warn('[AddLocationModal] Address is empty! Response:', JSON.stringify(response, null, 2))
+    }
   } catch (error) {
-    console.error('Error getting address:', error)
+    console.error('[AddLocationModal] Error getting address:', error)
     currentAddress.value = ''
   }
 }
@@ -296,16 +414,7 @@ const getCurrentLocation = () => {
   }
 }
 
-// Отслеживание изменения координат на карте
-watch(
-  () => selectedCoords.value,
-  (coords) => {
-    if (coords.length === 2 && !showAddressForm.value) {
-      getAddressFromCoords(coords)
-    }
-  },
-  { deep: true }
-)
+// Отслеживание изменения координат на карте (убрано, так как теперь обрабатывается через handleMapCenterChange)
 
 // Сброс формы
 const resetForm = () => {
@@ -322,6 +431,7 @@ const resetForm = () => {
     location_icon: null,
   }
   addressSuggestions.value = []
+  isFocus.value = false
 }
 
 // Отправка локации
@@ -330,28 +440,59 @@ const submitLocation = async () => {
 
   buttonLoading.value = true
   try {
-    const locationData = {
+    // Округляем координаты до 6 знаков после запятой (максимум 9 цифр всего)
+    const latitude = parseFloat(selectedCoords.value[1].toFixed(6))
+    const longitude = parseFloat(selectedCoords.value[0].toFixed(6))
+    
+    const locationData: any = {
       title: formData.value.title,
-      latitude: selectedCoords.value[1].toString(),
-      longitude: selectedCoords.value[0].toString(),
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
       address: currentAddress.value,
-      apartment: formData.value.apartment || undefined,
-      entrance: formData.value.entrance || undefined,
-      floor: formData.value.floor || undefined,
-      door_password: formData.value.door_password || undefined,
-      location_icon: formData.value.location_icon || undefined,
     }
+    
+    // Добавляем опциональные поля только если они заполнены
+    if (formData.value.apartment?.trim()) {
+      locationData.apartment = formData.value.apartment.trim()
+    }
+    if (formData.value.entrance?.trim()) {
+      locationData.entrance = formData.value.entrance.trim()
+    }
+    if (formData.value.floor?.trim()) {
+      locationData.floor = formData.value.floor.trim()
+    }
+    if (formData.value.door_password?.trim()) {
+      locationData.door_password = formData.value.door_password.trim()
+    }
+    // location_icon - ID иконки (обязательно если выбрана)
+    if (formData.value.location_icon) {
+      locationData.location_icon = formData.value.location_icon
+    }
+    
+    console.log('[AddLocationModal] Final locationData:', locationData)
 
     // Создаем локацию
+    console.log('[AddLocationModal] Creating location with data:', locationData)
     const newLocation = await locationsStore.createLocation(locationData)
+    console.log('[AddLocationModal] Created location:', newLocation)
+    console.log('[AddLocationModal] Location ID:', newLocation?.id)
 
     // Активируем созданную локацию
-    await locationsStore.activateLocation(newLocation.id)
+    if (newLocation?.id) {
+      console.log('[AddLocationModal] Activating location with ID:', newLocation.id)
+      await locationsStore.activateLocation(newLocation.id)
+    } else {
+      console.error('[AddLocationModal] Location ID is missing!', newLocation)
+      throw new Error('Location ID is missing after creation')
+    }
 
     showToast(t('success_send') || 'Адрес успешно добавлен', 'success')
 
     // Обновляем список магазинов
     await mainStore.fetchNearbyStores()
+
+    // Обновляем категории в сайдбаре
+    await categoriesStore.fetchCategories()
 
     // Закрываем модалку и эмитим событие
     emit('location-added')

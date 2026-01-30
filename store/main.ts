@@ -51,36 +51,21 @@ export const useMainStore = defineStore('mainStore', {
   }),
   actions: {
     fetchProducts(force = true) {
-      return new Promise((resolve, reject) => {
+      // УДАЛЕНО: запрос на /new/products больше не отправляется
+      // Вместо этого используйте searchStore.searchProducts() для поиска продуктов
+      // или mainStore.fetchNearbyStores() для получения магазинов
+      return new Promise((resolve) => {
         if (force) {
           this.products.params.page = 1
         } else {
           this.products.params.page += 1
-          this.products.params.loading = true
         }
-        useApi()
-          .$get('/new/products', {
-            params: {
-              page_size: this.products.params.page_size,
-              page: this.products.params.page,
-            },
-          })
-          .then((res: any) => {
-            if (force) {
-              this.products.list = res?.items
-            } else {
-              this.products.list = this.products.list.concat(res?.items)
-            }
-            this.products.params.total = res?.count
-            resolve(res)
-          })
-          .catch((error) => {
-            reject(error)
-          })
-          .finally(() => {
-            this.products.loading = false
-            this.products.params.loading = false
-          })
+        // Не отправляем запрос, просто возвращаем пустой результат
+        this.products.list = []
+        this.products.params.total = 0
+        this.products.loading = false
+        this.products.params.loading = false
+        resolve({ items: [], count: 0 })
       })
     },
 
@@ -186,9 +171,17 @@ export const useMainStore = defineStore('mainStore', {
     fetchNearbyStores(categoryId?: number) {
       return new Promise((resolve, reject) => {
         this.nearbyStores.loading = true
-        const params = categoryId ? `?category_id=${categoryId}` : ''
+        
+        // Формируем URL с параметрами в query string
+        let url = 'stores/nearby/'
+        if (categoryId) {
+          url += `?category_id=${categoryId}`
+        }
+        
+        console.log('[Stores] Fetching nearby stores - URL:', url)
+        
         useChakanaApi()
-          .$get(`/stores/nearby/${params}`)
+          .$get(url)
           .then((res: any) => {
             // API возвращает массив магазинов
             this.nearbyStores.list = Array.isArray(res) ? res : []

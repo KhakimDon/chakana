@@ -35,7 +35,7 @@ onMounted(() => {
   searchStore.searchPopular()
 })
 const clickBadge = (text: string) => {
-  searchStore.saveSearch(text)
+  // Устанавливаем значение поиска, watch в родительском компоненте обработает сохранение
   router.push({ query: { query: text } })
 }
 </script>

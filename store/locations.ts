@@ -7,6 +7,7 @@ import type {
   AddressSuggestionItem,
   ReverseGeocodeResponse,
 } from '~/types/locations'
+import { useChakanaApi } from '~/composables/useChakanaApi'
 
 export const useLocationsStore = defineStore('locationsStore', {
   state: () => ({
@@ -36,6 +37,14 @@ export const useLocationsStore = defineStore('locationsStore', {
      */
     getActiveLocation: (state): UserLocation | null => {
       return state.activeLocation || state.locations.find(loc => loc.is_active) || null
+    },
+
+    /**
+     * Получить первую локацию (последнюю в списке)
+     * Используется для подтверждения, когда нет активной локации
+     */
+    getFirstLocation: (state): UserLocation | null => {
+      return state.locations.length > 0 ? state.locations[0] : null
     },
 
     /**
@@ -119,8 +128,17 @@ export const useLocationsStore = defineStore('locationsStore', {
      */
     async createLocation(data: UserLocationCreate) {
       try {
+        console.log('[LocationsStore] Creating location with data:', data)
         const locationsApi = useLocations()
         const newLocation = await locationsApi.createLocation(data)
+        console.log('[LocationsStore] Created location response:', newLocation)
+        console.log('[LocationsStore] Location ID:', newLocation?.id)
+        
+        if (!newLocation?.id) {
+          console.error('[LocationsStore] Location ID is missing!', newLocation)
+          throw new Error('Location ID is missing after creation')
+        }
+        
         // Добавляем в список
         this.locations.push(newLocation)
         // Если это активная локация, обновляем activeLocation
@@ -135,7 +153,7 @@ export const useLocationsStore = defineStore('locationsStore', {
         }
         return newLocation
       } catch (error) {
-        console.error('Error creating location:', error)
+        console.error('[LocationsStore] Error creating location:', error)
         throw error
       }
     },
@@ -252,21 +270,58 @@ export const useLocationsStore = defineStore('locationsStore', {
      * Поиск предложений адресов
      */
     async searchAddressSuggestions(query: string) {
+      console.log('[LocationsStore] searchAddressSuggestions CALLED with query:', query)
       if (query.length < 2) {
+        console.log('[LocationsStore] Query too short, clearing suggestions')
         this.addressSuggestions = []
         return []
       }
+      console.log('[LocationsStore] Setting loading to true')
       this.suggestionsLoading = true
       try {
-        const locationsApi = useLocations()
-        const response = await locationsApi.getAddressSuggestions(query)
-        this.addressSuggestions = response.suggestions || []
+        console.log('[LocationsStore] Getting API instance')
+        const api = useChakanaApi()
+        console.log('[LocationsStore] API instance:', api)
+        console.log('[LocationsStore] Fetching suggestions for query:', query)
+        const response = await api.$get<any>(
+          '/common/address/suggestions/',
+          { params: { query } }
+        )
+        console.log('[LocationsStore] API response received:', response)
+        console.log('[LocationsStore] API response stringified:', JSON.stringify(response, null, 2))
+        console.log('[LocationsStore] Response type:', typeof response)
+        console.log('[LocationsStore] Response.data:', response?.data)
+        console.log('[LocationsStore] Response.data.suggestions:', response?.data?.suggestions)
+        
+        // API возвращает { success, message, data: { suggestions } }
+        let suggestions: AddressSuggestionItem[] = []
+        if (response?.data?.suggestions && Array.isArray(response.data.suggestions)) {
+          suggestions = response.data.suggestions
+          console.log('[LocationsStore] Using response.data.suggestions, count:', suggestions.length)
+        } else if (response?.suggestions && Array.isArray(response.suggestions)) {
+          suggestions = response.suggestions
+          console.log('[LocationsStore] Using response.suggestions, count:', suggestions.length)
+        } else if (Array.isArray(response)) {
+          suggestions = response
+          console.log('[LocationsStore] Using response as array, count:', suggestions.length)
+        } else {
+          console.warn('[LocationsStore] Unexpected response format:', response)
+        }
+        
+        console.log('[LocationsStore] Extracted suggestions:', suggestions.length, suggestions)
+        console.log('[LocationsStore] Before assignment, this.addressSuggestions:', this.addressSuggestions.length)
+        this.addressSuggestions = suggestions
+        console.log('[LocationsStore] After assignment, this.addressSuggestions:', this.addressSuggestions.length)
+        console.log('[LocationsStore] After assignment, this.addressSuggestions data:', this.addressSuggestions)
         return this.addressSuggestions
       } catch (error) {
-        console.error('Error searching address suggestions:', error)
+        console.error('[LocationsStore] Error searching address suggestions:', error)
+        console.error('[LocationsStore] Error details:', error instanceof Error ? error.message : String(error))
+        console.error('[LocationsStore] Error stack:', error instanceof Error ? error.stack : 'No stack')
         this.addressSuggestions = []
         throw error
       } finally {
+        console.log('[LocationsStore] Setting loading to false')
         this.suggestionsLoading = false
       }
     },
@@ -279,10 +334,11 @@ export const useLocationsStore = defineStore('locationsStore', {
       try {
         const locationsApi = useLocations()
         const data = await locationsApi.reverseGeocode(latitude, longitude)
+        console.log('[LocationsStore] reverseGeocode received data:', data)
         this.reverseGeocodeData = data
         return data
       } catch (error) {
-        console.error('Error reverse geocoding:', error)
+        console.error('[LocationsStore] Error reverse geocoding:', error)
         throw error
       } finally {
         this.reverseGeocodeLoading = false

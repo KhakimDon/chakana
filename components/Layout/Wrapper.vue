@@ -5,10 +5,13 @@
       :class="[
         leftSidebarClass,
         'hidden  md:block ',
-        { 'fixed top-[86px]': hasFixed && !hideLeftSidebar }
+        { 'fixed z-40': hasFixed && !hideLeftSidebar }
       ]"
       :data-sidebar-cols="props.leftSidebarCols"
-      :style="hasFixed && !hideLeftSidebar ? { width: leftSidebarWidth } : undefined"
+      :style="hasFixed && !hideLeftSidebar ? { 
+        width: leftSidebarWidth,
+        top: sidebarTop
+      } : undefined"
     >
       <slot name="left" />
     </aside>
@@ -35,11 +38,21 @@ interface Props {
   hasFixed?: boolean
   leftSidebarCols?: 2 | 3 | 4
   hideLeftSidebar?: boolean
+  bannerHeight?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   leftSidebarCols: 2,
   hideLeftSidebar: false,
+  bannerHeight: 0,
+})
+
+// Вычисляем позицию sidebar: header height (69px) + banner height + небольшой отступ
+const sidebarTop = computed(() => {
+  const headerHeight = 69 // Высота header
+  const padding = 10 // Небольшой отступ для визуального разделения
+  const totalTop = headerHeight + props.bannerHeight + padding
+  return `${totalTop}px`
 })
 
 // Computed classes for better reactivity

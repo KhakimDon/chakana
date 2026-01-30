@@ -5,6 +5,7 @@
       has-fixed 
       :left-sidebar-cols="isStorePage ? 3 : 2"
       :hide-left-sidebar="isSavedPage"
+      :banner-height="bannerHeight"
     >
       <template #left>
         <!-- Hide left sidebar for saved page -->
@@ -26,9 +27,10 @@
       </Transition>
       <template #right>
         <div class="sticky bottom-0 w-[313px] overflow-y-auto pb-16">
-          <ClientOnly>
-            <MainMapSidebar class="md:mr-2" @change-coords="changeCoords" />
-          </ClientOnly>
+          <!-- Блок локации -->
+          <MainMapSidebar class="md:mr-2" @change-coords="changeCoords" />
+          
+          <!-- Корзина -->
           <Transition name="fade" mode="out-in" class="space-y-5 mt-5 md:mr-2">
             <CartEmpty v-if="cartProducts.length === 0" />
             <CartFilled v-else />
@@ -50,6 +52,7 @@
 // import { getAuth, signInAnonymously } from 'firebase/auth'
 // import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 
+import MainMapSidebar from '~/components/Main/Map/Sidebar.vue'
 import { useCartStore } from '~/store/cart.js'
 import { useCategoriesStore } from '~/store/categories'
 import { useStorePageStore } from '~/store/storePage'
@@ -62,6 +65,46 @@ const isStorePage = computed(() => storePageStore.isStorePage)
 
 // Check if we're on saved page (hide left sidebar)
 const isSavedPage = computed(() => route.path.includes('/saved'))
+
+// Получаем высоту баннера из layout
+const bannerHeight = ref(0)
+if (process.client) {
+  const updateBannerHeight = () => {
+    const bannerElement = document.querySelector('.bg-red')
+    if (bannerElement) {
+      const computedStyle = window.getComputedStyle(bannerElement)
+      if (computedStyle.display !== 'none' && bannerElement.clientHeight > 0) {
+        bannerHeight.value = bannerElement.clientHeight
+      } else {
+        bannerHeight.value = 0
+      }
+    } else {
+      bannerHeight.value = 0
+    }
+  }
+  
+  onMounted(() => {
+    const mutationObserver = new MutationObserver(() => {
+      updateBannerHeight()
+    })
+    
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style']
+    })
+    
+    const interval = setInterval(updateBannerHeight, 300)
+    
+    updateBannerHeight()
+    
+    onUnmounted(() => {
+      mutationObserver.disconnect()
+      clearInterval(interval)
+    })
+  })
+}
 
 const categoriesStore = useCategoriesStore()
 const show = ref(false)
@@ -76,9 +119,10 @@ const cartStore = useCartStore()
 
 const cartProducts = computed(() => cartStore.products)
 
-onMounted(() => {
-  cartStore.getCartProducts()
-})
+// Убрано: cartStore.getCartProducts() - запрос к /cart/products/mobile не нужен на главной странице
+// onMounted(() => {
+//   cartStore.getCartProducts()
+// })
 
 watch(
   () => route.name,

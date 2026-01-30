@@ -7,32 +7,21 @@
     >
       <Transition name="fade" mode="out-in">
         <div
-          :key="products?.loading"
-          class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10"
+          :key="nearbyStores?.loading"
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5"
         >
-          <template v-if="products?.loading">
-            <MainCardLoading v-for="key in 16" :key />
+          <template v-if="nearbyStores?.loading">
+            <MainCardStoreCardLoading v-for="key in 6" :key="key" />
           </template>
-          <template v-else-if="!products?.loading && products?.list.length">
-            <MainCard
-              v-for="(card, index) in products?.list"
-              :key="index"
-              :card
+          <template v-else-if="!nearbyStores?.loading && nearbyStores?.list.length">
+            <MainCardStoreCard
+              v-for="store in nearbyStores.list"
+              :key="store.id"
+              :store="store"
             />
-          </template>
-          <template v-if="products?.params?.loading">
-            <MainCardLoading v-for="key in 10" :key />
           </template>
         </div>
       </Transition>
-      <div
-        v-if="
-          products.params?.total > products?.list.length &&
-          !products?.loading &&
-          !products?.params?.loading
-        "
-        ref="target"
-      />
     </CommonSectionWrapper>
   </section>
 </template>
@@ -49,19 +38,21 @@ defineProps<Props>()
 
 const mainStore = useMainStore()
 
-const products = computed(() => mainStore.products)
+// Используем магазины вместо продуктов
+const nearbyStores = computed(() => mainStore.nearbyStores)
 
-// Fetch products
-if (!products.value?.list.length) {
-  mainStore.fetchProducts()
+// Загружаем магазины вместо продуктов
+if (!nearbyStores.value?.list.length && !nearbyStores.value?.loading) {
+  mainStore.fetchNearbyStores()
 }
 
 const target = ref<HTMLElement | null>(null)
 
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
-  if (isIntersecting) {
-    mainStore.fetchProducts(false)
-  }
+  // Убрано: больше не загружаем продукты при скролле
+  // if (isIntersecting) {
+  //   mainStore.fetchProducts(false)
+  // }
 })
 </script>
 

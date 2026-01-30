@@ -34,26 +34,18 @@
       <SearchSectionPopularSearch />
       <SearchSectionSearchHistory />
     </section>
-    <SearchCardLoading v-if="products.loading && search" :count="10" />
+    <SearchCardLoading v-if="products.loading && search" :count="6" />
     <section
       v-else-if="products.list?.length && search && !products.loading"
       class="my-5"
-      :class="{ 'mb-0 md:mb-[85px]': !products?.params?.loading }"
     >
-      <SearchCardProduct
-        v-for="(product, key) in products.list"
-        :key
-        :product="product"
-        :class="{ 'bg-gray-300/50': key % 2 === 0 }"
-      />
-      <div
-        v-if="
-          products.params?.total > products?.list.length &&
-          !products?.loading &&
-          !products?.params?.loading
-        "
-        ref="target"
-      />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+        <MainCardStoreCard
+          v-for="store in products.list"
+          :key="store.id"
+          :store="store"
+        />
+      </div>
     </section>
     <section
       v-else-if="!products.list?.length && search && !products.loading"
@@ -66,9 +58,6 @@
       />
       <SearchSectionNewProducts />
     </section>
-    <template v-if="products?.params?.loading">
-      <SearchCardLoading :count="5" />
-    </template>
   </div>
 </template>
 <script setup lang="ts">
@@ -116,10 +105,12 @@ const updateSearch = (val: string) => {
 }
 
 watch(search, (val: string) => {
-  if (val) {
+  if (val && val.trim()) {
     outsideClicked.value = false
     router.push({ query: { query: val } }).then(() => {
       updateSearch(val)
+      // Сохраняем поисковый запрос в историю после выполнения поиска
+      searchStore.saveSearch(val.trim())
     })
   } else {
     router.push({ query: {} })
@@ -131,8 +122,13 @@ watch(search, (val: string) => {
 watch(
   () => route.query,
   (val: any) => {
-    if (val.query) {
+    if (val.query && val.query !== search.value) {
       search.value = val.query
+      // Выполняем поиск при изменении query параметра
+      if (val.query.trim()) {
+        updateSearch(val.query)
+        searchStore.saveSearch(val.query.trim())
+      }
     }
   },
   { immediate: true, deep: true }
@@ -141,18 +137,24 @@ watch(
 onMounted(() => {
   if (route.query.query) {
     outsideClicked.value = true
-  }
-})
-
-const target = ref<HTMLElement | null>(null)
-
-useIntersectionObserver(target, ([{ isIntersecting }]) => {
-  if (isIntersecting) {
-    if (products.value.next) {
-      searchStore.searchProducts(String(search.value), false)
+    // Выполняем поиск при загрузке страницы с query параметром
+    const query = String(route.query.query)
+    if (query.trim()) {
+      updateSearch(query)
+      searchStore.saveSearch(query.trim())
     }
   }
 })
+
+// Убрано: пагинация для магазинов не поддерживается через offset
+// const target = ref<HTMLElement | null>(null)
+// useIntersectionObserver(target, ([{ isIntersecting }]) => {
+//   if (isIntersecting) {
+//     if (products.value.next) {
+//       searchStore.searchProducts(String(search.value), false)
+//     }
+//   }
+// })
 </script>
 <style scoped>
 .suggestions-shadow {

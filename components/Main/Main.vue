@@ -80,8 +80,8 @@
         <IconList class="text-2xl text-blue-100" />
       </NuxtLinkLocale>
     </div>
-    <!-- Секция магазинов (показываем только если есть активная локация) -->
-    <div v-if="hasActiveLocation" class="mt-6">
+    <!-- Секция магазинов (показываем всегда) -->
+    <div class="mt-6">
       <Transition name="fade" mode="out-in">
         <div
           :key="nearbyStores?.loading"
@@ -331,7 +331,17 @@ const hasSelectedCategory = computed(
 )
 
 const hasActiveLocation = computed(() => {
-  return authStore.isAuthorized && locationsStore.getActiveLocation !== null
+  // Проверяем что пользователь авторизован и локации загружены
+  // Показываем магазины всегда, даже если нет активной локации
+  if (!authStore.isAuthorized) {
+    return false
+  }
+  // Если локации еще загружаются, не показываем магазины пока
+  if (locationsStore.locationsLoading) {
+    return false
+  }
+  // Показываем магазины всегда (запрос отправится в любом случае)
+  return true
 })
 
 onMounted(async () => {
@@ -344,25 +354,37 @@ onMounted(async () => {
 
   // Локации загружаются в MainMapSidebar, не нужно дублировать здесь
 
-  // Загружаем ближайшие магазины только если есть активная локация
-  if (hasActiveLocation.value && !nearbyStores.value?.list.length) {
-    mainStore.fetchNearbyStores().catch(() => {
-      // Игнорируем ошибки загрузки
-    })
-  }
+  // Загружаем ближайшие магазины ВСЕГДА при монтировании (независимо от авторизации)
+  mainStore.fetchNearbyStores().catch((error) => {
+    console.error('[Main] Error fetching nearby stores:', error)
+  })
 })
 
-// Отслеживаем изменения активной локации и загружаем магазины
+// Отслеживаем изменения активной локации и обновляем магазины
 watch(
-  () => hasActiveLocation.value,
-  async (hasLocation) => {
-    if (hasLocation && !nearbyStores.value?.list.length) {
-      await mainStore.fetchNearbyStores().catch(() => {
-        // Игнорируем ошибки загрузки
+  () => locationsStore.getActiveLocation,
+  async (activeLocation, previousLocation) => {
+    // Если активная локация изменилась (добавлена или изменена) - обновляем магазины
+    if (activeLocation && activeLocation !== previousLocation) {
+      console.log('[Main] Active location changed, refreshing nearby stores')
+      await mainStore.fetchNearbyStores().catch((error) => {
+        console.error('[Main] Error fetching nearby stores:', error)
       })
     }
   },
-  { immediate: true }
+  { immediate: false }
+)
+
+// Отслеживаем изменения авторизации и загружаем магазины
+watch(
+  () => authStore.isAuthorized,
+  async () => {
+    // Загружаем магазины всегда (независимо от авторизации)
+    await mainStore.fetchNearbyStores().catch((error) => {
+      console.error('[Main] Error fetching nearby stores:', error)
+    })
+  },
+  { immediate: false }
 )
 </script>
 

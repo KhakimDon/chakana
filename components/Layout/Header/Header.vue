@@ -1,7 +1,7 @@
 <template>
   <header
     :key="locale"
-    class="w-full border-b border-white-100 py-4 !fixed top-0"
+    class="w-full border-b border-white-100 py-4 !fixed z-50"
   >
     <div class="container grid grid-cols-3 gap-4">
       <CommonLogo />
@@ -57,7 +57,8 @@
           <LayoutHeaderUser :user="user" class="ml-2" />
         </div>
       </div>
-      <ProfileSidebarPremium class="hidden" />
+      <!-- Убрано: ProfileSidebarPremium - делал автоматический запрос к /subscriptions -->
+      <!-- <ProfileSidebarPremium class="hidden" /> -->
     </div>
   </header>
 </template>
